@@ -160,8 +160,7 @@ const TicketDetails = observer(props => {
 		eventStartDate,
 		ticketTimesDirty,
 		priceForDisplay,
-		soldOutBehavior,
-		isPrivate,
+		visibility,
 		isCancelled,
 		parentId,
 		ticketTypes
@@ -517,29 +516,18 @@ const TicketDetails = observer(props => {
 					<div className={classes.additionalInputContainer}>
 						<SelectGroup
 							disabled={isCancelled}
-							value={soldOutBehavior || "showSoldOut"}
+							value={visibility || "Always"}
 							items={[
-								{ value: "ShowSoldOut", label: "Show Sold Out" },
-								{ value: "Hide", label: "Hide" }
+								{ value: "Always", label: "Always Visible" },
+								{ value: "WhenAvailable", label: "Only When Available" },
+								{ value: "Hidden", label: "Hidden (Promo/Hold Code Required)" }
 							]}
-							name={"sold-out-behavior"}
-							label={"When tickets are sold out *"}
+							name={"visibility"}
+							label={"Visibility *"}
 							onChange={e => {
-								updateTicketType(index, { soldOutBehavior: e.target.value });
+								updateTicketType(index, { visibility: e.target.value });
 							}}
 						/>
-					</div>
-					<div className={classes.additionalInputContainer}>
-						<CheckBox
-							disabled={isCancelled}
-							name={"is_private"}
-							onClick={e => {
-								updateTicketType(index, { isPrivate: !isPrivate });
-							}}
-							active={isPrivate}
-						>
-							Private (Can only be sold via holds or access codes)
-						</CheckBox>
 					</div>
 				</div>
 
@@ -640,8 +628,7 @@ TicketType.propTypes = {
 	eventStartDate: PropTypes.object,
 	startDate: PropTypes.object,
 	startTime: PropTypes.object,
-	soldOutBehavior: PropTypes.string,
-	isPrivate: PropTypes.bool,
+	visibility: PropTypes.string,
 	isCancelled: PropTypes.bool,
 	parentId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	ticketTypes: PropTypes.array

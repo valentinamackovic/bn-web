@@ -26,8 +26,7 @@ const formatForSaving = (ticketTypes, event) => {
 			endTime,
 			limitPerPerson,
 			priceForDisplay,
-			soldOutBehavior,
-			isPrivate,
+			visibility,
 			description,
 			parentId
 		} = ticketType;
@@ -126,8 +125,7 @@ const formatForSaving = (ticketTypes, event) => {
 				limitPerPerson === "" ? undefined : Number(limitPerPerson),
 			price_in_cents: Number(priceForDisplay) * 100,
 			ticket_pricing,
-			sold_out_behavior: soldOutBehavior,
-			is_private: isPrivate,
+			visibility: visibility,
 			description,
 			parent_id: parentId
 		});
@@ -151,8 +149,7 @@ const formatForInput = (ticket_types, event) => {
 			end_date,
 			price_in_cents,
 			status,
-			sold_out_behavior,
-			is_private,
+			visibility,
 			parent_id
 		} = ticket_type;
 
@@ -225,8 +222,7 @@ const formatForInput = (ticket_types, event) => {
 			showPricing: pricing.length > 0,
 			priceForDisplay: price_in_cents / 100,
 			status,
-			soldOutBehavior: sold_out_behavior,
-			isPrivate: is_private,
+			visibility,
 			parentId: parent_id
 		};
 
@@ -302,9 +298,7 @@ const validateFields = ticketTypes => {
 			pricing,
 			priceForDisplay,
 			status,
-			parentId,
-			soldOutBehavior,
-			isPrivate
+			parentId
 		} = ticket;
 
 		if (status === "Cancelled") {
