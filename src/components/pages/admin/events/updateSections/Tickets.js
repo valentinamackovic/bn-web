@@ -73,8 +73,8 @@ const formatForSaving = (ticketTypes, event) => {
 		}
 
 		const ticket_pricing = [];
-		// Using != instead of !== here to check for null or undefined
-		if (parentId != null) {
+		// Using == instead of === here to check for null or undefined
+		if (parentId == null) {
 			pricing.forEach(pricePoint => {
 				const { id, name, startTime, endTime, value } = pricePoint;
 
