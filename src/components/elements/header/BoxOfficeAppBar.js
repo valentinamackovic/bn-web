@@ -64,7 +64,7 @@ const BoxOfficeAppBar = props => {
 						</Hidden>
 					) : null}
 					<div className={classes.logoContainer}>
-						<Link to={"/box-office/sell"}>
+						<Link to={"/"}>
 							<img
 								alt="Header logo"
 								className={classes.headerImage}
