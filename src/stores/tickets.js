@@ -5,48 +5,67 @@ import notifications from "./notifications";
 import Bigneon from "../helpers/bigneon";
 import user from "./user";
 
-//TODO remove this when timezone is passed in API
-//https://github.com/big-neon/bn-api/issues/1091
-const momentFromLocalizedTime = (localized_time) => {
-	const n = localized_time.indexOf("-");
-	const dateString = localized_time.substring(0, n != -1 ? n : localized_time.length);
-	return moment(dateString, "ddd,  D MMM YYYY hh:mm:ss");
-};
-
 //TODO add filtering options to be used in display components
 
 class Tickets {
 	@observable
-	groups = null;
+	upcomingGroups = null;
+
+	@observable
+	pastGroups = null;
 
 	@action
-	refreshTickets() {
-		//Right now carts only work for authed users
+	refreshTickets(type = "upcoming") {
 		if (!user.isAuthenticated) {
 			this.emptyTickets();
 			return;
 		}
 
+		const params = {};
+
+		const nowUTC = moment.utc().format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
+		const longLongAgoUTC = moment
+			.utc()
+			.subtract(100, "y")
+			.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
+
+		if (type === "upcoming") {
+			params.start_utc = nowUTC;
+			params.dir = "Asc";
+		} else if (type === "past") {
+			//params.start_utc = longLongAgoUTC;
+			params.end_utc = nowUTC;
+			params.dir = "Desc";
+		}
+
 		Bigneon()
-			.tickets.index()
+			.tickets.index(params)
 			.then(response => {
 				const { data, paging } = response.data; //TODO pagination
-
 				const ticketGroups = [];
 
 				//TODO api data structure will eventually change
 				data.forEach(ticketGroup => {
 					const event = ticketGroup[0];
 					const tickets = ticketGroup[1];
-					const { localized_times } = event;
 
-					event.eventDate = momentFromLocalizedTime(localized_times.event_start);
+					//TODO when the api returns the venue timezone, use that instead of the guess
+					//https://github.com/big-neon/bn-api/issues/1091
+					event.eventDate = moment(
+						event.event_start,
+						moment.HTML5_FMT.DATETIME_LOCAL_MS
+					).tz(moment.tz.guess());
+
 					event.formattedDate = event.eventDate.format("ddd MM/DD/YY, h:mm A");
 
 					ticketGroups.push({ event, tickets });
 				});
 
-				this.groups = ticketGroups;
+				if (type === "upcoming") {
+					this.upcomingGroups = ticketGroups;
+				} else if (type === "past") {
+					this.pastGroups = ticketGroups;
+				}
 			})
 			.catch(error => {
 				console.error(error);
@@ -57,37 +76,19 @@ class Tickets {
 			});
 	}
 
+	@action
 	emptyTickets() {
-		this.groups = [];
-	}
-
-	@computed
-	get ticketGroupCount() {
-		//Ticket groups are tickets grouped by event
-		if (!this.groups) {
-			return 0;
-		}
-
-		return this.groups.length;
+		this.upcomingGroups = [];
+		this.pastGroups = [];
 	}
 
 	@computed
 	get upcomingEventCount() {
-		if (!this.groups) {
+		if (!this.upcomingGroups) {
 			return 0;
 		}
 
-		let upcomingCount = 0;
-		this.groups.forEach(({ event }) => {
-			const { localized_times } = event;
-			const eventStartDate = momentFromLocalizedTime(localized_times.event_start);
-			const timeDifference = moment().diff(eventStartDate);
-			if (timeDifference < 0) {
-				upcomingCount++;
-			}
-		});
-
-		return upcomingCount;
+		return this.upcomingGroups.length;
 	}
 }
 

@@ -30,6 +30,9 @@ class EventUpdate {
 	event = freshEvent;
 
 	@observable
+	disabledExternalEvent = false;
+
+	@observable
 	organization = {};
 
 	@observable
@@ -69,6 +72,8 @@ class EventUpdate {
 				this.loadTicketTypes(formattedEventData, () =>
 					this.loadTimezone(venue.id)
 				);
+
+				this.checkIfSalesStarted(id);
 			})
 			.catch(error => {
 				console.error(error);
@@ -124,8 +129,7 @@ class EventUpdate {
 		//const endDate = this.event.eventDate ? this.event.eventDate : new Date(); //FIXME this will most certainly not work. If a user changes the event date this first ticket type date needs to change.
 		const ticketTypes = this.ticketTypes;
 		const startDate = moment().set({
-			hour: 12,
-			minute: 30,
+			minute: 0,
 			second: 0,
 			millisecond: 0
 		});
@@ -145,7 +149,7 @@ class EventUpdate {
 			...updateTimezonesInObjects(
 				{ startDate, startTime: startDate, endDate },
 				this.timezone,
-				true
+				false
 			)
 		};
 
@@ -524,8 +528,28 @@ class EventUpdate {
 		this.ticketTypes = [];
 		this.ticketTypeActiveIndex = null;
 		this.timezone = "";
+		this.disabledExternalEvent = false;
 
 		//this.addTicketType();
+	}
+
+	//Check if tickets have been sold, if they have the user can't change to be externally ticketed
+	checkIfSalesStarted(id) {
+		Bigneon()
+			.events.dashboard({ id })
+			.then(response => {
+				const { sold_unreserved, sold_held } = response.data.event;
+				if (sold_unreserved || sold_held) {
+					this.disabledExternalEvent = true;
+				}
+			})
+			.catch(error => {
+				console.error(error);
+				notifications.showFromErrorResponse({
+					defaultMessage: "Check for ticket sales failed.",
+					error
+				});
+			});
 	}
 
 	loadTimezone(id) {
