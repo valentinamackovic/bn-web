@@ -9,6 +9,7 @@ import {
 	Hidden
 } from "@material-ui/core";
 import classnames from "classnames";
+import Bn from "bn-api-node";
 
 import InputGroup from "../../../../common/form/InputGroup";
 import Button from "../../../../elements/Button";
@@ -208,6 +209,16 @@ const TicketDetails = observer(props => {
 				(tt.inner.parentId || "") !== id &&
 				tt.inner.status !== "Cancelled"
 		);
+
+	const ticketTypeVisibilitiesEnum = Bn.Enums ? Bn.Enums.VISIBILITY : {};
+
+	const visibilitySelectOptions = [];
+	Object.keys(ticketTypeVisibilitiesEnum).forEach(visKey => {
+		visibilitySelectOptions.push({
+			value: visKey,
+			label: ticketTypeVisibilitiesEnum[visKey]
+		});
+	});
 
 	const onShowAdditionalOptions = () =>
 		updateTicketType(index, { showAdditionalOptions: true });
@@ -517,11 +528,7 @@ const TicketDetails = observer(props => {
 						<SelectGroup
 							disabled={isCancelled}
 							value={visibility || "Always"}
-							items={[
-								{ value: "Always", label: "Always Visible" },
-								{ value: "WhenAvailable", label: "Only When Available" },
-								{ value: "Hidden", label: "Hidden (Promo/Hold Code Required)" }
-							]}
+							items={visibilitySelectOptions}
 							name={"visibility"}
 							label={"Visibility *"}
 							onChange={e => {
