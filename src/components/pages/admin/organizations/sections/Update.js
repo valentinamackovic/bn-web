@@ -64,7 +64,7 @@ class OrganizationUpdate extends Component {
 						state: state || "",
 						country: country || "",
 						zip: zip || "",
-						timezone: timezone ||  moment.tz.guess()
+						timezone: timezone || moment.tz.guess()
 					});
 				})
 				.catch(error => {
@@ -181,6 +181,7 @@ class OrganizationUpdate extends Component {
 		this.submitAttempted = true;
 
 		if (!this.validateFields()) {
+			this.setState({ showManualEntry: true });
 			return false;
 		}
 
@@ -270,7 +271,8 @@ class OrganizationUpdate extends Component {
 			longitude = "",
 			phone,
 			errors,
-			isSubmitting
+			isSubmitting,
+			showManualEntry
 		} = this.state;
 
 		const { organizationId } = this.props;
@@ -316,8 +318,9 @@ class OrganizationUpdate extends Component {
 						label="Organization address"
 						address={address}
 						addressBlock={addressBlock}
+						showManualEntry={showManualEntry}
 						onError={error => {
-							console.error("error");
+							this.setState({ showManualEntry: true });
 							notifications.show({
 								message: `Google API error: ${error}`, //TODO add more details here
 								variant: "error"
