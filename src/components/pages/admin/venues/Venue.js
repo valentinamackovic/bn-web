@@ -168,10 +168,7 @@ class Venue extends Component {
 			return null;
 		}
 
-		const {
-			organizationId,
-			venueId
-		} = this.state;
+		const { organizationId, venueId } = this.state;
 		const phone = removePhoneFormatting(this.state.phone);
 
 		const errors = {};
@@ -278,6 +275,7 @@ class Venue extends Component {
 		this.submitAttempted = true;
 
 		if (!this.validateFields()) {
+			this.setState({ showManualEntry: true });
 			return false;
 		}
 
@@ -366,8 +364,10 @@ class Venue extends Component {
 			return <Typography variant="body1">Loading organizations...</Typography>;
 		}
 
-		const organizationOptions = organizations
-			.map(organization => ({ value: organization.id, label: organization.name }));
+		const organizationOptions = organizations.map(organization => ({
+			value: organization.id,
+			label: organization.name
+		}));
 
 		return (
 			<SelectGroup
@@ -387,10 +387,12 @@ class Venue extends Component {
 			return <Typography variant="body1">Loading regions...</Typography>;
 		}
 
-		const regionOptions = [{ value: null, label: "No Region" }].concat(regions.map(r => ({
-			value: r.id,
-			label: r.name
-		})));
+		const regionOptions = [{ value: null, label: "No Region" }].concat(
+			regions.map(r => ({
+				value: r.id,
+				label: r.name
+			}))
+		);
 
 		return (
 			<SelectGroup
@@ -442,7 +444,6 @@ class Venue extends Component {
 				</PageHeading>
 
 				<Grid container spacing={24}>
-
 					<Grid item xs={12} sm={10} lg={8}>
 						<Card className={classes.paper}>
 							<form
@@ -450,7 +451,6 @@ class Venue extends Component {
 								autoComplete="off"
 								onSubmit={this.onSubmit.bind(this)}
 							>
-
 								<CardContent>
 									<Grid item xs={12} sm={4} lg={4}>
 										<CardMedia
