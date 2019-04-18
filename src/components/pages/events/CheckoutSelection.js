@@ -110,7 +110,7 @@ class CheckoutSelection extends Component {
 
 	setTicketSelectionFromExistingCart(items) {
 		const ticketSelection = {};
-
+		const { id } = this.props.match.params;
 		if (items && items.length > 0) {
 			items.forEach(({ ticket_type_id, quantity, redemption_code }) => {
 				if (ticket_type_id) {
@@ -126,21 +126,42 @@ class CheckoutSelection extends Component {
 
 		//Auto add one ticket if there is only one
 		const { ticket_types } = selectedEvent;
-		if (
-			(items === undefined || items.length === 0) &&
-			ticket_types &&
-			ticket_types.length === 1
-		) {
-			const { id } = ticket_types[0];
+		if (items === undefined || items.length === 0) {
+			if (ticket_types && ticket_types.length === 1) {
+				const type_id = ticket_types[0].id;
 
-			if (!ticketSelection[id]) {
-				ticketSelection[id] = {
-					quantity: 2
-				};
+				if (!ticketSelection[type_id]) {
+					ticketSelection[type_id] = {
+						quantity: 2
+					};
+				}
+
+				this.setState({ ticketSelection });
+			} else {
+				selectedEvent.refreshResult(
+					id,
+					errorMessage => {
+						notifications.show({
+							message: errorMessage,
+							variant: "error"
+						});
+					},
+					types => {
+						const type_id = types[0].id;
+
+						if (!ticketSelection[type_id]) {
+							ticketSelection[type_id] = {
+								quantity: 2
+							};
+						}
+
+						this.setState({ ticketSelection });
+					}
+				);
 			}
+		} else {
+			this.setState({ ticketSelection });
 		}
-
-		this.setState({ ticketSelection });
 	}
 
 	validateFields() {
