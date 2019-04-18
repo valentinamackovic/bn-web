@@ -13,6 +13,7 @@ const styles = theme => {
 			alignItems: "center",
 			height: "100%",
 			maxHeight: 40,
+			width: "100%",
 			maxWidth: 180,
 			[theme.breakpoints.down("xs")]: {
 				maxWidth: 80

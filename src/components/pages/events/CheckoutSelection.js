@@ -315,19 +315,11 @@ class CheckoutSelection extends Component {
 					redemption_code,
 					available,
 					description,
-					discount_as_percentage
+					discount_as_percentage,
+					status
 				} = ticketType;
 
-				const nowIsValidTime = start_date
-					? moment.utc().isBetween(moment.utc(start_date), moment.utc(end_date))
-					: moment.utc().isBefore(moment.utc(end_date));
-				//Not in a valid date for this ticket_type
-
-				if (!nowIsValidTime) {
-					return;
-				}
-
-				let price_in_cents = 0;
+				let price_in_cents;
 				let ticketsAvailable = false;
 				let discount_in_cents = 0;
 				if (ticket_pricing) {
@@ -364,10 +356,13 @@ class CheckoutSelection extends Component {
 									quantity: Number(amount) < 0 ? 0 : amount,
 									redemption_code
 								};
-								return { ticketSelection };
+								return {
+									ticketSelection
+								};
 							})
 						}
 						validateFields={this.validateFields.bind(this)}
+						status={status}
 					/>
 				);
 			})
