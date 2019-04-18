@@ -350,7 +350,7 @@ class User {
 		if (this.isAuthenticated) {
 			return `${maskString(this.firstName)} ${maskString(this.lastName)}`;
 		} else {
-			("");
+			return "";
 		}
 	}
 
