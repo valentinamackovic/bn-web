@@ -10,7 +10,7 @@ import Bigneon from "../../../../helpers/bigneon";
 import PageHeading from "../../../elements/PageHeading";
 import Loader from "../../../elements/loaders/Loader";
 import StyledLink from "../../../elements/StyledLink";
-import CustomDialog from "../../../elements/Dialog";
+import Dialog from "../../../elements/Dialog";
 import RegionRow from "./RegionRow";
 
 const styles = theme => ({
@@ -135,7 +135,6 @@ class RegionsList extends Component {
 			<Card>
 				<div className={classes.content}>
 					<RegionRow>
-						<Typography className={classes.heading}>ID</Typography>
 						<Typography className={classes.heading}>Name</Typography>
 						<Typography className={classes.heading}>Action</Typography>
 					</RegionRow>
@@ -143,7 +142,6 @@ class RegionsList extends Component {
 						const { id, name } = region;
 						return (
 							<RegionRow shaded={!(index % 2)} key={`region-${id}`}>
-								<Typography className={classes.itemText}>{id}</Typography>
 								<Typography className={classes.itemText}>{name}</Typography>
 								<Typography className={classes.itemText}>
 									<StyledLink
@@ -177,7 +175,7 @@ class RegionsList extends Component {
 	renderDeletionDialog() {
 		const { deleteModalActive, currentRegion, isSubmitting } = this.state;
 		return (
-			<CustomDialog
+			<Dialog
 				onClose={this.toggleModal.bind(this, "deleteModalActive", {})}
 				open={deleteModalActive}
 				title={`Delete region`}
@@ -206,16 +204,15 @@ class RegionsList extends Component {
 						</Button>
 					</div>
 				</form>
-			</CustomDialog>
+			</Dialog>
 		);
 	}
 
 	renderDialog(key, loadingString) {
 		const { isSubmitting, currentRegion } = this.state;
 		return (
-			<CustomDialog
+			<Dialog
 				onClose={this.toggleModal.bind(this, `${key}ModalActive`, {})}
-				iconUrl={"/icons/credit-card-white.svg"}
 				open={this.state[`${key}ModalActive`]}
 				title={`${key.charAt(0).toUpperCase() + key.slice(1)} region`}
 			>
@@ -247,7 +244,7 @@ class RegionsList extends Component {
 							: key.charAt(0).toUpperCase() + key.slice(1)}
 					</Button>
 				</form>
-			</CustomDialog>
+			</Dialog>
 		);
 	}
 
