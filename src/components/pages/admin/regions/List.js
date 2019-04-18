@@ -244,17 +244,26 @@ class RegionsList extends Component {
 							})
 						}
 					/>
-
-					<Button
-						disabled={isSubmitting}
-						type="submit"
-						style={{ marginRight: 10, marginTop: 20 }}
-						variant="callToAction"
-					>
-						{isSubmitting
-							? loadingString
-							: key.charAt(0).toUpperCase() + key.slice(1)}
-					</Button>
+					<div style={{ display: "flex" }}>
+						<Button
+							style={{ marginRight: 10, flex: 1, marginTop: 20 }}
+							onClick={this.toggleModal.bind(this, `${key}ModalActive`, {})}
+							color="primary"
+							disabled={isSubmitting}
+						>
+							Cancel
+						</Button>
+						<Button
+							disabled={isSubmitting}
+							type="submit"
+							style={{ marginRight: 10, flex: 1, marginTop: 20 }}
+							variant="callToAction"
+						>
+							{isSubmitting
+								? loadingString
+								: key.charAt(0).toUpperCase() + key.slice(1)}
+						</Button>
+					</div>
 				</form>
 			</Dialog>
 		);
