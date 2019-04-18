@@ -26,7 +26,7 @@ const RegionRow = props => {
 
 	const columnStyles = [
 		{ flex: 4, textAlign: "center" },
-		{ flex: 4, textAlign: "center" }
+		{ flex: 4, textAlign: "right" }
 	];
 
 	const columns = children.map((child, index) => {

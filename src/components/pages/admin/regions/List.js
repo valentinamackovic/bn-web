@@ -31,6 +31,12 @@ const styles = theme => ({
 		display: "flex",
 		alignItems: "flex-end",
 		padding: theme.spacing.unit
+	},
+	icon: {
+		marginLeft: theme.spacing.unit * 2,
+		width: 14,
+		height: 14,
+		cursor: "pointer"
 	}
 });
 
@@ -144,8 +150,7 @@ class RegionsList extends Component {
 							<RegionRow shaded={!(index % 2)} key={`region-${id}`}>
 								<Typography className={classes.itemText}>{name}</Typography>
 								<Typography className={classes.itemText}>
-									<StyledLink
-										underlined
+									<span
 										key={`region-update-${id}`}
 										onClick={this.toggleModal.bind(
 											this,
@@ -153,16 +158,23 @@ class RegionsList extends Component {
 											region
 										)}
 									>
-										update
-									</StyledLink>
+										<img
+											alt={name}
+											src={`/icons/edit-gray.svg`}
+											className={classes.icon}
+										/>
+									</span>
 									<br/>
-									{/* <StyledLink 
-										underlined
+									{/* <span
 										key={`region-delete-${id}`}
-										onClick={this.toggleModal.bind(this,'deleteModalActive', region)}
+										onClick={this.toggleModal.bind(
+											this,
+											"deleteModalActive",
+											region
+										)}
 									>
-										delete
-									</StyledLink> */}
+										<img alt={name} src={`/icons/delete-gray.svg`} className={classes.icon}/>
+									</span> */}
 								</Typography>
 							</RegionRow>
 						);
