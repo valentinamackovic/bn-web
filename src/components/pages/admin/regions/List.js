@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { Typography, withStyles } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
 import InputGroup from "../../../common/form/InputGroup";
 
 import notifications from "../../../../stores/notifications";
@@ -12,10 +11,18 @@ import Loader from "../../../elements/loaders/Loader";
 import StyledLink from "../../../elements/StyledLink";
 import Dialog from "../../../elements/Dialog";
 import RegionRow from "./RegionRow";
+import Card from "../../../elements/Card";
+import { fontFamilyDemiBold } from "../../../../config/theme";
 
 const styles = theme => ({
 	paper: {
 		display: "flex"
+	},
+	content: {
+		padding: theme.spacing.unit * 2
+	},
+	heading: {
+		fontFamily: fontFamilyDemiBold
 	},
 	cardContent: {
 		padding: theme.spacing.unit * 2,
@@ -107,18 +114,9 @@ class RegionsList extends Component {
 						);
 					})
 					.catch(error => {
-						let message = "Loading regions failed.";
-						if (
-							error.response &&
-							error.response.data &&
-							error.response.data.error
-						) {
-							message = error.response.data.error;
-						}
-
-						notifications.show({
-							message,
-							variant: "error"
+						notifications.showFromErrorResponse({
+							defaultMessage: "Loading regions failed.",
+							error
 						});
 					});
 			}
@@ -244,9 +242,9 @@ class RegionsList extends Component {
 							})
 						}
 					/>
-					<div style={{ display: "flex" }}>
+					<div style={{ display: "flex", marginTop: 20 }}>
 						<Button
-							style={{ marginRight: 10, flex: 1, marginTop: 20 }}
+							style={{ marginRight: 5, flex: 1 }}
 							onClick={this.toggleModal.bind(this, `${key}ModalActive`, {})}
 							color="primary"
 							disabled={isSubmitting}
@@ -256,7 +254,7 @@ class RegionsList extends Component {
 						<Button
 							disabled={isSubmitting}
 							type="submit"
-							style={{ marginRight: 10, flex: 1, marginTop: 20 }}
+							style={{ marginLeft: 5, flex: 1 }}
 							variant="callToAction"
 						>
 							{isSubmitting
