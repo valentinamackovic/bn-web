@@ -124,7 +124,15 @@ class CodeList extends Component {
 		}
 
 		if (codes && codes.length > 0) {
-			const ths = ["Name", "Codes", "Ticket Types", "Type",  "Total Used", "Discount", ""];
+			const ths = [
+				"Name",
+				"Codes",
+				"Ticket Types",
+				"Type",
+				"Total Used",
+				"Discount",
+				""
+			];
 
 			const onAction = (id, action) => {
 				if (action === "EditDiscount") {
@@ -171,8 +179,12 @@ class CodeList extends Component {
 						const ticketTypesList = [];
 						let ticketTypeDisplayList = "";
 						if (Object.keys(ticketTypes).length > 0) {
-							ticket_type_ids.forEach((id) => {
-								ticketTypesList.push(ticketTypes[id].name);
+							ticket_type_ids.forEach(id => {
+								// Ticket type might have been cancelled, in which case
+								// don't show it
+								if (ticketTypes[id]) {
+									ticketTypesList.push(ticketTypes[id].name);
+								}
 							});
 							ticketTypesList.sort();
 							ticketTypesList.forEach((name, idx) => {
@@ -226,7 +238,10 @@ class CodeList extends Component {
 											},
 											{
 												id: id,
-												name: discount_type === "Discount" ? "EditDiscount" : "EditAccess",
+												name:
+														discount_type === "Discount"
+															? "EditDiscount"
+															: "EditAccess",
 												iconUrl: `/icons/edit-${iconColor}.svg`,
 												onClick: onAction.bind(this)
 											},
@@ -315,19 +330,35 @@ class CodeList extends Component {
 
 			const { redemption_codes, event_id } = code;
 			redemption_codes.forEach(c => {
-				urls.push(`${window.location.protocol}//${window.location.host}/events/${event_id}/tickets?code=${c}`);
+				urls.push(
+					`${window.location.protocol}//${
+						window.location.host
+					}/events/${event_id}/tickets?code=${c}`
+				);
 			});
 		}
 
 		return (
-			<Dialog iconUrl={"/icons/link-white.svg"} title={`Shareable link${urls.length > 1 ? "s" : ""}`} open={!!showShareableLinkId} onClose={onClose}>
+			<Dialog
+				iconUrl={"/icons/link-white.svg"}
+				title={`Shareable link${urls.length > 1 ? "s" : ""}`}
+				open={!!showShareableLinkId}
+				onClose={onClose}
+			>
 				<div>
-					{urls.length > 0 ?
-						urls.map((url, index) => (
+					{urls.length > 0
+						? urls.map((url, index) => (
 							<div key={index} className={classes.shareableLinkContainer}>
-								<a href={url} target={"_blank"} className={classes.shareableLinkText}>{url}</a>
+								<a
+									href={url}
+									target={"_blank"}
+									className={classes.shareableLinkText}
+								>
+									{url}
+								</a>
 							</div>
-						)) : null }
+						  ))
+						: null}
 					<div style={{ display: "flex" }}>
 						<Button style={{ flex: 1 }} onClick={onClose}>
 							Done
@@ -350,14 +381,20 @@ class CodeList extends Component {
 					<Typography variant="title">Promo Codes</Typography>
 					<div>
 						{user.hasScope("code:write") ? (
-							<Button onClick={e => this.onAddCode("discount")} style={{ marginRight: 10 }}>New Discount Code</Button>
+							<Button
+								onClick={e => this.onAddCode("discount")}
+								style={{ marginRight: 10 }}
+							>
+								New Discount Code
+							</Button>
 						) : null}
 
 						{user.hasScope("code:write") ? (
-							<Button onClick={e => this.onAddCode("access")}>New Access Code</Button>
+							<Button onClick={e => this.onAddCode("access")}>
+								New Access Code
+							</Button>
 						) : null}
 					</div>
-
 				</div>
 
 				<Divider style={{ marginBottom: 40 }}/>
