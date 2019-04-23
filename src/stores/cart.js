@@ -252,7 +252,11 @@ class Cart {
 
 			orderTotalInCents = orderTotalInCents + quantity * unit_price_in_cents;
 
-			if (item_type === "PerUnitFees" || item_type === "EventFees") {
+			if (
+				item_type === "PerUnitFees" ||
+				item_type === "EventFees" ||
+				item_type === "CreditCardFees"
+			) {
 				serviceFeesInCents =
 					serviceFeesInCents + unit_price_in_cents * quantity;
 

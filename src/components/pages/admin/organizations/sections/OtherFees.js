@@ -31,18 +31,25 @@ class OtherFees extends Component {
 			Bigneon()
 				.organizations.read({ id: organizationId })
 				.then(response => {
-					const { owner_user_id, client_event_fee_in_cents, company_event_fee_in_cents } = response.data;
+					const {
+						owner_user_id,
+						client_event_fee_in_cents,
+						company_event_fee_in_cents,
+						cc_fee_percent
+					} = response.data;
 					const clientEventFee = client_event_fee_in_cents
 						? (client_event_fee_in_cents / 100).toFixed(2)
 						: (0).toFixed(2);
 					const companyEventFee = company_event_fee_in_cents
 						? (company_event_fee_in_cents / 100).toFixed(2)
 						: (0).toFixed(2);
+					const creditCardFee = cc_fee_percent ? cc_fee_percent : 0;
 
 					this.setState({
 						owner_user_id: owner_user_id || "",
 						clientEventFee,
-						companyEventFee
+						companyEventFee,
+						creditCardFee
 					});
 				})
 				.catch(error => {
@@ -62,7 +69,7 @@ class OtherFees extends Component {
 			return true;
 		}
 
-		const { clientEventFee, companyEventFee } = this.state;
+		const { clientEventFee, companyEventFee, creditCardFee } = this.state;
 
 		const errors = {};
 
@@ -72,6 +79,10 @@ class OtherFees extends Component {
 
 		if (!companyEventFee) {
 			errors.companyEventFee = "Missing Big Neon event fee.";
+		}
+
+		if (creditCardFee && (creditCardFee >= 100 || creditCardFee < 0)) {
+			errors.creditCardFee = "Credit Card fee must be a percentage.";
 		}
 
 		this.setState({ errors });
@@ -92,12 +103,13 @@ class OtherFees extends Component {
 			return false;
 		}
 
-		const { clientEventFee, companyEventFee } = this.state;
+		const { clientEventFee, companyEventFee, creditCardFee } = this.state;
 		const { organizationId } = this.props;
 
 		const orgDetails = {
 			client_event_fee_in_cents: Number(clientEventFee) * 100,
-			company_event_fee_in_cents: Number(companyEventFee) * 100
+			company_event_fee_in_cents: Number(companyEventFee) * 100,
+			cc_fee_percent: Number(creditCardFee)
 		};
 
 		Bigneon()
@@ -121,8 +133,19 @@ class OtherFees extends Component {
 	}
 
 	render() {
-		const { owner_user_id, clientEventFee = 0, companyEventFee = 0, errors, isSubmitting } = this.state;
-		const eventFee = Number(clientEventFee) + Number(companyEventFee);
+		const {
+			owner_user_id,
+			clientEventFee = 0,
+			companyEventFee = 0,
+			creditCardFee = 0,
+			errors,
+			isSubmitting
+		} = this.state;
+		const eventFee =
+			(Number(clientEventFee) + Number(companyEventFee)).toFixed(2) +
+			" + " +
+			creditCardFee +
+			"% of order total";
 		const { organizationId } = this.props;
 
 		const { classes } = this.props;
@@ -134,7 +157,7 @@ class OtherFees extends Component {
 			<div>
 				<form noValidate autoComplete="off" onSubmit={this.onSubmit.bind(this)}>
 					<Grid container spacing={24}>
-						<Grid item xs={12} sm={4} lg={4}>
+						<Grid item xs={12} sm={3} lg={3}>
 							<InputGroup
 								InputProps={{
 									startAdornment: (
@@ -146,11 +169,13 @@ class OtherFees extends Component {
 								name="clientEventFee"
 								label="Per order client fee"
 								type="number"
-								onChange={e => this.setState({ clientEventFee: e.target.value })}
+								onChange={e =>
+									this.setState({ clientEventFee: e.target.value })
+								}
 								onBlur={this.validateFields.bind(this)}
 							/>
 						</Grid>
-						<Grid item xs={12} sm={4} lg={4}>
+						<Grid item xs={12} sm={3} lg={3}>
 							<InputGroup
 								InputProps={{
 									startAdornment: (
@@ -162,11 +187,29 @@ class OtherFees extends Component {
 								name="companyEventFee"
 								label="Per order Big Neon fee"
 								type="number"
-								onChange={e => this.setState({ companyEventFee: e.target.value })}
+								onChange={e =>
+									this.setState({ companyEventFee: e.target.value })
+								}
 								onBlur={this.validateFields.bind(this)}
 							/>
 						</Grid>
-						<Grid item xs={12} sm={4} lg={4}>
+						<Grid item xs={12} sm={3} lg={3}>
+							<InputGroup
+								InputProps={{
+									endAdornment: (
+										<InputAdornment position="end">%</InputAdornment>
+									)
+								}}
+								error={errors.creditCardFee}
+								value={creditCardFee}
+								name="creditCardFeesPercent"
+								label="Credit card fee"
+								type="number"
+								onChange={e => this.setState({ creditCardFee: e.target.value })}
+								onBlur={this.validateFields.bind(this)}
+							/>
+						</Grid>
+						<Grid item xs={12} sm={3} lg={3}>
 							<InputGroup
 								InputProps={{
 									startAdornment: (
@@ -178,9 +221,8 @@ class OtherFees extends Component {
 								disabled
 								name="eventFee"
 								label="Total per order fee"
-								type="number"
-								onChange={e => {
-								}}
+								type="text"
+								onChange={e => {}}
 							/>
 						</Grid>
 					</Grid>
