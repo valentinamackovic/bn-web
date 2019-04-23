@@ -26,6 +26,8 @@ import EventDescriptionBody from "./EventDescriptionBody";
 import getUrlParam from "../../../helpers/getUrlParam";
 import { Redirect } from "react-router-dom";
 
+const AUTO_SELECT_TICKET_AMOUNT = 2;
+
 const styles = theme => ({
 	root: {},
 	mobileContainer: {
@@ -132,7 +134,7 @@ class CheckoutSelection extends Component {
 
 				if (!ticketSelection[type_id]) {
 					ticketSelection[type_id] = {
-						quantity: 2
+						quantity: AUTO_SELECT_TICKET_AMOUNT
 					};
 				}
 
@@ -150,9 +152,11 @@ class CheckoutSelection extends Component {
 						const type_id = types[0].id;
 
 						if (!ticketSelection[type_id]) {
-							ticketSelection[type_id] = {
-								quantity: 2
-							};
+							if (types.length === 1) {
+								ticketSelection[type_id] = {
+									quantity: AUTO_SELECT_TICKET_AMOUNT
+								};
+							}
 						}
 
 						this.setState({ ticketSelection });
