@@ -77,12 +77,18 @@ class TicketSales extends Component {
 		Object.keys(selectedTickets).forEach(ticket_type_id => {
 			const quantity = selectedTickets[ticket_type_id];
 			if (quantity > 0) {
-				if (ticketTypes[ticket_type_id] && ticketTypes[ticket_type_id].redemption_code) {
-					items.push({ quantity, ticket_type_id, redemption_code: ticketTypes[ticket_type_id].redemption_code });
+				if (
+					ticketTypes[ticket_type_id] &&
+					ticketTypes[ticket_type_id].redemption_code
+				) {
+					items.push({
+						quantity,
+						ticket_type_id,
+						redemption_code: ticketTypes[ticket_type_id].redemption_code
+					});
 				} else {
 					items.push({ quantity, ticket_type_id });
 				}
-
 			}
 		});
 
@@ -128,7 +134,15 @@ class TicketSales extends Component {
 		}
 
 		return ticketTypeIds.map(id => {
-			const { name, available, ticket_pricing, hidden, start_date, end_date, ...rest } = ticketTypes[id];
+			const {
+				name,
+				available,
+				ticket_pricing,
+				hidden,
+				start_date,
+				end_date,
+				...rest
+			} = ticketTypes[id];
 			let disabled = false;
 			let price_in_cents = 0;
 			let ticketTypeAvailabilityTitle = null;
@@ -326,9 +340,7 @@ class TicketSales extends Component {
 				<br/>
 				<br/>
 
-				<PageHeading iconUrl="/icons/tickets-active.svg">
-					Holds
-				</PageHeading>
+				<PageHeading iconUrl="/icons/tickets-active.svg">Holds</PageHeading>
 				{this.renderHolds()}
 
 				{ticketTypes ? (
