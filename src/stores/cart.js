@@ -130,7 +130,11 @@ class Cart {
 	update(selectedTickets, onSuccess, onError) {
 		const items = itemListToSave(selectedTickets);
 		Bigneon()
-			.cart.update({ items, redemption_code: this.redemptionCode })
+			.cart.update({
+				items,
+				redemption_code: this.redemptionCode,
+				tracking_data: user.getCampaignTrackingData()
+			})
 			.then(response => {
 				const { data } = response;
 				if (data) {
@@ -149,7 +153,11 @@ class Cart {
 		const items = itemListToSave(selectedTickets);
 
 		Bigneon()
-			.cart.replace({ items, redemption_code: this.redemptionCode })
+			.cart.replace({
+				items,
+				redemption_code: this.redemptionCode,
+				tracking_data: user.getCampaignTrackingData()
+			})
 			.then(response => {
 				const { data } = response;
 				if (data) {

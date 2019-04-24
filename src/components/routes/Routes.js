@@ -127,6 +127,7 @@ import WidgetLinkBuilder from "../widgets/LinkBuilder";
 import ReceiveTransfer from "../pages/myevents/ReceiveTransfer";
 import GuestList from "../pages/boxoffice/guests/Index";
 import analytics from "../../helpers/analytics";
+import getAllUrlParams from "../../helpers/getAllUrlParams";
 
 const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) => {
 	//If isAuthenticated is null then we're still checking the state
@@ -161,6 +162,8 @@ class Routes extends Component {
 		if (startLoadTime) {
 			analytics.trackPageLoadTime(Date.now() - startLoadTime);
 		}
+		// store url params data for campaign tracking
+		user.setCampaignTrackingData(getAllUrlParams());
 	}
 
 	componentWillUnmount() {

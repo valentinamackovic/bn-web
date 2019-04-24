@@ -333,6 +333,26 @@ class User {
 		this.showRequiresAuthDialog = false;
 	}
 
+	getCampaignTrackingData() {
+		try {
+			return JSON.parse(localStorage.getItem("campaignData"));
+		} catch (e) {
+			return {};
+		}
+	}
+
+	@action
+	setCampaignTrackingData(data) {
+		let currentData = this.getCampaignTrackingData();
+		currentData = { ...currentData, ...data };
+		localStorage.setItem("campaignData", JSON.stringify(currentData));
+	}
+
+	@action
+	clearCampaignTrackingData() {
+		localStorage.setItem("campaignData", "");
+	}
+
 	hasScope(scope) {
 		return this.globalScopes.indexOf(scope) > -1;
 	}
