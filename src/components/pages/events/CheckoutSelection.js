@@ -149,16 +149,22 @@ class CheckoutSelection extends Component {
 						});
 					},
 					types => {
-						const type_id = types[0].id;
+						if (types && types.length) {
+							for (let i = 0; i < types.length; i++) {
+								if (types[i].status !== "Published") {
+									continue;
+								}
+								const type_id = types[i].id;
 
-						if (!ticketSelection[type_id]) {
-							if (types.length === 1) {
-								ticketSelection[type_id] = {
-									quantity: AUTO_SELECT_TICKET_AMOUNT
-								};
+								if (!ticketSelection[type_id]) {
+									if (types.length === 1) {
+										ticketSelection[type_id] = {
+											quantity: AUTO_SELECT_TICKET_AMOUNT
+										};
+									}
+								}
 							}
 						}
-
 						this.setState({ ticketSelection });
 					}
 				);
