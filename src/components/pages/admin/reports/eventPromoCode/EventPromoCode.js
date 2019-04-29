@@ -5,21 +5,14 @@ import Divider from "../../../../common/Divider";
 import Button from "../../../../elements/Button";
 import { fontFamilyDemiBold } from "../../../../../config/theme";
 import notifications from "../../../../../stores/notifications";
-import { EventSalesTable } from "../eventSummary/EventSalesTable";
-import EventTicketCountTable from "../counts/EventTicketCountTable";
 import downloadCSV from "../../../../../helpers/downloadCSV";
 import promoCodeReport from "../../../../../stores/reports/promoCodeReport";
-import summaryReport from "../../../../../stores/reports/summaryReport";
 import { observer } from "mobx-react";
 import Loader from "../../../../elements/loaders/Loader";
-import Card from "../../../../elements/Card";
 import { EventPromoCodesTable } from "./EventPromoCodeTable";
 
 const styles = theme => ({
-	root: {
-		padding: theme.spacing.unit * 4,
-		marginBottom: theme.spacing.unit
-	},
+	root: {},
 	subHeading: {
 		fontFamily: fontFamilyDemiBold,
 		fontSize: theme.typography.fontSize * 1.3
@@ -111,40 +104,38 @@ class EventPromoCodesReport extends Component {
 		}
 
 		return (
-			<Card variant={"block"}>
-				<div className={classes.root}>
-					<div
-						style={{
-							display: "flex",
-							minHeight: 60,
-							alignItems: "center"
-						}}
+			<div className={classes.root}>
+				<div
+					style={{
+						display: "flex",
+						minHeight: 60,
+						alignItems: "center"
+					}}
+				>
+					<Typography variant="title">Event promo codes report</Typography>
+					<span style={{ flex: 1 }}/>
+					<Button
+						iconUrl="/icons/csv-active.svg"
+						variant="text"
+						onClick={this.exportCSV.bind(this)}
 					>
-						<Typography variant="title">Event promo codes report</Typography>
-						<span style={{ flex: 1 }}/>
-						<Button
-							iconUrl="/icons/csv-active.svg"
-							variant="text"
-							onClick={this.exportCSV.bind(this)}
-						>
-							Export CSV
-						</Button>
-						<Button
-							href={`/exports/reports/?type=promo_codes&event_id=${
-								this.props.eventId
-							}`}
-							target={"_blank"}
-							iconUrl="/icons/pdf-active.svg"
-							variant="text"
-						>
-							Export PDF
-						</Button>
-					</div>
-					<Divider style={{ marginBottom: 40 }}/>
-
-					{this.renderPromoCodes()}
+						Export CSV
+					</Button>
+					<Button
+						href={`/exports/reports/?type=promo_codes&event_id=${
+							this.props.eventId
+						}`}
+						target={"_blank"}
+						iconUrl="/icons/pdf-active.svg"
+						variant="text"
+					>
+						Export PDF
+					</Button>
 				</div>
-			</Card>
+				<Divider style={{ marginBottom: 40 }}/>
+
+				{this.renderPromoCodes()}
+			</div>
 		);
 	}
 }

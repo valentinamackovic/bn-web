@@ -119,7 +119,11 @@ class Report extends Component {
 		}
 
 		return (
-			<Container eventId={eventId} subheading={"reports"}>
+			<Container
+				eventId={eventId}
+				subheading={"reports"}
+				layout={"childrenInsideCard"}
+			>
 				{content}
 			</Container>
 		);

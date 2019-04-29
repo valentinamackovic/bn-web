@@ -14,10 +14,7 @@ import Loader from "../../../../elements/loaders/Loader";
 import Card from "../../../../elements/Card";
 
 const styles = theme => ({
-	root: {
-		padding: theme.spacing.unit * 4,
-		marginBottom: theme.spacing.unit
-	},
+	root: {},
 	header: {
 		display: "flex",
 		minHeight: 60,
@@ -103,54 +100,55 @@ class TicketCounts extends Component {
 			const ticketCounts = eventDataResults[eventId];
 			return (
 				<div>
-					<EventTicketCountTable hideDetails={true} ticketCounts={ticketCounts}/>
+					<EventTicketCountTable
+						hideDetails={true}
+						ticketCounts={ticketCounts}
+					/>
 				</div>
 			);
 		}
 
 		return (
 			<div>
-				{
-					Object.keys(eventDataResults).map((reportEventId, index) => {
-						const ticketCounts = eventDataResults[reportEventId];
-						const eventName = ticketCounts.eventName;
-						return (
-							<div key={reportEventId} className={classes.multiEventContainer}>
-								<div className={classes.multiEventHeader}>
-									<div>
-										<Typography className={classes.multiEventTitle}>
-											<span className={classes.eventNumber}>{index + 1}.</span>{" "}
-											{eventName}
-										</Typography>
-									</div>
-									<div>
-										<Button
-											iconUrl="/icons/csv-active.svg"
-											variant="text"
-											onClick={() => this.exportCSV(reportEventId)}
-										>
-											Export CSV
-										</Button>
-										<Button
-											href={`/exports/reports/?type=ticket_counts&event_id=${reportEventId}`}
-											target={"_blank"}
-											iconUrl="/icons/pdf-active.svg"
-											variant="text"
-										>
-											Export PDF
-										</Button>
-									</div>
+				{Object.keys(eventDataResults).map((reportEventId, index) => {
+					const ticketCounts = eventDataResults[reportEventId];
+					const eventName = ticketCounts.eventName;
+					return (
+						<div key={reportEventId} className={classes.multiEventContainer}>
+							<div className={classes.multiEventHeader}>
+								<div>
+									<Typography className={classes.multiEventTitle}>
+										<span className={classes.eventNumber}>{index + 1}.</span>{" "}
+										{eventName}
+									</Typography>
 								</div>
-
-								<Typography className={classes.subheading}>Inventory</Typography>
-
-								<EventTicketCountTable ticketCounts={ticketCounts}/>
-
-								<Divider style={{ marginTop: 20, marginBottom: 20 }}/>
+								<div>
+									<Button
+										iconUrl="/icons/csv-active.svg"
+										variant="text"
+										onClick={() => this.exportCSV(reportEventId)}
+									>
+										Export CSV
+									</Button>
+									<Button
+										href={`/exports/reports/?type=ticket_counts&event_id=${reportEventId}`}
+										target={"_blank"}
+										iconUrl="/icons/pdf-active.svg"
+										variant="text"
+									>
+										Export PDF
+									</Button>
+								</div>
 							</div>
-						);
-					})
-				}
+
+							<Typography className={classes.subheading}>Inventory</Typography>
+
+							<EventTicketCountTable ticketCounts={ticketCounts}/>
+
+							<Divider style={{ marginTop: 20, marginBottom: 20 }}/>
+						</div>
+					);
+				})}
 			</div>
 		);
 	}
@@ -163,37 +161,35 @@ class TicketCounts extends Component {
 		}
 
 		return (
-			<Card variant={"block"}>
-				<div className={classes.root}>
-					<div className={classes.header}>
-						<Typography variant="title">
-							{eventId ? "Event" : "Organization"} ticket counts report
-						</Typography>
-						<span style={{ flex: 1 }}/>
-						{eventId ? (
-							<div>
-								<Button
-									iconUrl="/icons/csv-active.svg"
-									variant="text"
-									onClick={() => this.exportCSV(eventId)}
-								>
-							Export CSV
-								</Button>
-								<Button
-									href={`/exports/reports/?type=ticket_counts&event_id=${eventId}`}
-									target={"_blank"}
-									iconUrl="/icons/pdf-active.svg"
-									variant="text"
-								>
+			<div className={classes.root}>
+				<div className={classes.header}>
+					<Typography variant="title">
+						{eventId ? "Event" : "Organization"} ticket counts report
+					</Typography>
+					<span style={{ flex: 1 }}/>
+					{eventId ? (
+						<div>
+							<Button
+								iconUrl="/icons/csv-active.svg"
+								variant="text"
+								onClick={() => this.exportCSV(eventId)}
+							>
+								Export CSV
+							</Button>
+							<Button
+								href={`/exports/reports/?type=ticket_counts&event_id=${eventId}`}
+								target={"_blank"}
+								iconUrl="/icons/pdf-active.svg"
+								variant="text"
+							>
 								Export PDF
-								</Button>
-							</div>
-						) : null}
-					</div>
-					<Divider style={{ marginBottom: 40 }}/>
-					{this.renderList()}
+							</Button>
+						</div>
+					) : null}
 				</div>
-			</Card>
+				<Divider style={{ marginBottom: 40 }}/>
+				{this.renderList()}
+			</div>
 		);
 	}
 }

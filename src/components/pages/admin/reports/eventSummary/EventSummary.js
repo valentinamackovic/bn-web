@@ -14,10 +14,7 @@ import { dollars } from "../../../../../helpers/money";
 import Card from "../../../../elements/Card";
 
 const styles = theme => ({
-	root: {
-		padding: theme.spacing.unit * 4,
-		marginBottom: theme.spacing.unit
-	},
+	root: {},
 	subHeading: {
 		fontFamily: fontFamilyDemiBold,
 		fontSize: theme.typography.fontSize * 1.3
@@ -59,7 +56,10 @@ class EventSummary extends Component {
 
 	exportCSV() {
 		const { eventId } = this.props;
-		downloadCSV(summaryReport.csv(summaryReport.dataByPrice[eventId]), "event-summary-report");
+		downloadCSV(
+			summaryReport.csv(summaryReport.dataByPrice[eventId]),
+			"event-summary-report"
+		);
 	}
 
 	renderEventSales() {
@@ -84,10 +84,12 @@ class EventSummary extends Component {
 		return (
 			<div>
 				<Typography className={classes.subHeading}>All event sales</Typography>
-				<EventSalesTable eventSales={eventSales.tickets} salesTotals={eventSales.totals}/>
+				<EventSalesTable
+					eventSales={eventSales.tickets}
+					salesTotals={eventSales.totals}
+				/>
 			</div>
 		);
-
 	}
 
 	renderRevenueShare() {
@@ -106,9 +108,7 @@ class EventSummary extends Component {
 		if (Object.keys(eventSales.tickets).length === 0) {
 			return <Typography>No event summary available.</Typography>;
 		}
-		const {
-			totalOnlineClientFeesInCents
-		} = eventSales.totals;
+		const { totalOnlineClientFeesInCents } = eventSales.totals;
 
 		return (
 			<div>
@@ -120,10 +120,7 @@ class EventSummary extends Component {
 					const ticketSale = eventSales.tickets[ticketId];
 					const { totals, sales, name } = ticketSale;
 
-					const {
-						totalSoldOnlineCount,
-						totalOnlineClientFeesInCents
-					} = totals;
+					const { totalSoldOnlineCount, totalOnlineClientFeesInCents } = totals;
 
 					return (
 						<div key={ticketId}>
@@ -152,10 +149,14 @@ class EventSummary extends Component {
 
 								let rowName = ticket_pricing_name;
 								if (hold_name) {
-									rowName = (promo_redemption_code ? "Promo - " : "Hold - ") + hold_name;
+									rowName =
+										(promo_redemption_code ? "Promo - " : "Hold - ") +
+										hold_name;
 								}
 
-								const priceInCents = ticket_pricing_price_in_cents + promo_code_discounted_ticket_price;
+								const priceInCents =
+									ticket_pricing_price_in_cents +
+									promo_code_discounted_ticket_price;
 
 								return (
 									<EventSummaryRow key={priceIndex}>
@@ -205,43 +206,43 @@ class EventSummary extends Component {
 		}
 
 		return (
-			<Card variant={"block"}>
-				<div className={classes.root}>
-					<div
-						style={{
-							display: "flex",
-							minHeight: 60,
-							alignItems: "center"
-						}}
+			<div className={classes.root}>
+				<div
+					style={{
+						display: "flex",
+						minHeight: 60,
+						alignItems: "center"
+					}}
+				>
+					<Typography variant="title">Event summary report</Typography>
+					<span style={{ flex: 1 }}/>
+					<Button
+						iconUrl="/icons/csv-active.svg"
+						variant="text"
+						onClick={this.exportCSV.bind(this)}
 					>
-						<Typography variant="title">Event summary report</Typography>
-						<span style={{ flex: 1 }}/>
-						<Button
-							iconUrl="/icons/csv-active.svg"
-							variant="text"
-							onClick={this.exportCSV.bind(this)}
-						>
-							Export CSV
-						</Button>
-						<Button
-							href={`/exports/reports/?type=summary&event_id=${this.props.eventId}`}
-							target={"_blank"}
-							iconUrl="/icons/pdf-active.svg"
-							variant="text"
-						>
-							Export PDF
-						</Button>
-					</div>
-					<Divider style={{ marginBottom: 40 }}/>
-
-					{this.renderEventSales()}
-
-					<br/>
-					<br/>
-
-					{this.renderRevenueShare()}
+						Export CSV
+					</Button>
+					<Button
+						href={`/exports/reports/?type=summary&event_id=${
+							this.props.eventId
+						}`}
+						target={"_blank"}
+						iconUrl="/icons/pdf-active.svg"
+						variant="text"
+					>
+						Export PDF
+					</Button>
 				</div>
-			</Card>
+				<Divider style={{ marginBottom: 40 }}/>
+
+				{this.renderEventSales()}
+
+				<br/>
+				<br/>
+
+				{this.renderRevenueShare()}
+			</div>
 		);
 	}
 }

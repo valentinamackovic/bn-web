@@ -13,14 +13,13 @@ import Loader from "../../../../elements/loaders/Loader";
 import { dollars } from "../../../../../helpers/money";
 import Bigneon from "../../../../../helpers/bigneon";
 import reportDateRangeHeading from "../../../../../helpers/reportDateRangeHeading";
-import Card from "../../../../elements/Card";
 import user from "../../../../../stores/user";
 import { observer } from "mobx-react";
 
 //Temp solution to group price points if they have the same name and price
 //If the API performs this function in the future, this code can be removed
 //Iterates through price points and merges number values for price points that have the same pricing_name and price_in_cents
-const groupPricePointsByNameAndPrice = (data) => {
+const groupPricePointsByNameAndPrice = data => {
 	Object.keys(data).forEach(ticket_type_id => {
 		const ticketType = data[ticket_type_id];
 		const { pricePoints } = ticketType;
@@ -29,7 +28,8 @@ const groupPricePointsByNameAndPrice = (data) => {
 		pricePoints.forEach(pricePoint => {
 			let existingIndex = -1;
 			mergedPricePoints.forEach((mergedPoint, index) => {
-				if (mergedPoint.pricing_name === pricePoint.pricing_name &&
+				if (
+					mergedPoint.pricing_name === pricePoint.pricing_name &&
 					mergedPoint.price_in_cents === pricePoint.price_in_cents &&
 					mergedPoint.hold_id === pricePoint.hold_id
 				) {
@@ -45,7 +45,8 @@ const groupPricePointsByNameAndPrice = (data) => {
 					const pricePointValue = pricePoint[pricePointKey];
 					if (pricePointKey !== "price_in_cents" && !isNaN(pricePointValue)) {
 						//Add it up
-						mergedPricePoints[existingIndex][pricePointKey] = mergedPricePoints[existingIndex][pricePointKey] + pricePointValue;
+						mergedPricePoints[existingIndex][pricePointKey] =
+							mergedPricePoints[existingIndex][pricePointKey] + pricePointValue;
 					}
 				});
 			}
@@ -165,8 +166,7 @@ export const eventSummaryData = (queryParams, onSuccess, onError) => {
 			let otherFees = other_fees[0];
 
 			if (otherFees) {
-				revenueTotals.totalOnlineRevenue +=
-					otherFees.total_client_fee_in_cents;
+				revenueTotals.totalOnlineRevenue += otherFees.total_client_fee_in_cents;
 				revenueTotals.totalRevenue += otherFees.total_client_fee_in_cents;
 			} else {
 				otherFees = { total_client_fee_in_cents: 0 };
@@ -246,10 +246,7 @@ const summaryAuditCSVRows = (eventSales, salesTotals) => {
 };
 
 const styles = theme => ({
-	root: {
-		padding: theme.spacing.unit * 4,
-		marginBottom: theme.spacing.unit
-	},
+	root: {},
 	subHeading: {
 		fontFamily: fontFamilyDemiBold,
 		fontSize: theme.typography.fontSize * 1.3
@@ -279,13 +276,30 @@ class SummaryAudit extends Component {
 		}
 	}
 
-	refreshData(dataParams = { start_utc: null, end_utc: null, startDate: null, endDate: null }) {
+	refreshData(
+		dataParams = {
+			start_utc: null,
+			end_utc: null,
+			startDate: null,
+			endDate: null
+		}
+	) {
 		const { startDate, endDate, start_utc, end_utc } = dataParams;
 
-		this.setState({ ...this.initialState, startDate, endDate, isLoading: true });
+		this.setState({
+			...this.initialState,
+			startDate,
+			endDate,
+			isLoading: true
+		});
 
 		const { eventId, organizationId } = this.props;
-		const summaryQueryParams = { organization_id: organizationId, event_id: eventId, start_utc, end_utc };
+		const summaryQueryParams = {
+			organization_id: organizationId,
+			event_id: eventId,
+			start_utc,
+			end_utc
+		};
 
 		//Refresh event summary
 		eventSummaryData(
@@ -293,7 +307,7 @@ class SummaryAudit extends Component {
 			({ eventSales, salesTotals }) => {
 				this.setState({ eventSales, salesTotals, isLoading: false });
 			},
-			(error) => {
+			error => {
 				console.error(error);
 				this.setState({ eventSales: false, isLoading: false });
 
@@ -301,7 +315,8 @@ class SummaryAudit extends Component {
 					error,
 					defaultMessage: "Loading event transaction report failed."
 				});
-			});
+			}
+		);
 
 		//Refresh today's summary
 		const yesterday_utc = moment
@@ -326,20 +341,23 @@ class SummaryAudit extends Component {
 		eventSummaryData(
 			todayQueryParams,
 			({ eventSales, salesTotals }) => {
-				this.setState({ todayEventSales: eventSales, todaySalesTotals: salesTotals }, () => {
-					const { onLoad } = this.props;
-					onLoad ? onLoad() : null;
-				});
+				this.setState(
+					{ todayEventSales: eventSales, todaySalesTotals: salesTotals },
+					() => {
+						const { onLoad } = this.props;
+						onLoad ? onLoad() : null;
+					}
+				);
 			},
-			(error) => {
+			error => {
 				console.error(error);
 
 				notifications.showFromErrorResponse({
 					error,
 					defaultMessage: "Loading today's event transaction report failed."
 				});
-			});
-
+			}
+		);
 	}
 
 	exportCSV() {
@@ -370,7 +388,9 @@ class SummaryAudit extends Component {
 		}
 
 		csvRows.push([title]);
-		csvRows.push([`Transactions occurring ${reportDateRangeHeading(startDate, endDate)}`]);
+		csvRows.push([
+			`Transactions occurring ${reportDateRangeHeading(startDate, endDate)}`
+		]);
 
 		csvRows.push([""]);
 		csvRows.push([""]);
@@ -384,7 +404,9 @@ class SummaryAudit extends Component {
 		csvRows.push([""]);
 
 		//Date range sales:
-		csvRows.push([`Sales occurring ${reportDateRangeHeading(startDate, endDate)}`]);
+		csvRows.push([
+			`Sales occurring ${reportDateRangeHeading(startDate, endDate)}`
+		]);
 		const dateRangeRows = summaryAuditCSVRows(eventSales, salesTotals);
 		csvRows = [...csvRows, ...dateRangeRows];
 
@@ -408,7 +430,10 @@ class SummaryAudit extends Component {
 		return (
 			<div>
 				<Typography className={classes.subHeading}>Today's sales</Typography>
-				<SummaryAuditTable eventSales={todayEventSales} salesTotals={todaySalesTotals}/>
+				<SummaryAuditTable
+					eventSales={todayEventSales}
+					salesTotals={todaySalesTotals}
+				/>
 			</div>
 		);
 	}
@@ -429,8 +454,9 @@ class SummaryAudit extends Component {
 
 		return (
 			<div>
-				<Typography className={classes.subHeading}>Sales
-					occurring {reportDateRangeHeading(startDate, endDate)}</Typography>
+				<Typography className={classes.subHeading}>
+					Sales occurring {reportDateRangeHeading(startDate, endDate)}
+				</Typography>
 				<SummaryAuditTable eventSales={eventSales} salesTotals={salesTotals}/>
 			</div>
 		);
@@ -443,7 +469,8 @@ class SummaryAudit extends Component {
 			return (
 				<div>
 					{this.renderTodayEventSales()}
-					<br/><br/>
+					<br/>
+					<br/>
 					{this.renderDateRangeEventSales()}
 				</div>
 			);
@@ -453,56 +480,57 @@ class SummaryAudit extends Component {
 		const { isLoading } = this.state;
 
 		return (
-			<Card variant={"block"}>
-				<div className={classes.root}>
-					<div
-						style={{
-							display: "flex",
-							minHeight: 60,
-							alignItems: "center"
-						}}
+			<div className={classes.root}>
+				<div
+					style={{
+						display: "flex",
+						minHeight: 60,
+						alignItems: "center"
+					}}
+				>
+					<Typography variant="title">Event summary audit report</Typography>
+					<span style={{ flex: 1 }}/>
+					<Button
+						iconUrl="/icons/csv-active.svg"
+						variant="text"
+						onClick={this.exportCSV.bind(this)}
 					>
-						<Typography variant="title">Event summary audit report</Typography>
-						<span style={{ flex: 1 }}/>
-						<Button
-							iconUrl="/icons/csv-active.svg"
-							variant="text"
-							onClick={this.exportCSV.bind(this)}
-						>
 						Export CSV
-						</Button>
-						<Button
-							href={`/exports/reports/?type=summary_audit&event_id=${this.props.eventId}`}
-							target={"_blank"}
-							iconUrl="/icons/pdf-active.svg"
-							variant="text"
-						>
+					</Button>
+					<Button
+						href={`/exports/reports/?type=summary_audit&event_id=${
+							this.props.eventId
+						}`}
+						target={"_blank"}
+						iconUrl="/icons/pdf-active.svg"
+						variant="text"
+					>
 						Export PDF
-						</Button>
-					</div>
-
-					{currentOrgTimezone ? (
-						<ReportsDate
-							timezone={currentOrgTimezone}
-							onChange={this.refreshData.bind(this)}
-							onChangeButton
-						/>
-					) : null }
-
-					{isLoading ? <Loader/> : (
-						<div>
-							{this.renderTodayEventSales()}
-
-							<div style={{ marginTop: 40 }}/>
-
-							{this.renderDateRangeEventSales()}
-
-						</div>
-					)}
-
-					<div style={{ marginBottom: 40 }}/>
+					</Button>
 				</div>
-			</Card>
+
+				{currentOrgTimezone ? (
+					<ReportsDate
+						timezone={currentOrgTimezone}
+						onChange={this.refreshData.bind(this)}
+						onChangeButton
+					/>
+				) : null}
+
+				{isLoading ? (
+					<Loader/>
+				) : (
+					<div>
+						{this.renderTodayEventSales()}
+
+						<div style={{ marginTop: 40 }}/>
+
+						{this.renderDateRangeEventSales()}
+					</div>
+				)}
+
+				<div style={{ marginBottom: 40 }}/>
+			</div>
 		);
 	}
 }
