@@ -62,10 +62,10 @@ const TransactionRow = props => {
 		...rest
 	} = props;
 
-	let { column_styles } = props;
+	let { columnStyles } = props;
 
-	if (!column_styles) {
-		column_styles = [
+	if (!columnStyles) {
+		columnStyles = [
 			{ flex: 2, textAlign: "left" },
 			{ flex: 1, textAlign: "left" },
 			{ flex: 1, textAlign: "left" },
@@ -86,7 +86,7 @@ const TransactionRow = props => {
 					[classes.totalText]: total
 				})}
 				key={index}
-				style={column_styles[index]}
+				style={columnStyles[index]}
 			>
 				{text}
 			</Typography>
@@ -120,7 +120,7 @@ TransactionRow.propTypes = {
 	onClick: PropTypes.func,
 	ticketTypeRow: PropTypes.bool,
 	noRadius: PropTypes.bool,
-	column_styles: PropTypes.array
+	columnStyles: PropTypes.array
 };
 
 export default withStyles(styles)(TransactionRow);

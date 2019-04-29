@@ -45,7 +45,7 @@ const EventPromoCodesTableView = props => {
 
 	return (
 		<div>
-			<EventSummaryRow heading column_styles={columnStyles}>
+			<EventSummaryRow heading columnStyles={columnStyles}>
 				{EVENT_PROMO_CODE_HEADINGS}
 			</EventSummaryRow>
 			{Object.keys(sales).map(key => {
@@ -54,7 +54,7 @@ const EventPromoCodesTableView = props => {
 						<EventSummaryRow
 							ticketTypeRow
 							gray={true}
-							column_styles={columnStyles}
+							columnStyles={columnStyles}
 						>
 							{[
 								sales[key].promo_code_name,
@@ -73,7 +73,7 @@ const EventPromoCodesTableView = props => {
 						</EventSummaryRow>
 						{sales[key].ticket_types.map((tt, index) => {
 							return (
-								<EventSummaryRow key={index} column_styles={columnStyles}>
+								<EventSummaryRow key={index} columnStyles={columnStyles}>
 									{[
 										tt.ticket_type_name,
 										" ",
@@ -94,7 +94,7 @@ const EventPromoCodesTableView = props => {
 					</div>
 				);
 			})}
-			<EventSummaryRow ticketTypeRow total column_styles={columnStyles}>
+			<EventSummaryRow ticketTypeRow total columnStyles={columnStyles}>
 				{[
 					"Totals",
 					" ",
