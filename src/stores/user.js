@@ -558,6 +558,15 @@ class User {
 
 		return false;
 	}
+
+	@computed
+	get hasEventPromoCodesReport() {
+		if (this.isAdmin) {
+			return true;
+		}
+
+		return false;
+	}
 }
 
 const user = new User();

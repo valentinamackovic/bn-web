@@ -206,7 +206,8 @@ class EventDashboardContainer extends Component {
 			hasEventSummaryReports,
 			hasTicketCountReports,
 			hasEventAuditReports,
-			hasEventSummaryAuditReports
+			hasEventSummaryAuditReports,
+			hasEventPromoCodesReport
 		} = user;
 		const items = [];
 
@@ -285,6 +286,22 @@ class EventDashboardContainer extends Component {
 						onClick={this.handleReportsMenuClose.bind(this)}
 					>
 						Event summary audit report
+					</MenuItem>
+				</Link>
+			);
+		}
+
+		if (hasEventPromoCodesReport) {
+			items.push(
+				<Link
+					key="promo-codes"
+					to={`/admin/events/${event.id}/dashboard/reports/promo-codes`}
+				>
+					<MenuItem
+						selected={isActiveReportMenu("promo-codes")}
+						onClick={this.handleReportsMenuClose.bind(this)}
+					>
+						Event promo codes report
 					</MenuItem>
 				</Link>
 			);

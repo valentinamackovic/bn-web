@@ -11,6 +11,7 @@ import { EventSummaryReport } from "../../../reports/eventSummary/EventSummary";
 import TicketCounts from "../../../reports/counts/TicketCounts";
 import EventAudit from "../../../reports/eventAudit/Audit";
 import EventSummaryAudit from "../../../reports/eventSummaryAudit/SummaryAudit";
+import EventPromoCodesReport from "../../../reports/eventPromoCode/EventPromoCode";
 import Loader from "../../../../../elements/loaders/Loader";
 
 const styles = theme => ({
@@ -95,6 +96,16 @@ class Report extends Component {
 			case "summary-audit":
 				content = (
 					<EventSummaryAudit
+						eventName={eventName}
+						organizationId={organizationId}
+						eventId={eventId}
+					/>
+				);
+				break;
+
+			case "promo-codes":
+				content = (
+					<EventPromoCodesReport
 						eventName={eventName}
 						organizationId={organizationId}
 						eventId={eventId}

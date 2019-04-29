@@ -55,7 +55,7 @@ class TicketHoldList extends Component {
 				const { data } = response.data;
 
 				const ticketTypes = [];
-				data.forEach((ticketType) => {
+				data.forEach(ticketType => {
 					if (ticketType.status !== "Cancelled") {
 						ticketTypes.push(ticketType);
 					}
@@ -81,7 +81,8 @@ class TicketHoldList extends Component {
 				const holds = response.data.data; //TODO Pagination
 
 				this.setState({ holds });
-			}).catch(error => {
+			})
+			.catch(error => {
 				notifications.showFromErrorResponse({
 					error,
 					defaultMessage: "Failed to load holds."
@@ -314,14 +315,27 @@ class TicketHoldList extends Component {
 			const hold = holds.find(c => c.id === showShareableLinkId);
 			const { redemption_code, event_id } = hold;
 
-			url = `${window.location.protocol}//${window.location.host}/events/${event_id}/tickets?code=${redemption_code}`;
+			url = `${window.location.protocol}//${
+				window.location.host
+			}/events/${event_id}/tickets?code=${redemption_code}`;
 		}
 
 		return (
-			<Dialog iconUrl={"/icons/link-white.svg"} title={"Shareable link"} open={!!showShareableLinkId} onClose={onClose}>
+			<Dialog
+				iconUrl={"/icons/link-white.svg"}
+				title={"Shareable link"}
+				open={!!showShareableLinkId}
+				onClose={onClose}
+			>
 				<div>
 					<div className={classes.shareableLinkContainer}>
-						<a href={url} target={"_blank"} className={classes.shareableLinkText}>{url}</a>
+						<a
+							href={url}
+							target={"_blank"}
+							className={classes.shareableLinkText}
+						>
+							{url}
+						</a>
 					</div>
 					<div style={{ display: "flex" }}>
 						<Button style={{ flex: 1 }} onClick={onClose}>

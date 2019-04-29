@@ -15,6 +15,7 @@ import Transactions from "./transactions/Transactions";
 import TicketCounts from "./counts/TicketCounts";
 import Audit from "./eventAudit/Audit";
 import SummaryAudit from "./eventSummaryAudit/SummaryAudit";
+import EventPromoCodesReport from "./eventPromoCode/EventPromoCode.js";
 import user from "../../../../stores/user";
 
 const styles = theme => ({
@@ -35,8 +36,7 @@ const styles = theme => ({
 		fontFamily: fontFamilyDemiBold,
 		fontSize: theme.typography.fontSize * 2
 	},
-	detail: {
-	}
+	detail: {}
 });
 
 const reportTypes = {
@@ -59,6 +59,10 @@ const reportTypes = {
 	summary_audit: {
 		label: "Event summary audit report",
 		ReportComponent: SummaryAudit
+	},
+	promo_codes: {
+		label: "Event promo codes report",
+		ReportComponent: EventPromoCodesReport
 	}
 };
 
@@ -100,7 +104,6 @@ class ExportPDF extends Component {
 					});
 				});
 		}
-
 	}
 
 	onReportLoad() {
@@ -117,7 +120,7 @@ class ExportPDF extends Component {
 		const { classes } = this.props;
 		const { event, venue, displayLocalVenueTime } = this.state;
 
- 		const event_id = getUrlParam("event_id");
+		const event_id = getUrlParam("event_id");
 		const type = getUrlParam("type");
 
 		const reportType = reportTypes[type];
@@ -125,7 +128,7 @@ class ExportPDF extends Component {
 		if (!reportType) {
 			return <NotFound>Unknown report type</NotFound>;
 		}
-		
+
 		if (event_id && event === null) {
 			return <Loader>Loading event...</Loader>;
 		}
@@ -138,7 +141,10 @@ class ExportPDF extends Component {
 
 		return (
 			<div className={classes.root}>
-				<ExportMetaTags eventName={event ? event.name : null} reportLabel={label}/>
+				<ExportMetaTags
+					eventName={event ? event.name : null}
+					reportLabel={label}
+				/>
 				<div className={classes.header}>
 					<img
 						alt="Header logo"
@@ -147,10 +153,20 @@ class ExportPDF extends Component {
 					/>
 
 					<div>
-						{event ? <Typography className={classes.title}>{event.name}</Typography> : null}
+						{event ? (
+							<Typography className={classes.title}>{event.name}</Typography>
+						) : null}
 						<Typography className={classes.detail}>Report: {label}</Typography>
-						{venue ? <Typography className={classes.detail}>Venue: {venue.name}</Typography> : null}
-						{displayLocalVenueTime ? <Typography className={classes.detail}>Event time: {displayLocalVenueTime}</Typography> : null}
+						{venue ? (
+							<Typography className={classes.detail}>
+								Venue: {venue.name}
+							</Typography>
+						) : null}
+						{displayLocalVenueTime ? (
+							<Typography className={classes.detail}>
+								Event time: {displayLocalVenueTime}
+							</Typography>
+						) : null}
 					</div>
 				</div>
 

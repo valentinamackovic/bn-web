@@ -62,15 +62,19 @@ const TransactionRow = props => {
 		...rest
 	} = props;
 
-	const columnStyles = [
-		{ flex: 2, textAlign: "left" },
-		{ flex: 1, textAlign: "left" },
-		{ flex: 1, textAlign: "left" },
-		{ flex: 1, textAlign: "left" },
-		{ flex: 1, textAlign: "left" },
-		{ flex: 1, textAlign: "left" },
-		{ flex: 1, textAlign: "left" }
-	];
+	let { column_styles } = props;
+
+	if (!column_styles) {
+		column_styles = [
+			{ flex: 2, textAlign: "left" },
+			{ flex: 1, textAlign: "left" },
+			{ flex: 1, textAlign: "left" },
+			{ flex: 1, textAlign: "left" },
+			{ flex: 1, textAlign: "left" },
+			{ flex: 1, textAlign: "left" },
+			{ flex: 1, textAlign: "left" }
+		];
+	}
 
 	const columns = children.map((text, index) => {
 		return (
@@ -82,7 +86,7 @@ const TransactionRow = props => {
 					[classes.totalText]: total
 				})}
 				key={index}
-				style={columnStyles[index]}
+				style={column_styles[index]}
 			>
 				{text}
 			</Typography>
@@ -115,7 +119,8 @@ TransactionRow.propTypes = {
 	heading: PropTypes.bool,
 	onClick: PropTypes.func,
 	ticketTypeRow: PropTypes.bool,
-	noRadius: PropTypes.bool
+	noRadius: PropTypes.bool,
+	column_styles: PropTypes.array
 };
 
 export default withStyles(styles)(TransactionRow);
