@@ -352,7 +352,11 @@ class TicketHoldList extends Component {
 		const { classes } = this.props;
 
 		return (
-			<Container eventId={this.eventId} subheading={"tools"} useCardContainer>
+			<Container
+				eventId={this.eventId}
+				subheading={"tools"}
+				layout={"childrenInsideCard"}
+			>
 				{showHoldDialog && this.renderDialog()}
 				{this.renderDeleteDialog()}
 				{this.renderShareableLink()}

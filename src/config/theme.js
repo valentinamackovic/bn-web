@@ -9,19 +9,6 @@ const borderRadius = 3;
 const dialogBackgroundColor = "rgba(112, 124, 237, 0.7)";
 const callToActionBackground = "linear-gradient(to left, #e53d96, #5491cc)";
 
-const shadows = ["none"];
-let baseShadow = 0.4;
-const increaseBy = 0.01;
-for (let index = 0; index < 24; index++) {
-	baseShadow = (Number(baseShadow) + increaseBy).toFixed(2);
-	const baseShadow2 = `${(baseShadow * 2).toFixed(2)}`;
-	const baseShadow3 = `${(baseShadow * 3).toFixed(2)}`;
-
-	shadows.push(
-		`0px ${baseShadow}px ${baseShadow3}px 0px rgba(0, 0, 0, 0.1),0px ${baseShadow}px ${baseShadow}px 0px rgba(0, 0, 0, 0.1),0px ${baseShadow2}px ${baseShadow}px -${baseShadow}px rgba(0, 0, 0, 0.1)`
-	);
-}
-
 const toolBarHeight = {
 	minHeight: 56,
 	"@media (min-width:0px) and (orientation: landscape)": {
@@ -42,7 +29,6 @@ const theme = createMuiTheme({
 	shape: {
 		borderRadius
 	},
-	shadows,
 	palette: {
 		background: {
 			default: "rgba(245, 247, 250)"
@@ -71,7 +57,7 @@ const theme = createMuiTheme({
 			root: {
 				background: `linear-gradient(45deg, #FFF 30%, #FFF 90%)`,
 				color: textColorPrimary,
-				boxShadow: shadows[0],
+				boxShadow: "none",
 				borderStyle: "solid",
 				borderWidth: 0.6,
 				borderColor: "rgba(157,163,180,0.25)",
@@ -101,7 +87,7 @@ const theme = createMuiTheme({
 		},
 		MuiButton: {
 			root: {
-				boxShadow: shadows[1],
+				boxShadow: "none",
 				borderRadius
 			}
 		},

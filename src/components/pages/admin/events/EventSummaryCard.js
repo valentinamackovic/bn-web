@@ -133,39 +133,27 @@ const EventSummaryCard = props => {
 
 	const mediaStyle = imageUrl ? { backgroundImage: `url(${imageUrl})` } : {};
 
-	const displayEventStartDate = eventDate.format(
-		"dddd, MMMM Do YYYY h:mm A"
-	);
+	const displayEventStartDate = eventDate.format("dddd, MMMM Do YYYY h:mm A");
 
 	let tags = null;
 	if (cancelled) {
-		tags = (
-			<Typography className={classes.cancelled}>
-				Cancelled
-			</Typography>
-		);
+		tags = <Typography className={classes.cancelled}>Cancelled</Typography>;
 	} else {
 		let onSaleTag = null;
 
 		if (eventEnded) {
-			onSaleTag = (
-				<ColorTag variant="disabled">Event ended</ColorTag>
-			);
+			onSaleTag = <ColorTag variant="disabled">Event ended</ColorTag>;
 		} else if (isOnSale) {
-			onSaleTag = (
-				<ColorTag variant="green">On sale</ColorTag>
-			);
+			onSaleTag = <ColorTag variant="green">On sale</ColorTag>;
 		} else if (isExternal) {
-			onSaleTag = (
-				<ColorTag variant="green">External</ColorTag>
-			);
+			onSaleTag = <ColorTag variant="green">External</ColorTag>;
 		}
 
 		tags = (
 			<div className={classes.statusContainer}>
 				<ColorTag
 					style={{ marginRight: 10 }}
-					variant={isPublished ? "default" : "disabled"}
+					variant={isPublished ? "secondary" : "disabled"}
 				>
 					{isPublished ? "Published" : "Draft"}
 				</ColorTag>
@@ -185,17 +173,19 @@ const EventSummaryCard = props => {
 					</Link>
 				</Grid>
 
-				<Grid item xs={12} sm={7} lg={8} className={classes.eventDetailsContainer}>
+				<Grid
+					item
+					xs={12}
+					sm={7}
+					lg={8}
+					className={classes.eventDetailsContainer}
+				>
 					<div className={classes.topRow}>
 						<div className={classes.bottomPadding}>
 							<Link to={`/admin/events/${id}/dashboard`}>
-								<Typography className={classes.eventName}>
-									{name}
-								</Typography>
+								<Typography className={classes.eventName}>{name}</Typography>
 							</Link>
-							<Typography className={classes.venueName}>
-								{venueName}
-							</Typography>
+							<Typography className={classes.venueName}>{venueName}</Typography>
 							<Typography className={classes.eventDate}>
 								{displayEventStartDate}
 							</Typography>
@@ -203,51 +193,64 @@ const EventSummaryCard = props => {
 						<div>{menuButton}</div>
 					</div>
 					<Grid container spacing={0} alignItems="center">
-						<Grid item xs={12} sm={12} md={5} lg={5} className={classes.bottomPadding}>
+						<Grid
+							item
+							xs={12}
+							sm={12}
+							md={5}
+							lg={5}
+							className={classes.bottomPadding}
+						>
 							{tags}
 						</Grid>
 
-						<Grid item xs={12} sm={12} md={7} lg={7} className={classes.bottomPadding}>
-							{!isExternal ?
-								(
-									<div className={classes.totalsContainer}>
-										<Total classes={classes} value={totalSold} color={"#707ced"}>
-											Sold
-										</Total>
+						<Grid
+							item
+							xs={12}
+							sm={12}
+							md={7}
+							lg={7}
+							className={classes.bottomPadding}
+						>
+							{!isExternal ? (
+								<div className={classes.totalsContainer}>
+									<Total classes={classes} value={totalSold} color={"#707ced"}>
+										Sold
+									</Total>
 
-										<div className={classes.totalsDivider}/>
+									<div className={classes.totalsDivider}/>
 
-										<Total classes={classes} value={totalOpen} color={"#afc6d4"}>
-											Open
-										</Total>
+									<Total classes={classes} value={totalOpen} color={"#afc6d4"}>
+										Open
+									</Total>
 
-										<div className={classes.totalsDivider}/>
+									<div className={classes.totalsDivider}/>
 
-										<Total classes={classes} value={totalHeld} color={"#ff22b2"}>
-											Held
-										</Total>
+									<Total classes={classes} value={totalHeld} color={"#ff22b2"}>
+										Held
+									</Total>
 
-										<div className={classes.totalsDivider}/>
+									<div className={classes.totalsDivider}/>
 
-										<Total classes={classes} value={totalCapacity}>
-											Capacity
-										</Total>
+									<Total classes={classes} value={totalCapacity}>
+										Capacity
+									</Total>
 
-										<div className={classes.totalsDivider}/>
+									<div className={classes.totalsDivider}/>
 
-										<Total classes={classes} value={`$${(totalSalesInCents / 100).toFixed(2)}`}>
-											Sales
-										</Total>
-									</div>
-								) :
-								(
-									<div className={classes.totalsContainer}>
-										<Typography variant="caption">Externally Ticketed</Typography>
-									</div>
-								)
-							}
+									<Total
+										classes={classes}
+										value={`$${(totalSalesInCents / 100).toFixed(2)}`}
+									>
+										Sales
+									</Total>
+								</div>
+							) : (
+								<div className={classes.totalsContainer}>
+									<Typography variant="caption">Externally Ticketed</Typography>
+								</div>
+							)}
 						</Grid>
-
 					</Grid>
 					<div>
 						{!isExternal ? (
@@ -262,24 +265,18 @@ const EventSummaryCard = props => {
 								/>
 							</div>
 						) : null}
-						{isExternal ?
-							<div className={classes.expandIconRowPlaceholder}>&nbsp;</div> :
-							(
-								!isExpanded
-									?
-									(
-										<div
-											className={classes.expandIconRow}
-											onClick={() => onExpandClick(id)}
-										>
-											<img src={"/icons/down-active.svg"}/>
-										</div>
-									) :
-									(
-										<div className={classes.expandIconRowPlaceholder}>&nbsp;</div>
-									)
-							)
-						}
+						{isExternal ? (
+							<div className={classes.expandIconRowPlaceholder}>&nbsp;</div>
+						) : !isExpanded ? (
+							<div
+								className={classes.expandIconRow}
+								onClick={() => onExpandClick(id)}
+							>
+								<img src={"/icons/down-active.svg"}/>
+							</div>
+						) : (
+							<div className={classes.expandIconRowPlaceholder}>&nbsp;</div>
+						)}
 					</div>
 				</Grid>
 
@@ -298,7 +295,8 @@ const EventSummaryCard = props => {
 												values={[
 													{
 														label: "Sold",
-														value: ticketType.sold_held + ticketType.sold_unreserved
+														value:
+															ticketType.sold_held + ticketType.sold_unreserved
 													},
 													{ label: "Open", value: ticketType.open },
 													{ label: "Held", value: remainingHeld }

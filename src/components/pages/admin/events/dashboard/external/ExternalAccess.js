@@ -449,7 +449,7 @@ class ExternalAccess extends Component {
 					autoComplete="off"
 					onSubmit={this.inviteUser.bind(this)}
 				>
-					<Grid direction="row" container>
+					<Grid direction="row" container spacing={32}>
 						<Grid item xs={12} md={6}>
 							<InputGroup
 								error={errors.email}
@@ -487,7 +487,11 @@ class ExternalAccess extends Component {
 		};
 
 		return (
-			<Container eventId={this.eventId} subheading={"tools"} useCardContainer>
+			<Container
+				eventId={this.eventId}
+				subheading={"tools"}
+				layout={"childrenInsideCard"}
+			>
 				{this.renderAreYouSureDialog}
 				{this.renderInviteForm}
 				<div>

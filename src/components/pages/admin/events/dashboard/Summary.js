@@ -139,7 +139,6 @@ class Summary extends Component {
 					error
 				});
 			});
-
 	}
 
 	loadTimeZone(id) {
@@ -148,7 +147,7 @@ class Summary extends Component {
 			.then(response => {
 				const { venue } = response.data;
 				if (venue.timezone) {
-					this.setState(({ venueTimeZone: venue.timezone }));
+					this.setState({ venueTimeZone: venue.timezone });
 				}
 			})
 			.catch(error => {
@@ -165,12 +164,14 @@ class Summary extends Component {
 
 		const result = [];
 		for (let index = 0; index < dayStats.length; index++) {
-
-			const dayOfMonth = moment.utc(dayStats[index].date).tz(venueTimezone).format("D");
+			const dayOfMonth = moment
+				.utc(dayStats[index].date)
+				.tz(venueTimezone)
+				.format("D");
 
 			result.push({
 				x: Number(dayOfMonth),
-				y: dayStats[index].revenue_in_cents / 100,//  + Math.random() * 100,
+				y: dayStats[index].revenue_in_cents / 100, //  + Math.random() * 100,
 				tooltipTitle: `$${(dayStats[index].revenue_in_cents / 100).toFixed(2)}`,
 				tooltipText: `${dayStats[index].ticket_sales} Tickets`
 			});
@@ -189,7 +190,6 @@ class Summary extends Component {
 		const { classes } = this.props;
 		return (
 			<Grid container spacing={32}>
-
 				<Grid
 					item
 					xs={12}
@@ -243,7 +243,9 @@ class Summary extends Component {
 					xs={12}
 					sm={6}
 					lg={3}
-					onMouseEnter={() => this.setState({ activeNumbersCard: "attendance" })}
+					onMouseEnter={() =>
+						this.setState({ activeNumbersCard: "attendance" })
+					}
 					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
 				>
 					<NumberCard
@@ -265,7 +267,10 @@ class Summary extends Component {
 					<NumberCard
 						active={activeNumbersCard === "daysLeft"}
 						label="Days left"
-						value={Math.max(0, moment(event.event_start).diff(moment(), "days"))}
+						value={Math.max(
+							0,
+							moment(event.event_start).diff(moment(), "days")
+						)}
 						iconName="events"
 						classes={classes}
 					/>
@@ -280,17 +285,18 @@ class Summary extends Component {
 		return (
 			<Grid container spacing={32}>
 				{ticketTypes.map((ticketType, index) => {
-
 					const remainingHeld = ticketType.held - ticketType.sold_held;
 					// const valueDisplay = ticketType.held > 0 ? `${remainingHeld} / ${ticketType.held}` : "";
 					return (
-
 						<Grid key={index} item xs={12} sm={6} lg={4}>
 							<TicketTypeSalesBarChart
 								name={ticketType.name}
 								totalRevenueInCents={ticketType.sales_total_in_cents}
 								values={[
-									{ label: "Sold", value: ticketType.sold_held + ticketType.sold_unreserved },
+									{
+										label: "Sold",
+										value: ticketType.sold_held + ticketType.sold_unreserved
+									},
 									{ label: "Open", value: ticketType.open },
 									{ label: "Held", value: remainingHeld }
 								]}
@@ -312,21 +318,34 @@ class Summary extends Component {
 
 		if (event.is_external) {
 			return (
-				<Container eventId={event.id} subheading={"summary"}>
+				<Container
+					eventId={event.id}
+					subheading={"summary"}
+					layout={"childrenInsideCard"}
+				>
 					<Grid
 						container
 						direction="column"
 						justify="center"
 						alignItems="center"
 					>
-						<img src="/images/no_sales_data_illustration.png" style={{ margin: 50, width: 200 }}/>
-						<Typography variant="title">This event is externally hosted.</Typography>
+						<img
+							src="/images/no_sales_data_illustration.png"
+							style={{ margin: 50, width: 200 }}
+						/>
+						<Typography variant="title">
+							This event is externally hosted.
+						</Typography>
 					</Grid>
 				</Container>
 			);
 		} else {
 			return (
-				<Container eventId={event.id} subheading={"summary"} useCardContainer>
+				<Container
+					eventId={event.id}
+					subheading={"summary"}
+					layout={"childrenInsideCard"}
+				>
 					{this.renderBarChart()}
 
 					<div style={{ marginTop: 60 }}/>

@@ -5,7 +5,11 @@ import notifications from "../../../../../../stores/notifications";
 import Button from "../../../../../elements/Button";
 import Bigneon from "../../../../../../helpers/bigneon";
 import Container from "../Container";
-import { fontFamilyDemiBold, primaryHex, secondaryHex } from "../../../../../../config/theme";
+import {
+	fontFamilyDemiBold,
+	primaryHex,
+	secondaryHex
+} from "../../../../../../config/theme";
 import Dialog from "../../../../../elements/Dialog";
 import Loader from "../../../../../elements/loaders/Loader";
 
@@ -84,11 +88,17 @@ class LastCall extends Component {
 		this.setState({ isSending: true, openConfirmDialog: false });
 
 		Bigneon()
-			.events.broadcasts.create({ event_id: this.eventId, notification_type: "LastCall" })
+			.events.broadcasts.create({
+				event_id: this.eventId,
+				notification_type: "LastCall"
+			})
 			.then(response => {
 				const { data } = response.data;
 				this.setState({ notificationTriggered: true });
-				notifications.show({ message: "Notification triggered!", variant: "success" });
+				notifications.show({
+					message: "Notification triggered!",
+					variant: "success"
+				});
 			})
 			.catch(error => {
 				this.setState({ isSending: false });
@@ -114,14 +124,28 @@ class LastCall extends Component {
 			>
 				<div className={classes.dialogContainer}>
 					<Typography className={classes.description}>
-						<span className={classes.descriptionHeading}>This can only be sent once during your event.</span>
+						<span className={classes.descriptionHeading}>
+							This can only be sent once during your event.
+						</span>
 						<br/>
-						All attendees who have enabled notifications on their devices will receive the Last Call message
+						All attendees who have enabled notifications on their devices will
+						receive the Last Call message
 					</Typography>
 				</div>
 				<div style={{ display: "flex" }}>
-					<Button style={{ flex: 1, marginRight: 5 }} onClick={() => this.setState({ openConfirmDialog: false })}>Cancel</Button>
-					<Button style={{ flex: 1, marginLeft: 5 }} variant={"callToAction"} onClick={this.onSend.bind(this)}>Send now</Button>
+					<Button
+						style={{ flex: 1, marginRight: 5 }}
+						onClick={() => this.setState({ openConfirmDialog: false })}
+					>
+						Cancel
+					</Button>
+					<Button
+						style={{ flex: 1, marginLeft: 5 }}
+						variant={"callToAction"}
+						onClick={this.onSend.bind(this)}
+					>
+						Send now
+					</Button>
 				</div>
 			</Dialog>
 		);
@@ -147,7 +171,10 @@ class LastCall extends Component {
 		}
 
 		return (
-			<Button variant={"callToAction"} onClick={() => this.setState({ openConfirmDialog: true })}>
+			<Button
+				variant={"callToAction"}
+				onClick={() => this.setState({ openConfirmDialog: true })}
+			>
 				Send now
 			</Button>
 		);
@@ -158,12 +185,22 @@ class LastCall extends Component {
 		const { canTrigger } = this.state;
 
 		return (
-			<Container eventId={this.eventId} subheading={"tools"} useCardContainer>
+			<Container
+				eventId={this.eventId}
+				subheading={"tools"}
+				layout={"childrenInsideCard"}
+			>
 				{this.renderConfirmDialog()}
 				<Typography className={classes.parentHeading}>Hospitality</Typography>
-				<Typography className={classes.heading}>Last call notification</Typography>
+				<Typography className={classes.heading}>
+					Last call notification
+				</Typography>
 
-				<Typography>Last Call Notifications are optimized to drive food and beverage sales by intelligently engaging your attendees prior to the close of service to entice them to make a purchase.</Typography>
+				<Typography>
+					Last Call Notifications are optimized to drive food and beverage sales
+					by intelligently engaging your attendees prior to the close of service
+					to entice them to make a purchase.
+				</Typography>
 
 				<div className={classes.actionButtonContainer}>
 					{this.renderActionButton()}
@@ -171,20 +208,23 @@ class LastCall extends Component {
 
 				{!canTrigger ? (
 					<Typography className={classes.description}>
-						<span className={classes.descriptionHeading}>Why Not?</span> Last call notifications can only be triggered during your event.
+						<span className={classes.descriptionHeading}>Why Not?</span> Last
+						call notifications can only be triggered during your event.
 					</Typography>
 				) : null}
 
-				<br/><br/>
+				<br/>
+				<br/>
 
 				<Typography className={classes.description}>
 					<span className={classes.descriptionHeading}>How does it work?</span>
 					<br/>
-					All attendees who have enabled notifications on their devices will receive the Last Call message on their home screen: “🗣LAST CALL! 🍻The bar is closing soon, grab something now before it’s too late!”
-					The message will be throttled to control traffic flow to your bar.
-					This can only be used once during your event.
+					All attendees who have enabled notifications on their devices will
+					receive the Last Call message on their home screen: “🗣LAST CALL! 🍻The
+					bar is closing soon, grab something now before it’s too late!” The
+					message will be throttled to control traffic flow to your bar. This
+					can only be used once during your event.
 				</Typography>
-
 			</Container>
 		);
 	}

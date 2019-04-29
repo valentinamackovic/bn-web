@@ -73,6 +73,7 @@ const CustomCard = props => {
 		style = {},
 		topBorderHighlight,
 		borderLess,
+		className,
 		...rest
 	} = props;
 
@@ -99,7 +100,8 @@ const CustomCard = props => {
 				classes={{
 					root: classNames(
 						classes.root,
-						classes[variant] ? classes[variant] : classes.default
+						classes[variant] ? classes[variant] : classes.default,
+						className
 					),
 					label: classes.label
 				}}
@@ -120,6 +122,7 @@ CustomCard.defaultPropTypes = {
 };
 
 CustomCard.propTypes = {
+	className: PropTypes.string,
 	topBorderHighlight: PropTypes.bool,
 	classes: PropTypes.object.isRequired,
 	iconUrl: PropTypes.string,

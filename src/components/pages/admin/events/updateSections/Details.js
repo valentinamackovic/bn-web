@@ -1,7 +1,14 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
-import { withStyles, Grid, Collapse, Hidden, ListItemText, TextField } from "@material-ui/core";
+import {
+	withStyles,
+	Grid,
+	Collapse,
+	Hidden,
+	ListItemText,
+	TextField
+} from "@material-ui/core";
 import moment from "moment-timezone";
 
 import Button from "../../../../elements/Button";
@@ -72,7 +79,8 @@ const validateFields = event => {
 	}
 
 	if (privateAccessCode && privateAccessCode.length > 6) {
-		errors.privateAccessCode = "Access code needs to be less than 6 characters.";
+		errors.privateAccessCode =
+			"Access code needs to be less than 6 characters.";
 	}
 
 	//TODO validate all fields
@@ -120,10 +128,7 @@ const formatDataForSaving = (event, organizationId) => {
 		private_access_code: privateAccessCode
 	};
 
-	if (
-		eventDate &&
-		moment(eventDate).isValid()
-	) {
+	if (eventDate && moment(eventDate).isValid()) {
 		eventDetails.event_start = moment
 			.utc(eventDate)
 			.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
@@ -154,7 +159,10 @@ const formatDataForSaving = (event, organizationId) => {
 			.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
 	} else {
 		//Set default if not set
-		const overrideEndTime = moment(eventDate).add(DEFAULT_END_TIME_HOURS_AFTER_SHOW_TIME, "h");
+		const overrideEndTime = moment(eventDate).add(
+			DEFAULT_END_TIME_HOURS_AFTER_SHOW_TIME,
+			"h"
+		);
 		eventDetails.event_end = moment
 			.utc(overrideEndTime)
 			.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
@@ -177,7 +185,7 @@ const formatDataForSaving = (event, organizationId) => {
 	return eventDetails;
 };
 
-const formatDataForInputs = (event) => {
+const formatDataForInputs = event => {
 	const {
 		age_limit,
 		door_time,
@@ -201,11 +209,14 @@ const formatDataForInputs = (event) => {
 		private_access_code
 	} = event;
 
-	const tomorrowNoon = moment.utc().add(1, "d").set({
-		hour: "12",
-		minute: "00",
-		second: "00"
-	});
+	const tomorrowNoon = moment
+		.utc()
+		.add(1, "d")
+		.set({
+			hour: "12",
+			minute: "00",
+			second: "00"
+		});
 
 	const eventDate = event_start
 		? moment.utc(event_start, moment.HTML5_FMT.DATETIME_LOCAL_MS)
@@ -265,7 +276,10 @@ class Details extends Component {
 		}
 		return {
 			value: i - 1,
-			label: i - 1 === 1 ? "1 hour before showtime" : `${i - 1} hours before showtime`
+			label:
+				i - 1 === 1
+					? "1 hour before showtime"
+					: `${i - 1} hours before showtime`
 		};
 	});
 
@@ -349,7 +363,9 @@ class Details extends Component {
 		const { override_status } = eventUpdateStore.event;
 
 		const statusOptions = [{ value: false, label: "Auto" }];
-		const eventOverrideStatusEnum = Bn.Enums ? Bn.Enums.EventOverrideStatus : {};
+		const eventOverrideStatusEnum = Bn.Enums
+			? Bn.Enums.EventOverrideStatus
+			: {};
 		const eventOverrideStatusString = Bn.Enums
 			? Bn.Enums.EVENT_OVERRIDE_STATUS_STRING
 			: {};
@@ -410,7 +426,7 @@ class Details extends Component {
 		const { classes } = this.props;
 		let { ageLimit } = eventUpdateStore.event;
 
-		ageLimit = (ageLimit === undefined ? "0" : ageLimit + "");
+		ageLimit = ageLimit === undefined ? "0" : ageLimit + "";
 
 		const ageLimits = [
 			{ value: "0", label: "This event is all ages" },
@@ -451,15 +467,7 @@ class Details extends Component {
 		//TODO There is definitely a better way to do this using an autocomplete
 		return (
 			<div>
-				{isCustom === true ?
-					(
-						this.renderAgeInput()
-					) :
-					(
-						this.renderAgeSelect()
-
-					)
-				}
+				{isCustom === true ? this.renderAgeInput() : this.renderAgeSelect()}
 			</div>
 		);
 	}
@@ -583,7 +591,9 @@ class Details extends Component {
 						label="Private access code (Disables public access without code)"
 						placeholder="eg. p@swd!"
 						type="text"
-						onChange={e => this.changeDetails({ privateAccessCode: e.target.value })}
+						onChange={e =>
+							this.changeDetails({ privateAccessCode: e.target.value })
+						}
 						onBlur={validateFields}
 					/>
 				</Grid>
@@ -699,7 +709,7 @@ class Details extends Component {
 						error={errors.endTime}
 						value={displayEndTime}
 						name="endTime"
-						label="Event end date *"
+						label="End date *"
 						onChange={newEndDate => {
 							const updatedEndTime = newEndDate;
 

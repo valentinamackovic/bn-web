@@ -24,7 +24,7 @@ const styles = theme => ({
 		paddingTop: theme.spacing.unit,
 		paddingBottom: theme.spacing.unit / 2
 	},
-	default: {
+	secondary: {
 		backgroundColor: "#FFE8F7",
 		color: secondaryHex
 	},
@@ -40,7 +40,9 @@ const styles = theme => ({
 		color: "inherit",
 		fontSize: theme.typography.fontSize * 0.9,
 		fontFamily: fontFamilyDemiBold,
-		display: "inline-block"
+		whiteSpace: "nowrap",
+		textOverflow: "ellipsis",
+		overflow: "hidden"
 	}
 });
 
@@ -63,13 +65,13 @@ const ColorTag = props => {
 
 ColorTag.defaultProps = {
 	style: {},
-	variant: "default",
+	variant: "secondary",
 	size: "medium"
 };
 
 ColorTag.propTypes = {
 	classes: PropTypes.object.isRequired,
-	variant: PropTypes.oneOf(["default", "green", "disabled"]),
+	variant: PropTypes.oneOf(["secondary", "green", "disabled"]),
 	children: PropTypes.oneOfType([
 		PropTypes.element,
 		PropTypes.array,

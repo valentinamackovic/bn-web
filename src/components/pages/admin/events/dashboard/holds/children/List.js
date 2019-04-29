@@ -117,7 +117,6 @@ class ChildrenList extends Component {
 				// if (action === "Split") {
 				// 	this.setState({ activeHoldId: id, showDialog: true, holdType: HOLD_TYPES.SPLIT });
 				// }
-				// console.log(action, id);
 			};
 
 			return (
@@ -207,7 +206,11 @@ class ChildrenList extends Component {
 		const { classes } = this.props;
 
 		return (
-			<Container eventId={this.eventId} subheading={"tools"} useCardContainer>
+			<Container
+				eventId={this.eventId}
+				subheading={"tools"}
+				layout={"childrenInsideCard"}
+			>
 				{showDialog && this.renderDialog()}
 
 				<div style={{ display: "flex" }}>
