@@ -266,12 +266,16 @@ class Transactions extends Component {
 		page = 0,
 		limit = LINE_LIMIT_PER_PAGE
 	) {
-		const { startDate, endDate, start_utc, end_utc } = dataParams;
-
+		const { startDate, endDate, end_utc } = dataParams;
+		let { start_utc } = dataParams;
 		this.currentDateParams = dataParams;
 
 		const { eventId, organizationId, onLoad } = this.props;
 		const { searchQuery } = this.state;
+
+		if (searchQuery) {
+			start_utc = null;
+		}
 
 		let queryParams = {
 			organization_id: organizationId,
@@ -416,7 +420,7 @@ class Transactions extends Component {
 	}
 
 	render() {
-		const { eventId, classes, printVersion } = this.props;
+		const { eventId, classes, printVersion, salesStart } = this.props;
 
 		if (printVersion) {
 			return this.renderList();
@@ -485,6 +489,7 @@ class Transactions extends Component {
 						timezone={currentOrgTimezone}
 						onChange={this.refreshData.bind(this)}
 						defaultStartTimeBeforeNow={{ value: 1, unit: "M" }}
+						salesStart={salesStart}
 						onChangeButton
 						onChangeOnLoad
 					/>

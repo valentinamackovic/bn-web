@@ -32,8 +32,8 @@ class Report extends Component {
 		Bigneon()
 			.events.read({ id: eventId })
 			.then(response => {
-				const { name } = response.data;
-				this.setState({ eventName: name });
+				const { name, sales_start_date } = response.data;
+				this.setState({ eventName: name, salesStart: sales_start_date });
 			})
 			.catch(error => {
 				console.error(error);
@@ -49,7 +49,7 @@ class Report extends Component {
 			return <Loader/>;
 		}
 
-		const { eventName } = this.state;
+		const { eventName, salesStart } = this.state;
 
 		let content;
 
@@ -58,6 +58,8 @@ class Report extends Component {
 				content = (
 					<TransactionsList
 						eventName={eventName}
+						eventId={eventId}
+						salesStart={salesStart}
 						organizationId={organizationId}
 						eventId={eventId}
 					/>
