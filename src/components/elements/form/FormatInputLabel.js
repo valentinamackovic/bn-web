@@ -1,24 +1,37 @@
 import React from "react";
 import { withStyles } from "@material-ui/core";
 import PropTypes from "prop-types";
-import InputLabel from "@material-ui/core/InputLabel";
 
-import { secondaryHex } from "../../../config/theme";
+import { secondaryHex, textFieldLabelStyle } from "../../../config/theme";
 
 const styles = theme => {
 	return {
+		root: textFieldLabelStyle,
 		astrix: {
 			color: secondaryHex
 		},
 		superText: {
-			cursor: "pointer"
+			color: secondaryHex,
+			cursor: "pointer",
+			textTransform: "none",
+			textDecoration: "underline"
 		}
 	};
 };
 
 //If it ends in an asterisk, change that color of that asterisk
-const FormatInputLabel = ({ classes, children, superText, onSuperTextClick, extra }) => {
-	const superTextLabel = superText ? <span className={classes.superText} onClick={onSuperTextClick}> ({superText})</span> : null;
+const FormatInputLabel = ({
+	classes,
+	children,
+	superText,
+	onSuperTextClick,
+	extra
+}) => {
+	const superTextLabel = superText ? (
+		<span className={classes.superText} onClick={onSuperTextClick}>
+			{superText}
+		</span>
+	) : null;
 
 	if (children && children.endsWith("*")) {
 		return (
@@ -30,7 +43,13 @@ const FormatInputLabel = ({ classes, children, superText, onSuperTextClick, extr
 		);
 	}
 
-	return <span>{children}{superTextLabel}</span>;
+	return (
+		<span className={classes.root}>
+			{children}
+			{superTextLabel ? " " : ""}
+			{superTextLabel}
+		</span>
+	);
 };
 
 FormatInputLabel.propTypes = {
@@ -38,8 +57,13 @@ FormatInputLabel.propTypes = {
 	children: PropTypes.string.isRequired,
 	superText: PropTypes.string,
 	onSuperTextClick: (props, propName, componentName) => {
-		if ((props.superText && (props[propName] == undefined || typeof (props[propName]) != "function"))) {
-			return new Error(`${componentName} is a required function if superText is set.`);
+		if (
+			props.superText &&
+			(props[propName] == undefined || typeof props[propName] != "function")
+		) {
+			return new Error(
+				`${componentName} is a required function if superText is set.`
+			);
 		}
 	}
 };

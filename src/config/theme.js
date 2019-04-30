@@ -21,6 +21,13 @@ const fontFamily = "TTCommons-Regular";
 const fontFamilyBold = "TTCommons-Bold";
 const fontFamilyDemiBold = "TTCommons-DemiBold";
 
+const textFieldLabelStyle = {
+	fontFamily,
+	color: "#3c383f",
+	textTransform: "capitalize",
+	fontSize: 16
+};
+
 const theme = createMuiTheme({
 	typography: {
 		fontFamily,
@@ -70,15 +77,11 @@ const theme = createMuiTheme({
 		MuiInput: {
 			root: {
 				fontFamily,
-				fontSize: 17
+				fontSize: 16
 			}
 		},
 		MuiInputLabel: {
-			root: {
-				fontFamily,
-				color: textColorPrimary,
-				textTransform: "capitalize"
-			}
+			root: textFieldLabelStyle
 		},
 		MuiFormHelperText: {
 			root: {
@@ -147,5 +150,6 @@ export {
 	callToActionBackground,
 	fontFamily,
 	fontFamilyBold,
-	fontFamilyDemiBold
+	fontFamilyDemiBold,
+	textFieldLabelStyle
 };

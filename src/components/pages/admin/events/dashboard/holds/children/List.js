@@ -39,8 +39,8 @@ class ChildrenList extends Component {
 			.then(response => {
 				const holdDetails = response.data;
 				this.setState({ holdDetails }, () => this.refreshChildren());
-
-			}).catch(error => {
+			})
+			.catch(error => {
 				notifications.showFromErrorResponse({
 					error,
 					defaultMessage: "Failed to load holds."
@@ -70,7 +70,8 @@ class ChildrenList extends Component {
 
 	refreshChildren() {
 		if (this.eventId && this.holdId) {
-			Bigneon().holds.children.index({ hold_id: this.holdId })
+			Bigneon()
+				.holds.children.index({ hold_id: this.holdId })
 				.then(response => {
 					//TODO Pagination
 					this.setState({ children: response.data.data });

@@ -14,12 +14,15 @@ import { primaryHex } from "../../../config/theme";
 import Button from "../../elements/Button";
 import Loader from "../../elements/loaders/Loader";
 import loadGoogleMaps from "../../../helpers/loadGoogleMaps";
+import FormatInputLabel from "../../elements/form/FormatInputLabel";
 
 const styles = theme => {
 	return {
 		formControl: {
-			marginTop: theme.spacing.unit * 2,
 			width: "100%"
+		},
+		labelContainer: {
+			marginBottom: theme.spacing.unit
 		}
 	};
 };
@@ -38,7 +41,10 @@ class LocationInputGroup extends React.Component {
 		loadGoogleMaps();
 
 		this.updateAPIScriptLoaded();
-		this.checkForLoadedScriptTimeout = setTimeout(this.updateAPIScriptLoaded.bind(this), 500);
+		this.checkForLoadedScriptTimeout = setTimeout(
+			this.updateAPIScriptLoaded.bind(this),
+			500
+		);
 	}
 
 	componentWillUnmount() {
@@ -64,7 +70,7 @@ class LocationInputGroup extends React.Component {
 			onLatLngResult,
 			onFullResult,
 			onError
-		} = this.props;  
+		} = this.props;
 
 		const { showGoogle } = this.state;
 
@@ -125,7 +131,7 @@ class LocationInputGroup extends React.Component {
 					value={address}
 					onChange={onAddressChange}
 					onSelect={this.onSelect.bind(this)}
-					onError={(e) => {
+					onError={e => {
 						if (e !== "ZERO_RESULTS") {
 							onError(e);
 							this.setState({ showGoogle: false, overrideManualEntry: true });
@@ -144,6 +150,11 @@ class LocationInputGroup extends React.Component {
 								aria-describedby={`location`}
 								error
 							>
+								{label ? (
+									<span className={classes.labelContainer}>
+										<FormatInputLabel>{label}</FormatInputLabel>
+									</span>
+								) : null}
 								<TextField
 									{...getInputProps({
 										placeholder:
@@ -151,7 +162,6 @@ class LocationInputGroup extends React.Component {
 										className: "location-search-input"
 									})}
 									error={!!error}
-									label={label}
 								/>
 								<FormHelperText id={`${name}-error-text`}>
 									{error}
@@ -205,7 +215,7 @@ class LocationInputGroup extends React.Component {
 		const { showManualEntry } = this.props;
 		return (
 			<div>
-				{(this.renderGoogle())}
+				{this.renderGoogle()}
 				{!showManualEntry || !overrideManualEntry ? (
 					<div>
 						<Button
@@ -217,14 +227,10 @@ class LocationInputGroup extends React.Component {
 					</div>
 				) : null}
 				<Collapse in={overrideManualEntry || showManualEntry}>
-					<div>
-						{(this.renderMissingGoogle())}
-					</div>
+					<div>{this.renderMissingGoogle()}</div>
 				</Collapse>
 			</div>
-
 		);
-
 	}
 }
 
@@ -241,7 +247,6 @@ LocationInputGroup.propTypes = {
 	onLatLngResult: PropTypes.func.isRequired,
 	onFullResult: PropTypes.func.isRequired,
 	showManualEntry: PropTypes.bool
-
 };
 
 export default withStyles(styles)(LocationInputGroup);
