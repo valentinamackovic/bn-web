@@ -143,7 +143,13 @@ class Transactions extends Component {
 					"Face value",
 					"Service fees",
 					"Discount",
-					"Gross"
+					"Gross",
+					"Source",
+					"Medium",
+					"Campaign",
+					"Term",
+					"Content",
+					"Platform"
 				]);
 
 				items.forEach(item => {
@@ -173,7 +179,13 @@ class Transactions extends Component {
 						last_name,
 						email,
 						promo_quantity,
-						promo_discount_value_in_cents
+						promo_discount_value_in_cents,
+						source,
+						medium,
+						campaign,
+						term,
+						content,
+						platform
 					} = item;
 
 					csvRows.push([
@@ -197,7 +209,13 @@ class Transactions extends Component {
 						dollars((quantity - refunded_quantity) * unit_price_in_cents), //Face value
 						dollars(event_fee_gross_in_cents_total + gross_fee_in_cents_total),
 						dollars(promo_quantity * promo_discount_value_in_cents),
-						dollars(gross)
+						dollars(gross),
+						source,
+						medium,
+						campaign,
+						term,
+						content,
+						platform
 					]);
 				});
 
@@ -360,7 +378,16 @@ class Transactions extends Component {
 		//If we're showing this on an org level then we need to show event names
 		const includeEventName = !this.props.eventId;
 
-		const ths = ["Order ID", "Name", "Email", "Date/time", "Qty", "Gross"];
+		const ths = [
+			"Order ID",
+			"Name",
+			"Email",
+			"Date/time",
+			"Qty",
+			"Gross",
+			"Source",
+			"Platform"
+		];
 
 		if (includeEventName) {
 			ths.splice(1, 0, "Event");
@@ -385,7 +412,13 @@ class Transactions extends Component {
 						last_name,
 						email,
 						refunded_quantity,
-						order_id
+						order_id,
+						source,
+						medium,
+						campaign,
+						term,
+						content,
+						platform
 					} = item;
 
 					const tds = [
@@ -394,7 +427,9 @@ class Transactions extends Component {
 						email,
 						formattedDate,
 						quantity - refunded_quantity,
-						dollars(gross)
+						dollars(gross),
+						source,
+						platform
 					];
 
 					if (includeEventName) {
