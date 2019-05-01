@@ -5,13 +5,11 @@ import Divider from "../../../../common/Divider";
 import Button from "../../../../elements/Button";
 import { fontFamilyDemiBold } from "../../../../../config/theme";
 import notifications from "../../../../../stores/notifications";
-import { EventSalesTable } from "../eventSummary/EventSalesTable";
-import EventTicketCountTable from "../counts/EventTicketCountTable";
 import downloadCSV from "../../../../../helpers/downloadCSV";
-import ticketCountReport from "../../../../../stores/reports/ticketCountReport";
-import summaryReport from "../../../../../stores/reports/summaryReport";
+import promoCodeReport from "../../../../../stores/reports/promoCodeReport";
 import { observer } from "mobx-react";
 import Loader from "../../../../elements/loaders/Loader";
+import { EventPromoCodesTable } from "./EventPromoCodeTable";
 
 const styles = theme => ({
 	root: {},
@@ -22,7 +20,7 @@ const styles = theme => ({
 });
 
 @observer
-class Audit extends Component {
+class EventPromoCodesReport extends Component {
 	constructor(props) {
 		super(props);
 
@@ -38,19 +36,13 @@ class Audit extends Component {
 
 		const queryParams = { organization_id: organizationId, event_id: eventId };
 
-		//TODO date filter
-		//start_utc
-		//end_utc
-
-		//Refresh ticket counts
-		ticketCountReport.fetchCountAndSalesData(queryParams, false, onLoad);
+		//Refresh promo code sales data
+		promoCodeReport.fetchSalesData(queryParams, onLoad);
 	}
 
 	exportCSV() {
-		const { eventId } = this.props;
-
-		const { tickets = {} } = ticketCountReport.dataByPrice[eventId];
-		if (!Object.keys(tickets).length) {
+		const { salesData } = promoCodeReport.salesByPromoCode;
+		if (!Object.keys(salesData).length) {
 			return notifications.show({
 				message: "No rows to export.",
 				variant: "warning"
@@ -61,7 +53,7 @@ class Audit extends Component {
 
 		let csvRows = [];
 
-		let title = "Event audit report";
+		let title = "Event promo code report";
 		if (eventName) {
 			title = `${title} - ${eventName}`;
 		}
@@ -70,67 +62,36 @@ class Audit extends Component {
 		csvRows.push([""]);
 
 		//Sales details:
-
-		csvRows.push(["All event sales"]);
-
-		const eventSalesRows = summaryReport.salesCsvData(
-			ticketCountReport.dataByPrice[eventId]
+		const eventSalesRows = promoCodeReport.csv(
+			promoCodeReport.salesByPromoCode
 		);
 		csvRows = [...csvRows, ...eventSalesRows];
 
 		csvRows.push([""]);
 		csvRows.push([""]);
 
-		const ticketCountRows = ticketCountReport.csv(
-			ticketCountReport.dataByPrice[eventId]
-		);
-		csvRows = [...csvRows, ...ticketCountRows];
-
-		downloadCSV(csvRows, "event-audit-report");
+		downloadCSV(csvRows, "event-promo-code-report");
 	}
 
-	renderEventSales() {
-		const { eventId } = this.props;
-		const eventSales = ticketCountReport.dataByPrice[eventId];
+	renderPromoCodes() {
+		const { salesData, totals } = promoCodeReport.salesByPromoCode;
 
-		if (eventSales === false) {
+		if (salesData === false) {
 			//Query failed
 			return null;
 		}
 
-		if (eventSales === null || eventSales === undefined) {
+		if (salesData === null || salesData === undefined) {
 			return <Loader/>;
 		}
 
-		if (Object.keys(eventSales.tickets).length === 0) {
-			return <Typography>No event summary available.</Typography>;
-		}
-
-		const { classes } = this.props;
-
-		return (
-			<div>
-				<Typography className={classes.subHeading}>All event sales</Typography>
-				<EventSalesTable
-					eventSales={eventSales.tickets}
-					salesTotals={eventSales.totals}
-				/>
-			</div>
-		);
-	}
-
-	renderTicketCounts() {
-		const { eventId, classes } = this.props;
-
-		const eventData = ticketCountReport.dataByTicketPricing[eventId];
-		if (!eventData) {
-			return <Typography>No counts...</Typography>;
+		if (Object.keys(salesData).length === 0) {
+			return <Typography>No event data available.</Typography>;
 		}
 
 		return (
 			<div>
-				<Typography className={classes.subHeading}>Ticket counts</Typography>
-				<EventTicketCountTable ticketCounts={eventData}/>
+				<EventPromoCodesTable sales={salesData} totals={totals}/>
 			</div>
 		);
 	}
@@ -139,14 +100,7 @@ class Audit extends Component {
 		const { printVersion, classes } = this.props;
 
 		if (printVersion) {
-			return (
-				<div>
-					{this.renderEventSales()}
-					<br/>
-					<br/>
-					{this.renderTicketCounts()}
-				</div>
-			);
+			return <div>{this.renderPromoCodes()}</div>;
 		}
 
 		return (
@@ -158,7 +112,7 @@ class Audit extends Component {
 						alignItems: "center"
 					}}
 				>
-					<Typography variant="title">Event audit report</Typography>
+					<Typography variant="title">Event promo codes report</Typography>
 					<span style={{ flex: 1 }}/>
 					<Button
 						iconUrl="/icons/csv-active.svg"
@@ -168,7 +122,9 @@ class Audit extends Component {
 						Export CSV
 					</Button>
 					<Button
-						href={`/exports/reports/?type=audit&event_id=${this.props.eventId}`}
+						href={`/exports/reports/?type=promo_codes&event_id=${
+							this.props.eventId
+						}`}
 						target={"_blank"}
 						iconUrl="/icons/pdf-active.svg"
 						variant="text"
@@ -178,17 +134,13 @@ class Audit extends Component {
 				</div>
 				<Divider style={{ marginBottom: 40 }}/>
 
-				{this.renderEventSales()}
-
-				<div style={{ marginBottom: 40 }}/>
-
-				{this.renderTicketCounts()}
+				{this.renderPromoCodes()}
 			</div>
 		);
 	}
 }
 
-Audit.propTypes = {
+EventPromoCodesReport.propTypes = {
 	classes: PropTypes.object.isRequired,
 	organizationId: PropTypes.string.isRequired,
 	eventId: PropTypes.string.isRequired,
@@ -197,4 +149,4 @@ Audit.propTypes = {
 	onLoad: PropTypes.func
 };
 
-export default withStyles(styles)(Audit);
+export default withStyles(styles)(EventPromoCodesReport);

@@ -59,7 +59,10 @@ const formatCodeForSaving = values => {
 	}
 
 	let db_code_type;
-	if (codeType === CODE_TYPES.NEW_ACCESS || (code_type && code_type === "Access")) {
+	if (
+		codeType === CODE_TYPES.NEW_ACCESS ||
+		(code_type && code_type === "Access")
+	) {
 		discount = { discount_in_cents: 0 };
 		db_code_type = "Access";
 	} else {
@@ -76,7 +79,9 @@ const formatCodeForSaving = values => {
 		event_id,
 		redemption_codes,
 		ticket_type_ids: ticket_type_ids,
-		max_tickets_per_user: Number(maxTicketsPerUser) ? Number(maxTicketsPerUser) : null,
+		max_tickets_per_user: Number(maxTicketsPerUser)
+			? Number(maxTicketsPerUser)
+			: null,
 		...discount
 	};
 	return result;
@@ -103,15 +108,11 @@ const createCodeForInput = (values = {}, timezone) => {
 			ticket_type_ids && ticket_type_ids.length > 0 ? ticket_type_ids[0] : "",
 		maxUses: max_uses || "",
 		redemption_codes: [""],
-		discount_type: discount_as_percentage
-			? "Percentage"
-			: "Absolute",
+		discount_type: discount_as_percentage ? "Percentage" : "Absolute",
 		discountInDollars: discount_in_cents
 			? (discount_in_cents / 100).toFixed(2)
 			: "",
-		discountAsPercentage: discount_as_percentage
-			? discount_as_percentage
-			: "",
+		discountAsPercentage: discount_as_percentage ? discount_as_percentage : "",
 		maxTicketsPerUser: max_tickets_per_user || "",
 		startDate: start_date
 			? moment.utc(start_date, moment.HTML5_FMT.DATETIME_LOCAL_MS).tz(timezone)
@@ -119,7 +120,9 @@ const createCodeForInput = (values = {}, timezone) => {
 		startAtTimeKey: start_date ? "custom" : "now",
 		endDate: end_date
 			? moment.utc(end_date, moment.HTML5_FMT.DATETIME_LOCAL_MS).tz(timezone)
-			: moment.utc(event_start, moment.HTML5_FMT.DATETIME_LOCAL_MS).tz(timezone),
+			: moment
+				.utc(event_start, moment.HTML5_FMT.DATETIME_LOCAL_MS)
+				.tz(timezone),
 		endAtTimeKey: end_date ? "custom" : "never",
 		...values
 	};
@@ -129,21 +132,19 @@ const startAtTimeOptions = [
 	{
 		value: "now",
 		label: "Now",
-		startAtDateString: (startDate) => {
+		startAtDateString: startDate => {
 			return null;
 		}
 	},
 	{
 		value: "custom",
 		label: "Custom",
-		startAtDateString: (startDate) => {
+		startAtDateString: startDate => {
 			if (!startDate) {
 				return null;
 			}
 
-			return moment
-				.utc(startDate)
-				.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
+			return moment.utc(startDate).format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
 		}
 	}
 ];
@@ -152,14 +153,14 @@ const endAtTimeOptions = [
 	{
 		value: "never",
 		label: "Never",
-		endAtDateString: (endAt) => {
+		endAtDateString: endAt => {
 			return null;
 		}
 	},
 	{
 		value: "custom",
 		label: "Custom",
-		endAtDateString: (endAt) => {
+		endAtDateString: endAt => {
 			if (!endAt) {
 				return null;
 			}
@@ -192,12 +193,37 @@ class CodeDialog extends React.Component {
 			errors: {},
 			isSubmitting: false,
 			timezone: null,
+			event_start: null,
 			totalAvailablePerTicketType: {} // {ticketTypeId: count}
 		};
 	}
 
 	componentDidMount() {
+		const { eventId } = this.props;
+
+		Bigneon()
+			.events.read({ id: eventId })
+			.then(response => {
+				const { event_start, venue } = response.data;
+				const { timezone } = venue;
+
+				this.setState({ timezone, event_start }, () => this.loadCode());
+			})
+			.catch(error => {
+				console.error(error);
+				notifications.showFromErrorResponse({
+					defaultMessage: "Loading event details failed.",
+					error
+				});
+			});
+
 		this.loadCode();
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		if (prevProps.codeId !== this.props.codeId) {
+			this.loadCode();
+		}
 	}
 
 	validateFields() {
@@ -210,7 +236,12 @@ class CodeDialog extends React.Component {
 
 		//TODO
 		const { code } = this.state;
-		const { startDate, ticket_type_ids, discount_type, discountAsPercentage } = code;
+		const {
+			startDate,
+			ticket_type_ids,
+			discount_type,
+			discountAsPercentage
+		} = code;
 
 		if (!startDate) {
 			errors.startDate = "Missing start date.";
@@ -223,7 +254,11 @@ class CodeDialog extends React.Component {
 			}
 		}
 
-		if (!ticket_type_ids || typeof ticket_type_ids !== "object" || ticket_type_ids[0] === "") {
+		if (
+			!ticket_type_ids ||
+			typeof ticket_type_ids !== "object" ||
+			ticket_type_ids[0] === ""
+		) {
 			errors.ticket_type_ids = "Missing ticket types.";
 		}
 
@@ -238,42 +273,37 @@ class CodeDialog extends React.Component {
 
 	loadCode() {
 		const { codeId, eventId, ticketTypes } = this.props;
+		const { timezone, event_start } = this.state;
 
-		Bigneon()
-			.events.read({ id: eventId })
-			.then(response => {
-				const { event_start, venue } = response.data;
-				const { timezone } = venue;
-
-				this.setState({ timezone },  () => {
-					if (codeId) {
-						Bigneon()
-							.codes.read({ id: codeId })
-							.then(response => {
-								const code = response.data;
-								this.setState( { code: createCodeForInput({ event_start: event_start, ...code }, timezone) } );
-							}).catch(error => {
-								notification.showFromErrorResponse({
-									defaultMessage: "Failed to load code.",
-									error
-								});
-							});
-					} else {
-						this.setState({
-							code: createCodeForInput({
-								event_id: eventId,
-								event_start: event_start
-							}, timezone)
-						});
-					}
+		if (typeof codeId === "string") {
+			Bigneon()
+				.codes.read({ id: codeId })
+				.then(response => {
+					const code = response.data;
+					this.setState({
+						code: createCodeForInput(
+							{ event_start: event_start, ...code },
+							timezone
+						)
+					});
+				})
+				.catch(error => {
+					notification.showFromErrorResponse({
+						defaultMessage: "Failed to load code.",
+						error
+					});
 				});
-			}).catch(error => {
-				console.error(error);
-				notifications.showFromErrorResponse({
-					defaultMessage: "Loading event details failed.",
-					error
-				});
+		} else {
+			this.setState({
+				code: createCodeForInput(
+					{
+						event_id: eventId,
+						event_start: event_start
+					},
+					timezone
+				)
 			});
+		}
 	}
 
 	onSubmit() {
@@ -290,7 +320,7 @@ class CodeDialog extends React.Component {
 		let storeFunction;
 		switch (codeType) {
 			case CODE_TYPES.NEW_ACCESS:
-			case CODE_TYPES.NEW_DISCOUNT :
+			case CODE_TYPES.NEW_DISCOUNT:
 				storeFunction = Bigneon().events.codes.create;
 				break;
 			case CODE_TYPES.EDIT_ACCESS:
@@ -300,9 +330,19 @@ class CodeDialog extends React.Component {
 		}
 
 		//Get the calculated end_date using the event dates
-		const { endAtTimeKey, startAtTimeKey, endDate, startDate, code_type } = code;
-		const endAtOption = endAtTimeOptions.find(option => option.value === endAtTimeKey);
-		const startAtOption = startAtTimeOptions.find(option => option.value === startAtTimeKey);
+		const {
+			endAtTimeKey,
+			startAtTimeKey,
+			endDate,
+			startDate,
+			code_type
+		} = code;
+		const endAtOption = endAtTimeOptions.find(
+			option => option.value === endAtTimeKey
+		);
+		const startAtOption = startAtTimeOptions.find(
+			option => option.value === startAtTimeKey
+		);
 		const end_date = endAtOption.endAtDateString(endDate);
 		const start_date = startAtOption.startAtDateString(startDate);
 
@@ -318,9 +358,7 @@ class CodeDialog extends React.Component {
 			.then(response => {
 				const { id } = response.data;
 				this.setState({ isSubmitting: false });
-				const message = `Successfully ${
-					code.id ? "updated" : "created"
-				} code`;
+				const message = `Successfully ${code.id ? "updated" : "created"} code`;
 				notification.show({
 					message,
 					variant: "success"
@@ -335,7 +373,6 @@ class CodeDialog extends React.Component {
 					defaultMessage: `${code.id ? "Update" : "Create"} code failed.`
 				});
 			});
-
 	}
 
 	renderTicketTypes() {
@@ -379,15 +416,19 @@ class CodeDialog extends React.Component {
 					input={<Input id="select-multiple-ticket-types"/>}
 					name="ticket-types"
 					renderValue={selected => {
-						return selected.map(s => {
-							return ticketTypeHash[s];
-						}).join(", ");
+						return selected
+							.map(s => {
+								return ticketTypeHash[s];
+							})
+							.join(", ");
 					}}
 					displayEmpty
 				>
 					{items}
 				</Select>
-				<FormHelperText id={`${name}-error-text`}>{errors.ticket_type_ids}</FormHelperText>
+				<FormHelperText id={`${name}-error-text`}>
+					{errors.ticket_type_ids}
+				</FormHelperText>
 			</FormControl>
 		);
 	}
@@ -438,7 +479,10 @@ class CodeDialog extends React.Component {
 
 	renderDiscounts(codeType, classes) {
 		const { code, errors } = this.state;
-		if (codeType === CODE_TYPES.NEW_DISCOUNT || codeType === CODE_TYPES.EDIT_DISCOUNT) {
+		if (
+			codeType === CODE_TYPES.NEW_DISCOUNT ||
+			codeType === CODE_TYPES.EDIT_DISCOUNT
+		) {
 			return (
 				<Grid container>
 					<Grid item xs={12} md={12} lg={12}>
@@ -491,9 +535,7 @@ class CodeDialog extends React.Component {
 			return (
 				<InputGroup
 					InputProps={{
-						startAdornment: (
-							<InputAdornment position="start">$</InputAdornment>
-						)
+						startAdornment: <InputAdornment position="start">$</InputAdornment>
 					}}
 					error={errors.discountInDollars}
 					value={code.discountInDollars}
@@ -510,9 +552,7 @@ class CodeDialog extends React.Component {
 			return (
 				<InputGroup
 					InputProps={{
-						endAdornment: (
-							<InputAdornment position="end">%</InputAdornment>
-						)
+						endAdornment: <InputAdornment position="end">%</InputAdornment>
 					}}
 					error={errors.discountAsPercentage}
 					value={code.discountAsPercentage}
@@ -529,7 +569,10 @@ class CodeDialog extends React.Component {
 	}
 
 	renderStartAtTimeOptions(codeType) {
-		if (codeType === CODE_TYPES.NEW_DISCOUNT || codeType === CODE_TYPES.EDIT_DISCOUNT) {
+		if (
+			codeType === CODE_TYPES.NEW_DISCOUNT ||
+			codeType === CODE_TYPES.EDIT_DISCOUNT
+		) {
 			const { code } = this.state;
 
 			return (
@@ -548,7 +591,10 @@ class CodeDialog extends React.Component {
 	}
 
 	renderEndAtTimeOptions(codeType) {
-		if (codeType === CODE_TYPES.NEW_DISCOUNT || codeType === CODE_TYPES.EDIT_DISCOUNT) {
+		if (
+			codeType === CODE_TYPES.NEW_DISCOUNT ||
+			codeType === CODE_TYPES.EDIT_DISCOUNT
+		) {
 			const { code } = this.state;
 
 			return (
@@ -567,7 +613,10 @@ class CodeDialog extends React.Component {
 	}
 
 	renderCustomStartAtDates(codeType) {
-		if (codeType === CODE_TYPES.NEW_DISCOUNT || codeType === CODE_TYPES.EDIT_DISCOUNT) {
+		if (
+			codeType === CODE_TYPES.NEW_DISCOUNT ||
+			codeType === CODE_TYPES.EDIT_DISCOUNT
+		) {
 			const { code, errors } = this.state;
 
 			if (!code.startAtTimeKey || code.startAtTimeKey !== "custom") {
@@ -637,7 +686,10 @@ class CodeDialog extends React.Component {
 	}
 
 	renderCustomEndAtDates(codeType) {
-		if (codeType === CODE_TYPES.NEW_DISCOUNT || codeType === CODE_TYPES.EDIT_DISCOUNT) {
+		if (
+			codeType === CODE_TYPES.NEW_DISCOUNT ||
+			codeType === CODE_TYPES.EDIT_DISCOUNT
+		) {
 			const { code, errors } = this.state;
 
 			const { endDate } = code;
@@ -745,7 +797,7 @@ class CodeDialog extends React.Component {
 
 		const { code, errors } = this.state;
 
-		const content =  code ? (
+		const content = code ? (
 			<div>
 				<InputGroup
 					error={errors.name}
@@ -793,7 +845,7 @@ class CodeDialog extends React.Component {
 						color="primary"
 						disabled={isSubmitting}
 					>
-					Cancel
+						Cancel
 					</Button>
 					<Button
 						size="large"
@@ -807,13 +859,16 @@ class CodeDialog extends React.Component {
 					</Button>
 				</div>
 			</div>
-		) : <Loader/>;
+		) : (
+			<Loader/>
+		);
 
 		return (
 			<Dialog
 				onClose={onClose}
 				iconUrl={iconUrl}
 				title={`${title}`}
+				open={!!codeId}
 				{...other}
 			>
 				{content}
@@ -825,7 +880,7 @@ class CodeDialog extends React.Component {
 CodeDialog.propTypes = {
 	classes: PropTypes.object.isRequired,
 	codeType: PropTypes.string,
-	codeId: PropTypes.string,
+	codeId: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
 	eventId: PropTypes.string.isRequired,
 	ticketTypes: PropTypes.array,
 	onClose: PropTypes.func.isRequired,

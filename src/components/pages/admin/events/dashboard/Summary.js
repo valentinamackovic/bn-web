@@ -1139,7 +1139,11 @@ class Summary extends Component {
 
 		if (event.is_external) {
 			return (
-				<Container eventId={event.id} subheading={"summary"}>
+				<Container
+					eventId={event.id}
+					subheading={"summary"}
+					layout={"childrenInsideCard"}
+				>
 					<Grid
 						container
 						direction="column"

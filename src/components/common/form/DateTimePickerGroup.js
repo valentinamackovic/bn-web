@@ -46,6 +46,10 @@ const styles = theme => {
 	return {
 		formControl: {
 			width: "100%"
+			//marginTop: theme.spacing.unit
+		},
+		labelContainer: {
+			marginBottom: theme.spacing.unit
 		},
 		popover: {
 			maxHeight: "300px"
@@ -151,7 +155,7 @@ class DateTimePickerGroup extends Component {
 		}
 	};
 
-	onTimeSelected = (newValue) => {
+	onTimeSelected = newValue => {
 		const { onChange } = this.props;
 
 		const newTime = moment.utc(newValue, timeFormat, true);
@@ -209,7 +213,12 @@ class DateTimePickerGroup extends Component {
 			start.add(timeIncrement, "minutes");
 		}
 
-		const { anchorEl, timeFormatted, isTimeValid, displayTimezone } = this.state;
+		const {
+			anchorEl,
+			timeFormatted,
+			isTimeValid,
+			displayTimezone
+		} = this.state;
 
 		let timezoneLabel;
 		if (displayTimezone) {
@@ -222,40 +231,38 @@ class DateTimePickerGroup extends Component {
 				error
 				aria-describedby={`%${name}-error-text`}
 			>
+				<span className={classes.labelContainer}>
+					<FormatInputLabel>{label}</FormatInputLabel>
+					{timezoneLabel}
+				</span>
 				{type === "date" ? (
-					<div>
-						<InlineDatePicker
-							style={{ width: "100%" }}
-							id={name}
-							error={!!error}
-							label={<span><FormatInputLabel>{label}</FormatInputLabel>{timezoneLabel}</span>}
-							value={value}
-							onChange={v => this.onDateChange(v)}
-							onBlur={onBlur}
-							onFocus={onFocus}
-							placeholder={placeholder || placeHolders[type]}
-							format={value && value._z ? value._z.name : "UTC"} //See src/helpers/customPickerUtils.js for the reason the timezone is passed through as the format
-							keyboard
-							InputProps={inputProps}
-							clearable
-							{...additionalProps}
-							ref={node => {
-								this.picker = node;
-							}}
-						/>
-					</div>
-				) : (
-					<div/>
-				)}
+					<InlineDatePicker
+						style={{ width: "100%" }}
+						id={name}
+						error={!!error}
+						value={value}
+						onChange={v => this.onDateChange(v)}
+						onBlur={onBlur}
+						onFocus={onFocus}
+						placeholder={placeholder || placeHolders[type]}
+						format={value && value._z ? value._z.name : "UTC"} //See src/helpers/customPickerUtils.js for the reason the timezone is passed through as the format
+						keyboard
+						InputProps={inputProps}
+						clearable
+						{...additionalProps}
+						ref={node => {
+							this.picker = node;
+						}}
+					/>
+				) : null}
 
 				{type === "time" ? (
-					<div>
+					<span>
 						<TextField
 							disabled={disabled}
 							style={{ width: "100%" }}
 							id={name}
 							name={name}
-							label={<span><FormatInputLabel>{label}</FormatInputLabel>{timezoneLabel}</span>}
 							error={!isTimeValid || !!error}
 							onClick={!disabled ? event => this.onClick(event) : null}
 							value={timeFormatted}
@@ -303,10 +310,8 @@ class DateTimePickerGroup extends Component {
 								</Paper>
 							</ClickAwayListener>
 						</Popover>
-					</div>
-				) : (
-					<div/>
-				)}
+					</span>
+				) : null}
 				<FormHelperText id={`${name}-error-text`}>
 					{!isTimeValid ? "Not a valid time (e.g. 9:30 PM)" : error}
 				</FormHelperText>

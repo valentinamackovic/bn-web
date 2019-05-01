@@ -23,7 +23,7 @@ const styles = theme => ({
 		backgroundColor: "transparent",
 		outline: "none",
 		boxShadow: "none",
-		overflowY: "scroll",
+		overflowY: "auto",
 		maxHeight: "100%"
 	},
 	content: {
@@ -83,7 +83,11 @@ class CustomDialog extends Component {
 					<div>
 						{onClose ? (
 							<div onClick={onClose} className={classes.closeDialogContainer}>
-								<img alt="close" className={classes.closeIcon} src="/icons/delete-active.svg"/>
+								<img
+									alt="close"
+									className={classes.closeIcon}
+									src="/icons/delete-active.svg"
+								/>
 							</div>
 						) : null}
 						{iconUrl ? <TopCardIcon iconUrl={iconUrl}/> : null}
@@ -120,7 +124,6 @@ class CustomDialog extends Component {
 			</Dialog>
 		);
 	}
-
 }
 
 CustomDialog.propTypes = {

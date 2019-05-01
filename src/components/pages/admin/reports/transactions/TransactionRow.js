@@ -50,11 +50,12 @@ const TransactionRow = props => {
 		{ flex: 3, textAlign: "left" },
 		{ flex: 3, textAlign: "left" },
 		{ flex: 1, textAlign: "left" },
+		{ flex: 1, textAlign: "left" },
 		{ flex: 1, textAlign: "left" }
 	];
 
 	//If they're adding the event name, make the second column side
-	if (children.length === 7) {
+	if (children.length === 8) {
 		columnStyles.splice(1, 0, { flex: 3, textAlign: "left" });
 	}
 

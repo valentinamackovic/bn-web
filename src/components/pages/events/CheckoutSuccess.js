@@ -9,7 +9,12 @@ import notifications from "../../../stores/notifications";
 import selectedEvent from "../../../stores/selectedEvent";
 import cart from "../../../stores/cart";
 import EventDetailsOverlayCard from "../../elements/event/EventDetailsOverlayCard";
-import { fontFamilyBold, fontFamilyDemiBold, secondaryHex, textColorPrimary } from "../../../config/theme";
+import {
+	fontFamilyBold,
+	fontFamilyDemiBold,
+	secondaryHex,
+	textColorPrimary
+} from "../../../config/theme";
 import Card from "../../elements/Card";
 import AppButton from "../../elements/AppButton";
 import SMSLinkForm from "../../elements/SMSLinkForm";
@@ -29,7 +34,7 @@ const heroHeight = 800;
 const iPhone5MediaQuery = "@media (max-width:321px)";
 
 const styles = theme => {
-	return ({
+	return {
 		root: {
 			backgroundColor: "#FFFFFF"
 		},
@@ -163,8 +168,13 @@ const styles = theme => {
 			height: 167,
 			padding: theme.spacing.unit,
 			paddingLeft: 65,
+			paddingRight: 65,
 			display: "flex",
-			alignItems: "center"
+			alignItems: "center",
+			[theme.breakpoints.down("md")]: {
+				paddingLeft: 25,
+				paddingRight: 25
+			}
 		},
 		desktopEventDetailContainer: {
 			paddingTop: 4
@@ -194,7 +204,10 @@ const styles = theme => {
 			fontFamily: fontFamilyDemiBold,
 			fontSize: theme.typography.fontSize * 1.75,
 			color: "#FFFFFF",
-			lineHeight: 1
+			lineHeight: 1,
+			[theme.breakpoints.down("md")]: {
+				fontSize: theme.typography.fontSize * 1.52
+			}
 		},
 		desktopFooterText: {
 			color: textColorPrimary
@@ -205,7 +218,7 @@ const styles = theme => {
 			paddingLeft: 82,
 			textAlign: "center"
 		}
-	});
+	};
 };
 
 const EventDetail = ({ classes, children, iconUrl }) => (
@@ -214,9 +227,7 @@ const EventDetail = ({ classes, children, iconUrl }) => (
 			<img className={classes.desktopIcon} src={iconUrl}/>
 		</div>
 
-		<div className={classes.desktopEventDetailContainer}>
-			{children}
-		</div>
+		<div className={classes.desktopEventDetailContainer}>{children}</div>
 	</div>
 );
 
@@ -226,22 +237,39 @@ const Hero = ({ classes, order_id }) => {
 			<TwoColumnLayout
 				col1={(
 					<div className={classes.desktopHeroContent}>
-						<Typography className={classes.desktopHeroTopLine}>Almost done...</Typography>
-						<Typography className={classes.desktopHeroTitle}>Get your tickets!</Typography>
+						<Typography className={classes.desktopHeroTopLine}>
+							Almost done...
+						</Typography>
+						<Typography className={classes.desktopHeroTitle}>
+							Get your tickets!
+						</Typography>
 
 						<span className={classes.underlinedSpacer}/>
 
 						<Typography className={classes.desktopEventDetailText}>
-							To enhance your experience and protect you against counterfeit ticket sales,
+							To enhance your experience and protect you against counterfeit
+							ticket sales,
 							<br/>
-							<span className={classes.boldText}>tickets are accessible through the Big Neon App.</span>
+							<span className={classes.boldText}>
+								tickets are accessible through the Big Neon App.
+							</span>
 						</Typography>
 
-						<br/><br/>
+						<br/>
+						<br/>
 
 						<Typography className={classes.desktopEventDetailText}>
-							{order_id ? <span>Order <span className={classes.boldText}>#{order_id.slice(-8)}</span><br/></span> : null}
-							We’ve also sent your receipt to: <span className={classes.boldText}>{user.email}</span>
+							{order_id ? (
+								<span>
+									Order{" "}
+									<span className={classes.boldText}>
+										#{order_id.slice(-8)}
+									</span>
+									<br/>
+								</span>
+							) : null}
+							We’ve also sent your receipt to:{" "}
+							<span className={classes.boldText}>{user.email}</span>
 						</Typography>
 					</div>
 				)}
@@ -330,7 +358,12 @@ class CheckoutSuccess extends Component {
 			eventStartDateMoment
 		} = event;
 
-		const { mobileDialogOpen, mobileCardSlideIn, order_id, phoneOS } = this.state;
+		const {
+			mobileDialogOpen,
+			mobileCardSlideIn,
+			order_id,
+			phoneOS
+		} = this.state;
 
 		return (
 			<div className={classes.root}>
@@ -372,7 +405,8 @@ class CheckoutSuccess extends Component {
 
 										<div className={classes.desktopCardFooterContainer}>
 											<Typography className={classes.desktopFooterText}>
-											No app? No sweat. Bring your ID and credit card to the will call line to get checked in.
+												No app? No sweat. Bring your ID and credit card to the
+												will call line to get checked in.
 											</Typography>
 										</div>
 									</div>
@@ -396,7 +430,11 @@ class CheckoutSuccess extends Component {
 							<div className={classes.mobileHeaderRow}>
 								{/*TODO once my-events is mobile friendly redirect there?*/}
 								<div onClick={this.goHome.bind(this)}>
-									<img className={classes.mobileHeaderIcon} alt="close" src="/icons/close-white.svg"/>
+									<img
+										className={classes.mobileHeaderIcon}
+										alt="close"
+										src="/icons/close-white.svg"
+									/>
 								</div>
 								<div>
 									{/*<img className={classes.mobileHeaderIcon} alt="share" src="/icons/share-white.svg"/>*/}
@@ -413,8 +451,12 @@ class CheckoutSuccess extends Component {
 								</Typography>
 
 								<Typography className={classes.mobileSuccessText}>
-									To enhance your experience and protect you against counterfeit ticket sales,
-									<span className={classes.boldText}> tickets are accessible through the Big Neon App.</span>
+									To enhance your experience and protect you against counterfeit
+									ticket sales,
+									<span className={classes.boldText}>
+										{" "}
+										tickets are accessible through the Big Neon App.
+									</span>
 								</Typography>
 							</div>
 							<div>
@@ -432,7 +474,8 @@ class CheckoutSuccess extends Component {
 										</div>
 										<div className={classes.cardSpacer}/>
 										<Typography className={classes.mobileFooterText}>
-											No app? No sweat. Bring your ID and credit card to the will call line to get checked in.
+											No app? No sweat. Bring your ID and credit card to the
+											will call line to get checked in.
 										</Typography>
 									</div>
 								</Slide>

@@ -46,6 +46,10 @@ const AdminVenuesList = asyncComponent(() =>
 	import("../pages/admin/venues/List")
 );
 const AdminVenue = asyncComponent(() => import("../pages/admin/venues/Venue"));
+
+const AdminRegionsList = asyncComponent(() =>
+	import("../pages/admin/regions/List")
+);
 const AdminArtistsList = asyncComponent(() =>
 	import("../pages/admin/artists/List")
 );
@@ -61,11 +65,11 @@ const AdminEventDashboardSummary = asyncComponent(() =>
 const AdminEventDashboardHolds = asyncComponent(() =>
 	import("../pages/admin/events/dashboard/holds/List")
 );
+const AdminEventDashboardHoldChildren = asyncComponent(() =>
+	import("../pages/admin/events/dashboard/holds/children/List")
+);
 const AdminEventDashboardCodes = asyncComponent(() =>
 	import("../pages/admin/events/dashboard/codes/List")
-);
-const AdminEventDashboardComps = asyncComponent(() =>
-	import("../pages/admin/events/dashboard/comps/List")
 );
 const AdminEventDashboardReports = asyncComponent(() =>
 	import("../pages/admin/events/dashboard/reports/Index")
@@ -124,6 +128,7 @@ import WidgetLinkBuilder from "../widgets/LinkBuilder";
 import ReceiveTransfer from "../pages/myevents/ReceiveTransfer";
 import GuestList from "../pages/boxoffice/guests/Index";
 import analytics from "../../helpers/analytics";
+import getAllUrlParams from "../../helpers/getAllUrlParams";
 
 const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) => {
 	//If isAuthenticated is null then we're still checking the state
@@ -158,6 +163,8 @@ class Routes extends Component {
 		if (startLoadTime) {
 			analytics.trackPageLoadTime(Date.now() - startLoadTime);
 		}
+		// store url params data for campaign tracking
+		user.setCampaignTrackingData(getAllUrlParams());
 	}
 
 	componentWillUnmount() {
@@ -209,7 +216,7 @@ class Routes extends Component {
 								/>
 								<PrivateRoute
 									exact
-									path="/my-events"
+									path="/my-events/:eventId?"
 									component={MyEvents}
 									isAuthenticated={isAuthenticated}
 								/>
@@ -309,6 +316,12 @@ class Routes extends Component {
 								/>
 								<PrivateRoute
 									exact
+									path="/admin/regions"
+									component={AdminRegionsList}
+									isAuthenticated={isAuthenticated}
+								/>
+								<PrivateRoute
+									exact
 									path="/admin/artists"
 									component={AdminArtistsList}
 									isAuthenticated={isAuthenticated}
@@ -339,8 +352,8 @@ class Routes extends Component {
 								/>
 								<PrivateRoute
 									exact
-									path="/admin/events/:id/dashboard/comps/:holdId"
-									component={AdminEventDashboardComps}
+									path="/admin/events/:id/dashboard/holds/:holdId"
+									component={AdminEventDashboardHoldChildren}
 									isAuthenticated={isAuthenticated}
 								/>
 								<PrivateRoute

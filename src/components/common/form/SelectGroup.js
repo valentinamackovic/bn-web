@@ -5,16 +5,18 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import MenuItem from "@material-ui/core/MenuItem";
-import InputLabel from "@material-ui/core/InputLabel";
 import FormatInputLabel from "../../elements/form/FormatInputLabel";
 
 const styles = theme => ({
 	formControl: {
 		width: "100%",
-		marginTop: theme.spacing.unit * 2
+		marginTop: 2
 	},
 	formControlNoMargin: {
 		width: "100%"
+	},
+	labelContainer: {
+		marginBottom: theme.spacing.unit
 	}
 });
 
@@ -58,9 +60,9 @@ const SelectGroup = props => {
 			aria-describedby={`%${name}-error-text`}
 		>
 			{label ? (
-				<InputLabel shrink htmlFor={name}>
+				<span className={classes.labelContainer}>
 					<FormatInputLabel {...labelProps}>{label}</FormatInputLabel>
-				</InputLabel>
+				</span>
 			) : null}
 			<Select
 				disabled={disabled}

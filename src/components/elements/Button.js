@@ -19,10 +19,14 @@ const styles = theme => {
 		root: {
 			borderRadius: 8,
 			borderStyle: "none",
-			paddingLeft: 30,
-			paddingRight: 30,
+			paddingLeft: 20,
+			paddingRight: 20,
 			paddingTop: 10,
-			paddingBottom: 10
+			paddingBottom: 10,
+			[theme.breakpoints.down("sm")]: {
+				paddingLeft: 10,
+				paddingRight: 10
+			}
 		},
 		primary: {
 			background: primaryHex,
@@ -79,7 +83,9 @@ const styles = theme => {
 		small: {
 			height: 30
 		},
-		medium: {},
+		medium: {
+			paddingBottom: 6
+		},
 		mediumLarge: {
 			height: 50
 		},

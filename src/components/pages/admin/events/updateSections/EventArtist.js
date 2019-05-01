@@ -10,25 +10,24 @@ import CheckBox from "../../../../elements/form/CheckBox";
 
 const styles = theme => ({
 	root: {
-		display: "flex",
-		height: 180
+		display: "flex"
 	},
 	image: {
-		flex: 1,
-		width: "100%",
-		height: "100%",
-		borderRadius: 0,
-
-		[theme.breakpoints.down("sm")]: {
-			flex: 2
-		}
+		height: 200,
+		width: 200,
+		borderRadius: 0
 	},
 	content: {
 		paddingLeft: theme.spacing.unit * 2,
 		//paddingRight: theme.spacing.unit * 2,
 		paddingBottom: theme.spacing.unit,
 		display: "flex",
-		flex: 2
+		flex: 2,
+
+		[theme.breakpoints.down("sm")]: {
+			paddingLeft: theme.spacing.unit,
+			paddingBottom: theme.spacing.unit / 2
+		}
 	},
 	leftColumn: {
 		flex: 1,
@@ -45,7 +44,7 @@ const styles = theme => ({
 	}
 });
 
-const EventArtist = (props) => {
+const EventArtist = props => {
 	const {
 		classes,
 		imgUrl,

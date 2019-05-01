@@ -210,8 +210,8 @@ class CheckoutConfirmation extends Component {
 
 		Bigneon()
 			.cart.checkout({
-				amount: cart.total_in_cents, //TODO remove this amount, we shouldn't be specifying it on the frontend
-				method: method
+				method: method,
+				tracking_data: user.getCampaignTrackingData()
 			})
 			.then(response => {
 				const { data } = response;
@@ -223,6 +223,7 @@ class CheckoutConfirmation extends Component {
 				cart.refreshCart();
 				orders.refreshOrders();
 				tickets.refreshTickets();
+				user.clearCampaignTrackingData();
 
 				const { history } = this.props;
 				const { id } = selectedEvent;

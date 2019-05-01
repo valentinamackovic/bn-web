@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Typography, withStyles } from "@material-ui/core";
+import { Hidden, Typography, withStyles } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -18,11 +18,33 @@ import user from "../../../../../stores/user";
 import ColorTag from "../../../../elements/ColorTag";
 import VisitEventPage from "../../../../elements/VisitEventPage";
 import Loader from "../../../../elements/loaders/Loader";
+import Divider from "../../../../common/Divider";
 
 const styles = theme => ({
 	container: {
-		padding: theme.spacing.unit * 4,
-		marginBottom: theme.spacing.unit
+		paddingTop: theme.spacing.unit * 4,
+		paddingBottom: theme.spacing.unit * 4,
+		paddingLeft: theme.spacing.unit * 8,
+		paddingRight: theme.spacing.unit * 8,
+
+		[theme.breakpoints.down("sm")]: {
+			padding: theme.spacing.unit * 2
+		}
+	},
+	headerContainer: {
+		marginBottom: theme.spacing.unit * 4,
+		[theme.breakpoints.down("sm")]: {
+			marginBottom: theme.spacing.unit
+		}
+	},
+	card: {
+		borderRadius: "6px 6px 0 0",
+		[theme.breakpoints.down("sm")]: {
+			borderRadius: 6
+		}
+	},
+	innerCardContainer: {
+		paddingBottom: theme.spacing.unit * 4
 	},
 	rightHeaderOptions: {
 		display: "flex",
@@ -41,15 +63,29 @@ const styles = theme => ({
 		}
 	},
 	menuContainer: {
-		padding: theme.spacing.unit * 2.5,
-		display: "flex"
+		display: "flex",
+		justifyContent: "flex-start",
+		alignItems: "center"
 	},
 	menuText: {
 		marginRight: theme.spacing.unit * 4
 	},
+	menuDividerContainer: {
+		marginBottom: theme.spacing.unit * 3,
+		marginTop: theme.spacing.unit * 3
+	},
 	tagsContainer: {
 		display: "flex",
 		justifyContent: "flex-start"
+	},
+	menuDropdownContainer: {
+		//borderStyle: "solid",
+		boxShadow: "0 4px 15px 2px rgba(112, 124, 237, 0.17)"
+	},
+	additionalDesktopMenuContent: {
+		flex: 1,
+		display: "flex",
+		justifyContent: "flex-end"
 	}
 });
 
@@ -198,6 +234,7 @@ class EventDashboardContainer extends Component {
 
 	renderReportsMenu() {
 		const { anchorReportsEl } = this.state;
+		const { classes } = this.props;
 		const open = Boolean(anchorReportsEl);
 		const { event } = this.state;
 
@@ -206,7 +243,8 @@ class EventDashboardContainer extends Component {
 			hasEventSummaryReports,
 			hasTicketCountReports,
 			hasEventAuditReports,
-			hasEventSummaryAuditReports
+			hasEventSummaryAuditReports,
+			hasEventPromoCodesReport
 		} = user;
 		const items = [];
 
@@ -290,6 +328,22 @@ class EventDashboardContainer extends Component {
 			);
 		}
 
+		if (hasEventPromoCodesReport) {
+			items.push(
+				<Link
+					key="promo-codes"
+					to={`/admin/events/${event.id}/dashboard/reports/promo-codes`}
+				>
+					<MenuItem
+						selected={isActiveReportMenu("promo-codes")}
+						onClick={this.handleReportsMenuClose.bind(this)}
+					>
+						Event promo codes report
+					</MenuItem>
+				</Link>
+			);
+		}
+
 		if (items.length === 0) {
 			items.push(
 				<MenuItem key="none" onClick={this.handleReportsMenuClose.bind(this)}>
@@ -312,6 +366,9 @@ class EventDashboardContainer extends Component {
 				}}
 				open={open}
 				onClose={this.handleReportsMenuClose.bind(this)}
+				MenuListProps={{
+					className: classes.menuDropdownContainer
+				}}
 			>
 				{items}
 			</Menu>
@@ -372,7 +429,13 @@ class EventDashboardContainer extends Component {
 
 	render() {
 		const { event } = this.state;
-		const { classes, children, subheading, useCardContainer } = this.props;
+		const {
+			classes,
+			children,
+			subheading,
+			layout,
+			additionalDesktopMenuContent
+		} = this.props;
 
 		if (!event) {
 			return <Loader/>;
@@ -393,7 +456,7 @@ class EventDashboardContainer extends Component {
 
 		return (
 			<div>
-				<Grid container>
+				<Grid container className={classes.headerContainer}>
 					<Grid item xs={12} sm={12} lg={8}>
 						<PageHeading iconUrl="/icons/events-multi.svg">
 							{event.name}
@@ -410,7 +473,7 @@ class EventDashboardContainer extends Component {
 							<div>
 								<ColorTag
 									style={{ marginRight: 10 }}
-									variant={isPublished ? "default" : "disabled"}
+									variant={isPublished ? "secondary" : "disabled"}
 								>
 									{isPublished ? "Published" : "Draft"}
 								</ColorTag>
@@ -438,63 +501,77 @@ class EventDashboardContainer extends Component {
 					</Grid>
 				</Grid>
 
-				<Card
-					variant="block"
-					style={{ borderRadius: "6px 6px 0 0", marginBottom: 10 }}
-				>
-					<div className={classes.menuContainer}>
-						<Typography className={classes.menuText}>
-							<StyledLink
-								underlined={subheading === "summary"}
-								to={`/admin/events/${event.id}/dashboard`}
-							>
-								Dashboard
-							</StyledLink>
-						</Typography>
-						{event.is_external ? null : (
+				<Card variant="block" className={classes.card}>
+					<div className={classes.container}>
+						<div className={classes.menuContainer}>
 							<Typography className={classes.menuText}>
-								{this.renderToolsMenu()}
 								<StyledLink
-									underlined={subheading === "tools"}
-									onClick={this.handleToolsMenu.bind(this)}
+									underlined={subheading === "summary"}
+									to={`/admin/events/${event.id}/dashboard`}
 								>
-									Tools
+									Dashboard
 								</StyledLink>
 							</Typography>
-						)}
-						{event.is_external ? null : (
-							<Typography className={classes.menuText}>
-								{this.renderReportsMenu()}
-								<StyledLink
-									underlined={subheading === "reports"}
-									onClick={this.handleReportsMenu.bind(this)}
-								>
-									Reports
-								</StyledLink>
-							</Typography>
-						)}
-						{/*TODO add back when Mike wants to work on it*/}
-						{/*{event.is_external ? null : (*/}
-						{/*<Typography className={classes.menuText}>*/}
-						{/*{this.renderMarketingMenu()}*/}
-						{/*<StyledLink*/}
-						{/*underlined={subheading === "marketing"}*/}
-						{/*onClick={this.handleMarketingMenu.bind(this)}*/}
-						{/*>*/}
-						{/*Marketing*/}
-						{/*</StyledLink>*/}
-						{/*</Typography>*/}
-						{/*)}*/}
+							{event.is_external ? null : (
+								<Typography className={classes.menuText}>
+									{this.renderToolsMenu()}
+									<StyledLink
+										underlined={subheading === "tools"}
+										onClick={this.handleToolsMenu.bind(this)}
+									>
+										Tools
+									</StyledLink>
+								</Typography>
+							)}
+							{event.is_external ? null : (
+								<Typography className={classes.menuText}>
+									{this.renderReportsMenu()}
+									<StyledLink
+										underlined={subheading === "reports"}
+										onClick={this.handleReportsMenu.bind(this)}
+									>
+										Reports
+									</StyledLink>
+								</Typography>
+							)}
+							{/*TODO add back when Mike wants to work on it*/}
+							{/*{event.is_external ? null : (*/}
+							{/*<Typography className={classes.menuText}>*/}
+							{/*{this.renderMarketingMenu()}*/}
+							{/*<StyledLink*/}
+							{/*underlined={subheading === "marketing"}*/}
+							{/*onClick={this.handleMarketingMenu.bind(this)}*/}
+							{/*>*/}
+							{/*Marketing*/}
+							{/*</StyledLink>*/}
+							{/*</Typography>*/}
+							{/*)}*/}
+
+							<Hidden smDown>
+								<div className={classes.additionalDesktopMenuContent}>
+									{additionalDesktopMenuContent}
+								</div>
+							</Hidden>
+						</div>
+
+						{layout === "childrenInsideCard" ? (
+							<div>
+								<div className={classes.menuDividerContainer}>
+									<Divider/>
+								</div>
+								<div className={classes.innerCardContainer}>{children}</div>
+							</div>
+						) : null}
 					</div>
 				</Card>
 
-				{useCardContainer ? (
+				{layout === "childrenOutsideWithCard" ? (
 					<Card variant={"block"}>
 						<div className={classes.container}>{children}</div>
 					</Card>
-				) : (
-					children
-				)}
+				) : null}
+
+				{layout === "childrenOutsideNoCard" ? children : null}
 
 				{event ? (
 					<VisitEventPage
@@ -507,13 +584,22 @@ class EventDashboardContainer extends Component {
 	}
 }
 
+EventDashboardContainer.defaultProps = {
+	layout: "childrenOutsideWithCard"
+};
+
 EventDashboardContainer.propTypes = {
 	classes: PropTypes.object.isRequired,
 	eventId: PropTypes.string.isRequired,
 	children: PropTypes.oneOfType([PropTypes.element, PropTypes.array])
 		.isRequired,
 	subheading: PropTypes.string.isRequired,
-	useCardContainer: PropTypes.bool
+	layout: PropTypes.oneOf([
+		"childrenInsideCard",
+		"childrenOutsideWithCard",
+		"childrenOutsideNoCard"
+	]),
+	additionalDesktopMenuContent: PropTypes.element
 };
 
 export default withStyles(styles)(EventDashboardContainer);
