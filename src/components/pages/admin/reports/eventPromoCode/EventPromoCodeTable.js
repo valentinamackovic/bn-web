@@ -29,8 +29,18 @@ const EventPromoCodesTableView = props => {
 	const { classes, sales, totals } = props;
 
 	const columnStyles = [
-		{ flex: 1, textAlign: "left" },
-		{ flex: 1, textAlign: "left" },
+		{
+			flex: 1,
+			textAlign: "left",
+			textOverflow: "ellipsis",
+			overflow: "hidden"
+		},
+		{
+			flex: 1,
+			textAlign: "left",
+			textOverflow: "ellipsis",
+			overflow: "hidden"
+		},
 		{ flex: 1, textAlign: "left" },
 		{ flex: 1, textAlign: "left" },
 		{ flex: 1, textAlign: "left" },
