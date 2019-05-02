@@ -11,6 +11,7 @@ import TicketCounts from "./counts/TicketCounts";
 import Loader from "../../../elements/loaders/Loader";
 import SettlementReport from "./settlement/SettlementReport";
 import SettlementReportList from "./settlement/SettlementReportList";
+import OrgOverview from "./overview/Overview";
 
 const styles = theme => ({
 	content: {
@@ -45,10 +46,19 @@ class Reports extends Component {
 
 		return (
 			<div className={classes.menuContainer}>
+				<Typography className={classes.menuText}>
+					<StyledLink
+						underlined={!report || report === "org-overview"}
+						to={`/admin/reports/org-overview`}
+					>
+						Overview
+					</StyledLink>
+				</Typography>
+
 				{hasTicketCountReports ? (
 					<Typography className={classes.menuText}>
 						<StyledLink
-							underlined={!report || report === "ticket-counts"}
+							underlined={report === "ticket-counts"}
 							to={`/admin/reports/ticket-counts`}
 						>
 							Ticket Counts
@@ -122,6 +132,12 @@ class Reports extends Component {
 		//Add report components here as needed
 		switch (report) {
 			case undefined:
+			case "org-overview":
+				return (
+					<Card variant={"block"} className={classes.content}>
+						<OrgOverview organizationId={currentOrganizationId}/>
+					</Card>
+				);
 			case "ticket-counts":
 				return hasTicketCountReports ? (
 					<Card variant={"block"} className={classes.content}>
