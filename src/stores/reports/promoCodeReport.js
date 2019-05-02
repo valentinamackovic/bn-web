@@ -175,21 +175,28 @@ export class PromoCodeReport {
 						: 0
 			);
 			salesData[key].ticket_types.forEach(tt => {
-				tt.percent_of_total_value = Math.floor(
-					(100 * tt.total_value) /
-						ticket_type_totals[tt.ticket_type_name].total_value
-				);
-				tt.percent_of_total_quantity = Math.floor(
-					(100 * tt.quantity) / ticket_type_totals[tt.ticket_type_name].quantity
-				);
+				tt.percent_of_total_value = ticket_type_totals[tt.ticket_type_name]
+					.total_value
+					? Math.floor(
+						(100 * tt.total_value) /
+								ticket_type_totals[tt.ticket_type_name].total_value
+					  )
+					: 0;
+				tt.percent_of_total_quantity = ticket_type_totals[tt.ticket_type_name]
+					.quantity
+					? Math.floor(
+						(100 * tt.quantity) /
+								ticket_type_totals[tt.ticket_type_name].quantity
+					  )
+					: 0;
 			});
 
-			salesData[key].percent_of_total_quantity = Math.floor(
-				(100 * salesData[key].quantity) / event_totals.quantity
-			);
-			salesData[key].percent_of_total_value = Math.floor(
-				(100 * salesData[key].total_value) / event_totals.value
-			);
+			salesData[key].percent_of_total_quantity = event_totals.quantity
+				? Math.floor((100 * salesData[key].quantity) / event_totals.quantity)
+				: 0;
+			salesData[key].percent_of_total_value = event_totals.value
+				? Math.floor((100 * salesData[key].total_value) / event_totals.value)
+				: 0;
 
 			totals.quantity += salesData[key].quantity;
 			totals.total_discounted_value += salesData[key].total_discounted_value;
@@ -198,12 +205,12 @@ export class PromoCodeReport {
 			totals.total_customers += salesData[key].total_customers;
 		});
 
-		totals.percent_of_total_quantity = Math.floor(
-			(100 * totals.quantity) / event_totals.quantity
-		);
-		totals.percent_of_total_value = Math.floor(
-			(100 * totals.total_value) / event_totals.value
-		);
+		totals.percent_of_total_quantity = event_totals.quantity
+			? Math.floor((100 * totals.quantity) / event_totals.quantity)
+			: 0;
+		totals.percent_of_total_value = event_totals.value
+			? Math.floor((100 * totals.total_value) / event_totals.value)
+			: 0;
 
 		return { salesData: salesData, totals: totals };
 	}
