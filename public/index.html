@@ -1,61 +1,107 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="user-scalable=0, initial-scale=1, minimum-scale=1, width=device-width, height=device-height"
-    />
-    <!-- PWA primary color -->
-    <meta name="theme-color" content="#707CED" />
+	<head>
+		<meta charset="utf-8" />
+		<meta
+			name="viewport"
+			content="user-scalable=0, initial-scale=1, minimum-scale=1, width=device-width, height=device-height"
+		/>
+		<!-- PWA primary color -->
+		<meta name="theme-color" content="#707CED" />
 		<title>Big Neon | Concert and Live Event Ticketing</title>
-    <meta property="og:title" content="Big Neon - The new standard in event ticketing" data-react-helmet="true"/>
-    <meta property="og:site_name" content="Big Neon" data-react-helmet="true" />
-    <meta property="og:type" content="website" data-react-helmet="true" />
-    <meta property="og:url" content="https://www.bigneon.com" data-react-helmet="true" />
-    <meta property="og:image" content="https://www.bigneon.com/site/images/bigneon-screen-app.png" data-react-helmet="true" />
-    <meta property="og:description" content="Big Neon - Mobile-first event ticketing. We’re relentlessly focused on serving the needs of independent live music promoters." data-react-helmet="true" />
-    <meta name="description" content="Big Neon - Mobile-first event ticketing and discovery. We’re relentlessly focused on serving the needs of independent live music promoters. Bring your experiences to life with Big Neon." data-react-helmet="true" />
+		<meta
+			property="og:title"
+			content="Big Neon - The new standard in event ticketing"
+			data-react-helmet="true"
+		/>
+		<meta property="og:site_name" content="Big Neon" data-react-helmet="true" />
+		<meta property="og:type" content="website" data-react-helmet="true" />
+		<meta
+			property="og:url"
+			content="https://www.bigneon.com"
+			data-react-helmet="true"
+		/>
+		<meta
+			property="og:image"
+			content="https://www.bigneon.com/site/images/bigneon-screen-app.png"
+			data-react-helmet="true"
+		/>
+		<meta
+			property="og:description"
+			content="Big Neon - Mobile-first event ticketing. We’re relentlessly focused on serving the needs of independent live music promoters."
+			data-react-helmet="true"
+		/>
+		<meta
+			name="description"
+			content="Big Neon - Mobile-first event ticketing and discovery. We’re relentlessly focused on serving the needs of independent live music promoters. Bring your experiences to life with Big Neon."
+			data-react-helmet="true"
+		/>
 
-    <link rel="canonical" href="https://www.bigneon.com" data-react-helmet="true"/>
+		<link
+			rel="canonical"
+			href="https://www.bigneon.com"
+			data-react-helmet="true"
+		/>
 
-    <link rel="image_src" href="https://www.bigneon.com/site/images/home-logo.png" data-react-helmet="true"/>
+		<link
+			rel="image_src"
+			href="https://www.bigneon.com/site/images/home-logo.png"
+			data-react-helmet="true"
+		/>
 
-    <link rel="stylesheet" href="/style.css" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Material+Icons"
-      rel="stylesheet"
-	  media="none"
-	  onload="if(media!=='all')media='all'"
-    />
-    <link rel="icon" type="image/png" href="/images/fav-icon.png" />
+		<link rel="stylesheet" href="/tt-bold.css" async />
+		<link
+			rel="preload"
+			as="font"
+			href="/fonts/TypeType - TT Commons Regular.otf"
+			crossorigin
+		/>
+		<link
+			rel="preload"
+			as="font"
+			href="/fonts/TypeType - TT Commons DemiBold.otf"
+			crossorigin
+		/>
+		<link
+			rel="preload"
+			as="font"
+			href="/fonts/TypeType - TT Commons Bold.otf"
+			crossorigin
+		/>
+		<link rel="stylesheet" href="/style.css" />
+		<link
+			href="https://fonts.googleapis.com/css?family=Material+Icons"
+			rel="stylesheet"
+			media="none"
+			onload="if(media!=='all')media='all'"
+		/>
+		<link rel="icon" type="image/png" href="/images/fav-icon.png" />
 
-    <script>
-		window.startLoadTime = new Date();
-		window.prerenderReady = false;
-	</script>
+		<script>
+			window.startLoadTime = new Date();
+			window.prerenderReady = false;
+		</script>
 
+		<!-- Start of bigneonsupport Zendesk Widget script -->
+		<!--<script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=f704f3e8-f61d-421e-a833-60cba6e2c51b" async> </script>-->
+		<!--<script type="text/javascript">-->
+		<!--window.zESettings = {-->
+		<!--webWidget: {-->
+		<!--offset: {-->
+		<!--horizontal: '0px',-->
+		<!--vertical: '50px',-->
+		<!--mobile: {-->
+		<!--horizontal: '0px',-->
+		<!--vertical: '30px'-->
+		<!--}-->
+		<!--}-->
+		<!--}-->
+		<!--};-->
+		<!--</script>-->
+		<!-- End of bigneonsupport Zendesk Widget script -->
+	</head>
 
-	<!-- Start of bigneonsupport Zendesk Widget script -->
-	<!--<script id="ze-snippet" src="https://static.zdassets.com/ekr/snippet.js?key=f704f3e8-f61d-421e-a833-60cba6e2c51b" async> </script>-->
-	<!--<script type="text/javascript">-->
-	  <!--window.zESettings = {-->
-		  <!--webWidget: {-->
-			  <!--offset: {-->
-				  <!--horizontal: '0px',-->
-				  <!--vertical: '50px',-->
-				  <!--mobile: {-->
-					  <!--horizontal: '0px',-->
-					  <!--vertical: '30px'-->
-				  <!--}-->
-			  <!--}-->
-		  <!--}-->
-	  <!--};-->
-	<!--</script>-->
-	<!-- End of bigneonsupport Zendesk Widget script -->
-  </head>
-
-  <body>
-    <div id="root"></div>
-  </body>
+	<body>
+		<div id="root"></div>
+	</body>
 </html>

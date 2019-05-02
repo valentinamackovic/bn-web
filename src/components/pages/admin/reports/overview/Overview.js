@@ -10,7 +10,6 @@ import Card from "../../../../elements/Card";
 import Divider from "../../../../common/Divider";
 import { fontFamilyDemiBold } from "../../../../../config/theme";
 import VerticalBarChart from "../../../../elements/charts/VerticalBarChart";
-import Container from "./Container";
 import Bigneon from "../../../../../helpers/bigneon";
 import notifications from "../../../../../stores/notifications";
 import Loader from "../../../../elements/loaders/Loader";
@@ -202,68 +201,98 @@ class Summary extends Component {
 	componentDidMount() {
 		//TODO make bn-api issue for date required
 
-		const id = this.props.match.params.id;
-		this.loadEventDetails(id);
-		this.loadTimeZone(id);
+		this.loadEventDetails();
+		this.loadTimeZone();
 	}
 
-	loadEventDetails(id) {
-		Bigneon()
-			.events.dashboard({ id })
-			.then(response => {
-				const { day_stats, event, venue } = response.data;
-
-				this.setState({
-					event,
-					dayStats: day_stats,
-					chartValues: this.getDailyBreakdownValues(day_stats)
-				});
-			})
-			.catch(error => {
-				console.error(error);
-				notifications.showFromErrorResponse({
-					defaultMessage: "Loading event details failed.",
-					error
-				});
-			});
+	loadEventDetails() {
+		this.setState({
+			chartValues: this.getDailyBreakdownValues()
+		});
 	}
 
-	loadTimeZone(id) {
-		Bigneon()
-			.events.read({ id })
-			.then(response => {
-				const { venue } = response.data;
-				if (venue.timezone) {
-					this.setState({ venueTimeZone: venue.timezone });
-				}
-			})
-			.catch(error => {
-				console.error(error);
-				notifications.showFromErrorResponse({
-					defaultMessage: "Loading time zone for event failed.",
-					error
-				});
-			});
-	}
+	loadTimeZone(id) {}
 
-	getDailyBreakdownValues(dayStats) {
+	getDailyBreakdownValues() {
 		const venueTimezone = this.state.venueTimeZone || "America/Los_Angeles";
 
-		const result = [];
-		for (let index = 0; index < dayStats.length; index++) {
-			const dayOfMonth = moment
-				.utc(dayStats[index].date)
-				.tz(venueTimezone)
-				.format("D");
-
-			result.push({
-				x: Number(dayOfMonth),
-				y: dayStats[index].revenue_in_cents / 100, //  + Math.random() * 100,
-				tooltipTitle: `$${(dayStats[index].revenue_in_cents / 100).toFixed(2)}`,
-				tooltipText: `${dayStats[index].ticket_sales} Tickets`
-			});
-		}
-
+		const result = [
+			{ x: 1, y: 4320, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{ x: 2, y: 453, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{ x: 3, y: 3453, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{ x: 4, y: 5435, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{ x: 5, y: 453, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{ x: 6, y: 433, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{ x: 7, y: 4320, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{ x: 8, y: 235, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{ x: 9, y: 4345, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{ x: 10, y: 345, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{
+				x: 11,
+				y: 3454,
+				tooltipTitle: "$4,320.19",
+				tooltipText: "1234 Tickets"
+			},
+			{ x: 12, y: 234, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{
+				x: 13,
+				y: 4533,
+				tooltipTitle: "$4,320.19",
+				tooltipText: "1234 Tickets"
+			},
+			{
+				x: 14,
+				y: 4556,
+				tooltipTitle: "$4,320.19",
+				tooltipText: "1234 Tickets"
+			},
+			{ x: 15, y: 424, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{
+				x: 16,
+				y: 1345,
+				tooltipTitle: "$4,320.19",
+				tooltipText: "1234 Tickets"
+			},
+			{ x: 17, y: 455, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{ x: 18, y: 653, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{
+				x: 19,
+				y: 3453,
+				tooltipTitle: "$4,320.19",
+				tooltipText: "1234 Tickets"
+			},
+			{ x: 20, y: 545, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{
+				x: 21,
+				y: 3453,
+				tooltipTitle: "$4,320.19",
+				tooltipText: "1234 Tickets"
+			},
+			{ x: 22, y: 636, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{ x: 23, y: 456, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{ x: 24, y: 656, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{
+				x: 25,
+				y: 3451,
+				tooltipTitle: "$4,320.19",
+				tooltipText: "1234 Tickets"
+			},
+			{
+				x: 26,
+				y: 3254,
+				tooltipTitle: "$4,320.19",
+				tooltipText: "1234 Tickets"
+			},
+			{
+				x: 27,
+				y: 2342,
+				tooltipTitle: "$4,320.19",
+				tooltipText: "1234 Tickets"
+			},
+			{ x: 28, y: 232, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{ x: 29, y: 244, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" },
+			{ x: 30, y: 121, tooltipTitle: "$4,320.19", tooltipText: "1234 Tickets" }
+		];
 		return result;
 	}
 
@@ -922,7 +951,7 @@ class Summary extends Component {
 
 		return (
 			<div>
-				<h4>Current Event: {this.state.event.name}</h4>
+				<h4>Org Average</h4>
 				<LineChart
 					width={950}
 					height={200}
@@ -1130,148 +1159,110 @@ class Summary extends Component {
 	}
 
 	render() {
-		const { event } = this.state;
 		const { classes } = this.props;
-
-		if (!event) {
-			return <Loader/>;
-		}
-
-		if (event.is_external) {
-			return (
-				<Container
-					eventId={event.id}
-					subheading={"summary"}
-					layout={"childrenInsideCard"}
-				>
-					<Grid
-						container
-						direction="column"
-						justify="center"
-						alignItems="center"
-					>
-						<img
-							src="/images/no_sales_data_illustration.png"
-							style={{ margin: 50, width: 200 }}
+		return (
+			<div>
+				<Typography variant="title">Organization Overview</Typography>
+				<Divider style={{ marginTop: 40, marginBottom: 40 }}/>
+				<Grid container spacing={32}>
+					<Grid item xs={12} sm={6} lg={3}>
+						<SelectGroup
+							value={this.state.graphOption || "custom"}
+							items={[
+								{ value: "salesByDay", label: "Sales Velocity" },
+								{ value: "salesBySource", label: "Sales By Source" },
+								{ value: "dayTimeHeatmap", label: "Promotions Heatmap" },
+								{ value: "compare", label: "Compare Events" }
+							]}
+							name={"sales-graph-option"}
+							label={"Select Dashboard Graph"}
+							onChange={e => {
+								this.setState({ graphOption: e.target.value });
+							}}
 						/>
-						<Typography variant="title">
-							This event is externally hosted.
-						</Typography>
 					</Grid>
-				</Container>
-			);
-		} else {
-			return (
-				<Container eventId={event.id} subheading={"summary"} useCardContainer>
-					<Grid container spacing={32}>
-						<Grid item xs={12} sm={6} lg={3}>
+					<Grid item xs={12} sm={6} lg={3}>
+						{this.state.graphOption == "compare" ? (
 							<SelectGroup
-								value={this.state.graphOption || "custom"}
+								value={this.state.eventCompareOption || "custom"}
 								items={[
-									{ value: "salesByDay", label: "Sales Velocity" },
-									{ value: "salesBySource", label: "Sales By Source" },
-									{ value: "dayTimeHeatmap", label: "Promotions Heatmap" },
-									{ value: "compare", label: "Compare Events" }
+									{
+										value: "Jay Wilson Band - 2/25/19",
+										label: "Jay Wilson Band - 2/25/19"
+									},
+									{
+										value: "Tie Lawson - 3/21/19",
+										label: "Tie Lawson - 3/21/19"
+									},
+									{
+										value: "Red Cap Tap - 3/24/19",
+										label: "Red Cap Tap - 3/24/19"
+									}
 								]}
 								name={"sales-graph-option"}
-								label={"Select Dashboard Graph"}
+								label={"Select Event to Compare"}
 								onChange={e => {
-									this.setState({ graphOption: e.target.value });
+									this.setState({ eventCompareOption: e.target.value });
 								}}
 							/>
-						</Grid>
-						<Grid item xs={12} sm={6} lg={3}>
-							{this.state.graphOption == "compare" ? (
+						) : null}
+					</Grid>
+					<Grid item xs={12} sm={6} lg={3}>
+						{this.state.graphOption == "compare" &&
+						this.state.eventCompareOption ? (
 								<SelectGroup
-									value={this.state.eventCompareOption || "custom"}
+									value={this.state.eventCompareType || "custom"}
 									items={[
-										{
-											value: "Jay Wilson Band - 2/25/19",
-											label: "Jay Wilson Band - 2/25/19"
-										},
-										{
-											value: "Tie Lawson - 3/21/19",
-											label: "Tie Lawson - 3/21/19"
-										},
-										{
-											value: "Red Cap Tap - 3/24/19",
-											label: "Red Cap Tap - 3/24/19"
-										}
+										{ value: "data1", label: "Weekly Sales Volume" },
+										{ value: "data2", label: "Inventory Burndown" },
+										{ value: "data3", label: "Sales By Source" }
 									]}
 									name={"sales-graph-option"}
-									label={"Select Event to Compare"}
+									label={"Select Chart to Compare"}
 									onChange={e => {
-										this.setState({ eventCompareOption: e.target.value });
+										this.setState({ eventCompareType: e.target.value });
 									}}
 								/>
 							) : null}
-						</Grid>
-						<Grid item xs={12} sm={6} lg={3}>
-							{this.state.graphOption == "compare" &&
-							this.state.eventCompareOption ? (
-									<SelectGroup
-										value={this.state.eventCompareType || "custom"}
-										items={[
-											{ value: "data1", label: "Weekly Sales Volume" },
-											{ value: "data2", label: "Inventory Burndown" },
-											{ value: "data3", label: "Sales By Source" }
-										]}
-										name={"sales-graph-option"}
-										label={"Select Chart to Compare"}
-										onChange={e => {
-											this.setState({ eventCompareType: e.target.value });
-										}}
-									/>
-								) : null}
-						</Grid>
 					</Grid>
-					{this.state.graphOption == "salesByDay"
-						? this.renderBarChart()
-						: null}
-					{this.state.graphOption == "dayTimeHeatmap"
-						? this.renderScatterPlot()
-						: null}
-					{this.state.graphOption == "salesBySource"
-						? this.renderSalesPie()
-						: null}
-					{this.state.graphOption == "compare" &&
-					!this.state.eventCompareOption ? (
-							<Grid
-								container
-								direction="column"
-								justify="center"
-								alignItems="center"
-							>
-								<img
-									src="/images/no_sales_data_illustration.png"
-									style={{ margin: 50, width: 200 }}
-								/>
-								<Typography variant="title">
-								Select an event to compare
-								</Typography>
-							</Grid>
-						) : null}
-					{this.state.graphOption == "compare" &&
-					this.state.eventCompareOption &&
-					this.state.eventCompareType != "data3"
-						? this.renderComparison()
-						: null}
-					{this.state.graphOption == "compare" &&
-					this.state.eventCompareOption &&
-					this.state.eventCompareType == "data3"
-						? this.renderSalesPieCompare()
-						: null}
-					<div style={{ marginTop: 60 }}/>
+				</Grid>
+				{this.state.graphOption == "salesByDay" ? this.renderBarChart() : null}
+				{this.state.graphOption == "dayTimeHeatmap"
+					? this.renderScatterPlot()
+					: null}
+				{this.state.graphOption == "salesBySource"
+					? this.renderSalesPie()
+					: null}
+				{this.state.graphOption == "compare" &&
+				!this.state.eventCompareOption ? (
+						<Grid
+							container
+							direction="column"
+							justify="center"
+							alignItems="center"
+						>
+							<img
+								src="/images/no_sales_data_illustration.png"
+								style={{ margin: 50, width: 200 }}
+							/>
+							<Typography variant="title">Select an event to compare</Typography>
+						</Grid>
+					) : null}
+				{this.state.graphOption == "compare" &&
+				this.state.eventCompareOption &&
+				this.state.eventCompareType != "data3"
+					? this.renderComparison()
+					: null}
+				{this.state.graphOption == "compare" &&
+				this.state.eventCompareOption &&
+				this.state.eventCompareType == "data3"
+					? this.renderSalesPieCompare()
+					: null}
+				<div style={{ marginTop: 60 }}/>
 
-					{this.renderNumbers()}
-
-					<Divider style={{ marginTop: 40, marginBottom: 40 }}/>
-
-					<Typography variant="title">Ticket Volumes</Typography>
-					{this.renderTicketVolumes()}
-				</Container>
-			);
-		}
+				<Divider style={{ marginTop: 40, marginBottom: 40 }}/>
+			</div>
+		);
 	}
 }
 
