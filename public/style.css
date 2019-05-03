@@ -1,43 +1,46 @@
 @font-face {
-  font-family: TTCommons-Regular;
-  src: url("/fonts/TypeType - TT Commons Regular.otf") format("opentype");
+	font-family: TTCommons-Regular;
+	font-display: swap;
+	src: url("/fonts/TypeType - TT Commons Regular.otf") format("opentype");
 }
 
 @font-face {
-  font-family: TTCommons-DemiBold;
-  src: url("/fonts/TypeType - TT Commons DemiBold.otf") format("opentype");
+	font-family: TTCommons-DemiBold;
+	font-display: swap;
+	src: url("/fonts/TypeType - TT Commons DemiBold.otf") format("opentype");
 }
 
 @font-face {
-  font-family: TTCommons-Bold;
-  src: url("/fonts/TypeType - TT Commons Bold.otf") format("opentype");
+	font-family: TTCommons-Bold;
+	font-display: swap;
+	src: url("/fonts/TypeType - TT Commons Bold.otf") format("opentype");
 }
 
 * {
-  font-family: TTCommons-Regular;
+	font-family: TTCommons-Regular;
 }
 
 a {
-  text-decoration: none;
-  outline: none;
+	text-decoration: none;
+	outline: none;
 }
 
 input:focus {
-  outline: none;
+	outline: none;
 }
 
 .noselect {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
 }
 
 input[type="number"]::-webkit-inner-spin-button,
 input[type="number"]::-webkit-outer-spin-button {
-  -webkit-appearance: none;
+	-webkit-appearance: none;
 
-  margin: 0;
+	margin: 0;
 }
