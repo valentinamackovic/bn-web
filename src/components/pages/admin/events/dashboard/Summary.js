@@ -339,7 +339,7 @@ class Summary extends Component {
 						active={activeNumbersCard === "attendance"}
 						label="Attendance"
 						value={event.tickets_redeemed}
-						iconName="tickets"
+						iconName="ticket"
 						classes={classes}
 					/>
 				</Grid>
@@ -367,14 +367,32 @@ class Summary extends Component {
 					xs={12}
 					sm={6}
 					lg={3}
-					onMouseEnter={() => this.setState({ activeNumbersCard: "dayOfWeek" })}
+					onMouseEnter={() =>
+						this.setState({ activeNumbersCard: "sellThrough" })
+					}
 					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
 				>
 					<NumberCard
-						active={activeNumbersCard === "dayOfWeek"}
-						label="Top promo time"
-						value="Tues am"
-						iconName="events"
+						active={activeNumbersCard === "sellThrough"}
+						label="Sell through rate"
+						value="0%"
+						iconName="ticket"
+						classes={classes}
+					/>
+				</Grid>
+				<Grid
+					item
+					xs={12}
+					sm={6}
+					lg={3}
+					onMouseEnter={() => this.setState({ activeNumbersCard: "avgFace" })}
+					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
+				>
+					<NumberCard
+						active={activeNumbersCard === "avgFace"}
+						label="Avg Face"
+						value="$0"
+						iconName="ticket"
 						classes={classes}
 					/>
 				</Grid>
@@ -384,48 +402,14 @@ class Summary extends Component {
 					sm={6}
 					lg={3}
 					onMouseEnter={() =>
-						this.setState({ activeNumbersCard: "salesSource" })
+						this.setState({ activeNumbersCard: "avgTixPerDay" })
 					}
 					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
 				>
 					<NumberCard
-						active={activeNumbersCard === "salesSource"}
-						label="Top sales source"
-						value="FB CPC"
-						iconName="chart"
-						classes={classes}
-					/>
-				</Grid>
-				<Grid
-					item
-					xs={12}
-					sm={6}
-					lg={3}
-					onMouseEnter={() =>
-						this.setState({ activeNumbersCard: "salesSource" })
-					}
-					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
-				>
-					<NumberCard
-						active={activeNumbersCard === "salesSource"}
-						label="Top campaign"
-						value="fb-92389"
-						iconName="chart"
-						classes={classes}
-					/>
-				</Grid>
-				<Grid
-					item
-					xs={12}
-					sm={6}
-					lg={3}
-					onMouseEnter={() => this.setState({ activeNumbersCard: "topPromo" })}
-					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
-				>
-					<NumberCard
-						active={activeNumbersCard === "topPromo"}
-						label="Top promo"
-						value="Promo25"
+						active={activeNumbersCard === "avgTixPerDay"}
+						label="Tickets Sold/Day"
+						value="0"
 						iconName="tickets"
 						classes={classes}
 					/>
@@ -485,24 +469,6 @@ class Summary extends Component {
 						active={activeNumbersCard === "topPromo"}
 						label="Top promo"
 						value="promo25"
-						iconName="tickets"
-						classes={classes}
-					/>
-				</Grid>
-				<Grid
-					item
-					xs={12}
-					sm={6}
-					lg={3}
-					onMouseEnter={() =>
-						this.setState({ activeNumbersCard: "projectedSales" })
-					}
-					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
-				>
-					<NumberCard
-						active={activeNumbersCard === "projectedSales"}
-						label="Projected sold"
-						value="1000"
 						iconName="tickets"
 						classes={classes}
 					/>
@@ -1169,8 +1135,6 @@ class Summary extends Component {
 								value={this.state.graphOption || "custom"}
 								items={[
 									{ value: "salesByDay", label: "Sales Velocity" },
-									{ value: "salesBySource", label: "Sales By Source" },
-									{ value: "dayTimeHeatmap", label: "Promotions Heatmap" },
 									{ value: "compare", label: "Compare Events" }
 								]}
 								name={"sales-graph-option"}
@@ -1264,6 +1228,19 @@ class Summary extends Component {
 					<div style={{ marginTop: 60 }}/>
 
 					{this.renderNumbers()}
+					<Divider style={{ marginTop: 40, marginBottom: 40 }}/>
+
+					<Typography variant="title">Marketing and Promotions</Typography>
+					<div style={{ marginTop: 60 }}/>
+					{this.renderMarketingSnapshot()}
+					<div style={{ marginTop: 60 }}/>
+					<Typography variant="subheading">
+						Sales Heatmap by Day of Week and Time
+					</Typography>
+					{this.renderScatterPlot()}
+					<div style={{ marginTop: 60 }}/>
+					<Typography variant="subheading">Sales By Source</Typography>
+					{this.renderSalesPie()}
 
 					<Divider style={{ marginTop: 40, marginBottom: 40 }}/>
 
