@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [[ ! -z "$BUILD_BRANCH" ]]
+if  test ! -z "$BUILD_BRANCH" && test -f /.dockerenv
 then
 	echo "Changing path to /"
 	cd /
