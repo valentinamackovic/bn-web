@@ -1,6 +1,6 @@
 #!/bin/sh
 
-if [[ ! -z "$BUILD_BRANCH" ]]
+if [ ! -z "$BUILD_BRANCH" ]
 then
 	echo "Changing path to /"
 	cd /
