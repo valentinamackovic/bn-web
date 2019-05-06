@@ -385,7 +385,6 @@ class Transactions extends Component {
 			"Date/time",
 			"Qty",
 			"Gross",
-			"Source",
 			"Platform"
 		];
 
@@ -428,7 +427,6 @@ class Transactions extends Component {
 						formattedDate,
 						quantity - refunded_quantity,
 						dollars(gross),
-						source,
 						platform
 					];
 
