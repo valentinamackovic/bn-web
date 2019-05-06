@@ -316,8 +316,56 @@ class Summary extends Component {
 				>
 					<NumberCard
 						active={activeNumbersCard === "revenue"}
-						label="Face value sales"
-						value={"$" + (event.sales_total_in_cents / 100).toFixed(2)}
+						label="Face value sales YTD"
+						value="$24,287"
+						iconName="chart"
+						classes={classes}
+					/>
+				</Grid>
+				<Grid
+					item
+					xs={12}
+					sm={6}
+					lg={3}
+					onMouseEnter={() => this.setState({ activeNumbersCard: "revenue" })}
+					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
+				>
+					<NumberCard
+						active={activeNumbersCard === "revenue"}
+						label="Face value sales MTD"
+						value="$987"
+						iconName="chart"
+						classes={classes}
+					/>
+				</Grid>
+				<Grid
+					item
+					xs={12}
+					sm={6}
+					lg={3}
+					onMouseEnter={() => this.setState({ activeNumbersCard: "revenue" })}
+					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
+				>
+					<NumberCard
+						active={activeNumbersCard === "revenue"}
+						label="Face value sales 30d"
+						value="$3,287"
+						iconName="chart"
+						classes={classes}
+					/>
+				</Grid>
+				<Grid
+					item
+					xs={12}
+					sm={6}
+					lg={3}
+					onMouseEnter={() => this.setState({ activeNumbersCard: "revenue" })}
+					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
+				>
+					<NumberCard
+						active={activeNumbersCard === "revenue"}
+						label="Face value sales today"
+						value="$287"
 						iconName="chart"
 						classes={classes}
 					/>
@@ -333,7 +381,7 @@ class Summary extends Component {
 					<NumberCard
 						active={activeNumbersCard === "sold"}
 						label="Tickets sold"
-						value={event.sold_held + event.sold_unreserved}
+						value="2,633"
 						iconName="ticket"
 						classes={classes}
 					/>
@@ -349,7 +397,7 @@ class Summary extends Component {
 					<NumberCard
 						active={activeNumbersCard === "open"}
 						label="Tickets open"
-						value={event.tickets_open}
+						value="12,384"
 						iconName="ticket"
 						classes={classes}
 					/>
@@ -367,43 +415,8 @@ class Summary extends Component {
 					<NumberCard
 						active={activeNumbersCard === "attendance"}
 						label="Attendance"
-						value={event.tickets_redeemed}
-						iconName="tickets"
-						classes={classes}
-					/>
-				</Grid>
-				<Grid
-					item
-					xs={12}
-					sm={6}
-					lg={3}
-					onMouseEnter={() => this.setState({ activeNumbersCard: "daysLeft" })}
-					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
-				>
-					<NumberCard
-						active={activeNumbersCard === "daysLeft"}
-						label="Days left"
-						value={Math.max(
-							0,
-							moment(event.event_start).diff(moment(), "days")
-						)}
-						iconName="events"
-						classes={classes}
-					/>
-				</Grid>
-				<Grid
-					item
-					xs={12}
-					sm={6}
-					lg={3}
-					onMouseEnter={() => this.setState({ activeNumbersCard: "dayOfWeek" })}
-					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
-				>
-					<NumberCard
-						active={activeNumbersCard === "dayOfWeek"}
-						label="Top promo time"
-						value="Tues am"
-						iconName="events"
+						value="12,213"
+						iconName="ticket"
 						classes={classes}
 					/>
 				</Grid>
@@ -413,15 +426,31 @@ class Summary extends Component {
 					sm={6}
 					lg={3}
 					onMouseEnter={() =>
-						this.setState({ activeNumbersCard: "salesSource" })
+						this.setState({ activeNumbersCard: "sellThrough" })
 					}
 					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
 				>
 					<NumberCard
-						active={activeNumbersCard === "salesSource"}
-						label="Top sales source"
-						value="FB CPC"
-						iconName="chart"
+						active={activeNumbersCard === "sellThrough"}
+						label="Avg sell through rate"
+						value="76%"
+						iconName="ticket"
+						classes={classes}
+					/>
+				</Grid>
+				<Grid
+					item
+					xs={12}
+					sm={6}
+					lg={3}
+					onMouseEnter={() => this.setState({ activeNumbersCard: "avgFace" })}
+					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
+				>
+					<NumberCard
+						active={activeNumbersCard === "avgFace"}
+						label="Avg Face"
+						value="$0"
+						iconName="ticket"
 						classes={classes}
 					/>
 				</Grid>
@@ -431,30 +460,14 @@ class Summary extends Component {
 					sm={6}
 					lg={3}
 					onMouseEnter={() =>
-						this.setState({ activeNumbersCard: "salesSource" })
+						this.setState({ activeNumbersCard: "avgTixPerDay" })
 					}
 					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
 				>
 					<NumberCard
-						active={activeNumbersCard === "salesSource"}
-						label="Top campaign"
-						value="fb-92389"
-						iconName="chart"
-						classes={classes}
-					/>
-				</Grid>
-				<Grid
-					item
-					xs={12}
-					sm={6}
-					lg={3}
-					onMouseEnter={() => this.setState({ activeNumbersCard: "topPromo" })}
-					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
-				>
-					<NumberCard
-						active={activeNumbersCard === "topPromo"}
-						label="Top promo"
-						value="Promo25"
+						active={activeNumbersCard === "avgTixPerDay"}
+						label="Tickets Sold/Day"
+						value="20"
 						iconName="tickets"
 						classes={classes}
 					/>
@@ -514,24 +527,6 @@ class Summary extends Component {
 						active={activeNumbersCard === "topPromo"}
 						label="Top promo"
 						value="promo25"
-						iconName="tickets"
-						classes={classes}
-					/>
-				</Grid>
-				<Grid
-					item
-					xs={12}
-					sm={6}
-					lg={3}
-					onMouseEnter={() =>
-						this.setState({ activeNumbersCard: "projectedSales" })
-					}
-					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
-				>
-					<NumberCard
-						active={activeNumbersCard === "projectedSales"}
-						label="Projected sold"
-						value="1000"
 						iconName="tickets"
 						classes={classes}
 					/>
@@ -1170,8 +1165,6 @@ class Summary extends Component {
 							value={this.state.graphOption || "custom"}
 							items={[
 								{ value: "salesByDay", label: "Sales Velocity" },
-								{ value: "salesBySource", label: "Sales By Source" },
-								{ value: "dayTimeHeatmap", label: "Promotions Heatmap" },
 								{ value: "compare", label: "Compare Events" }
 							]}
 							name={"sales-graph-option"}
@@ -1260,7 +1253,21 @@ class Summary extends Component {
 					: null}
 				<div style={{ marginTop: 60 }}/>
 
+				{this.renderNumbers()}
+
 				<Divider style={{ marginTop: 40, marginBottom: 40 }}/>
+
+				<Typography variant="title">Marketing and Promotions</Typography>
+				<div style={{ marginTop: 60 }}/>
+				{this.renderMarketingSnapshot()}
+				<div style={{ marginTop: 60 }}/>
+				<Typography variant="subheading">
+					Sales Heatmap by Day of Week and Time
+				</Typography>
+				{this.renderScatterPlot()}
+				<div style={{ marginTop: 60 }}/>
+				<Typography variant="subheading">Sales By Source</Typography>
+				{this.renderSalesPie()}
 			</div>
 		);
 	}
