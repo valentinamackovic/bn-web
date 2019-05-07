@@ -800,6 +800,269 @@ class Summary extends Component {
 		);
 	}
 
+	renderVelocityByTypeAndCode() {
+		const data1 = [
+			{
+				name: "T - 42",
+				uv: 4000,
+				pv: 2400,
+				amt: 2400
+			},
+			{
+				name: "T - 35",
+				uv: 3000,
+				pv: 1398,
+				amt: 2210
+			},
+			{
+				name: "T - 28",
+				uv: 2000,
+				pv: 9800,
+				amt: 2290
+			},
+			{
+				name: "T - 21",
+				uv: 2780,
+				pv: 3908,
+				amt: 2000
+			},
+			{
+				name: "T - 14",
+				uv: 1890,
+				pv: 4800,
+				amt: 2181
+			},
+			{
+				name: "T - 7",
+				uv: 2390,
+				amt: 2500
+			},
+			{
+				name: "T - 0",
+				uv: 3490,
+				amt: 2100
+			}
+		];
+		const data2 = [
+			{
+				name: "4/1",
+				vip: 4000,
+				vip_code1: 3234,
+				ga: 1234,
+				ga_code1: 434,
+				ga_code2: 4322,
+				amt: 2400
+			},
+			{
+				name: "4/2",
+				vip: 4231,
+				vip_code1: 32,
+				ga: 432,
+				ga_code1: 2233,
+				ga_code2: 0,
+				amt: 2400
+			},
+			{
+				name: "4/3",
+				vip: 543,
+				vip_code1: 4232,
+				ga: 23,
+				ga_code1: 23,
+				ga_code2: 432,
+				amt: 2400
+			},
+			{
+				name: "4/4",
+				vip: 21,
+				vip_code1: 435,
+				ga: 432,
+				ga_code1: 53,
+				ga_code2: 234,
+				amt: 2400
+			},
+			{
+				name: "4/5",
+				vip: 443,
+				vip_code1: 12,
+				ga: 24,
+				ga_code1: 432,
+				ga_code2: 32,
+				amt: 2400
+			},
+			{
+				name: "4/6",
+				vip: 423,
+				vip_code1: 543,
+				ga: 653,
+				ga_code1: 2653,
+				ga_code2: 4353,
+				amt: 3425
+			},
+			{
+				name: "4/7",
+				vip: 543,
+				vip_code1: 45,
+				ga: 34,
+				ga_code1: 453,
+				ga_code2: 34,
+				amt: 2400
+			},
+			{
+				name: "4/8",
+				vip: 234,
+				vip_code1: 342,
+				ga: 642,
+				ga_code1: 642,
+				ga_code2: 356,
+				amt: 2400
+			},
+			{
+				name: "4/9",
+				vip: 345,
+				vip_code1: 4563,
+				ga: 545,
+				ga_code1: 0,
+				ga_code2: 543,
+				amt: 2400
+			},
+			{
+				name: "4/10",
+				vip: 537,
+				vip_code1: 764,
+				ga: 34,
+				ga_code1: 43,
+				ga_code2: 54,
+				amt: 2400
+			},
+			{
+				name: "4/11",
+				vip: 543,
+				vip_code1: 345,
+				ga: 543,
+				ga_code1: 4,
+				ga_code2: 0,
+				amt: 2400
+			},
+			{
+				name: "4/12",
+				vip: 543,
+				vip_code1: 435,
+				ga: 54,
+				ga_code1: 34,
+				ga_code2: 54,
+				amt: 2400
+			},
+			{
+				name: "4/13",
+				vip: 543,
+				vip_code1: 54,
+				ga: 564,
+				ga_code1: 345,
+				ga_code2: 543,
+				amt: 2400
+			},
+			{
+				name: "4/14",
+				vip: 543,
+				vip_code1: 345,
+				ga: 345,
+				ga_code1: 45,
+				ga_code2: 5643,
+				amt: 2400
+			},
+			{
+				name: "5/1",
+				vip: 543,
+				vip_code1: 453,
+				ga: 34,
+				ga_code1: 564,
+				ga_code2: 64,
+				amt: 2400
+			},
+			{
+				name: "5/2",
+				vip: 345,
+				vip_code1: 6574,
+				ga: 65,
+				ga_code1: 545,
+				ga_code2: 54,
+				amt: 2400
+			},
+			{
+				name: "5/3",
+				vip: 546,
+				vip_code1: 45,
+				ga: 564,
+				ga_code1: 456,
+				ga_code2: 566,
+				amt: 2400
+			},
+			{
+				name: "5/4",
+				vip: 654,
+				vip_code1: 456,
+				ga: 56,
+				ga_code1: 654,
+				ga_code2: 4564,
+				amt: 2400
+			},
+			{
+				name: "5/5",
+				vip: 0,
+				vip_code1: 666,
+				ga: 65,
+				ga_code1: 453,
+				ga_code2: 5345,
+				amt: 2400
+			},
+			{
+				name: "5/6",
+				vip: 555,
+				vip_code1: 435,
+				ga: 443,
+				ga_code1: 456,
+				ga_code2: 675,
+				amt: 2400
+			},
+			{
+				name: "5/7",
+				vip: 534,
+				vip_code1: 3453,
+				ga: 453,
+				ga_code1: 45,
+				ga_code2: 543,
+				amt: 2400
+			}
+		];
+
+		return (
+			<div>
+				<BarChart
+					width={900}
+					height={300}
+					data={data2}
+					margin={{
+						top: 20,
+						right: 30,
+						left: 20,
+						bottom: 5
+					}}
+				>
+					<CartesianGrid strokeDasharray="3 3"/>
+					<XAxis dataKey="name"/>
+					<YAxis/>
+					<Tooltip/>
+					<Legend align="right" layout="vertical" verticalAlign="middle"/>
+					<Bar dataKey="vip" stackId="a" fill="#8884d8"/>
+					<Bar dataKey="vip_code1" stackId="a" fill="#707CED"/>
+					<Bar dataKey="ga" stackId="a" fill="#FF20B1"/>
+					<Bar dataKey="ga_code1" stackId="a" fill="#5491cc"/>
+					<Bar dataKey="ga_code2" stackId="a" fill="#afc6d4"/>
+				</BarChart>
+			</div>
+		);
+	}
+
 	renderComparison() {
 		const data1 = [
 			{
@@ -890,7 +1153,150 @@ class Summary extends Component {
 			<div>
 				<h4>Current Event: {this.state.event.name}</h4>
 				<LineChart
-					width={950}
+					width={900}
+					height={200}
+					data={
+						this.state.eventCompareType == "data1"
+							? data1
+							: this.state.eventCompareType == "data2"
+								? data2
+								: data1
+					}
+					syncId="anyId"
+					margin={{
+						top: 10,
+						right: 30,
+						left: 0,
+						bottom: 0
+					}}
+				>
+					<CartesianGrid strokeDasharray="3 3"/>
+					<XAxis dataKey="name"/>
+					<YAxis/>
+					<Tooltip/>
+					<Line type="monotone" dataKey="pv" stroke="#8884d8" fill="#8884d8"/>
+				</LineChart>
+				<h4>Compared: {this.state.eventCompareOption}</h4>
+				<LineChart
+					width={900}
+					height={200}
+					data={
+						this.state.eventCompareType == "data1"
+							? data1
+							: this.state.eventCompareType == "data2"
+								? data2
+								: data1
+					}
+					syncId="anyId"
+					margin={{
+						top: 10,
+						right: 30,
+						left: 0,
+						bottom: 0
+					}}
+				>
+					<CartesianGrid strokeDasharray="3 3"/>
+					<XAxis dataKey="name"/>
+					<YAxis/>
+					<Tooltip/>
+					<Line type="monotone" dataKey="uv" stroke="#FF20B1" fill="#FF20B1"/>
+					<Brush/>
+				</LineChart>
+			</div>
+		);
+	}
+
+	renderVenueComparison() {
+		const data1 = [
+			{
+				name: "T - 42",
+				uv: 4000,
+				pv: 2400,
+				amt: 2400
+			},
+			{
+				name: "T - 35",
+				uv: 3000,
+				pv: 1398,
+				amt: 2210
+			},
+			{
+				name: "T - 28",
+				uv: 2000,
+				pv: 9800,
+				amt: 2290
+			},
+			{
+				name: "T - 21",
+				uv: 2780,
+				pv: 3908,
+				amt: 2000
+			},
+			{
+				name: "T - 14",
+				uv: 1890,
+				pv: 4800,
+				amt: 2181
+			},
+			{
+				name: "T - 7",
+				uv: 2390,
+				amt: 2500
+			},
+			{
+				name: "T - 0",
+				uv: 3490,
+				amt: 2100
+			}
+		];
+		const data2 = [
+			{
+				name: "T - 42",
+				uv: 4000,
+				pv: 4000,
+				amt: 2400
+			},
+			{
+				name: "T - 35",
+				uv: 2423,
+				pv: 3000,
+				amt: 2210
+			},
+			{
+				name: "T - 28",
+				uv: 1329,
+				pv: 2492,
+				amt: 2290
+			},
+			{
+				name: "T - 21",
+				uv: 1123,
+				pv: 2301,
+				amt: 2000
+			},
+			{
+				name: "T - 14",
+				uv: 987,
+				pv: 2100,
+				amt: 2181
+			},
+			{
+				name: "T - 7",
+				uv: 635,
+				amt: 2500
+			},
+			{
+				name: "T - 0",
+				uv: 32,
+				amt: 2100
+			}
+		];
+
+		return (
+			<div>
+				<h4>Venue Average</h4>
+				<LineChart
+					width={900}
 					height={200}
 					data={
 						this.state.eventCompareType == "data1"
@@ -913,9 +1319,9 @@ class Summary extends Component {
 					<Tooltip/>
 					<Line type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8"/>
 				</LineChart>
-				<h4>Compared: {this.state.eventCompareOption}</h4>
+				<h4>Current Event: {this.state.event.name}</h4>
 				<LineChart
-					width={950}
+					width={900}
 					height={200}
 					data={
 						this.state.eventCompareType == "data1"
@@ -936,8 +1342,261 @@ class Summary extends Component {
 					<XAxis dataKey="name"/>
 					<YAxis/>
 					<Tooltip/>
-					<Line type="monotone" dataKey="pv" stroke="#82ca9d" fill="#82ca9d"/>
+					<Line type="monotone" dataKey="pv" stroke="#FF20B1" fill="#FF20B1"/>
 					<Brush/>
+				</LineChart>
+			</div>
+		);
+	}
+
+	renderGenreComparison() {
+		const data1 = [
+			{
+				name: "T - 42",
+				uv: 4000,
+				pv: 2400,
+				amt: 2400
+			},
+			{
+				name: "T - 35",
+				uv: 3000,
+				pv: 1398,
+				amt: 2210
+			},
+			{
+				name: "T - 28",
+				uv: 2000,
+				pv: 9800,
+				amt: 2290
+			},
+			{
+				name: "T - 21",
+				uv: 2780,
+				pv: 3908,
+				amt: 2000
+			},
+			{
+				name: "T - 14",
+				uv: 1890,
+				pv: 4800,
+				amt: 2181
+			},
+			{
+				name: "T - 7",
+				uv: 2390,
+				amt: 2500
+			},
+			{
+				name: "T - 0",
+				uv: 3490,
+				amt: 2100
+			}
+		];
+		const data2 = [
+			{
+				name: "T - 42",
+				uv: 4000,
+				pv: 4000,
+				amt: 2400
+			},
+			{
+				name: "T - 35",
+				uv: 2423,
+				pv: 3000,
+				amt: 2210
+			},
+			{
+				name: "T - 28",
+				uv: 1329,
+				pv: 2492,
+				amt: 2290
+			},
+			{
+				name: "T - 21",
+				uv: 1123,
+				pv: 2301,
+				amt: 2000
+			},
+			{
+				name: "T - 14",
+				uv: 987,
+				pv: 2100,
+				amt: 2181
+			},
+			{
+				name: "T - 7",
+				uv: 635,
+				amt: 2500
+			},
+			{
+				name: "T - 0",
+				uv: 32,
+				amt: 2100
+			}
+		];
+
+		return (
+			<div>
+				<h4>Compared Genre: Hip Hop</h4>
+				<LineChart
+					width={900}
+					height={200}
+					data={
+						this.state.eventCompareType == "data1"
+							? data1
+							: this.state.eventCompareType == "data2"
+								? data2
+								: data1
+					}
+					syncId="anyId"
+					margin={{
+						top: 10,
+						right: 30,
+						left: 0,
+						bottom: 0
+					}}
+				>
+					<CartesianGrid strokeDasharray="3 3"/>
+					<XAxis dataKey="name"/>
+					<YAxis/>
+					<Tooltip/>
+					<Line type="monotone" dataKey="uv" stroke="#8884d8" fill="#8884d8"/>
+				</LineChart>
+				<h4>Current Event: {this.state.event.name}</h4>
+				<LineChart
+					width={900}
+					height={200}
+					data={
+						this.state.eventCompareType == "data1"
+							? data1
+							: this.state.eventCompareType == "data2"
+								? data2
+								: data1
+					}
+					syncId="anyId"
+					margin={{
+						top: 10,
+						right: 30,
+						left: 0,
+						bottom: 0
+					}}
+				>
+					<CartesianGrid strokeDasharray="3 3"/>
+					<XAxis dataKey="name"/>
+					<YAxis/>
+					<Tooltip/>
+					<Line type="monotone" dataKey="pv" stroke="#FF20B1" fill="#FF20B1"/>
+					<Brush/>
+				</LineChart>
+			</div>
+		);
+	}
+
+	renderInventoryBurndown() {
+		const data1 = [
+			{
+				name: "T - 42",
+				uv: 4000,
+				pv: 2400,
+				amt: 2400
+			},
+			{
+				name: "T - 35",
+				uv: 3000,
+				pv: 1398,
+				amt: 2210
+			},
+			{
+				name: "T - 28",
+				uv: 2000,
+				pv: 9800,
+				amt: 2290
+			},
+			{
+				name: "T - 21",
+				uv: 2780,
+				pv: 3908,
+				amt: 2000
+			},
+			{
+				name: "T - 14",
+				uv: 1890,
+				pv: 4800,
+				amt: 2181
+			},
+			{
+				name: "T - 7",
+				uv: 2390,
+				amt: 2500
+			},
+			{
+				name: "T - 0",
+				uv: 3490,
+				amt: 2100
+			}
+		];
+		const data2 = [
+			{
+				name: "T - 42",
+				uv: 4000,
+				pv: 4000,
+				amt: 2400
+			},
+			{
+				name: "T - 35",
+				uv: 2423,
+				pv: 3000,
+				amt: 2210
+			},
+			{
+				name: "T - 28",
+				uv: 1329,
+				pv: 2492,
+				amt: 2290
+			},
+			{
+				name: "T - 21",
+				uv: 1123,
+				pv: 2301,
+				amt: 2000
+			},
+			{
+				name: "T - 14",
+				uv: 987,
+				pv: 2100,
+				amt: 2181
+			},
+			{
+				name: "T - 7",
+				uv: 635,
+				amt: 2500
+			},
+			{
+				name: "T - 0",
+				uv: 32,
+				amt: 2100
+			}
+		];
+
+		return (
+			<div>
+				<LineChart
+					width={900}
+					height={300}
+					data={data2}
+					syncId="anyId"
+					margin={{
+						top: 10,
+						right: 30,
+						left: 0,
+						bottom: 0
+					}}
+				>
+					<CartesianGrid strokeDasharray="3 3"/>
+					<XAxis dataKey="name"/>
+					<YAxis/>
+					<Tooltip/>
+					<Line type="monotone" dataKey="pv" stroke="#FF20B1" fill="#FF20B1"/>
 				</LineChart>
 			</div>
 		);
@@ -1135,6 +1794,10 @@ class Summary extends Component {
 								value={this.state.graphOption || "custom"}
 								items={[
 									{ value: "salesByDay", label: "Sales Velocity" },
+									{ value: "inventoryBurdown", label: "Inventory Burndown" },
+									{ value: "salesByDayType", label: "Sales Velocity by Tier" },
+									{ value: "compareVenue", label: "Compare Venue" },
+									{ value: "compareGenre", label: "Compare Genre" },
 									{ value: "compare", label: "Compare Events" }
 								]}
 								name={"sales-graph-option"}
@@ -1144,8 +1807,8 @@ class Summary extends Component {
 								}}
 							/>
 						</Grid>
-						<Grid item xs={12} sm={6} lg={3}>
-							{this.state.graphOption == "compare" ? (
+						{this.state.graphOption == "compare" ? (
+							<Grid item xs={12} sm={6} lg={3}>
 								<SelectGroup
 									value={this.state.eventCompareOption || "custom"}
 									items={[
@@ -1168,11 +1831,13 @@ class Summary extends Component {
 										this.setState({ eventCompareOption: e.target.value });
 									}}
 								/>
-							) : null}
-						</Grid>
+							</Grid>
+						) : null}
 						<Grid item xs={12} sm={6} lg={3}>
-							{this.state.graphOption == "compare" &&
-							this.state.eventCompareOption ? (
+							{(this.state.graphOption == "compare" &&
+								this.state.eventCompareOption) ||
+							this.state.graphOption == "compareVenue" ||
+							this.state.graphOption == "compareGenre" ? (
 									<SelectGroup
 										value={this.state.eventCompareType || "custom"}
 										items={[
@@ -1192,11 +1857,23 @@ class Summary extends Component {
 					{this.state.graphOption == "salesByDay"
 						? this.renderBarChart()
 						: null}
+					{this.state.graphOption == "salesByDayType"
+						? this.renderVelocityByTypeAndCode()
+						: null}
 					{this.state.graphOption == "dayTimeHeatmap"
 						? this.renderScatterPlot()
 						: null}
 					{this.state.graphOption == "salesBySource"
 						? this.renderSalesPie()
+						: null}
+					{this.state.graphOption == "inventoryBurdown"
+						? this.renderInventoryBurndown()
+						: null}
+					{this.state.graphOption == "compareVenue"
+						? this.renderVenueComparison()
+						: null}
+					{this.state.graphOption == "compareGenre"
+						? this.renderGenreComparison()
 						: null}
 					{this.state.graphOption == "compare" &&
 					!this.state.eventCompareOption ? (
