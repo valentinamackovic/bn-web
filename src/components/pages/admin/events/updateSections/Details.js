@@ -317,8 +317,7 @@ class Details extends Component {
 	renderVenues() {
 		const { venues } = this.state;
 		const { errors } = this.props;
-
-		const { venueId } = eventUpdateStore.event;
+		let { venueId } = eventUpdateStore.event;
 
 		const venueOptions = [];
 
@@ -328,6 +327,10 @@ class Details extends Component {
 			venues.forEach(venue => {
 				venueOptions.push({ value: venue.id, label: venue.name });
 			});
+
+			if (venues.length == 1) {
+				venueId = venueId || venues[0].id;
+			}
 			label = "Venue *";
 		} else {
 			label = "Loading venues...";
