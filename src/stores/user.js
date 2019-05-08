@@ -310,9 +310,10 @@ class User {
 	}
 
 	//Dialog is kept in Container.js ready to popup when it's needed
+	//type = true (Lets the user choose login or signup) / login / signup
 	@action
-	showAuthRequiredDialog(onSuccess) {
-		this.showRequiresAuthDialog = true;
+	showAuthRequiredDialog(onSuccess, type = true) {
+		this.showRequiresAuthDialog = type;
 
 		if (onSuccess) {
 			this.onAuthDialogSuccess = onSuccess;
