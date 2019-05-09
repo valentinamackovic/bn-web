@@ -214,25 +214,40 @@ const EventSummaryCard = props => {
 						>
 							{!isExternal ? (
 								<div className={classes.totalsContainer}>
-									<Total classes={classes} value={totalSold} color={"#707ced"}>
+									<Total
+										classes={classes}
+										value={totalSold === null ? "-" : totalSold}
+										color={"#707ced"}
+									>
 										Sold
 									</Total>
 
 									<div className={classes.totalsDivider}/>
 
-									<Total classes={classes} value={totalOpen} color={"#afc6d4"}>
+									<Total
+										classes={classes}
+										value={totalOpen === null ? "-" : totalOpen}
+										color={"#afc6d4"}
+									>
 										Open
 									</Total>
 
 									<div className={classes.totalsDivider}/>
 
-									<Total classes={classes} value={totalHeld} color={"#ff22b2"}>
+									<Total
+										classes={classes}
+										value={totalHeld === null ? "-" : totalHeld}
+										color={"#ff22b2"}
+									>
 										Held
 									</Total>
 
 									<div className={classes.totalsDivider}/>
 
-									<Total classes={classes} value={totalCapacity}>
+									<Total
+										classes={classes}
+										value={totalCapacity === null ? "-" : totalCapacity}
+									>
 										Capacity
 									</Total>
 
@@ -240,7 +255,11 @@ const EventSummaryCard = props => {
 
 									<Total
 										classes={classes}
-										value={`$${(totalSalesInCents / 100).toFixed(2)}`}
+										value={
+											totalSalesInCents === null
+												? "-"
+												: `$${(totalSalesInCents / 100).toFixed(2)}`
+										}
 									>
 										Sales
 									</Total>
@@ -253,7 +272,7 @@ const EventSummaryCard = props => {
 						</Grid>
 					</Grid>
 					<div>
-						{!isExternal ? (
+						{!isExternal && totalSold !== null ? (
 							<div className={classes.progressBarContainer}>
 								<HorizontalBreakdownBar
 									title="Ticket progress"
@@ -284,27 +303,36 @@ const EventSummaryCard = props => {
 					<Collapse in={isExpanded}>
 						<div className={classes.expandedViewContent}>
 							<Grid container spacing={32}>
-								{ticketTypes.map((ticketType, index) => {
-									const remainingHeld = ticketType.held - ticketType.sold_held;
-									// const valueDisplay = ticketType.held > 0 ? `${remainingHeld} / ${ticketType.held}` : "";
-									return (
-										<Grid key={index} item xs={12} sm={12} md={6} lg={4}>
-											<TicketTypeSalesBarChart
-												name={ticketType.name}
-												totalRevenueInCents={ticketType.sales_total_in_cents}
-												values={[
-													{
-														label: "Sold",
-														value:
-															ticketType.sold_held + ticketType.sold_unreserved
-													},
-													{ label: "Open", value: ticketType.open },
-													{ label: "Held", value: remainingHeld }
-												]}
-											/>
-										</Grid>
-									);
-								})}
+								{ticketTypes
+									.filter(
+										ticketType =>
+											ticketType.sales_total_in_cents !== null &&
+											ticketType.sold_held !== null &&
+											ticketType.sold_unreserved !== null
+									)
+									.map((ticketType, index) => {
+										const remainingHeld =
+											ticketType.held - ticketType.sold_held;
+										// const valueDisplay = ticketType.held > 0 ? `${remainingHeld} / ${ticketType.held}` : "";
+										return (
+											<Grid key={index} item xs={12} sm={12} md={6} lg={4}>
+												<TicketTypeSalesBarChart
+													name={ticketType.name}
+													totalRevenueInCents={ticketType.sales_total_in_cents}
+													values={[
+														{
+															label: "Sold",
+															value:
+																ticketType.sold_held +
+																ticketType.sold_unreserved
+														},
+														{ label: "Open", value: ticketType.open },
+														{ label: "Held", value: remainingHeld }
+													]}
+												/>
+											</Grid>
+										);
+									})}
 							</Grid>
 							<div
 								className={classes.expandIconRow}
@@ -330,11 +358,11 @@ EventSummaryCard.propTypes = {
 	menuButton: PropTypes.element.isRequired,
 	isPublished: PropTypes.bool.isRequired,
 	isOnSale: PropTypes.bool.isRequired,
-	totalSold: PropTypes.number.isRequired,
-	totalOpen: PropTypes.number.isRequired,
-	totalHeld: PropTypes.number.isRequired,
-	totalCapacity: PropTypes.number.isRequired,
-	totalSalesInCents: PropTypes.number.isRequired,
+	totalSold: PropTypes.number,
+	totalOpen: PropTypes.number,
+	totalHeld: PropTypes.number,
+	totalCapacity: PropTypes.number,
+	totalSalesInCents: PropTypes.number,
 	isExpanded: PropTypes.bool.isRequired,
 	onExpandClick: PropTypes.func.isRequired,
 	ticketTypes: PropTypes.array.isRequired,
