@@ -75,13 +75,13 @@ class Refunds extends Component {
 
 				data.forEach(
 					({
-						 user_id,
-						 email,
-						 first_name,
-						 last_name,
-						 phone,
-						 ...ticketDetails
-					 }) => {
+						user_id,
+						email,
+						first_name,
+						last_name,
+						phone,
+						...ticketDetails
+					}) => {
 						if (!guests[user_id]) {
 							guests[user_id] = {
 								email,
@@ -142,16 +142,19 @@ class Refunds extends Component {
 		//Filtering required
 		const filteredGuests = {};
 		Object.keys(guests).forEach(user_id => {
-			const { first_name, last_name, tickets } = guests[user_id];
+			const { first_name, last_name, email, phone, tickets } = guests[user_id];
 			const ticketIds = [];
-			tickets.forEach(({ id }) => {
+			const orderIds = [];
+
+			tickets.forEach(({ id, order_id }) => {
 				ticketIds.push(id);
+				orderIds.push(order_id);
 			});
 
 			if (
 				this.stringContainedInArray(
-					[first_name, last_name, ...ticketIds],
-					searchQuery
+					[first_name, last_name, email, phone, ...ticketIds, ...orderIds],
+					searchQuery.replace("#", "")
 				)
 			) {
 				filteredGuests[user_id] = guests[user_id];
@@ -201,7 +204,7 @@ class Refunds extends Component {
 		//Group by order_id as we might need to do multiple refund calls per order
 		const orders = {}; //order_id: [items]
 		Object.keys(selectedTickets).forEach(ticket_instance_id => {
-			const { order_id, order_item_id }  = selectedTickets[ticket_instance_id];
+			const { order_id, order_item_id } = selectedTickets[ticket_instance_id];
 
 			if (!orders[order_id]) {
 				orders[order_id] = [];
@@ -239,7 +242,11 @@ class Refunds extends Component {
 
 		this.refreshGuests();
 
-		this.setState({ isRefunding: false, refundComplete: !foundError, selectedTickets: {} });
+		this.setState({
+			isRefunding: false,
+			refundComplete: !foundError,
+			selectedTickets: {}
+		});
 	}
 
 	onRefund() {
@@ -258,13 +265,27 @@ class Refunds extends Component {
 			value_in_cents += price_in_cents;
 		});
 
-		return <BottomRefundBar value_in_cents={value_in_cents} count={count} onSubmit={this.onRefund.bind(this)}/>;
+		return (
+			<BottomRefundBar
+				value_in_cents={value_in_cents}
+				count={count}
+				onSubmit={this.onRefund.bind(this)}
+			/>
+		);
 	}
 
 	render() {
 		//TODO make sure this is for org members
 
-		const { eventName, searchQuery, expandedUserId, selectedTickets, showConfirmRefund, isRefunding, refundComplete } = this.state;
+		const {
+			eventName,
+			searchQuery,
+			expandedUserId,
+			selectedTickets,
+			showConfirmRefund,
+			isRefunding,
+			refundComplete
+		} = this.state;
 
 		const { classes } = this.props;
 
@@ -276,9 +297,8 @@ class Refunds extends Component {
 
 		return (
 			<div>
-
 				<Grid className={classes.filterOptions} container>
-					<Grid  item xs={12} sm={12} md={6} lg={8}>
+					<Grid item xs={12} sm={12} md={6} lg={8}>
 						<PageHeading iconUrl="/icons/events-multi.svg">
 							Manage orders - {eventName}
 						</PageHeading>
@@ -311,7 +331,9 @@ class Refunds extends Component {
 
 				<ConfirmRefundDialog
 					open={showConfirmRefund}
-					onClose={() => this.setState({ showConfirmRefund: false, refundComplete: false })}
+					onClose={() =>
+						this.setState({ showConfirmRefund: false, refundComplete: false })
+					}
 					isRefunding={isRefunding}
 					refundComplete={refundComplete}
 					selectedTickets={selectedTickets}
