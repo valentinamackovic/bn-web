@@ -124,14 +124,10 @@ class ChildrenList extends Component {
 				<div>
 					<HoldRow heading>{ths}</HoldRow>
 					{children.map((ticket, index) => {
-						const {
-							id,
-							name,
-							redemption_code,
-							status = "Unclaimed",
-							quantity,
-							claimed = 0
-						} = ticket;
+						const { id, name, redemption_code, quantity, available } = ticket;
+
+						const claimed = quantity - available;
+						const status = claimed === 0 ? "Unclaimed" : "Claimed";
 
 						const tds = [
 							name,
