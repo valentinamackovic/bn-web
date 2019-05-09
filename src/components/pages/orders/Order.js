@@ -158,26 +158,29 @@ class Order extends Component {
 		const listItems = [];
 
 		if (items) {
-			items.forEach(
-				(item) => {
-					const { description, item_type, unit_price_in_cents, quantity } = item;
+			items.forEach(item => {
+				const { description, item_type, unit_price_in_cents, quantity } = item;
 
-					if (item_type === "Fees" || item_type === "EventFees" || item_type === "PerUnitFees") {
-						fee_total_in_cents =
-							fee_total_in_cents + unit_price_in_cents * quantity;
-					} else {
-						listItems.push(item);
+				if (
+					item_type === "Fees" ||
+					item_type === "EventFees" ||
+					item_type === "PerUnitFees" ||
+					item_type === "CreditCardFees"
+				) {
+					fee_total_in_cents =
+						fee_total_in_cents + unit_price_in_cents * quantity;
+				} else {
+					listItems.push(item);
 
-						if (item_type === "Tickets") {
-							if (eventName === "") {
-								eventName = description;
-							} else {
-								eventName = `${eventName}, ${description}`;
-							}
+					if (item_type === "Tickets") {
+						if (eventName === "") {
+							eventName = description;
+						} else {
+							eventName = `${eventName}, ${description}`;
 						}
 					}
 				}
-			);
+			});
 		}
 
 		const orderNumber = id.slice(-8); //TODO eventually this will also come in the API
@@ -225,44 +228,31 @@ class Order extends Component {
 						<Divider style={{ marginBottom: 15 }}/>
 
 						{listItems.map(item => {
-							const {
-								id,
-								quantity,
-								unit_price_in_cents,
-								description
-							} = item;
+							const { id, quantity, unit_price_in_cents, description } = item;
 
 							return (
 								<div key={id}>
 									<LineEntry
-										col1={
-											(
-												<Typography className={classes.item}>
-													{quantity}
-												</Typography>
-											)
-										}
-										col2={
-											(
-												<Typography className={classes.item}>
-													{description}
-												</Typography>
-											)
-										}
-										col3={
-											(
-												<Typography className={classes.item}>
-													{(unit_price_in_cents / 100).toFixed(2)}
-												</Typography>
-											)
-										}
-										col4={
-											(
-												<Typography className={classes.item}>
-													{((unit_price_in_cents / 100) * quantity).toFixed(2)}
-												</Typography>
-											)
-										}
+										col1={(
+											<Typography className={classes.item}>
+												{quantity}
+											</Typography>
+										)}
+										col2={(
+											<Typography className={classes.item}>
+												{description}
+											</Typography>
+										)}
+										col3={(
+											<Typography className={classes.item}>
+												{(unit_price_in_cents / 100).toFixed(2)}
+											</Typography>
+										)}
+										col4={(
+											<Typography className={classes.item}>
+												{((unit_price_in_cents / 100) * quantity).toFixed(2)}
+											</Typography>
+										)}
 									/>
 									<Divider style={{ marginBottom: 15 }}/>
 								</div>
@@ -272,20 +262,16 @@ class Order extends Component {
 						<LineEntry
 							col1={null}
 							col2={null}
-							col3={
-								(
-									<Typography className={classes.itemHeading}>
+							col3={(
+								<Typography className={classes.itemHeading}>
 									Service fees
-									</Typography>
-								)
-							}
-							col4={
-								(
-									<Typography className={classes.itemHeading}>
+								</Typography>
+							)}
+							col4={(
+								<Typography className={classes.itemHeading}>
 									$ {(fee_total_in_cents / 100).toFixed(2)}
-									</Typography>
-								)
-							}
+								</Typography>
+							)}
 						/>
 
 						<div style={{ marginTop: 20 }}/>
@@ -293,20 +279,16 @@ class Order extends Component {
 						<LineEntry
 							col1={null}
 							col2={null}
-							col3={
-								(
-									<Typography className={classes.itemHeading}>
+							col3={(
+								<Typography className={classes.itemHeading}>
 									Order total
-									</Typography>
-								)
-							}
-							col4={
-								(
-									<Typography className={classes.itemHeading}>
+								</Typography>
+							)}
+							col4={(
+								<Typography className={classes.itemHeading}>
 									$ {(total_in_cents / 100).toFixed(2)}
-									</Typography>
-								)
-							}
+								</Typography>
+							)}
 						/>
 
 						<AppPromoCard style={{ marginTop: 80 }}/>
