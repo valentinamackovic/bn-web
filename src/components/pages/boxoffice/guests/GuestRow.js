@@ -34,7 +34,8 @@ const styles = theme => ({
 		fontSize: theme.typography.fontSize * 1.2
 	},
 	ticketInfo: {
-		color: "#9DA3B4"
+		color: "#9DA3B4",
+		maxWidth: "90vw"
 	},
 	leftContent: {},
 	rightContent: {
@@ -66,19 +67,29 @@ const styles = theme => ({
 			padding: 0,
 			paddingLeft: theme.spacing.unit,
 			width: 320 - theme.spacing.unit * 4,
-			"overflowX": "scroll","overflowY": "hidden","whiteSpace": "nowrap"
+			overflowX: "scroll",
+			overflowY: "hidden",
+			whiteSpace: "nowrap"
 		}
 	}
 });
 
-const DiscountIcon = ({ classes }) => <img className={classes.paymentRequiredIcon} alt={"Payment required"} src={"/icons/sales-active.svg"}/>;
+const DiscountIcon = ({ classes }) => (
+	<img
+		className={classes.paymentRequiredIcon}
+		alt={"Payment required"}
+		src={"/icons/sales-active.svg"}
+	/>
+);
 
 const ticketIdsString = (tickets, isMobile) => {
 	const subheadingMobileCharLimit = 38;
 
-	let subHeading = tickets.map(({ id }) => {
-		return `#${id.slice(-8)}`;
-	}).join(", ");
+	let subHeading = tickets
+		.map(({ id }) => {
+			return `#${id.slice(-8)}`;
+		})
+		.join(", ");
 
 	if (isMobile && subHeading.length > subheadingMobileCharLimit) {
 		subHeading = `${subHeading.substring(0, subheadingMobileCharLimit)}...`;
@@ -112,16 +123,17 @@ const GuestRow = props => {
 	let ticketRows = [];
 
 	if (type === "guest") {
-		ticketHeadings = [ " ", "Ticket #", "Order #", "Ticket type", "Price", "Status" ];
+		ticketHeadings = [
+			" ",
+			"Ticket #",
+			"Order #",
+			"Ticket type",
+			"Price",
+			"Status"
+		];
 
 		ticketRows = tickets.map(ticket => {
-			const {
-				id,
-				ticket_type,
-				price_in_cents,
-				order_id,
-				status
-			} = ticket;
+			const { id, ticket_type, price_in_cents, order_id, status } = ticket;
 			const isPurchased = status === "Purchased";
 
 			return (
@@ -136,7 +148,17 @@ const GuestRow = props => {
 					</span>
 					<Typography>{id.slice(-8)}</Typography>
 					<Typography>
-						{order_id ? <StyledLink underlined href={`/orders/${order_id}`} target="_blank">{order_id.slice(-8)}</StyledLink> : "-"}
+						{order_id ? (
+							<StyledLink
+								underlined
+								href={`/orders/${order_id}`}
+								target="_blank"
+							>
+								{order_id.slice(-8)}
+							</StyledLink>
+						) : (
+							"-"
+						)}
 					</Typography>
 					<Typography>{ticket_type}</Typography>
 					<Typography>$ {(price_in_cents / 100).toFixed(2)}</Typography>
@@ -147,7 +169,7 @@ const GuestRow = props => {
 	}
 
 	if (type === "hold") {
-		ticketHeadings = [ " ", "Ticket #", "Hold", "Ticket type", "Price", "" ];
+		ticketHeadings = [" ", "Ticket #", "Hold", "Ticket type", "Price", ""];
 
 		for (let index = 0; index < available; index++) {
 			let price = "";
@@ -178,7 +200,10 @@ const GuestRow = props => {
 	return (
 		<div className={classes.root}>
 			<Card>
-				<div className={classes.header} onClick={() => onExpandChange(expanded ? null : rowKey)}>
+				<div
+					className={classes.header}
+					onClick={() => onExpandChange(expanded ? null : rowKey)}
+				>
 					<div className={classes.leftContent}>
 						<div className={classes.topRow}>
 							<Typography className={classes.indexNumber}>
@@ -208,13 +233,13 @@ const GuestRow = props => {
 						</div>
 					</div>
 					<div className={classes.rightContent}>
-						{hold_type === "Discount" ? <DiscountIcon classes={classes}/> : null}
+						{hold_type === "Discount" ? (
+							<DiscountIcon classes={classes}/>
+						) : null}
 						<img
 							alt="Expand icon"
 							className={classes.expandIcon}
-							src={
-								expanded ? "/icons/up-active.svg" : "/icons/down-active.svg"
-							}
+							src={expanded ? "/icons/up-active.svg" : "/icons/down-active.svg"}
 						/>
 					</div>
 				</div>
@@ -223,7 +248,9 @@ const GuestRow = props => {
 					<div className={classes.ticketContainerOuter}>
 						<div className={classes.ticketContainerInner}>
 							<GuestTicketRow heading>
-								{ticketHeadings.map((heading, index) => <span key={index}>{heading}</span>)}
+								{ticketHeadings.map((heading, index) => (
+									<span key={index}>{heading}</span>
+								))}
 							</GuestTicketRow>
 							{ticketRows}
 						</div>
@@ -246,39 +273,61 @@ GuestRow.propTypes = {
 	//Used for type=guest
 	tickets: (props, propName, componentName) => {
 		if (props.type === "guest" && !props[propName]) {
-			return new Error(`Invalid prop '${propName}' supplied to '${componentName}'. If type='guest' then '${propName}' is required`);
+			return new Error(
+				`Invalid prop '${propName}' supplied to '${componentName}'. If type='guest' then '${propName}' is required`
+			);
 		}
 	},
 	selectedTickets: (props, propName, componentName) => {
 		if (props.type === "guest" && !props[propName]) {
-			return new Error(`Invalid prop '${propName}' supplied to '${componentName}'. If type='guest' then '${propName}' is required`);
+			return new Error(
+				`Invalid prop '${propName}' supplied to '${componentName}'. If type='guest' then '${propName}' is required`
+			);
 		}
 	},
 
 	//Used for type=hold
 	available: (props, propName, componentName) => {
 		if (props.type === "hold" && isNaN(props[propName])) {
-			return new Error(`Invalid prop '${propName}' supplied to '${componentName}'. If type='hold' then '${propName}' number is required`);
+			return new Error(
+				`Invalid prop '${propName}' supplied to '${componentName}'. If type='hold' then '${propName}' number is required`
+			);
 		}
 	},
 	hold_type: (props, propName, componentName) => {
-		if (props.type === "hold" && props[propName] !== "Discount" && props[propName] !== "Comp") {
-			return new Error(`Invalid prop '${propName}' supplied to '${componentName}'. If type='hold' then '${propName}' must be either 'Discount' or 'Comp'`);
+		if (
+			props.type === "hold" &&
+			props[propName] !== "Discount" &&
+			props[propName] !== "Comp"
+		) {
+			return new Error(
+				`Invalid prop '${propName}' supplied to '${componentName}'. If type='hold' then '${propName}' must be either 'Discount' or 'Comp'`
+			);
 		}
 	},
 	ticketTypeName: (props, propName, componentName) => {
 		if (props.type === "hold" && !props[propName]) {
-			return new Error(`Missing prop '${propName}' for '${componentName}'. If type='hold' then '${propName}' is required`);
+			return new Error(
+				`Missing prop '${propName}' for '${componentName}'. If type='hold' then '${propName}' is required`
+			);
 		}
 	},
 	discountedPriceInCents: (props, propName, componentName) => {
-		if (props.type === "hold" && props.hold_type === "Discount" && isNaN(props[propName])) {
-			return new Error(`Invalid prop '${propName}' supplied to '${componentName}'. Requires a number when hold_type===Discount`);
+		if (
+			props.type === "hold" &&
+			props.hold_type === "Discount" &&
+			isNaN(props[propName])
+		) {
+			return new Error(
+				`Invalid prop '${propName}' supplied to '${componentName}'. Requires a number when hold_type===Discount`
+			);
 		}
 	},
 	selectedHolds: (props, propName, componentName) => {
 		if (props.type === "hold" && !props[propName]) {
-			return new Error(`Invalid prop '${propName}' supplied to '${componentName}'. If type='guest' then '${propName}' is required`);
+			return new Error(
+				`Invalid prop '${propName}' supplied to '${componentName}'. If type='guest' then '${propName}' is required`
+			);
 		}
 	}
 };
