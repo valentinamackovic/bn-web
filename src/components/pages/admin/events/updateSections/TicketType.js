@@ -451,26 +451,44 @@ const TicketDetails = observer(props => {
 				) : null}
 
 				<div className={classes.additionalInputsRow}>
+					{/*<div className={classes.additionalInputContainer}>*/}
+					{/*	<InputGroup*/}
+					{/*		disabled={isCancelled}*/}
+					{/*		InputProps={{*/}
+					{/*			startAdornment: (*/}
+					{/*				<InputAdornment position="start">$</InputAdornment>*/}
+					{/*			)*/}
+					{/*		}}*/}
+					{/*		error={errors.priceAtDoor}*/}
+					{/*		value={priceAtDoor}*/}
+					{/*		name="value"*/}
+					{/*		label="Price at door"*/}
+					{/*		placeholder=""*/}
+					{/*		type="number"*/}
+					{/*		onChange={e => {*/}
+					{/*			updateTicketType(index, { priceAtDoor: e.target.value });*/}
+					{/*		}}*/}
+					{/*		onBlur={validateFields}*/}
+					{/*	/>*/}
+					{/*</div>*/}
 					<div className={classes.additionalInputContainer}>
 						<InputGroup
 							disabled={isCancelled}
-							InputProps={{
-								startAdornment: (
-									<InputAdornment position="start">$</InputAdornment>
-								)
-							}}
-							error={errors.priceAtDoor}
-							value={priceAtDoor}
-							name="value"
-							label="Price at door"
-							placeholder=""
-							type="number"
+							error={errors.description}
+							value={description}
+							name="description"
+							label="Ticket description"
+							placeholder="More details about this ticket type"
+							type="text"
 							onChange={e => {
-								updateTicketType(index, { priceAtDoor: e.target.value });
+								updateTicketType(index, { description: e.target.value });
 							}}
 							onBlur={validateFields}
 						/>
 					</div>
+				</div>
+
+				<div className={classes.additionalInputsRow}>
 					<div className={classes.additionalInputContainer}>
 						<InputGroup
 							disabled={isCancelled}
@@ -488,9 +506,7 @@ const TicketDetails = observer(props => {
 							onBlur={validateFields}
 						/>
 					</div>
-				</div>
 
-				<div className={classes.additionalInputsRow}>
 					<div className={classes.additionalInputContainer}>
 						<InputGroup
 							disabled={isCancelled}
@@ -502,22 +518,6 @@ const TicketDetails = observer(props => {
 							type="number"
 							onChange={e => {
 								updateTicketType(index, { increment: e.target.value });
-							}}
-							onBlur={validateFields}
-						/>
-					</div>
-
-					<div className={classes.additionalInputContainer}>
-						<InputGroup
-							disabled={isCancelled}
-							error={errors.description}
-							value={description}
-							name="description"
-							label="Ticket description"
-							placeholder="More details about this ticket type"
-							type="text"
-							onChange={e => {
-								updateTicketType(index, { description: e.target.value });
 							}}
 							onBlur={validateFields}
 						/>
