@@ -13,6 +13,8 @@ import Dialog from "../../../../../elements/Dialog";
 import Loader from "../../../../../elements/loaders/Loader";
 import user from "../../../../../../stores/user";
 import { secondaryHex } from "../../../../../../config/theme";
+import Hidden from "@material-ui/core/es/Hidden/Hidden";
+import CodeRow from "../codes/CodeRow";
 
 const styles = theme => ({
 	root: {},
@@ -38,7 +40,8 @@ class TicketHoldList extends Component {
 			showHoldDialog: null,
 			ticketTypes: [],
 			holds: [],
-			deleteId: null
+			deleteId: null,
+			expandRowId: null
 		};
 	}
 
@@ -117,7 +120,7 @@ class TicketHoldList extends Component {
 	}
 
 	renderList() {
-		const { holds, activeHoldId, showHoldDialog } = this.state;
+		const { holds, activeHoldId, showHoldDialog, expandRowId } = this.state;
 
 		if (holds === null) {
 			return <Loader/>;
@@ -160,7 +163,12 @@ class TicketHoldList extends Component {
 
 			return (
 				<div>
-					<HoldRow heading>{ths}</HoldRow>
+					<Hidden smDown>
+						{" "}
+						<HoldRow heading>{ths}</HoldRow>
+					</Hidden>
+
+					{/*<HoldRow heading>{ths}</HoldRow>*/}
 					{holds.map((hold, index) => {
 						const {
 							id,
@@ -239,6 +247,10 @@ class TicketHoldList extends Component {
 												onClick: onAction.bind(this)
 											}
 										  ]
+								}
+								expanded={expandRowId === id}
+								onExpand={() =>
+									this.setState({ expandRowId: expandRowId === id ? null : id })
 								}
 							>
 								{tds}

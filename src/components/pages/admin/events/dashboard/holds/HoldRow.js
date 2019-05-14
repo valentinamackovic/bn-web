@@ -1,7 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withStyles, Typography } from "@material-ui/core";
+import { withStyles, Typography, Hidden, Collapse } from "@material-ui/core";
 import classNames from "classnames";
+import Card from "../../../../../elements/Card";
+import Divider from "../../../../../common/Divider";
 
 const styles = theme => {
 	return {
@@ -35,12 +37,32 @@ const styles = theme => {
 			width: 14,
 			height: 14,
 			cursor: "pointer"
+		},
+		mobileRow: {
+			display: "flex",
+			flex: 1,
+			justifyContent: "space-between"
+		},
+		mobileCard: {
+			borderRadius: 6,
+			marginTop: theme.spacing.unit * 2,
+			padding: theme.spacing.unit * 2
 		}
 	};
 };
 
 const HoldRow = props => {
-	const { heading, gray, active, children, classes, actions, ...rest } = props;
+	const {
+		heading,
+		gray,
+		active,
+		onExpand,
+		children,
+		classes,
+		expanded,
+		actions,
+		...rest
+	} = props;
 
 	const columnStyles = [
 		{ flex: 3, textAlign: "left" },
@@ -86,16 +108,36 @@ const HoldRow = props => {
 	}
 
 	return (
-		<div
-			className={classNames(
-				classes.root,
-				gray ? classes.gray : "",
-				active ? classes.active : ""
-			)}
-			{...rest}
-		>
-			{columns}
-			{actionButtons}
+		<div>
+			{/*DESKTOP*/}
+			<Hidden smDown>
+				<div
+					className={classNames(
+						classes.root,
+						gray ? classes.gray : "",
+						active ? classes.active : ""
+					)}
+					{...rest}
+				>
+					{columns}
+
+					{actionButtons}
+				</div>
+			</Hidden>
+
+			{/*MOBILE*/}
+			<Hidden mdUp>
+				<Card variant={"block"} className={classes.mobileCard}>
+					<div className={classes.mobileSummarySection} onClick={onExpand}>
+						<div className={classes.mobileRow}>{columns}</div>
+					</div>
+
+					<Collapse in={expanded}>
+						<Divider/>
+						{actionButtons}
+					</Collapse>
+				</Card>
+			</Hidden>
 		</div>
 	);
 };
