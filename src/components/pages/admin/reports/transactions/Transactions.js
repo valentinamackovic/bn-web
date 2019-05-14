@@ -13,7 +13,7 @@ import Loader from "../../../../elements/loaders/Loader";
 import { dollars } from "../../../../../helpers/money";
 import ReportsDate from "../ReportDate";
 import reportDateRangeHeading from "../../../../../helpers/reportDateRangeHeading";
-import BoxInput from "../../../../elements/form/BoxInput";
+import SearchInput from "../../../../elements/search";
 import { Pagination, urlPageParam } from "../../../../elements/Pagination";
 import user from "../../../../../stores/user";
 import { observer } from "mobx-react";
@@ -33,7 +33,6 @@ const styles = theme => ({
 
 const LINE_LIMIT_PER_PAGE = 20;
 const UNLIMITED_LINE_LIMIT = 999999999;
-const DEBOUNCE_DELAY = 500;
 
 const formatItems = data => {
 	const items = [];
@@ -66,7 +65,6 @@ class Transactions extends Component {
 			items: null,
 			isLoading: false,
 			paging: null,
-			searchQuery: "",
 			isExportingCSV: false
 		};
 
@@ -78,10 +76,6 @@ class Transactions extends Component {
 		if (printVersion) {
 			this.refreshData({}, 0, UNLIMITED_LINE_LIMIT); //TODO api needs to allow for all
 		}
-	}
-
-	componentWillUnmount() {
-		this.clearDebounceTimer();
 	}
 
 	exportCSV() {
@@ -231,37 +225,25 @@ class Transactions extends Component {
 			});
 	}
 
-	clearDebounceTimer() {
-		if (this.debounceTimeout) {
-			clearTimeout(this.debounceTimeout);
-		}
-	}
+	onSearch(searchQuery) {
+		const {
+			startDate = null,
+			endDate = null,
+			start_utc = null,
+			end_utc = null
+		} = this.currentDateParams;
 
-	onSearch(e) {
-		const searchQuery = e.target.value;
-		this.setState({ searchQuery }, () => {
-			const {
-				startDate = null,
-				endDate = null,
-				start_utc = null,
-				end_utc = null
-			} = this.currentDateParams;
-
-			this.clearDebounceTimer();
-			this.debounceTimeout = setTimeout(
-				() =>
-					this.refreshData(
-						{
-							start_utc,
-							end_utc,
-							startDate,
-							endDate
-						},
-						0
-					),
-				DEBOUNCE_DELAY
-			);
-		});
+		this.refreshData(
+			{
+				start_utc,
+				end_utc,
+				startDate,
+				endDate
+			},
+			0,
+			LINE_LIMIT_PER_PAGE,
+			searchQuery
+		);
 	}
 
 	changePage(page = urlPageParam()) {
@@ -282,14 +264,14 @@ class Transactions extends Component {
 			endDate: null
 		},
 		page = 0,
-		limit = LINE_LIMIT_PER_PAGE
+		limit = LINE_LIMIT_PER_PAGE,
+		searchQuery = ""
 	) {
 		const { startDate, endDate, end_utc } = dataParams;
 		let { start_utc } = dataParams;
 		this.currentDateParams = dataParams;
 
 		const { eventId, organizationId, onLoad } = this.props;
-		const { searchQuery } = this.state;
 
 		if (searchQuery) {
 			start_utc = null;
@@ -459,7 +441,7 @@ class Transactions extends Component {
 			return this.renderList();
 		}
 
-		const { isLoading, paging, searchQuery, isExportingCSV } = this.state;
+		const { isLoading, paging, isExportingCSV } = this.state;
 
 		const { currentOrgTimezone } = user;
 
@@ -472,11 +454,9 @@ class Transactions extends Component {
 						</Typography>
 					</Grid>
 					<Grid item xs={12} sm={12} md={4} lg={4}>
-						<BoxInput
-							name="Search"
-							value={searchQuery}
+						<SearchInput
 							placeholder="Search by guest name, email or event name"
-							onChange={this.onSearch.bind(this)}
+							onSearch={this.onSearch.bind(this)}
 						/>
 						{/*<InputWithButton*/}
 						{/*// style={{ marginBottom: 20, marginTop: 20 }}*/}
