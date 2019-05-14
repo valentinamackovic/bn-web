@@ -21,10 +21,6 @@ import layout from "../../../stores/layout";
 
 const styles = theme => {
 	return {
-		root: {
-			position: "absolute",
-			padding: 0
-		},
 		headerLinkContainer: {
 			[theme.breakpoints.down("sm")]: {
 				flex: 1,
@@ -38,9 +34,6 @@ const styles = theme => {
 			display: "flex",
 			justifyContent: "space-between",
 			...toolBarHeight
-		},
-		headerImage: {
-			maxWidth: 140
 		},
 		rightMenuOptions: {
 			alignItems: "center",
@@ -56,7 +49,7 @@ const CustomAppBar = observer(props => {
 	const { classes, handleDrawerToggle, history } = props;
 
 	return (
-		<AppBar className={classes.appBar}>
+		<AppBar position={"static"}>
 			<Toolbar className={classes.toolBar}>
 				{handleDrawerToggle ? (
 					<Hidden mdUp>

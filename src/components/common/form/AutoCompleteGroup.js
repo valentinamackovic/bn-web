@@ -16,7 +16,7 @@ const styles = theme => {
 	return {
 		formControl: {
 			width: "100%",
-			marginTop: theme.spacing.unit * 2
+			marginTop: theme.spacing.unit
 		},
 		input: {
 			display: "flex",
@@ -35,6 +35,9 @@ const styles = theme => {
 			position: "absolute",
 			left: 2,
 			fontSize: theme.overrides.MuiInput.root.fontSize
+		},
+		labelContainer: {
+			marginBottom: theme.spacing.unit
 		}
 	};
 };
@@ -121,7 +124,6 @@ class AutoCompleteGroup extends React.Component {
 	//TODO test and uncomment when needed
 	// static getDerivedStateFromProps(props, state) {
 	// 	const { value } = props;
-	// 	console.log(value);
 	// 	if (value) {
 	// 		return { value };
 	// 	}
@@ -180,24 +182,24 @@ class AutoCompleteGroup extends React.Component {
 
 		return (
 			<div>
-				{label ? (
-					<InputLabel>
-						<FormatInputLabel>{label}</FormatInputLabel>
-					</InputLabel>
-				) : null}
 				<FormControl
 					className={classes.formControl}
 					error={!!error}
 					aria-describedby={`%${name}-error-text`}
 					style={style}
 				>
+					{label ? (
+						<span className={classes.labelContainer}>
+							<FormatInputLabel>{label}</FormatInputLabel>
+						</span>
+					) : null}
 					<SelectComponent
 						classes={classes}
 						styles={selectStyles}
 						options={suggestions}
 						components={components}
 						value={value}
-						onChange={(chosen) => {
+						onChange={chosen => {
 							if (chosen) {
 								const { value, label } = chosen;
 								onChange(value, label);

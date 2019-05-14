@@ -6,7 +6,6 @@ import user from "../../../../stores/user";
 import PageHeading from "../../../elements/PageHeading";
 import Card from "../../../elements/Card";
 import StyledLink from "../../../elements/StyledLink";
-import Divider from "../../../common/Divider";
 import Transactions from "./transactions/Transactions";
 import TicketCounts from "./counts/TicketCounts";
 import Loader from "../../../elements/loaders/Loader";
@@ -36,7 +35,13 @@ class Reports extends Component {
 		const { classes } = this.props;
 
 		const report = this.props.match.params.report;
-		const { hasTransactionReports, hasTicketCountReports, hasOrgBoxOfficeSalesReport, hasOrgReconciliationReport, hasOrgEventSettlementReport } = user;
+		const {
+			hasTransactionReports,
+			hasTicketCountReports,
+			hasOrgBoxOfficeSalesReport,
+			hasOrgReconciliationReport,
+			hasOrgEventSettlementReport
+		} = user;
 
 		return (
 			<div className={classes.menuContainer}>
@@ -68,7 +73,7 @@ class Reports extends Component {
 							underlined={report === "box-office"}
 							to={`/admin/reports/box-office`}
 						>
-						Box Office Sales
+							Box Office Sales
 						</StyledLink>
 					</Typography>
 				) : null}
@@ -79,10 +84,10 @@ class Reports extends Component {
 							underlined={report === "reconciliation"}
 							to={`/admin/reports/reconciliation`}
 						>
-						Reconciliation
+							Reconciliation
 						</StyledLink>
 					</Typography>
-				) : null }
+				) : null}
 
 				{hasOrgEventSettlementReport ? (
 					<Typography className={classes.menuText}>
@@ -90,7 +95,7 @@ class Reports extends Component {
 							underlined={report === "settlement-list"}
 							to={`/admin/reports/settlement-list`}
 						>
-						Settlement reports
+							Settlement reports
 						</StyledLink>
 					</Typography>
 				) : null}
@@ -101,29 +106,52 @@ class Reports extends Component {
 	renderContent() {
 		const report = this.props.match.params.report;
 
-		const { hasTransactionReports, hasTicketCountReports, currentOrganizationId, currentOrgTimezone } = user;
+		const {
+			hasTransactionReports,
+			hasTicketCountReports,
+			currentOrganizationId,
+			currentOrgTimezone
+		} = user;
 
 		if (!currentOrganizationId || !currentOrgTimezone) {
 			return <Loader/>;
 		}
+
+		const { classes } = this.props;
 
 		//Add report components here as needed
 		switch (report) {
 			case undefined:
 			case "ticket-counts":
 				return hasTicketCountReports ? (
-					<TicketCounts organizationId={currentOrganizationId}/>
+					<Card variant={"block"} className={classes.content}>
+						<TicketCounts organizationId={currentOrganizationId}/>
+					</Card>
 				) : null;
 			case "transaction-details":
-				return <Transactions organizationId={currentOrganizationId}/>;
+				return (
+					<Card variant={"block"} className={classes.content}>
+						<Transactions organizationId={currentOrganizationId}/>
+					</Card>
+				);
 			case "settlement-list":
 				if (!currentOrgTimezone) {
 					return <Loader/>;
 				}
 
-				return <SettlementReportList organizationId={currentOrganizationId} organizationTimezone={currentOrgTimezone}/>;
+				return (
+					<SettlementReportList
+						organizationId={currentOrganizationId}
+						organizationTimezone={currentOrgTimezone}
+					/>
+				);
 			case "settlement":
-				return <SettlementReport history={this.props.history} organizationId={currentOrganizationId}/>;
+				return (
+					<SettlementReport
+						history={this.props.history}
+						organizationId={currentOrganizationId}
+					/>
+				);
 			default:
 				return (
 					<Typography>
@@ -141,9 +169,7 @@ class Reports extends Component {
 				<PageHeading>Organization Reports</PageHeading>
 
 				<Card variant={"block"} style={{ borderRadius: "6px 6px 0 0" }}>
-					<div className={classes.content}>
-						{this.renderMenu()}
-					</div>
+					<div className={classes.content}>{this.renderMenu()}</div>
 				</Card>
 
 				<div style={{ marginBottom: 20 }}/>

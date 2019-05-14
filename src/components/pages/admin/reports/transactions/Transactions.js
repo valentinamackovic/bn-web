@@ -14,18 +14,12 @@ import { dollars } from "../../../../../helpers/money";
 import ReportsDate from "../ReportDate";
 import reportDateRangeHeading from "../../../../../helpers/reportDateRangeHeading";
 import BoxInput from "../../../../elements/form/BoxInput";
-import boxOffice from "../../../../../stores/boxOffice";
-import Card from "../../../../elements/Card";
 import { Pagination, urlPageParam } from "../../../../elements/Pagination";
-import InputWithButton from "../../../../common/form/InputWithButton";
 import user from "../../../../../stores/user";
 import { observer } from "mobx-react";
 
 const styles = theme => ({
-	root: {
-		padding: theme.spacing.unit * 4,
-		marginBottom: theme.spacing.unit
-	},
+	root: {},
 	header: {
 		display: "flex",
 		minHeight: 60,
@@ -41,7 +35,7 @@ const LINE_LIMIT_PER_PAGE = 20;
 const UNLIMITED_LINE_LIMIT = 999999999;
 const DEBOUNCE_DELAY = 500;
 
-const formatItems = (data) => {
+const formatItems = data => {
 	const items = [];
 	data.forEach(item => {
 		const formattedDate = moment
@@ -96,8 +90,7 @@ class Transactions extends Component {
 		const { eventName, eventId, organizationId } = this.props;
 
 		Bigneon()
-			.reports
-			.transactionDetails({
+			.reports.transactionDetails({
 				organization_id: organizationId,
 				page: 0,
 				limit: UNLIMITED_LINE_LIMIT,
@@ -125,7 +118,9 @@ class Transactions extends Component {
 				}
 
 				csvRows.push([title]);
-				csvRows.push([`Transactions occurring ${reportDateRangeHeading(startDate, endDate)}`]);
+				csvRows.push([
+					`Transactions occurring ${reportDateRangeHeading(startDate, endDate)}`
+				]);
 				csvRows.push([""]);
 
 				csvRows.push([
@@ -148,8 +143,13 @@ class Transactions extends Component {
 					"Face value",
 					"Service fees",
 					"Discount",
-					"Gross"
-
+					"Gross",
+					"Source",
+					"Medium",
+					"Campaign",
+					"Term",
+					"Content",
+					"Platform"
 				]);
 
 				items.forEach(item => {
@@ -179,7 +179,13 @@ class Transactions extends Component {
 						last_name,
 						email,
 						promo_quantity,
-						promo_discount_value_in_cents
+						promo_discount_value_in_cents,
+						source,
+						medium,
+						campaign,
+						term,
+						content,
+						platform
 					} = item;
 
 					csvRows.push([
@@ -203,8 +209,13 @@ class Transactions extends Component {
 						dollars((quantity - refunded_quantity) * unit_price_in_cents), //Face value
 						dollars(event_fee_gross_in_cents_total + gross_fee_in_cents_total),
 						dollars(promo_quantity * promo_discount_value_in_cents),
-						dollars(gross)
-
+						dollars(gross),
+						source,
+						medium,
+						campaign,
+						term,
+						content,
+						platform
 					]);
 				});
 
@@ -229,35 +240,60 @@ class Transactions extends Component {
 	onSearch(e) {
 		const searchQuery = e.target.value;
 		this.setState({ searchQuery }, () => {
-			const { startDate = null, endDate = null, start_utc = null, end_utc = null } = this.currentDateParams;
+			const {
+				startDate = null,
+				endDate = null,
+				start_utc = null,
+				end_utc = null
+			} = this.currentDateParams;
 
 			this.clearDebounceTimer();
-			this.debounceTimeout = setTimeout(() => this.refreshData({
-				start_utc,
-				end_utc,
-				startDate,
-				endDate
-			}, 0), DEBOUNCE_DELAY);
+			this.debounceTimeout = setTimeout(
+				() =>
+					this.refreshData(
+						{
+							start_utc,
+							end_utc,
+							startDate,
+							endDate
+						},
+						0
+					),
+				DEBOUNCE_DELAY
+			);
 		});
 	}
 
 	changePage(page = urlPageParam()) {
-		const { startDate = null, endDate = null, start_utc = null, end_utc = null } = this.currentDateParams;
+		const {
+			startDate = null,
+			endDate = null,
+			start_utc = null,
+			end_utc = null
+		} = this.currentDateParams;
 		this.refreshData({ start_utc, end_utc, startDate, endDate }, page);
 	}
 
-	refreshData(dataParams = {
-		start_utc: null,
-		end_utc: null,
-		startDate: null,
-		endDate: null
-	}, page = 0, limit = LINE_LIMIT_PER_PAGE) {
-		const { startDate, endDate, start_utc, end_utc } = dataParams;
-
+	refreshData(
+		dataParams = {
+			start_utc: null,
+			end_utc: null,
+			startDate: null,
+			endDate: null
+		},
+		page = 0,
+		limit = LINE_LIMIT_PER_PAGE
+	) {
+		const { startDate, endDate, end_utc } = dataParams;
+		let { start_utc } = dataParams;
 		this.currentDateParams = dataParams;
 
 		const { eventId, organizationId, onLoad } = this.props;
 		const { searchQuery } = this.state;
+
+		if (searchQuery) {
+			start_utc = null;
+		}
 
 		let queryParams = {
 			organization_id: organizationId,
@@ -348,7 +384,8 @@ class Transactions extends Component {
 			"Email",
 			"Date/time",
 			"Qty",
-			"Gross"
+			"Gross",
+			"Platform"
 		];
 
 		if (includeEventName) {
@@ -374,7 +411,13 @@ class Transactions extends Component {
 						last_name,
 						email,
 						refunded_quantity,
-						order_id
+						order_id,
+						source,
+						medium,
+						campaign,
+						term,
+						content,
+						platform
 					} = item;
 
 					const tds = [
@@ -383,7 +426,8 @@ class Transactions extends Component {
 						email,
 						formattedDate,
 						quantity - refunded_quantity,
-						dollars(gross)
+						dollars(gross),
+						platform
 					];
 
 					if (includeEventName) {
@@ -409,7 +453,7 @@ class Transactions extends Component {
 	}
 
 	render() {
-		const { eventId, classes, printVersion } = this.props;
+		const { eventId, classes, printVersion, salesStart } = this.props;
 
 		if (printVersion) {
 			return this.renderList();
@@ -420,74 +464,81 @@ class Transactions extends Component {
 		const { currentOrgTimezone } = user;
 
 		return (
-			<Card variant={"block"}>
-				<div className={classes.root}>
-					<Grid className={classes.header} container>
-						<Grid item xs={12} sm={12} md={4} lg={4}>
-							<Typography variant="title">
-								{eventId ? "Event" : "Organization"} transaction report
-							</Typography>
-						</Grid>
-						<Grid item xs={12} sm={12} md={4} lg={4}>
-
-							<BoxInput
-								name="Search"
-								value={searchQuery}
-								placeholder="Search by guest name, email or event name"
-								onChange={this.onSearch.bind(this)}
-							/>
-							{/*<InputWithButton*/}
-							{/*// style={{ marginBottom: 20, marginTop: 20 }}*/}
-							{/*name={"tx-report-search"}*/}
-							{/*placeholder="Search by guest name, email or event name"*/}
-							{/*buttonText="Search"*/}
-							{/*onSubmit={this.onSearch.bind(this)}*/}
-							{/*disabled={isLoading}*/}
-							{/*/>*/}
-						</Grid>
-
-						<Grid item xs={12} sm={12} md={4} lg={4} className={classes.exportButtonContainer}>
-							<Button
-								iconUrl="/icons/csv-active.svg"
-								variant="text"
-								onClick={this.exportCSV.bind(this)}
-								disabled={isExportingCSV}
-							>
-								{isExportingCSV ? "Exporting..." : "Export CSV"}
-							</Button>
-							<Button
-								href={`/exports/reports/?type=transactions${eventId ? `&event_id=${eventId}` : ""}`}
-								target={"_blank"}
-								iconUrl="/icons/pdf-active.svg"
-								variant="text"
-							>
-								Export PDF
-							</Button>
-						</Grid>
+			<div className={classes.root}>
+				<Grid className={classes.header} container>
+					<Grid item xs={12} sm={12} md={4} lg={4}>
+						<Typography variant="title">
+							{eventId ? "Event" : "Organization"} transaction report
+						</Typography>
+					</Grid>
+					<Grid item xs={12} sm={12} md={4} lg={4}>
+						<BoxInput
+							name="Search"
+							value={searchQuery}
+							placeholder="Search by guest name, email or event name"
+							onChange={this.onSearch.bind(this)}
+						/>
+						{/*<InputWithButton*/}
+						{/*// style={{ marginBottom: 20, marginTop: 20 }}*/}
+						{/*name={"tx-report-search"}*/}
+						{/*placeholder="Search by guest name, email or event name"*/}
+						{/*buttonText="Search"*/}
+						{/*onSubmit={this.onSearch.bind(this)}*/}
+						{/*disabled={isLoading}*/}
+						{/*/>*/}
 					</Grid>
 
-					{currentOrgTimezone ? (
-						<ReportsDate
-							timezone={currentOrgTimezone}
-							onChange={this.refreshData.bind(this)}
-							defaultStartTimeBeforeNow={{ value: 1, unit: "M" }}
-							onChangeButton
-							onChangeOnLoad
-						/>
-					) : null}
+					<Grid
+						item
+						xs={12}
+						sm={12}
+						md={4}
+						lg={4}
+						className={classes.exportButtonContainer}
+					>
+						<Button
+							iconUrl="/icons/csv-active.svg"
+							variant="text"
+							onClick={this.exportCSV.bind(this)}
+							disabled={isExportingCSV}
+						>
+							{isExportingCSV ? "Exporting..." : "Export CSV"}
+						</Button>
+						<Button
+							href={`/exports/reports/?type=transactions${
+								eventId ? `&event_id=${eventId}` : ""
+							}`}
+							target={"_blank"}
+							iconUrl="/icons/pdf-active.svg"
+							variant="text"
+						>
+							Export PDF
+						</Button>
+					</Grid>
+				</Grid>
 
-					{this.renderDialog()}
-					{this.renderList()}
+				{currentOrgTimezone ? (
+					<ReportsDate
+						timezone={currentOrgTimezone}
+						onChange={this.refreshData.bind(this)}
+						defaultStartTimeBeforeNow={{ value: 1, unit: "M" }}
+						salesStart={salesStart}
+						onChangeButton
+						onChangeOnLoad
+					/>
+				) : null}
 
-					{paging ? (
-						<Pagination
-							isLoading={isLoading}
-							paging={paging}
-							onChange={this.changePage.bind(this)}
-						/>
-					) : null}
-				</div>
-			</Card>
+				{this.renderDialog()}
+				{this.renderList()}
+
+				{paging ? (
+					<Pagination
+						isLoading={isLoading}
+						paging={paging}
+						onChange={this.changePage.bind(this)}
+					/>
+				) : null}
+			</div>
 		);
 	}
 }

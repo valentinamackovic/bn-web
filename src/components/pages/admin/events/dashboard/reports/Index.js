@@ -11,6 +11,7 @@ import { EventSummaryReport } from "../../../reports/eventSummary/EventSummary";
 import TicketCounts from "../../../reports/counts/TicketCounts";
 import EventAudit from "../../../reports/eventAudit/Audit";
 import EventSummaryAudit from "../../../reports/eventSummaryAudit/SummaryAudit";
+import EventPromoCodesReport from "../../../reports/eventPromoCode/EventPromoCode";
 import Loader from "../../../../../elements/loaders/Loader";
 
 const styles = theme => ({
@@ -31,8 +32,8 @@ class Report extends Component {
 		Bigneon()
 			.events.read({ id: eventId })
 			.then(response => {
-				const { name } = response.data;
-				this.setState({ eventName: name });
+				const { name, sales_start_date } = response.data;
+				this.setState({ eventName: name, salesStart: sales_start_date });
 			})
 			.catch(error => {
 				console.error(error);
@@ -48,7 +49,7 @@ class Report extends Component {
 			return <Loader/>;
 		}
 
-		const { eventName } = this.state;
+		const { eventName, salesStart } = this.state;
 
 		let content;
 
@@ -57,6 +58,8 @@ class Report extends Component {
 				content = (
 					<TransactionsList
 						eventName={eventName}
+						eventId={eventId}
+						salesStart={salesStart}
 						organizationId={organizationId}
 						eventId={eventId}
 					/>
@@ -102,13 +105,27 @@ class Report extends Component {
 				);
 				break;
 
+			case "promo-codes":
+				content = (
+					<EventPromoCodesReport
+						eventName={eventName}
+						organizationId={organizationId}
+						eventId={eventId}
+					/>
+				);
+				break;
+
 			default:
 				content = <Typography>Report unavailable.</Typography>;
 				break;
 		}
 
 		return (
-			<Container eventId={eventId} subheading={"reports"}>
+			<Container
+				eventId={eventId}
+				subheading={"reports"}
+				layout={"childrenInsideCard"}
+			>
 				{content}
 			</Container>
 		);

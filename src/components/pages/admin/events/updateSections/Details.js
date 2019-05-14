@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { observer } from "mobx-react";
-import { withStyles, Grid, Collapse, Hidden, ListItemText, TextField } from "@material-ui/core";
+import { withStyles, Grid, Collapse } from "@material-ui/core";
 import moment from "moment-timezone";
 
 import Button from "../../../../elements/Button";
@@ -12,8 +12,6 @@ import SelectGroup from "../../../../common/form/SelectGroup";
 import Bigneon from "../../../../../helpers/bigneon";
 import eventUpdateStore from "../../../../../stores/eventUpdate";
 import Bn from "bn-api-node";
-import AutoCompleteGroup from "../../../../common/form/AutoCompleteGroup";
-import { secondaryHex } from "../../../../../config/theme";
 
 const styles = theme => ({
 	selectedAgeLimitContainer: {
@@ -23,9 +21,6 @@ const styles = theme => ({
 	},
 	ageLimitContainer: {
 		paddingTop: "14px"
-	},
-	superText: {
-		color: secondaryHex
 	}
 });
 
@@ -72,7 +67,8 @@ const validateFields = event => {
 	}
 
 	if (privateAccessCode && privateAccessCode.length > 6) {
-		errors.privateAccessCode = "Access code needs to be less than 6 characters.";
+		errors.privateAccessCode =
+			"Access code needs to be less than 6 characters.";
 	}
 
 	//TODO validate all fields
@@ -120,10 +116,7 @@ const formatDataForSaving = (event, organizationId) => {
 		private_access_code: privateAccessCode
 	};
 
-	if (
-		eventDate &&
-		moment(eventDate).isValid()
-	) {
+	if (eventDate && moment(eventDate).isValid()) {
 		eventDetails.event_start = moment
 			.utc(eventDate)
 			.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
@@ -154,7 +147,10 @@ const formatDataForSaving = (event, organizationId) => {
 			.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
 	} else {
 		//Set default if not set
-		const overrideEndTime = moment(eventDate).add(DEFAULT_END_TIME_HOURS_AFTER_SHOW_TIME, "h");
+		const overrideEndTime = moment(eventDate).add(
+			DEFAULT_END_TIME_HOURS_AFTER_SHOW_TIME,
+			"h"
+		);
 		eventDetails.event_end = moment
 			.utc(overrideEndTime)
 			.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
@@ -177,7 +173,7 @@ const formatDataForSaving = (event, organizationId) => {
 	return eventDetails;
 };
 
-const formatDataForInputs = (event) => {
+const formatDataForInputs = event => {
 	const {
 		age_limit,
 		door_time,
@@ -201,11 +197,14 @@ const formatDataForInputs = (event) => {
 		private_access_code
 	} = event;
 
-	const tomorrowNoon = moment.utc().add(1, "d").set({
-		hour: "12",
-		minute: "00",
-		second: "00"
-	});
+	const tomorrowNoon = moment
+		.utc()
+		.add(1, "d")
+		.set({
+			hour: "12",
+			minute: "00",
+			second: "00"
+		});
 
 	const eventDate = event_start
 		? moment.utc(event_start, moment.HTML5_FMT.DATETIME_LOCAL_MS)
@@ -235,12 +234,15 @@ const formatDataForInputs = (event) => {
 		doorTimeHours,
 		publishDate,
 		redeemDate,
-		ageLimit: age_limit,
+		ageLimit: age_limit || "0",
 		venueId: venue_id || "",
 		additionalInfo: additional_info || "",
 		topLineInfo: top_line_info ? top_line_info : "",
 		videoUrl: video_url || "",
 		showTopLineInfo: !!top_line_info,
+		showEventStatus: !!override_status,
+		showPrivateCode: !!private_access_code,
+		showEmbeddedMedia: !!video_url,
 		promoImageUrl: promo_image_url,
 		isExternal: is_external,
 		externalTicketsUrl: is_external && external_url ? external_url : "",
@@ -265,7 +267,10 @@ class Details extends Component {
 		}
 		return {
 			value: i - 1,
-			label: i - 1 === 1 ? "1 hour before showtime" : `${i - 1} hours before showtime`
+			label:
+				i - 1 === 1
+					? "1 hour before showtime"
+					: `${i - 1} hours before showtime`
 		};
 	});
 
@@ -312,17 +317,21 @@ class Details extends Component {
 	renderVenues() {
 		const { venues } = this.state;
 		const { errors } = this.props;
-
-		const { venueId } = eventUpdateStore.event;
+		let { venueId } = eventUpdateStore.event;
 
 		const venueOptions = [];
 
 		let label = "";
 
 		if (venues !== null) {
+			const privateVenues = venues.filter(v => v.is_private);
 			venues.forEach(venue => {
 				venueOptions.push({ value: venue.id, label: venue.name });
 			});
+
+			if (privateVenues.length == 1) {
+				venueId = venueId || privateVenues[0].id;
+			}
 			label = "Venue *";
 		} else {
 			label = "Loading venues...";
@@ -349,7 +358,9 @@ class Details extends Component {
 		const { override_status } = eventUpdateStore.event;
 
 		const statusOptions = [{ value: false, label: "Auto" }];
-		const eventOverrideStatusEnum = Bn.Enums ? Bn.Enums.EventOverrideStatus : {};
+		const eventOverrideStatusEnum = Bn.Enums
+			? Bn.Enums.EventOverrideStatus
+			: {};
 		const eventOverrideStatusString = Bn.Enums
 			? Bn.Enums.EVENT_OVERRIDE_STATUS_STRING
 			: {};
@@ -386,12 +397,9 @@ class Details extends Component {
 				error={errors.ageLimit}
 				value={ageLimit}
 				name="age-limit"
-				label="Age Limit"
+				label="Custom age limit"
 				labelProps={{
-					classes: {
-						superText: classes.superText
-					},
-					superText: `Select Age Limit`,
+					superText: `or select existing...`,
 					onSuperTextClick: () => {
 						this.setState({ isCustom: false });
 						this.changeDetails({ ageLimit: "0" });
@@ -410,7 +418,7 @@ class Details extends Component {
 		const { classes } = this.props;
 		let { ageLimit } = eventUpdateStore.event;
 
-		ageLimit = (ageLimit === undefined ? "0" : ageLimit + "");
+		ageLimit = ageLimit === undefined ? "0" : ageLimit + "";
 
 		const ageLimits = [
 			{ value: "0", label: "This event is all ages" },
@@ -423,12 +431,9 @@ class Details extends Component {
 				value={ageLimit}
 				items={ageLimits}
 				name={"age-limit"}
-				label={"Age Limit"}
+				label={"Select age limit"}
 				labelProps={{
-					classes: {
-						superText: classes.superText
-					},
-					superText: `Custom Age Limit`,
+					superText: `or customize...`,
 					onSuperTextClick: () => {
 						this.setState({ isCustom: true });
 						this.changeDetails({ ageLimit: "" });
@@ -451,15 +456,7 @@ class Details extends Component {
 		//TODO There is definitely a better way to do this using an autocomplete
 		return (
 			<div>
-				{isCustom === true ?
-					(
-						this.renderAgeInput()
-					) :
-					(
-						this.renderAgeSelect()
-
-					)
-				}
+				{isCustom === true ? this.renderAgeInput() : this.renderAgeSelect()}
 			</div>
 		);
 	}
@@ -506,6 +503,9 @@ class Details extends Component {
 			topLineInfo,
 			videoUrl,
 			showTopLineInfo,
+			showEventStatus,
+			showPrivateCode,
+			showEmbeddedMedia,
 			doorTimeHours = "1",
 			eventType,
 			redeemDate,
@@ -525,277 +525,294 @@ class Details extends Component {
 		}
 
 		return (
-			<Grid container spacing={8}>
-				<Grid
-					style={{ paddingBottom: 0, marginBottom: 0 }}
-					item
-					xs={12}
-					sm={12}
-					md={6}
-					lg={6}
-				>
-					<InputGroup
-						error={errors.name}
-						value={name}
-						name="eventName"
-						label="Event name *"
-						placeholder="eg. Child's play"
-						type="text"
-						onChange={e => this.changeDetails({ name: e.target.value })}
-						onBlur={validateFields}
-					/>
+			<React.Fragment>
+				<Grid container spacing={32}>
+					<Grid item xs={12} sm={12} md={8} lg={8}>
+						<InputGroup
+							error={errors.name}
+							value={name}
+							name="eventName"
+							label="Event name *"
+							placeholder="eg. Child's play"
+							type="text"
+							onChange={e => this.changeDetails({ name: e.target.value })}
+							onBlur={validateFields}
+						/>
+					</Grid>
+
+					<Grid item xs={12} sm={12} md={4} lg={4}>
+						{this.renderVenues()}
+					</Grid>
+
+					{/*<Grid*/}
+					{/*style={{ paddingBottom: 0, marginBottom: 0 }}*/}
+					{/*item*/}
+					{/*xs={12}*/}
+					{/*sm={12}*/}
+					{/*md={6}*/}
+					{/*lg={6}*/}
+					{/*>*/}
+					{/*{this.renderEventTypes()}*/}
+					{/*</Grid>*/}
 				</Grid>
 
-				<Grid
-					style={{ paddingBottom: 0, marginBottom: 0 }}
-					item
-					xs={12}
-					sm={12}
-					md={6}
-					lg={6}
-				>
-					{this.renderVenues()}
+				<Collapse in={!showTopLineInfo}>
+					<Grid container spacing={32}>
+						<Grid item xs={12} sm={12} md={5} lg={5}>
+							<Button
+								style={{ width: "100%" }}
+								variant="additional"
+								onClick={() => this.changeDetails({ showTopLineInfo: true })}
+							>
+								Add additional top line info
+							</Button>
+						</Grid>
+					</Grid>
+				</Collapse>
+
+				<Collapse in={showTopLineInfo}>
+					<Grid container spacing={32}>
+						<Grid item xs={12} sm={12} md={12} lg={12}>
+							<InputGroup
+								error={errors.topLineInfo}
+								value={topLineInfo}
+								name="topLineInfo"
+								label="Top line info"
+								type="text"
+								onChange={e =>
+									this.changeDetails({ topLineInfo: e.target.value })
+								}
+								onBlur={validateFields}
+								multiline
+							/>
+						</Grid>
+					</Grid>
+				</Collapse>
+
+				<div style={{ marginBottom: 30 }}/>
+
+				<Grid container spacing={32}>
+					<Grid item xs={12} sm={12} md={3} lg={3}>
+						<DateTimePickerGroup
+							type="date"
+							error={errors.eventDate}
+							value={eventDate}
+							name="eventDate"
+							label="Event date *"
+							onChange={newEventDate => {
+								newEventDate.set({
+									hour: eventDate.get("hour"),
+									minute: eventDate.get("minute"),
+									second: eventDate.get("second")
+								});
+
+								this.changeDetails({ eventDate: newEventDate });
+
+								//TODO add this check back when possible to change the end date of a ticket if it's later than the event date
+								//const tickets = this.state.tickets;
+								// if (tickets.length > 0) {
+								// 	if (!tickets[0].endDate) {
+								// 		tickets[0].endDate = eventDate;
+								// 		this.setState({ tickets });
+								// 	}
+								// }
+							}}
+							onBlur={validateFields}
+						/>
+					</Grid>
+
+					<Grid item xs={12} sm={12} md={3} lg={3}>
+						<DateTimePickerGroup
+							error={errors.eventDate}
+							value={eventDate}
+							name="show-time"
+							label="Show time *"
+							onChange={eventTime => {
+								eventDate.set({
+									hour: eventTime.get("hour"),
+									minute: eventTime.get("minute"),
+									second: eventTime.get("second")
+								});
+								this.changeDetails({ eventDate });
+							}}
+							onBlur={validateFields}
+							format="HH:mm"
+							type="time"
+						/>
+					</Grid>
+
+					<Grid item xs={12} sm={12} md={4} lg={4}>
+						<SelectGroup
+							value={doorTimeHours}
+							items={Details.doorHoursOptions}
+							error={errors.doorTime}
+							name="doorTimeHours"
+							label="Door time *"
+							styleClassName="formControlNoMargin"
+							onChange={this.handleDoorTimeChange}
+						/>
+					</Grid>
 				</Grid>
 
-				<Grid
-					style={{ paddingBottom: 0, marginBottom: 0 }}
-					item
-					xs={12}
-					sm={12}
-					md={6}
-					lg={6}
-				>
-					{this.renderEventTypes()}
+				<Grid container spacing={32}>
+					<Grid item xs={12} sm={12} md={3} lg={3}>
+						<DateTimePickerGroup
+							type="date"
+							error={errors.endTime}
+							value={displayEndTime}
+							name="endTime"
+							label="End date *"
+							onChange={newEndDate => {
+								const updatedEndTime = newEndDate;
+
+								let adjustTime;
+
+								//Adjust time part of newly selected date
+								if (endTime) {
+									adjustTime = endTime;
+								} else if (eventDate) {
+									adjustTime = moment(eventDate).add(
+										DEFAULT_END_TIME_HOURS_AFTER_SHOW_TIME,
+										"hours"
+									);
+								}
+
+								if (adjustTime) {
+									updatedEndTime.set({
+										hour: adjustTime.get("hour"),
+										minute: adjustTime.get("minute"),
+										second: adjustTime.get("second")
+									});
+								}
+
+								this.changeDetails({ endTime: updatedEndTime });
+							}}
+							onBlur={validateFields}
+						/>
+					</Grid>
+					<Grid item xs={12} sm={12} md={3} lg={3}>
+						<DateTimePickerGroup
+							type="time"
+							error={errors.endTime}
+							value={displayEndTime}
+							name="endTime"
+							label="End time *"
+							onChange={newEndTime => {
+								let updatedEndTime = moment();
+
+								if (endTime) {
+									updatedEndTime = moment(endTime);
+								} else if (eventDate) {
+									updatedEndTime = moment(eventDate).add(
+										DEFAULT_END_TIME_HOURS_AFTER_SHOW_TIME,
+										"hours"
+									);
+								}
+
+								updatedEndTime.set({
+									hour: newEndTime.get("hour"),
+									minute: newEndTime.get("minute"),
+									second: newEndTime.get("second")
+								});
+
+								this.changeDetails({ endTime: updatedEndTime });
+							}}
+							onBlur={validateFields}
+						/>
+					</Grid>
 				</Grid>
 
-				<Grid
-					style={{ paddingBottom: 0, marginBottom: 0 }}
-					item
-					xs={12}
-					sm={12}
-					md={6}
-					lg={6}
-				>
-					<InputGroup
-						error={errors.privateAccessCode}
-						value={privateAccessCode}
-						name="privateAccessCode"
-						label="Private access code (Disables public access without code)"
-						placeholder="eg. p@swd!"
-						type="text"
-						onChange={e => this.changeDetails({ privateAccessCode: e.target.value })}
-						onBlur={validateFields}
-					/>
+				<Grid container spacing={32}>
+					<Grid item xs={12} sm={12} md={12} lg={12}>
+						<InputGroup
+							error={errors.additionalInfo}
+							value={additionalInfo}
+							name="additionalInfo"
+							label="Additional event info"
+							type="text"
+							onChange={e =>
+								this.changeDetails({ additionalInfo: e.target.value })
+							}
+							onBlur={validateFields}
+							placeholder="Enter any additional event info you require."
+							multiline
+						/>
+					</Grid>
+
+					<Grid item xs={12} sm={12} md={5} lg={5}>
+						{this.renderAgeLimits()}
+					</Grid>
 				</Grid>
 
-				<Grid
-					style={{ paddingTop: 0, marginTop: 0 }}
-					item
-					xs={12}
-					sm={12}
-					md={12}
-					lg={12}
-				>
-					<Collapse in={!showTopLineInfo}>
-						<Hidden mdUp>
+				<Grid container spacing={32}>
+					<Grid item xs={12} sm={12} md={5} lg={5}>
+						<Collapse in={!showEmbeddedMedia}>
+							<Button
+								style={{ width: "100%" }}
+								variant="additional"
+								onClick={() => this.changeDetails({ showEmbeddedMedia: true })}
+							>
+								Add embedded media
+							</Button>
+						</Collapse>
+						<Collapse in={showEmbeddedMedia}>
+							<InputGroup
+								error={errors.videoUrl}
+								value={videoUrl}
+								name="videoUrl"
+								label="Featured media url"
+								type="text"
+								onChange={e => this.changeDetails({ videoUrl: e.target.value })}
+								onBlur={validateFields}
+								placeholder="https://vimeo.com/event-video-html"
+							/>
+						</Collapse>
+					</Grid>
+				</Grid>
+
+				<Grid container spacing={32}>
+					<Grid item xs={12} sm={12} md={5} lg={5}>
+						<Collapse in={!showPrivateCode}>
+							<Button
+								style={{ width: "100%" }}
+								variant="additional"
+								onClick={() => this.changeDetails({ showPrivateCode: true })}
+							>
+								Require password to view
+							</Button>
+						</Collapse>
+						<Collapse in={showPrivateCode}>
+							<InputGroup
+								error={errors.privateAccessCode}
+								value={privateAccessCode}
+								name="privateAccessCode"
+								label="Private access code"
+								placeholder="eg. p@swd!"
+								type="text"
+								onChange={e =>
+									this.changeDetails({ privateAccessCode: e.target.value })
+								}
+								onBlur={validateFields}
+							/>
+						</Collapse>
+					</Grid>
+				</Grid>
+
+				<Grid container spacing={32}>
+					<Grid item xs={12} sm={12} md={5} lg={5}>
+						<Collapse in={!showEventStatus}>
 							<Button
 								style={{ marginBottom: 20, width: "100%" }}
 								variant="additional"
-								onClick={() => this.changeDetails({ showTopLineInfo: true })}
+								onClick={() => this.changeDetails({ showEventStatus: true })}
 							>
-								Add additional top line info
+								Manually adjust event status
 							</Button>
-						</Hidden>
-						<Hidden smDown>
-							<Button
-								style={{ marginBottom: 20 }}
-								variant="additional"
-								onClick={() => this.changeDetails({ showTopLineInfo: true })}
-							>
-								Add additional top line info
-							</Button>
-						</Hidden>
-					</Collapse>
-					<Collapse in={showTopLineInfo}>
-						<InputGroup
-							error={errors.topLineInfo}
-							value={topLineInfo}
-							name="topLineInfo"
-							label="Top line info"
-							type="text"
-							onChange={e =>
-								this.changeDetails({ topLineInfo: e.target.value })
-							}
-							onBlur={validateFields}
-							multiline
-						/>
-					</Collapse>
+						</Collapse>
+						<Collapse in={showEventStatus}>{this.renderStatus()}</Collapse>
+					</Grid>
 				</Grid>
-
-				<Grid item xs={12} sm={12} md={6} lg={6}>
-					<DateTimePickerGroup
-						type="date"
-						error={errors.eventDate}
-						value={eventDate}
-						name="eventDate"
-						label="Event date *"
-						onChange={newEventDate => {
-							newEventDate.set({
-								hour: eventDate.get("hour"),
-								minute: eventDate.get("minute"),
-								second: eventDate.get("second")
-							});
-
-							this.changeDetails({ eventDate: newEventDate });
-
-							//TODO add this check back when possible to change the end date of a ticket if it's later than the event date
-							//const tickets = this.state.tickets;
-							// if (tickets.length > 0) {
-							// 	if (!tickets[0].endDate) {
-							// 		tickets[0].endDate = eventDate;
-							// 		this.setState({ tickets });
-							// 	}
-							// }
-						}}
-						onBlur={validateFields}
-					/>
-				</Grid>
-
-				<Grid item xs={12} sm={12} md={3} lg={3}>
-					<DateTimePickerGroup
-						error={errors.eventDate}
-						value={eventDate}
-						name="show-time"
-						label="Show time *"
-						onChange={eventTime => {
-							eventDate.set({
-								hour: eventTime.get("hour"),
-								minute: eventTime.get("minute"),
-								second: eventTime.get("second")
-							});
-							this.changeDetails({ eventDate });
-						}}
-						onBlur={validateFields}
-						format="HH:mm"
-						type="time"
-					/>
-				</Grid>
-
-				<Grid item xs={12} sm={12} md={3} lg={3}>
-					<SelectGroup
-						value={doorTimeHours}
-						items={Details.doorHoursOptions}
-						error={errors.doorTime}
-						name="doorTimeHours"
-						label="Door time *"
-						styleClassName="formControlNoMargin"
-						onChange={this.handleDoorTimeChange}
-					/>
-				</Grid>
-
-				<Grid item xs={12} sm={12} md={6} lg={6}>
-					<DateTimePickerGroup
-						type="date"
-						error={errors.endTime}
-						value={displayEndTime}
-						name="endTime"
-						label="Event end date *"
-						onChange={newEndDate => {
-							const updatedEndTime = newEndDate;
-
-							let adjustTime;
-
-							//Adjust time part of newly selected date
-							if (endTime) {
-								adjustTime = endTime;
-							} else if (eventDate) {
-								adjustTime = moment(eventDate).add(
-									DEFAULT_END_TIME_HOURS_AFTER_SHOW_TIME,
-									"hours"
-								);
-							}
-
-							if (adjustTime) {
-								updatedEndTime.set({
-									hour: adjustTime.get("hour"),
-									minute: adjustTime.get("minute"),
-									second: adjustTime.get("second")
-								});
-							}
-
-							this.changeDetails({ endTime: updatedEndTime });
-						}}
-						onBlur={validateFields}
-					/>
-				</Grid>
-				<Grid item xs={12} sm={12} md={6} lg={6}>
-					<DateTimePickerGroup
-						type="time"
-						error={errors.endTime}
-						value={displayEndTime}
-						name="endTime"
-						label="Event end time *"
-						onChange={newEndTime => {
-							let updatedEndTime = moment();
-
-							if (endTime) {
-								updatedEndTime = moment(endTime);
-							} else if (eventDate) {
-								updatedEndTime = moment(eventDate).add(
-									DEFAULT_END_TIME_HOURS_AFTER_SHOW_TIME,
-									"hours"
-								);
-							}
-
-							updatedEndTime.set({
-								hour: newEndTime.get("hour"),
-								minute: newEndTime.get("minute"),
-								second: newEndTime.get("second")
-							});
-
-							this.changeDetails({ endTime: updatedEndTime });
-						}}
-						onBlur={validateFields}
-					/>
-				</Grid>
-
-				<Grid item xs={12} sm={12} md={6} lg={6}>
-					{this.renderAgeLimits()}
-				</Grid>
-
-				<Grid item xs={12} sm={12} md={6} lg={6}>
-					{this.renderStatus()}
-				</Grid>
-
-				<Grid item xs={12} sm={12} md={12} lg={12}>
-					<InputGroup
-						error={errors.additionalInfo}
-						value={additionalInfo}
-						name="additionalInfo"
-						label="Additional event info"
-						type="text"
-						onChange={e =>
-							this.changeDetails({ additionalInfo: e.target.value })
-						}
-						onBlur={validateFields}
-						placeholder="Enter any additional event info you require."
-						multiline
-					/>
-				</Grid>
-
-				<Grid item xs={12} sm={12} md={12} lg={12}>
-					<InputGroup
-						error={errors.videoUrl}
-						value={videoUrl}
-						name="videoUrl"
-						label="Event video url"
-						type="text"
-						onChange={e => this.changeDetails({ videoUrl: e.target.value })}
-						onBlur={validateFields}
-						placeholder="https://vimeo.com/event-video-html"
-					/>
-				</Grid>
-			</Grid>
+			</React.Fragment>
 		);
 	}
 }

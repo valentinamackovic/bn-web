@@ -70,9 +70,6 @@ const styles = theme => ({
 		backgroundPosition: "center"
 	},
 	//Standalone classes
-	standaloneSpacer: {
-		...toolBarHeight
-	},
 	standaloneRoot: {
 		backgroundColor: "#FFFFFF",
 		height: 70,
@@ -166,15 +163,27 @@ class BoxOfficeEventSelection extends React.Component {
 				onClose={this.handleClose.bind(this)}
 			>
 				{availableEvents.map(
-					({ id, name, promo_image_url, venue, event_start, door_time, status }) => {
+					({
+						id,
+						name,
+						promo_image_url,
+						venue,
+						event_start,
+						door_time,
+						status
+					}) => {
 						//TODO use localised times in event obj
 						const displayTimes = {
 							event_start: moment.utc(event_start).local(),
 							door_time: moment.utc(door_time || event_start).local()
 						};
 						if (venue.timezone) {
-							displayTimes.event_start = moment.utc(event_start).tz(venue.timezone);
-							displayTimes.door_time = moment.utc(door_time || event_start).tz(venue.timezone);
+							displayTimes.event_start = moment
+								.utc(event_start)
+								.tz(venue.timezone);
+							displayTimes.door_time = moment
+								.utc(door_time || event_start)
+								.tz(venue.timezone);
 						}
 						return (
 							<MenuItem
@@ -191,7 +200,7 @@ class BoxOfficeEventSelection extends React.Component {
 										className={classes.promoImage}
 										style={{
 											backgroundImage: `url(${promo_image_url ||
-											"/images/app-promo-background.png"})`
+												"/images/app-promo-background.png"})`
 										}}
 									/>
 								</ListItemIcon>
@@ -235,11 +244,18 @@ class BoxOfficeEventSelection extends React.Component {
 		};
 		if (venue.timezone) {
 			displayTimes.event_start = moment.utc(event_start).tz(venue.timezone);
-			displayTimes.door_time = moment.utc(door_time || event_start).tz(venue.timezone);
+			displayTimes.door_time = moment
+				.utc(door_time || event_start)
+				.tz(venue.timezone);
 		}
 
 		const publishIsInFuture = moment.utc(publish_date) > moment.utc();
-		const invalidStatus = status === "Draft" ? "(Un-Published)" : publishIsInFuture ? "(Pre-Published)" : "";
+		const invalidStatus =
+			status === "Draft"
+				? "(Un-Published)"
+				: publishIsInFuture
+					? "(Pre-Published)"
+					: "";
 
 		if (type === "top-bar") {
 			return (
@@ -254,7 +270,7 @@ class BoxOfficeEventSelection extends React.Component {
 							className={classes.promoImage}
 							style={{
 								backgroundImage: `url(${promo_image_url ||
-							"/images/app-promo-background.png"})`
+									"/images/app-promo-background.png"})`
 							}}
 						/>
 						<div className={classes.nameDiv}>
@@ -283,7 +299,6 @@ class BoxOfficeEventSelection extends React.Component {
 		if (type === "stand-alone") {
 			return (
 				<div>
-					<div className={classes.standaloneSpacer}/>
 					<div className={classes.standaloneRoot}>
 						<span
 							aria-owns={open ? "menu-appbar" : null}
@@ -295,7 +310,8 @@ class BoxOfficeEventSelection extends React.Component {
 								<div
 									className={classes.standalonePromoImage}
 									style={{
-										backgroundImage: `url(${promo_image_url || "/images/app-promo-background.png"})`
+										backgroundImage: `url(${promo_image_url ||
+											"/images/app-promo-background.png"})`
 									}}
 								/>
 							</div>

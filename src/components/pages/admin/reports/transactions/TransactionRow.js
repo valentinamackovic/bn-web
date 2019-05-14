@@ -21,7 +21,9 @@ const styles = theme => {
 			color: "#FFFFFF"
 		},
 		text: {
-			fontSize: theme.typography.fontSize * 0.9
+			fontSize: theme.typography.fontSize * 0.9,
+			marginLeft: theme.spacing.unit,
+			marginRight: theme.spacing.unit
 		},
 		activeText: {
 			color: "#FFFFFF"
@@ -45,16 +47,17 @@ const TransactionRow = props => {
 	const { heading, gray, active, children, onClick, classes, ...rest } = props;
 
 	const columnStyles = [
-		{ flex: 2, textAlign: "left" },
-		{ flex: 3, textAlign: "left" },
-		{ flex: 3, textAlign: "left" },
-		{ flex: 3, textAlign: "left" },
-		{ flex: 1, textAlign: "left" },
-		{ flex: 1, textAlign: "left" }
+		{ flex: 2, textAlign: "left" }, // Order ID
+		{ flex: 3, textAlign: "left" }, // Name
+		{ flex: 3, textAlign: "left" }, // Email
+		{ flex: 3, textAlign: "left" }, // Date/time
+		{ flex: 1, textAlign: "right" }, // Qty
+		{ flex: 1, textAlign: "right" }, // Gross
+		{ flex: 3, textAlign: "left" } // Platform
 	];
 
 	//If they're adding the event name, make the second column side
-	if (children.length === 7) {
+	if (children.length === 8) {
 		columnStyles.splice(1, 0, { flex: 3, textAlign: "left" });
 	}
 

@@ -29,6 +29,22 @@ class RequiresAuthDialog extends Component {
 		this.onSuccess = this.onSuccess.bind(this);
 	}
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		const { type } = this.props;
+
+		//Check if we need to jump straight into login or signup without asking first
+		if (prevProps.type !== type) {
+			let isNewUser = null;
+			if (type === "login") {
+				isNewUser = false;
+			} else if (type === "signup") {
+				isNewUser = true;
+			}
+
+			this.setState({ isNewUser });
+		}
+	}
+
 	onClose() {
 		this.props.onClose();
 		this.setState({ isNewUser: null });
@@ -81,9 +97,11 @@ class RequiresAuthDialog extends Component {
 
 				<div style={{ marginTop: 20 }}/>
 
-				{process.env.REACT_APP_FACEBOOK_APP_ID ? <FacebookButton onSuccess={this.onSuccess}/> : null}
+				{process.env.REACT_APP_FACEBOOK_APP_ID ? (
+					<FacebookButton onSuccess={this.onSuccess}/>
+				) : null}
 
-				 <Divider style={{ marginTop: 20, marginBottom: 20 }}> or </Divider>
+				<Divider style={{ marginTop: 20, marginBottom: 20 }}> or </Divider>
 
 				<Button
 					variant="text"
@@ -96,7 +114,7 @@ class RequiresAuthDialog extends Component {
 	}
 
 	render() {
-		const { open, classes } = this.props;
+		const { type, classes } = this.props;
 		const { isNewUser } = this.state;
 
 		let title = "";
@@ -115,7 +133,7 @@ class RequiresAuthDialog extends Component {
 
 		return (
 			<Dialog
-				open={open}
+				open={!!type}
 				onClose={this.onClose}
 				title={title}
 				iconUrl={"/icons/user-white.svg"}
@@ -127,7 +145,7 @@ class RequiresAuthDialog extends Component {
 }
 
 RequiresAuthDialog.propTypes = {
-	open: PropTypes.bool.isRequired,
+	type: PropTypes.oneOf([true, false, "login", "signup"]),
 	onClose: PropTypes.func.isRequired,
 	onAuthSuccess: PropTypes.func.isRequired
 };

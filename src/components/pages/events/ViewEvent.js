@@ -11,7 +11,11 @@ import Divider from "../../common/Divider";
 import notifications from "../../../stores/notifications";
 import selectedEvent from "../../../stores/selectedEvent";
 import EventHeaderImage from "../../elements/event/EventHeaderImage";
-import { fontFamilyBold, secondaryHex, textColorPrimary } from "../../../config/theme";
+import {
+	fontFamilyBold,
+	secondaryHex,
+	textColorPrimary
+} from "../../../config/theme";
 import EventDetailsOverlayCard from "../../elements/event/EventDetailsOverlayCard";
 import nl2br from "../../../helpers/nl2br";
 import Meta from "./Meta";
@@ -30,11 +34,13 @@ import EventDescriptionBody from "./EventDescriptionBody";
 import addressLineSplit from "../../../helpers/addressLineSplit";
 import layout from "../../../stores/layout";
 import settings from "../../../config/settings";
+import EventCallToActionAppBar from "../../elements/header/EventCallToActionAppBar";
+import user from "../../../stores/user";
 
 const ADDITIONAL_INFO_CHAR_LIMIT = 300;
 
 const styles = theme => {
-	return ({
+	return {
 		root: {},
 		desktopContent: {
 			backgroundColor: "#FFFFFF"
@@ -112,7 +118,7 @@ const styles = theme => {
 			marginTop: theme.spacing.unit,
 			marginBottom: theme.spacing.unit * 4
 		}
-	});
+	};
 };
 
 const EventDetail = ({ classes, children, iconUrl }) => (
@@ -121,9 +127,7 @@ const EventDetail = ({ classes, children, iconUrl }) => (
 			<img className={classes.icon} src={iconUrl}/>
 		</div>
 
-		<div className={classes.eventDetailContainer}>
-			{children}
-		</div>
+		<div className={classes.eventDetailContainer}>{children}</div>
 	</div>
 );
 
@@ -141,7 +145,11 @@ class ViewEvent extends Component {
 	componentDidMount() {
 		layout.toggleBelowFooterPadding(true);
 
-		if (this.props.match && this.props.match.params && this.props.match.params.id) {
+		if (
+			this.props.match &&
+			this.props.match.params &&
+			this.props.match.params.id
+		) {
 			const { id } = this.props.match.params;
 
 			selectedEvent.refreshResult(id, errorMessage => {
@@ -237,7 +245,7 @@ class ViewEvent extends Component {
 		}
 	}
 
-	renderCallToActionButton() {
+	renderCallToActionButton(variant = "callToAction") {
 		const { classes } = this.props;
 		const { event, id } = selectedEvent;
 		const { is_external, external_url } = event;
@@ -254,7 +262,7 @@ class ViewEvent extends Component {
 		if (is_external) {
 			return (
 				<a href={external_url} target="_blank">
-					<Button className={classes.callToAction} variant={"callToAction"}>
+					<Button className={classes.callToAction} variant={variant}>
 						{ctaText}
 					</Button>
 				</a>
@@ -262,7 +270,11 @@ class ViewEvent extends Component {
 		} else {
 			return (
 				<Link to={`/events/${id}/tickets`}>
-					<Button size={"mediumLarge"} className={classes.callToAction} variant={"callToAction"}>
+					<Button
+						size={"mediumLarge"}
+						className={classes.callToAction}
+						variant={variant}
+					>
 						{ctaText}
 					</Button>
 				</Link>
@@ -275,7 +287,9 @@ class ViewEvent extends Component {
 	}
 
 	showHideMoreAdditionalInfo() {
-		this.setState(({ showAllAdditionalInfo }) => ({ showAllAdditionalInfo: !showAllAdditionalInfo }));
+		this.setState(({ showAllAdditionalInfo }) => ({
+			showAllAdditionalInfo: !showAllAdditionalInfo
+		}));
 	}
 
 	priceTagText(min, max, separator = "to") {
@@ -287,7 +301,7 @@ class ViewEvent extends Component {
 			return dollars(max);
 		}
 
-		if ((max === null || isNaN(max)) || min === max) {
+		if (max === null || isNaN(max) || min === max) {
 			return dollars(min);
 		}
 
@@ -312,7 +326,7 @@ class ViewEvent extends Component {
 					<PrivateEventDialog/>
 					<Loader style={{ height: 400 }}/>
 				</div>
-			) ;
+			);
 		}
 
 		if (event === false) {
@@ -335,9 +349,11 @@ class ViewEvent extends Component {
 			max_ticket_price
 		} = event;
 
-		const promo_image_url = event.promo_image_url ? optimizedImageUrl(event.promo_image_url) : null;
+		const promo_image_url = event.promo_image_url
+			? optimizedImageUrl(event.promo_image_url)
+			: null;
 
-		const ageLimitText  = displayAgeLimit(age_limit);
+		const ageLimitText = displayAgeLimit(age_limit);
 
 		const mobilePromoImageStyle = {};
 		if (promo_image_url) {
@@ -347,6 +363,8 @@ class ViewEvent extends Component {
 		const { showAllAdditionalInfo } = this.state;
 
 		const priceTagText = this.priceTagText(min_ticket_price, max_ticket_price);
+
+		const { enabled } = this.callToActionButtonDetails;
 
 		const sharedContent = (
 			<div>
@@ -358,7 +376,9 @@ class ViewEvent extends Component {
 
 				<EventDetail classes={classes} iconUrl={"/icons/events-black.svg"}>
 					<Typography className={classes.eventDetailText}>
-						<span className={classes.eventDetailBoldText}>{displayEventStartDate}</span>
+						<span className={classes.eventDetailBoldText}>
+							{displayEventStartDate}
+						</span>
 						<br/>
 						Doors {displayDoorTime} - Show {displayShowTime}
 						<br/>
@@ -372,7 +392,7 @@ class ViewEvent extends Component {
 
 						<EventDetail classes={classes} iconUrl={"/icons/ticket-black.svg"}>
 							<Typography className={classes.eventDetailText}>
-							Tickets from {priceTagText}
+								Tickets from {priceTagText}
 							</Typography>
 						</EventDetail>
 					</div>
@@ -387,7 +407,10 @@ class ViewEvent extends Component {
 						{addressLineSplit(venue.address)}
 						{venue.googleMapsLink ? (
 							<a target="_blank" href={venue.googleMapsLink}>
-								<span className={classes.eventDetailLinkText}><br/>View map</span>
+								<span className={classes.eventDetailLinkText}>
+									<br/>
+									View map
+								</span>
 							</a>
 						) : null}
 					</Typography>
@@ -405,12 +428,25 @@ class ViewEvent extends Component {
 
 				{/*DESKTOP*/}
 				<Hidden smDown>
+					{enabled ? (
+						<EventCallToActionAppBar
+							isAuthenticated={user.isAuthenticated}
+							venue={venue}
+							{...event}
+							ctaButton={this.renderCallToActionButton("secondary")}
+						/>
+					) : null}
+
 					<EventHeaderImage {...event} artists={artists}/>
 
 					<TwoColumnLayout
 						containerClass={classes.desktopContent}
 						containerStyle={{ minHeight: overlayCardHeightAdjustment }}
-						col1={<EventDescriptionBody artists={artists}>{additional_info}</EventDescriptionBody>}
+						col1={(
+							<EventDescriptionBody artists={artists}>
+								{additional_info}
+							</EventDescriptionBody>
+						)}
 						col2={(
 							<EventDetailsOverlayCard
 								style={{
@@ -432,7 +468,10 @@ class ViewEvent extends Component {
 				{/*MOBILE*/}
 				<Hidden mdUp>
 					<MaintainAspectRatio aspectRatio={settings().promoImageAspectRatio}>
-						<div className={classes.mobileHeaderImage} style={mobilePromoImageStyle}/>
+						<div
+							className={classes.mobileHeaderImage}
+							style={mobilePromoImageStyle}
+						/>
 					</MaintainAspectRatio>
 					<div className={classes.mobileContainer}>
 						{top_line_info ? (
@@ -447,7 +486,7 @@ class ViewEvent extends Component {
 							<Typography className={classes.cardArtists}>
 								<SupportingArtistsLabel eventName={name} artists={artists}/>
 							</Typography>
-						) : null }
+						) : null}
 
 						{sharedContent}
 
@@ -455,26 +494,44 @@ class ViewEvent extends Component {
 
 						{additional_info ? (
 							<div>
-								<EventDetail classes={classes} iconUrl={"/icons/event-detail-black.svg"}>
+								<EventDetail
+									classes={classes}
+									iconUrl={"/icons/event-detail-black.svg"}
+								>
 									<Typography className={classes.eventDetailText}>
-										{showAllAdditionalInfo ? nl2br(additional_info) : nl2br(ellipsis(additional_info, ADDITIONAL_INFO_CHAR_LIMIT))}
+										{showAllAdditionalInfo
+											? nl2br(additional_info)
+											: nl2br(
+												ellipsis(additional_info, ADDITIONAL_INFO_CHAR_LIMIT)
+											  )}
 
-										{additional_info && additional_info.length > ADDITIONAL_INFO_CHAR_LIMIT ? (
-											<span className={classes.eventDetailLinkText} onClick={this.showHideMoreAdditionalInfo.bind(this)}>
-												{showAllAdditionalInfo ? "Read less" : "Read more"}
-											</span>
-										) : null}
+										{additional_info &&
+										additional_info.length > ADDITIONAL_INFO_CHAR_LIMIT ? (
+												<span
+													className={classes.eventDetailLinkText}
+													onClick={this.showHideMoreAdditionalInfo.bind(this)}
+												>
+													{showAllAdditionalInfo ? "Read less" : "Read more"}
+												</span>
+											) : null}
 									</Typography>
 								</EventDetail>
 
-								<Divider className={classes.divider} style={{ marginBottom: 0 }}/>
+								<Divider
+									className={classes.divider}
+									style={{ marginBottom: 0 }}
+								/>
 							</div>
 						) : null}
 					</div>
 
 					<MobileBottomBarCTA
 						button={this.renderCallToActionButton()}
-						priceRange={this.priceTagText(min_ticket_price, max_ticket_price, "-")}
+						priceRange={this.priceTagText(
+							min_ticket_price,
+							max_ticket_price,
+							"-"
+						)}
 					/>
 				</Hidden>
 			</div>

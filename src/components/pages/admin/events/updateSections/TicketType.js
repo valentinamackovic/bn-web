@@ -9,6 +9,7 @@ import {
 	Hidden
 } from "@material-ui/core";
 import classnames from "classnames";
+import Bn from "bn-api-node";
 
 import InputGroup from "../../../../common/form/InputGroup";
 import Button from "../../../../elements/Button";
@@ -160,8 +161,7 @@ const TicketDetails = observer(props => {
 		eventStartDate,
 		ticketTimesDirty,
 		priceForDisplay,
-		soldOutBehavior,
-		isPrivate,
+		visibility,
 		isCancelled,
 		parentId,
 		ticketTypes
@@ -209,6 +209,16 @@ const TicketDetails = observer(props => {
 				(tt.inner.parentId || "") !== id &&
 				tt.inner.status !== "Cancelled"
 		);
+
+	const ticketTypeVisibilitiesEnum = Bn.Enums ? Bn.Enums.VISIBILITY : {};
+
+	const visibilitySelectOptions = [];
+	Object.keys(ticketTypeVisibilitiesEnum).forEach(visKey => {
+		visibilitySelectOptions.push({
+			value: visKey,
+			label: ticketTypeVisibilitiesEnum[visKey]
+		});
+	});
 
 	const onShowAdditionalOptions = () =>
 		updateTicketType(index, { showAdditionalOptions: true });
@@ -441,26 +451,44 @@ const TicketDetails = observer(props => {
 				) : null}
 
 				<div className={classes.additionalInputsRow}>
+					{/*<div className={classes.additionalInputContainer}>*/}
+					{/*	<InputGroup*/}
+					{/*		disabled={isCancelled}*/}
+					{/*		InputProps={{*/}
+					{/*			startAdornment: (*/}
+					{/*				<InputAdornment position="start">$</InputAdornment>*/}
+					{/*			)*/}
+					{/*		}}*/}
+					{/*		error={errors.priceAtDoor}*/}
+					{/*		value={priceAtDoor}*/}
+					{/*		name="value"*/}
+					{/*		label="Price at door"*/}
+					{/*		placeholder=""*/}
+					{/*		type="number"*/}
+					{/*		onChange={e => {*/}
+					{/*			updateTicketType(index, { priceAtDoor: e.target.value });*/}
+					{/*		}}*/}
+					{/*		onBlur={validateFields}*/}
+					{/*	/>*/}
+					{/*</div>*/}
 					<div className={classes.additionalInputContainer}>
 						<InputGroup
 							disabled={isCancelled}
-							InputProps={{
-								startAdornment: (
-									<InputAdornment position="start">$</InputAdornment>
-								)
-							}}
-							error={errors.priceAtDoor}
-							value={priceAtDoor}
-							name="value"
-							label="Price at door"
-							placeholder=""
-							type="number"
+							error={errors.description}
+							value={description}
+							name="description"
+							label="Ticket description"
+							placeholder="More details about this ticket type"
+							type="text"
 							onChange={e => {
-								updateTicketType(index, { priceAtDoor: e.target.value });
+								updateTicketType(index, { description: e.target.value });
 							}}
 							onBlur={validateFields}
 						/>
 					</div>
+				</div>
+
+				<div className={classes.additionalInputsRow}>
 					<div className={classes.additionalInputContainer}>
 						<InputGroup
 							disabled={isCancelled}
@@ -478,9 +506,7 @@ const TicketDetails = observer(props => {
 							onBlur={validateFields}
 						/>
 					</div>
-				</div>
 
-				<div className={classes.additionalInputsRow}>
 					<div className={classes.additionalInputContainer}>
 						<InputGroup
 							disabled={isCancelled}
@@ -496,50 +522,19 @@ const TicketDetails = observer(props => {
 							onBlur={validateFields}
 						/>
 					</div>
-
-					<div className={classes.additionalInputContainer}>
-						<InputGroup
-							disabled={isCancelled}
-							error={errors.description}
-							value={description}
-							name="description"
-							label="Ticket description"
-							placeholder="More details about this ticket type"
-							type="text"
-							onChange={e => {
-								updateTicketType(index, { description: e.target.value });
-							}}
-							onBlur={validateFields}
-						/>
-					</div>
 				</div>
 				<div className={classes.additionalInputsRow}>
 					<div className={classes.additionalInputContainer}>
 						<SelectGroup
 							disabled={isCancelled}
-							value={soldOutBehavior || "showSoldOut"}
-							items={[
-								{ value: "ShowSoldOut", label: "Show Sold Out" },
-								{ value: "Hide", label: "Hide" }
-							]}
-							name={"sold-out-behavior"}
-							label={"When tickets are sold out *"}
+							value={visibility || "Always"}
+							items={visibilitySelectOptions}
+							name={"visibility"}
+							label={"Visibility *"}
 							onChange={e => {
-								updateTicketType(index, { soldOutBehavior: e.target.value });
+								updateTicketType(index, { visibility: e.target.value });
 							}}
 						/>
-					</div>
-					<div className={classes.additionalInputContainer}>
-						<CheckBox
-							disabled={isCancelled}
-							name={"is_private"}
-							onClick={e => {
-								updateTicketType(index, { isPrivate: !isPrivate });
-							}}
-							active={isPrivate}
-						>
-							Private (Can only be sold via holds or access codes)
-						</CheckBox>
 					</div>
 				</div>
 
@@ -640,8 +635,7 @@ TicketType.propTypes = {
 	eventStartDate: PropTypes.object,
 	startDate: PropTypes.object,
 	startTime: PropTypes.object,
-	soldOutBehavior: PropTypes.string,
-	isPrivate: PropTypes.bool,
+	visibility: PropTypes.string,
 	isCancelled: PropTypes.bool,
 	parentId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
 	ticketTypes: PropTypes.array

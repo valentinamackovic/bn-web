@@ -49,12 +49,10 @@ class Tickets {
 					const event = ticketGroup[0];
 					const tickets = ticketGroup[1];
 
-					//TODO when the api returns the venue timezone, use that instead of the guess
-					//https://github.com/big-neon/bn-api/issues/1091
 					event.eventDate = moment(
 						event.event_start,
 						moment.HTML5_FMT.DATETIME_LOCAL_MS
-					).tz(moment.tz.guess());
+					).tz(event.venue.timezone || moment.tz.guess());
 
 					event.formattedDate = event.eventDate.format("ddd MM/DD/YY, h:mm A");
 

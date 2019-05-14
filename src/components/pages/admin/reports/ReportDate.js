@@ -55,14 +55,14 @@ class ReportsDate extends Component {
 		let endDate = null;
 
 		if (fromString) {
-			startDate =  moment.utc(fromString, URL_DATE_FORMAT).tz(timezone);
+			startDate = moment.utc(fromString, URL_DATE_FORMAT).tz(timezone);
 			if (!startDate.isValid()) {
 				startDate = null;
 			}
 		}
 
 		if (toString) {
-			endDate =  moment.utc(toString, URL_DATE_FORMAT).tz(timezone);
+			endDate = moment.utc(toString, URL_DATE_FORMAT).tz(timezone);
 			if (!endDate.isValid()) {
 				endDate = null;
 			}
@@ -72,7 +72,13 @@ class ReportsDate extends Component {
 			const { defaultStartTimeBeforeNow } = this.props;
 			//Used for weekly settlement reports to default dates to be for the past week
 			if (defaultStartTimeBeforeNow) {
-				startDate = moment.utc().subtract(defaultStartTimeBeforeNow.value, defaultStartTimeBeforeNow.unit).tz(timezone);
+				startDate = moment
+					.utc()
+					.subtract(
+						defaultStartTimeBeforeNow.value,
+						defaultStartTimeBeforeNow.unit
+					)
+					.tz(timezone);
 				endDate = moment.utc().tz(timezone);
 			}
 		}
@@ -80,11 +86,24 @@ class ReportsDate extends Component {
 		this.setState({ startDate, endDate }, this.onDateChange.bind(this));
 	}
 
+	componentDidUpdate(prevProps) {
+		const { salesStart: prevSalesStart } = prevProps;
+		const { salesStart, timezone } = this.props;
+
+		if (!prevSalesStart && salesStart) {
+			const startDate = moment.utc(salesStart).tz(timezone);
+			const endDate = moment.utc().tz(timezone);
+			this.setState({ startDate, endDate }, this.onDateChange.bind(this));
+		}
+	}
+
 	onChange(callBack = () => {}) {
 		const { startDate, endDate } = this.state;
 		if (startDate && endDate) {
 			if (endDate.isBefore(startDate)) {
-				return this.setState({ errors: { startDate: "From date needs to be before to date." } });
+				return this.setState({
+					errors: { startDate: "From date needs to be before to date." }
+				});
 			}
 
 			//Inclusive of whole days
@@ -100,13 +119,16 @@ class ReportsDate extends Component {
 			callBack({
 				startDate: startOfStartDate,
 				endDate: endOfEndDate,
-				start_utc: moment.utc(startOfStartDate).format(moment.HTML5_FMT.DATETIME_LOCAL_MS),
-				end_utc: moment.utc(endOfEndDate).format(moment.HTML5_FMT.DATETIME_LOCAL_MS)
+				start_utc: moment
+					.utc(startOfStartDate)
+					.format(moment.HTML5_FMT.DATETIME_LOCAL_MS),
+				end_utc: moment
+					.utc(endOfEndDate)
+					.format(moment.HTML5_FMT.DATETIME_LOCAL_MS)
 			});
 		} else if (!startDate && !endDate) {
 			callBack();
 		}
-		
 	}
 
 	onDateChange() {
@@ -147,20 +169,15 @@ class ReportsDate extends Component {
 					spacing={24}
 					className={classes.innerRow}
 				>
-					<Grid
-						item
-						className={classes.titleContainer}
-						{...columnSizes[0]}
-					>
-						<img alt={"Report date"} src="/icons/events-active.svg" className={classes.icon}/>
-						<Typography className={classes.title}>
-							Set report date
-						</Typography>
+					<Grid item className={classes.titleContainer} {...columnSizes[0]}>
+						<img
+							alt={"Report date"}
+							src="/icons/events-active.svg"
+							className={classes.icon}
+						/>
+						<Typography className={classes.title}>Set report date</Typography>
 					</Grid>
-					<Grid
-						item
-						{...columnSizes[1]}
-					>
+					<Grid item {...columnSizes[1]}>
 						<DateTimePickerGroup
 							error={errors.startDate}
 							type="date"
@@ -172,10 +189,7 @@ class ReportsDate extends Component {
 							}}
 						/>
 					</Grid>
-					<Grid
-						item
-						{...columnSizes[2]}
-					>
+					<Grid item {...columnSizes[2]}>
 						<DateTimePickerGroup
 							error={errors.endDate}
 							type="date"
@@ -189,10 +203,7 @@ class ReportsDate extends Component {
 					</Grid>
 
 					{onChangeButton ? (
-						<Grid
-							item
-							{...columnSizes[3]}
-						>
+						<Grid item {...columnSizes[3]}>
 							<Button
 								style={{ width: "100%" }}
 								onClick={() => {
@@ -203,8 +214,7 @@ class ReportsDate extends Component {
 								Generate report
 							</Button>
 						</Grid>
-					) : null
-					}
+					) : null}
 				</Grid>
 				<Divider/>
 			</div>

@@ -113,6 +113,12 @@ class FacebookButtonDisplay extends Component {
 						variant: "error"
 					});
 				});
+		} else {
+			notifications.show({
+				message: "Facebook authentication failed.",
+				variant: "error"
+			});
+			this.setState({ isAuthenticating: false });
 		}
 	}
 

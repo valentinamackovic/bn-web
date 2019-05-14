@@ -42,7 +42,7 @@ class SelectedEvent {
 	currentlyAppliedCode = null;
 
 	@action
-	refreshResult(id, onError = () => {}) {
+	refreshResult(id, onError = () => {}, onSuccess = () => {}) {
 		//If we're updating the state to a different event just reset the values first so it doesn't load old data in components observing this
 		if (this.id && id !== this.id) {
 			this.event = null;
@@ -128,6 +128,7 @@ class SelectedEvent {
 				if (private_access_code) {
 					changeUrlParam("private_access_code", private_access_code);
 				}
+				onSuccess(ticket_types);
 			})
 			.catch(error => {
 				console.error(error);
@@ -227,8 +228,7 @@ class SelectedEvent {
 						onError();
 
 						notifications.show({
-							message:
-								"Promo code is valid but ticket is currently unavailable.",
+							message: "Code is valid but no eligible tickets are available.",
 							variant: "warning"
 						});
 					} else {

@@ -55,7 +55,7 @@ class TicketHoldList extends Component {
 				const { data } = response.data;
 
 				const ticketTypes = [];
-				data.forEach((ticketType) => {
+				data.forEach(ticketType => {
 					if (ticketType.status !== "Cancelled") {
 						ticketTypes.push(ticketType);
 					}
@@ -77,9 +77,16 @@ class TicketHoldList extends Component {
 	refreshHolds() {
 		Bigneon()
 			.events.holds.index({ event_id: this.eventId })
-			.then(holds => {
-				//TODO Pagination
-				this.setState({ holds: holds.data.data });
+			.then(response => {
+				const holds = response.data.data; //TODO Pagination
+
+				this.setState({ holds });
+			})
+			.catch(error => {
+				notifications.showFromErrorResponse({
+					error,
+					defaultMessage: "Failed to load holds."
+				});
 			});
 	}
 
@@ -154,24 +161,35 @@ class TicketHoldList extends Component {
 			return (
 				<div>
 					<HoldRow heading>{ths}</HoldRow>
-					{holds.map((ticket, index) => {
+					{holds.map((hold, index) => {
 						const {
 							id,
 							name,
 							redemption_code,
 							hold_type,
 							quantity,
-							available
-						} = ticket;
+							available,
+							parent_hold_id,
+							...rest
+						} = hold;
+
+						let nameField = name;
+
+						//Only show links to name list if it's not a child of another list
+						if (!parent_hold_id) {
+							nameField = (
+								<StyledLink
+									underlined
+									key={id}
+									to={`/admin/events/${this.eventId}/dashboard/holds/${id}`}
+								>
+									{name}
+								</StyledLink>
+							);
+						}
 
 						const tds = [
-							<StyledLink
-								underlined
-								key={id}
-								to={`/admin/events/${this.eventId}/dashboard/comps/${id}`}
-							>
-								{name}
-							</StyledLink>,
+							nameField,
 							redemption_code,
 							hold_type,
 							quantity - available,
@@ -182,8 +200,6 @@ class TicketHoldList extends Component {
 						const iconColor = active ? "white" : "gray";
 						return (
 							<HoldRow
-								// onMouseEnter={e => this.setState({ hoverId: id })}
-								// onMouseLeave={e => this.setState({ hoverId: null })}
 								active={active}
 								gray={!(index % 2)}
 								key={id}
@@ -299,14 +315,27 @@ class TicketHoldList extends Component {
 			const hold = holds.find(c => c.id === showShareableLinkId);
 			const { redemption_code, event_id } = hold;
 
-			url = `${window.location.protocol}//${window.location.host}/events/${event_id}/tickets?code=${redemption_code}`;
+			url = `${window.location.protocol}//${
+				window.location.host
+			}/events/${event_id}/tickets?code=${redemption_code}`;
 		}
 
 		return (
-			<Dialog iconUrl={"/icons/link-white.svg"} title={"Shareable link"} open={!!showShareableLinkId} onClose={onClose}>
+			<Dialog
+				iconUrl={"/icons/link-white.svg"}
+				title={"Shareable link"}
+				open={!!showShareableLinkId}
+				onClose={onClose}
+			>
 				<div>
 					<div className={classes.shareableLinkContainer}>
-						<a href={url} target={"_blank"} className={classes.shareableLinkText}>{url}</a>
+						<a
+							href={url}
+							target={"_blank"}
+							className={classes.shareableLinkText}
+						>
+							{url}
+						</a>
 					</div>
 					<div style={{ display: "flex" }}>
 						<Button style={{ flex: 1 }} onClick={onClose}>
@@ -323,7 +352,11 @@ class TicketHoldList extends Component {
 		const { classes } = this.props;
 
 		return (
-			<Container eventId={this.eventId} subheading={"tools"} useCardContainer>
+			<Container
+				eventId={this.eventId}
+				subheading={"tools"}
+				layout={"childrenInsideCard"}
+			>
 				{showHoldDialog && this.renderDialog()}
 				{this.renderDeleteDialog()}
 				{this.renderShareableLink()}

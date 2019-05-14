@@ -5,6 +5,7 @@ import TextField from "@material-ui/core/TextField";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import MaskedInput from "react-text-mask";
+import classnames from "classnames";
 
 import FormatInputLabel from "../../elements/form/FormatInputLabel";
 
@@ -51,9 +52,16 @@ const styles = theme => {
 		formControl: {
 			width: "100%"
 		},
-		search: {
+		input: { paddingTop: 0 },
+		searchInput: {
 			textAlign: "center",
 			fontSize: theme.typography.body1.fontSize
+		},
+		errorHelperText: {
+			marginTop: 0,
+			paddingTop: 0,
+			paddingBottom: 0,
+			marginBottom: 0
 		}
 	};
 };
@@ -80,11 +88,6 @@ const InputGroup = props => {
 		labelProps
 	} = props;
 
-	let inputPropClasses = {};
-	if (isSearch) {
-		inputPropClasses = { ...inputPropClasses, input: classes.search };
-	}
-
 	if (type === "phone") {
 		InputProps.inputComponent = PhoneNumberInputMask;
 	}
@@ -106,10 +109,10 @@ const InputGroup = props => {
 			error
 			aria-describedby={`%${name}-error-text`}
 		>
+			<FormatInputLabel {...labelProps}>{label}</FormatInputLabel>
 			<TextField
 				error={!!error}
 				id={name}
-				label={label ? <FormatInputLabel {...labelProps}>{label}</FormatInputLabel> : null}
 				type={type}
 				value={value}
 				onChange={onChangeEvent}
@@ -118,10 +121,12 @@ const InputGroup = props => {
 				onFocus={onFocus}
 				InputProps={{
 					...InputProps,
-					classes: inputPropClasses
-				}}
-				InputLabelProps={{
-					shrink: true
+					classes: {
+						input: classnames({
+							[classes.input]: true,
+							[classes.searchInput]: isSearch
+						})
+					}
 				}}
 				placeholder={placeholder}
 				multiline={multiline}
@@ -131,7 +136,12 @@ const InputGroup = props => {
 				onWheel={e => e.preventDefault()}
 			/>
 
-			<FormHelperText id={`${name}-error-text`}>{error}</FormHelperText>
+			<FormHelperText
+				className={classes.errorHelperText}
+				id={`${name}-error-text`}
+			>
+				{error}
+			</FormHelperText>
 		</FormControl>
 	);
 };

@@ -234,7 +234,11 @@ class User {
 
 		//If this is being called by the user selecting their role, we need to reload the page so the content is related to that org
 		if (reloadPage) {
-			window.location.href = "/admin/events";
+			if (!user.canViewStudio && user.isOrgBoxOffice) {
+				window.location.href = "/box-office/sell";
+			} else {
+				window.location.href = "/admin/events";
+			}
 		} else {
 			//Set the active roles and scopes here as we'll know what roles this user has for this org
 			this.globalRoles = this.userRoles.concat(this.organizationRoles[id]);
@@ -310,9 +314,10 @@ class User {
 	}
 
 	//Dialog is kept in Container.js ready to popup when it's needed
+	//type = true (Lets the user choose login or signup) / login / signup
 	@action
-	showAuthRequiredDialog(onSuccess) {
-		this.showRequiresAuthDialog = true;
+	showAuthRequiredDialog(onSuccess, type = true) {
+		this.showRequiresAuthDialog = type;
 
 		if (onSuccess) {
 			this.onAuthDialogSuccess = onSuccess;
@@ -333,6 +338,26 @@ class User {
 		this.showRequiresAuthDialog = false;
 	}
 
+	getCampaignTrackingData() {
+		try {
+			return JSON.parse(localStorage.getItem("campaignData"));
+		} catch (e) {
+			return {};
+		}
+	}
+
+	@action
+	setCampaignTrackingData(data) {
+		let currentData = this.getCampaignTrackingData();
+		currentData = { ...currentData, ...data };
+		localStorage.setItem("campaignData", JSON.stringify(currentData));
+	}
+
+	@action
+	clearCampaignTrackingData() {
+		localStorage.setItem("campaignData", "");
+	}
+
 	hasScope(scope) {
 		return this.globalScopes.indexOf(scope) > -1;
 	}
@@ -350,7 +375,7 @@ class User {
 		if (this.isAuthenticated) {
 			return `${maskString(this.firstName)} ${maskString(this.lastName)}`;
 		} else {
-			("");
+			return "";
 		}
 	}
 
@@ -532,6 +557,15 @@ class User {
 
 	@computed
 	get hasOrgEventSettlementReport() {
+		if (this.isAdmin) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@computed
+	get hasEventPromoCodesReport() {
 		if (this.isAdmin) {
 			return true;
 		}

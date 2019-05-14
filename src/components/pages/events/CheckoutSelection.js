@@ -26,6 +26,8 @@ import EventDescriptionBody from "./EventDescriptionBody";
 import getUrlParam from "../../../helpers/getUrlParam";
 import { Redirect } from "react-router-dom";
 
+const AUTO_SELECT_TICKET_AMOUNT = 2;
+
 const styles = theme => ({
 	root: {},
 	mobileContainer: {
@@ -110,7 +112,7 @@ class CheckoutSelection extends Component {
 
 	setTicketSelectionFromExistingCart(items) {
 		const ticketSelection = {};
-
+		const { id } = this.props.match.params;
 		if (items && items.length > 0) {
 			items.forEach(({ ticket_type_id, quantity, redemption_code }) => {
 				if (ticket_type_id) {
@@ -126,21 +128,50 @@ class CheckoutSelection extends Component {
 
 		//Auto add one ticket if there is only one
 		const { ticket_types } = selectedEvent;
-		if (
-			(items === undefined || items.length === 0) &&
-			ticket_types &&
-			ticket_types.length === 1
-		) {
-			const { id } = ticket_types[0];
+		if (items === undefined || items.length === 0) {
+			if (ticket_types && ticket_types.length === 1) {
+				const type_id = ticket_types[0].id;
 
-			if (!ticketSelection[id]) {
-				ticketSelection[id] = {
-					quantity: 2
-				};
+				if (!ticketSelection[type_id]) {
+					ticketSelection[type_id] = {
+						quantity: AUTO_SELECT_TICKET_AMOUNT
+					};
+				}
+
+				this.setState({ ticketSelection });
+			} else {
+				selectedEvent.refreshResult(
+					id,
+					errorMessage => {
+						notifications.show({
+							message: errorMessage,
+							variant: "error"
+						});
+					},
+					types => {
+						if (types && types.length) {
+							for (let i = 0; i < types.length; i++) {
+								if (types[i].status !== "Published") {
+									continue;
+								}
+								const type_id = types[i].id;
+
+								if (!ticketSelection[type_id]) {
+									if (types.length === 1) {
+										ticketSelection[type_id] = {
+											quantity: AUTO_SELECT_TICKET_AMOUNT
+										};
+									}
+								}
+							}
+						}
+						this.setState({ ticketSelection });
+					}
+				);
 			}
+		} else {
+			this.setState({ ticketSelection });
 		}
-
-		this.setState({ ticketSelection });
 	}
 
 	validateFields() {
@@ -315,19 +346,11 @@ class CheckoutSelection extends Component {
 					redemption_code,
 					available,
 					description,
-					discount_as_percentage
+					discount_as_percentage,
+					status
 				} = ticketType;
 
-				const nowIsValidTime = start_date
-					? moment.utc().isBetween(moment.utc(start_date), moment.utc(end_date))
-					: moment.utc().isBefore(moment.utc(end_date));
-				//Not in a valid date for this ticket_type
-
-				if (!nowIsValidTime) {
-					return;
-				}
-
-				let price_in_cents = 0;
+				let price_in_cents;
 				let ticketsAvailable = false;
 				let discount_in_cents = 0;
 				if (ticket_pricing) {
@@ -364,10 +387,13 @@ class CheckoutSelection extends Component {
 									quantity: Number(amount) < 0 ? 0 : amount,
 									redemption_code
 								};
-								return { ticketSelection };
+								return {
+									ticketSelection
+								};
 							})
 						}
 						validateFields={this.validateFields.bind(this)}
+						status={status}
 					/>
 				);
 			})

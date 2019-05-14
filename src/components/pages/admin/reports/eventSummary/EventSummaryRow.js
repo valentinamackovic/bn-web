@@ -62,15 +62,19 @@ const TransactionRow = props => {
 		...rest
 	} = props;
 
-	const columnStyles = [
-		{ flex: 2, textAlign: "left" },
-		{ flex: 1, textAlign: "left" },
-		{ flex: 1, textAlign: "left" },
-		{ flex: 1, textAlign: "left" },
-		{ flex: 1, textAlign: "left" },
-		{ flex: 1, textAlign: "left" },
-		{ flex: 1, textAlign: "left" }
-	];
+	let { columnStyles } = props;
+
+	if (!columnStyles) {
+		columnStyles = [
+			{ flex: 2, textAlign: "left" },
+			{ flex: 1, textAlign: "left" },
+			{ flex: 1, textAlign: "left" },
+			{ flex: 1, textAlign: "left" },
+			{ flex: 1, textAlign: "left" },
+			{ flex: 1, textAlign: "left" },
+			{ flex: 1, textAlign: "left" }
+		];
+	}
 
 	const columns = children.map((text, index) => {
 		return (
@@ -115,7 +119,8 @@ TransactionRow.propTypes = {
 	heading: PropTypes.bool,
 	onClick: PropTypes.func,
 	ticketTypeRow: PropTypes.bool,
-	noRadius: PropTypes.bool
+	noRadius: PropTypes.bool,
+	columnStyles: PropTypes.array
 };
 
 export default withStyles(styles)(TransactionRow);

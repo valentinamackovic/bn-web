@@ -36,14 +36,14 @@ const styles = theme => ({
 		display: "flex",
 		width: "100%"
 	},
-	toolbarSpacer: toolBarHeight,
-	boxOfficeToolBarSpacer: {
-		...toolBarHeight,
-		//Don't add space on mobile, the event selection menu take care of it
-		[theme.breakpoints.down("sm")]: {
-			minHeight: 0
-		}
-	},
+	// toolbarSpacer: toolBarHeight,
+	// boxOfficeToolBarSpacer: {
+	// 	...toolBarHeight,
+	// 	//Don't add space on mobile, the event selection menu take care of it
+	// 	[theme.breakpoints.down("sm")]: {
+	// 		minHeight: 0
+	// 	}
+	// },
 	drawerPaper: {
 		//width: layout.adminStyleMenu ? 60 : drawerWidth,
 		minHeight: window.innerHeight * 1.1,
@@ -189,7 +189,7 @@ class Container extends React.Component {
 						})}
 					>
 						{/*If it's box office and mobile then hide this spacer. The event select menu take care of it.*/}
-						<div className={classnames({ [classes.toolbarSpacer]: !isBoxOffice, [classes.boxOfficeToolBarSpacer]: isBoxOffice })}/>
+						{/*<div className={classnames({ [classes.toolbarSpacer]: !isBoxOffice, [classes.boxOfficeToolBarSpacer]: isBoxOffice })}/>*/}
 
 						<Grid
 							container
@@ -204,6 +204,7 @@ class Container extends React.Component {
 								sm={12}
 								md={12}
 								lg={includeContainerPadding ? 9 : 12}
+								xl={includeContainerPadding ? 7 : 12}
 								className={classnames({
 									[classes.boxOfficePaddedContainer]: isBoxOffice
 								})}
@@ -214,10 +215,13 @@ class Container extends React.Component {
 
 						<RequiresAuthDialog
 							onAuthSuccess={() => user.onSuccessAuthRequiredDialog()}
-							open={user.showRequiresAuthDialog}
+							type={user.showRequiresAuthDialog}
 							onClose={() => user.hideAuthRequiredDialog()}
 						/>
-						<CaptureMissingEmailDialog open={user.userMissingEmail} onSuccess={() => user.refreshUser()}/>
+						<CaptureMissingEmailDialog
+							open={user.userMissingEmail}
+							onSuccess={() => user.refreshUser()}
+						/>
 						<Notification/>
 
 						{layout.showFooter ? (
@@ -226,7 +230,9 @@ class Container extends React.Component {
 							<div className={classes.footerPlaceholder}/>
 						)}
 
-						{layout.belowFooterPadding ? <div className={classes.belowFooterPadding}/> : null}
+						{layout.belowFooterPadding ? (
+							<div className={classes.belowFooterPadding}/>
+						) : null}
 					</main>
 				</div>
 				<CartMobileBottomBar/>

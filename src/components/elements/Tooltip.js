@@ -106,7 +106,12 @@ class CustomTooltip extends Component {
 	};
 
 	render() {
-		const { classes, children, title, text, placement } = this.props;
+		const { classes, children, title, text, placement, forceShow } = this.props;
+
+		let open;
+		if (forceShow === true || forceShow === false) {
+			open = forceShow;
+		}
 
 		return (
 			<Tooltip
@@ -134,6 +139,7 @@ class CustomTooltip extends Component {
 						}
 					}
 				}}
+				open={open}
 			>
 				{children}
 			</Tooltip>
@@ -147,6 +153,7 @@ CustomTooltip.defaultProps = {
 
 CustomTooltip.propTypes = {
 	classes: PropTypes.object.isRequired,
+	forceShow: PropTypes.bool,
 	placement: PropTypes.oneOf(["top", "bottom", "left", "right"]),
 	title: PropTypes.string,
 	text: PropTypes.string

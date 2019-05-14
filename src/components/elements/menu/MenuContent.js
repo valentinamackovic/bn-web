@@ -21,7 +21,7 @@ import layout from "../../../stores/layout";
 
 const styles = theme => ({
 	root: {
-		paddingTop: theme.spacing.unit * 10,
+		//paddingTop: theme.spacing.unit * 10,
 		[theme.breakpoints.down("sm")]: {
 			paddingTop: theme.spacing.unit
 		}
