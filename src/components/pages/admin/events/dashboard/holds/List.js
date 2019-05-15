@@ -14,7 +14,6 @@ import Loader from "../../../../../elements/loaders/Loader";
 import user from "../../../../../../stores/user";
 import { secondaryHex } from "../../../../../../config/theme";
 import Hidden from "@material-ui/core/es/Hidden/Hidden";
-import CodeRow from "../codes/CodeRow";
 
 const styles = theme => ({
 	root: {},
@@ -205,7 +204,7 @@ class TicketHoldList extends Component {
 						];
 
 						const active = activeHoldId === id && showHoldDialog;
-						const iconColor = active ? "white" : "gray";
+						const iconColor = active ? "white" : "active";
 						return (
 							<HoldRow
 								active={active}
@@ -217,25 +216,25 @@ class TicketHoldList extends Component {
 											{
 												id: id,
 												name: "Split",
-												iconUrl: `/icons/split-${iconColor}.svg`,
+												iconName: "split",
 												onClick: onAction.bind(this)
 											},
 											{
 												id: id,
 												name: "Link",
-												iconUrl: `/icons/link-${iconColor}.svg`,
+												iconName: "link",
 												onClick: onAction.bind(this)
 											},
 											{
 												id: id,
 												name: "Edit",
-												iconUrl: `/icons/edit-${iconColor}.svg`,
+												iconName: "edit",
 												onClick: onAction.bind(this)
 											},
 											{
 												id: id,
 												name: "Delete",
-												iconUrl: `/icons/delete-${iconColor}.svg`,
+												iconName: "delete",
 												onClick: onAction.bind(this)
 											}
 										  ]
@@ -243,7 +242,7 @@ class TicketHoldList extends Component {
 											{
 												id: id,
 												name: "Link",
-												iconUrl: `/icons/link-${iconColor}.svg`,
+												iconName: "link",
 												onClick: onAction.bind(this)
 											}
 										  ]
