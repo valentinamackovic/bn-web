@@ -176,7 +176,7 @@ class ChildDialog extends React.Component {
 				break;
 			case HOLD_TYPES.EDIT:
 				Bigneon()
-					.holds.children.update({ ...parentHoldInheritance, ...saveData })
+					.holds.update({ ...parentHoldInheritance, ...saveData })
 					.then(response => {
 						const { id } = response.data;
 						this.setState({ isSubmitting: false });
