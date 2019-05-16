@@ -92,7 +92,7 @@ class ChildrenList extends Component {
 
 	deleteChild(id) {
 		Bigneon()
-			.holds.children.delete({ id })
+			.holds.delete({ id })
 			.then(response => {
 				this.refreshChildren();
 				notifications.show({ message: "Hold deleted.", variant: "success" });
