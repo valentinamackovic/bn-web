@@ -61,6 +61,18 @@ const styles = theme => {
 			flex: 1,
 			justifyContent: "space-between"
 		},
+		ticketInfoRow: {
+			display: "flex",
+			width: "60%",
+			flexDirection: "column"
+		},
+		ticketInfo: {
+			display: "flex",
+			flexDirection: "row",
+			justifyContent: "space-between",
+			minWidth: "50%",
+			paddingRight: theme.spacing.unit * 2
+		},
 		mobileCard: {
 			borderRadius: 6,
 			marginTop: theme.spacing.unit * 2,
@@ -239,20 +251,23 @@ const ChildRow = props => {
 			<div className={classes.mobileHoldRow}>
 				<Typography className={classes.holdName}>{children[0]}</Typography>
 				<Typography className={classes.holdCode}>{children[1]}</Typography>
-				<div>
-					<div className={classes.mobileRow}>
-						<Typography className={classes.headingText}>Type</Typography>
-						<Typography className={classes.headingText}>Claimed</Typography>
-						<Typography className={classes.headingText}>Remaining</Typography>
+				<div className={classes.mobileRow}>
+					<div className={classes.ticketInfoRow}>
+						<div className={classes.ticketInfo}>
+							<Typography className={classes.headingText}>Claimed</Typography>
+							<Typography className={classes.headingText}>Remaining</Typography>
+						</div>
+						<div className={classes.ticketInfo}>
+							<Typography>{children[3]}</Typography>
+							<Typography className={classes.remainingNoColour}>
+								{children[4]}
+							</Typography>
+						</div>
 					</div>
-					<div className={classes.mobileRow}>
+					<div>
 						<ColorTag size={"small"} variant={"gray"}>
 							{children[2]}
 						</ColorTag>
-						<Typography>{children[3]}</Typography>
-						<Typography className={classes.remainingNoColour}>
-							{children[4]}
-						</Typography>
 					</div>
 				</div>
 			</div>
