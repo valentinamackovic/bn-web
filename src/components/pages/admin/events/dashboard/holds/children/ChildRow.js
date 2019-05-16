@@ -8,6 +8,7 @@ import {
 	fontFamilyDemiBold,
 	textColorPrimary
 } from "../../../../../../../config/theme";
+import ColorTag from "../../../../../../elements/ColorTag";
 
 const styles = theme => {
 	return {
@@ -150,11 +151,25 @@ const ChildRow = props => {
 				? classes.activeText
 				: classes.text;
 
-		return (
-			<Typography className={className} key={index} style={columnStyles[index]}>
-				{text}
-			</Typography>
-		);
+		if (index == 2) {
+			return (
+				<div style={columnStyles[index]}>
+					<ColorTag size={"small"} variant={"gray"}>
+						{text}
+					</ColorTag>
+				</div>
+			);
+		} else {
+			return (
+				<Typography
+					className={className}
+					key={index}
+					style={columnStyles[index]}
+				>
+					{text}
+				</Typography>
+			);
+		}
 	});
 
 	let actionButtons = <span>&nbsp;</span>;
@@ -219,7 +234,10 @@ const ChildRow = props => {
 						<Typography className={classes.headingText}>Remaining</Typography>
 					</div>
 					<div className={classes.mobileRow}>
-						<Typography>{children[2]}</Typography>
+						<ColorTag size={"small"} variant={"gray"}>
+							{children[2]}
+						</ColorTag>
+						{/*<Typography>{children[2]}</Typography>*/}
 						<Typography>{children[3]}</Typography>
 						<Typography>{children[4]}</Typography>
 					</div>

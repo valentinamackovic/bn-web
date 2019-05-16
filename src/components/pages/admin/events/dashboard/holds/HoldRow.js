@@ -156,9 +156,11 @@ const HoldRow = props => {
 				: classes.text;
 		if (index == 2) {
 			return (
-				<ColorTag size={"small"} variant={"gray"}>
-					{text}
-				</ColorTag>
+				<div style={columnStyles[index]}>
+					<ColorTag size={"small"} variant={"gray"}>
+						{text}
+					</ColorTag>
+				</div>
 			);
 		} else {
 			return (
@@ -185,7 +187,7 @@ const HoldRow = props => {
 						<Typography className={classes.headingText}>Remaining</Typography>
 					</div>
 					<div className={classes.mobileRow}>
-						<ColorTag size={"small"} variant={"green"}>
+						<ColorTag size={"small"} variant={"gray"}>
 							{children[2]}
 						</ColorTag>
 						{/*<Typography>{children[2]}</Typography>*/}

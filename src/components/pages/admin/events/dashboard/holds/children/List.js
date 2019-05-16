@@ -336,13 +336,13 @@ class ChildrenList extends Component {
 	renderDialog() {
 		const { ticketTypes, activeHoldId, holdType } = this.state;
 		const eventId = this.eventId;
-		const holdId = this.holdId;
+		//const holdId = this.holdId;
 		return (
 			<ChildDialog
 				holdType={holdType}
 				open={true}
 				eventId={eventId}
-				holdId={holdId}
+				holdId={activeHoldId}
 				ticketTypes={ticketTypes}
 				onSuccess={id => {
 					this.refreshChildren();
