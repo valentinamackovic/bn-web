@@ -388,6 +388,7 @@ class TicketHoldList extends Component {
 						<Button style={{ flex: 1 }} onClick={onClose}>
 							Done
 						</Button>
+						s
 					</div>
 				</div>
 			</Dialog>

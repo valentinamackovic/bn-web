@@ -9,6 +9,7 @@ import {
 	textColorPrimary
 } from "../../../../../../config/theme";
 import CustomTooltip from "../../../../../elements/Tooltip";
+import ColorTag from "../../../../../elements/ColorTag";
 
 const styles = theme => {
 	return {
@@ -153,11 +154,23 @@ const HoldRow = props => {
 			: active
 				? classes.activeText
 				: classes.text;
-		return (
-			<Typography className={className} key={index} style={columnStyles[index]}>
-				{text}
-			</Typography>
-		);
+		if (index == 2) {
+			return (
+				<ColorTag size={"small"} variant={"gray"}>
+					{text}
+				</ColorTag>
+			);
+		} else {
+			return (
+				<Typography
+					className={className}
+					key={index}
+					style={columnStyles[index]}
+				>
+					{text}
+				</Typography>
+			);
+		}
 	});
 
 	const mobiHold = children => {
@@ -172,7 +185,10 @@ const HoldRow = props => {
 						<Typography className={classes.headingText}>Remaining</Typography>
 					</div>
 					<div className={classes.mobileRow}>
-						<Typography>{children[2]}</Typography>
+						<ColorTag size={"small"} variant={"green"}>
+							{children[2]}
+						</ColorTag>
+						{/*<Typography>{children[2]}</Typography>*/}
 						<Typography>{children[3]}</Typography>
 						<Typography>{children[4]}</Typography>
 					</div>
