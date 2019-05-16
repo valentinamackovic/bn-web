@@ -24,6 +24,11 @@ const styles = theme => ({
 	shareableLinkText: {
 		color: secondaryHex,
 		fontSize: theme.typography.fontSize * 0.9
+	},
+	desktopHeadingRow: {
+		display: "flex",
+		paddingLeft: theme.spacing.unit * 2,
+		paddingRight: theme.spacing.unit * 2
 	}
 });
 
@@ -118,6 +123,42 @@ class TicketHoldList extends Component {
 			});
 	}
 
+	renderDesktopHeadings() {
+		const { classes } = this.props;
+		const headings = [
+			"Name",
+			"Code",
+			"Ticket Type",
+			"Claimed from hold",
+			"Remaining",
+			"Action"
+		];
+
+		const columnStyles = [
+			{ flex: 3, textAlign: "left" },
+			{ flex: 2, textAlign: "left" },
+			{ flex: 3, textAlign: "center" },
+			{ flex: 2, textAlign: "center" },
+			{ flex: 2, textAlign: "center" },
+			{ flex: 2, textAlign: "left" },
+			{ flex: 2, textAlign: "right" }
+		];
+
+		return (
+			<div className={classes.desktopHeadingRow}>
+				{headings.map((heading, index) => (
+					<Typography
+						key={index}
+						className={classes.desktopHeadingText}
+						style={columnStyles[index]}
+					>
+						{heading}
+					</Typography>
+				))}
+			</div>
+		);
+	}
+
 	renderList() {
 		const { holds, activeHoldId, showHoldDialog, expandRowId } = this.state;
 
@@ -162,10 +203,7 @@ class TicketHoldList extends Component {
 
 			return (
 				<div>
-					<Hidden smDown>
-						{" "}
-						<HoldRow heading>{ths}</HoldRow>
-					</Hidden>
+					<Hidden smDown>{this.renderDesktopHeadings()}</Hidden>
 
 					{/*<HoldRow heading>{ths}</HoldRow>*/}
 					{holds.map((hold, index) => {

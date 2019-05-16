@@ -45,6 +45,20 @@ const styles = theme => {
 			height: 14,
 			cursor: "pointer"
 		},
+		desktopCard: {
+			display: "flex",
+			height: 70,
+			alignItems: "center",
+			marginTop: theme.spacing.unit * 2,
+			paddingLeft: theme.spacing.unit * 2,
+			paddingRight: theme.spacing.unit * 2
+		},
+		desktopIcon: {
+			marginLeft: theme.spacing.unit * 2,
+			width: 14,
+			height: 14,
+			cursor: "pointer"
+		},
 		mobileRow: {
 			display: "flex",
 			flex: 1,
@@ -224,18 +238,11 @@ const HoldRow = props => {
 		<div>
 			{/*DESKTOP*/}
 			<Hidden smDown>
-				<div
-					className={classNames(
-						classes.root,
-						gray ? classes.gray : "",
-						active ? classes.active : ""
-					)}
-					{...rest}
-				>
+				<Card className={classes.desktopCard} {...rest}>
 					{columns}
 
 					{actionButtons}
-				</div>
+				</Card>
 			</Hidden>
 
 			{/*MOBILE*/}
