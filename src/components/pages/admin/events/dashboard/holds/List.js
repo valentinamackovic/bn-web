@@ -204,8 +204,6 @@ class TicketHoldList extends Component {
 			return (
 				<div>
 					<Hidden smDown>{this.renderDesktopHeadings()}</Hidden>
-
-					{/*<HoldRow heading>{ths}</HoldRow>*/}
 					{holds.map((hold, index) => {
 						const {
 							id,

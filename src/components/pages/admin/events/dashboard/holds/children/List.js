@@ -13,7 +13,12 @@ import user from "../../../../../../../stores/user";
 import Dialog from "../../../../../../elements/Dialog";
 
 const styles = theme => ({
-	root: {}
+	root: {},
+	desktopHeadingRow: {
+		display: "flex",
+		paddingLeft: theme.spacing.unit * 2,
+		paddingRight: theme.spacing.unit * 2
+	}
 });
 
 class ChildrenList extends Component {
@@ -192,6 +197,43 @@ class ChildrenList extends Component {
 		);
 	}
 
+	renderDesktopHeadings() {
+		const { classes } = this.props;
+		const headings = [
+			"Name",
+			"Code",
+			"Status",
+			"Total Held",
+			"Claimed",
+			"Remaining",
+			"Action"
+		];
+
+		const columnStyles = [
+			{ flex: 3, textAlign: "left" },
+			{ flex: 2, textAlign: "left" },
+			{ flex: 3, textAlign: "center" },
+			{ flex: 2, textAlign: "center" },
+			{ flex: 2, textAlign: "center" },
+			{ flex: 2, textAlign: "left" },
+			{ flex: 2, textAlign: "right" }
+		];
+
+		return (
+			<div className={classes.desktopHeadingRow}>
+				{headings.map((heading, index) => (
+					<Typography
+						key={index}
+						className={classes.desktopHeadingText}
+						style={columnStyles[index]}
+					>
+						{heading}
+					</Typography>
+				))}
+			</div>
+		);
+	}
+
 	renderList() {
 		const { children, hoverId, expandRowId } = this.state;
 		const { classes } = this.props;
@@ -230,9 +272,7 @@ class ChildrenList extends Component {
 
 			return (
 				<div>
-					<Hidden smDown>
-						<HoldRow heading>{ths}</HoldRow>
-					</Hidden>
+					<Hidden smDown>{this.renderDesktopHeadings()}</Hidden>
 					{children.map((ticket, index) => {
 						const { id, name, redemption_code, quantity, available } = ticket;
 

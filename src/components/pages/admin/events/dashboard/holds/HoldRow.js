@@ -238,7 +238,7 @@ const HoldRow = props => {
 		<div>
 			{/*DESKTOP*/}
 			<Hidden smDown>
-				<Card className={classes.desktopCard} {...rest}>
+				<Card variant={"raisedLight"} className={classes.desktopCard} {...rest}>
 					{columns}
 
 					{actionButtons}
