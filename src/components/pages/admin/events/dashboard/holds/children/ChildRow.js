@@ -117,6 +117,9 @@ const styles = theme => {
 			width: 12,
 			height: 12,
 			cursor: "pointer"
+		},
+		remainingNoColour: {
+			color: theme.palette.secondary.main
 		}
 	};
 };
@@ -158,6 +161,15 @@ const ChildRow = props => {
 						{text}
 					</ColorTag>
 				</div>
+			);
+		} else if (index == 4) {
+			return (
+				<Typography
+					className={classes.remainingNoColour}
+					style={columnStyles[index]}
+				>
+					{text}
+				</Typography>
 			);
 		} else {
 			return (
@@ -237,9 +249,10 @@ const ChildRow = props => {
 						<ColorTag size={"small"} variant={"gray"}>
 							{children[2]}
 						</ColorTag>
-						{/*<Typography>{children[2]}</Typography>*/}
 						<Typography>{children[3]}</Typography>
-						<Typography>{children[4]}</Typography>
+						<Typography className={classes.remainingNoColour}>
+							{children[4]}
+						</Typography>
 					</div>
 				</div>
 			</div>
