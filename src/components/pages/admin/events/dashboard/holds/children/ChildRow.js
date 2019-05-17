@@ -69,9 +69,14 @@ const styles = theme => {
 		ticketInfo: {
 			display: "flex",
 			flexDirection: "row",
-			justifyContent: "space-between",
+			justifyContent: "space-between"
+			// alignItems: "center"
+			// paddingRight: theme.spacing.unit * 2
+		},
+		alignLeft: {
 			minWidth: "50%",
-			paddingRight: theme.spacing.unit * 2
+			display: "flex",
+			justifySelf: "flex-start"
 		},
 		mobileCard: {
 			borderRadius: 6,
@@ -168,15 +173,16 @@ const ChildRow = props => {
 
 		if (index == 2) {
 			return (
-				<div style={columnStyles[index]}>
+				<div key={index} style={columnStyles[index]}>
 					<ColorTag size={"small"} variant={"gray"}>
 						{text}
 					</ColorTag>
 				</div>
 			);
-		} else if (index == 4) {
+		} else if (index == 5) {
 			return (
 				<Typography
+					key={index}
 					className={classes.remainingNoColour}
 					style={columnStyles[index]}
 				>
@@ -254,13 +260,25 @@ const ChildRow = props => {
 				<div className={classes.mobileRow}>
 					<div className={classes.ticketInfoRow}>
 						<div className={classes.ticketInfo}>
-							<Typography className={classes.headingText}>Claimed</Typography>
-							<Typography className={classes.headingText}>Remaining</Typography>
+							<Typography
+								className={classes.headingText + " " + classes.alignLeft}
+							>
+								Claimed
+							</Typography>
+							<Typography
+								className={classes.headingText + " " + classes.alignLeft}
+							>
+								Remaining
+							</Typography>
 						</div>
 						<div className={classes.ticketInfo}>
-							<Typography>{children[3]}</Typography>
-							<Typography className={classes.remainingNoColour}>
+							<Typography className={classes.alignLeft}>
 								{children[4]}
+							</Typography>
+							<Typography
+								className={classes.remainingNoColour + " " + classes.alignLeft}
+							>
+								{children[5]}
 							</Typography>
 						</div>
 					</div>

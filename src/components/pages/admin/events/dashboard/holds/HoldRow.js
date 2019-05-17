@@ -65,6 +65,23 @@ const styles = theme => {
 			flex: 1,
 			justifyContent: "space-between"
 		},
+		ticketInfoRow: {
+			display: "flex",
+			width: "60%",
+			flexDirection: "column"
+		},
+		ticketInfo: {
+			display: "flex",
+			flexDirection: "row",
+			justifyContent: "space-between"
+			// alignItems: "center"
+			// paddingRight: theme.spacing.unit * 2
+		},
+		alignLeft: {
+			minWidth: "50%",
+			display: "flex",
+			justifySelf: "flex-start"
+		},
 		mobileCard: {
 			borderRadius: 6,
 			marginTop: theme.spacing.unit * 2,
@@ -159,7 +176,7 @@ const HoldRow = props => {
 				: classes.text;
 		if (index == 2) {
 			return (
-				<div style={columnStyles[index]}>
+				<div key={index} style={columnStyles[index]}>
 					<ColorTag size={"small"} variant={"gray"}>
 						{text}
 					</ColorTag>
@@ -168,6 +185,7 @@ const HoldRow = props => {
 		} else if (index == 4) {
 			return (
 				<Typography
+					key={index}
 					className={classes.remainingNoColour}
 					style={columnStyles[index]}
 				>
@@ -192,21 +210,35 @@ const HoldRow = props => {
 			<div className={classes.mobileHoldRow}>
 				<Typography className={classes.holdName}>{children[0]}</Typography>
 				<Typography className={classes.holdCode}>{children[1]}</Typography>
-				<div>
-					<div className={classes.mobileRow}>
-						<Typography className={classes.headingText}>Type</Typography>
-						<Typography className={classes.headingText}>Claimed</Typography>
-						<Typography className={classes.headingText}>Remaining</Typography>
+				<div className={classes.mobileRow}>
+					<div className={classes.ticketInfoRow}>
+						<div className={classes.ticketInfo}>
+							<Typography
+								className={classes.headingText + " " + classes.alignLeft}
+							>
+								Claimed
+							</Typography>
+							<Typography
+								className={classes.headingText + " " + classes.alignLeft}
+							>
+								Remaining
+							</Typography>
+						</div>
+						<div className={classes.ticketInfo}>
+							<Typography className={classes.alignLeft}>
+								{children[3]}
+							</Typography>
+							<Typography
+								className={classes.remainingNoColour + " " + classes.alignLeft}
+							>
+								{children[4]}
+							</Typography>
+						</div>
 					</div>
-					<div className={classes.mobileRow}>
+					<div>
 						<ColorTag size={"small"} variant={"gray"}>
 							{children[2]}
 						</ColorTag>
-						{/*<Typography>{children[2]}</Typography>*/}
-						<Typography>{children[3]}</Typography>
-						<Typography className={classes.remainingNoColour}>
-							{children[4]}
-						</Typography>
 					</div>
 				</div>
 			</div>

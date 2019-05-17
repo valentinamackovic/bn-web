@@ -26,7 +26,7 @@ class ChildrenList extends Component {
 		super(props);
 
 		this.eventId = this.props.match.params.id;
-		this.holdId = this.props.match.params.holdId;
+		this.parentHoldId = this.props.match.params.holdId;
 
 		this.state = {
 			activeHoldId: null, //TODO check this is not used and remove if not
@@ -37,7 +37,8 @@ class ChildrenList extends Component {
 			holdType: HOLD_TYPES.NEW,
 			showHoldDialog: null,
 			deleteId: null,
-			expandRowId: null
+			expandRowId: null,
+			holdId: this.props.match.params.holdId
 		};
 	}
 
@@ -45,7 +46,7 @@ class ChildrenList extends Component {
 		this.loadEventDetails();
 
 		Bigneon()
-			.holds.read({ id: this.holdId })
+			.holds.read({ id: this.state.holdId })
 			.then(response => {
 				const holdDetails = response.data;
 				this.setState({ holdDetails }, () => this.refreshChildren());
@@ -79,9 +80,9 @@ class ChildrenList extends Component {
 	}
 
 	refreshChildren() {
-		if (this.eventId && this.holdId) {
+		if (this.eventId && this.state.holdId) {
 			Bigneon()
-				.holds.children.index({ hold_id: this.holdId })
+				.holds.children.index({ hold_id: this.parentHoldId })
 				.then(response => {
 					//TODO Pagination
 					this.setState({ children: response.data.data });
@@ -256,7 +257,7 @@ class ChildrenList extends Component {
 			const onAction = (id, action) => {
 				if (action === "Edit") {
 					return this.setState({
-						activeHoldId: id,
+						holdId: id,
 						showDialog: true,
 						holdType: HOLD_TYPES.EDIT
 					});
@@ -334,17 +335,17 @@ class ChildrenList extends Component {
 	}
 
 	renderDialog() {
-		const { ticketTypes, activeHoldId, holdType } = this.state;
+		const { ticketTypes, activeHoldId, holdType, holdId } = this.state;
 		const eventId = this.eventId;
-		//const holdId = this.holdId;
+		const parentHoldId = this.parentHoldId;
 		return (
 			<ChildDialog
 				holdType={holdType}
 				open={true}
 				eventId={eventId}
-				holdId={activeHoldId}
+				holdId={holdId}
 				ticketTypes={ticketTypes}
-				onSuccess={id => {
+				onSuccess={parentHoldId => {
 					this.refreshChildren();
 					this.setState({ showDialog: null });
 				}}

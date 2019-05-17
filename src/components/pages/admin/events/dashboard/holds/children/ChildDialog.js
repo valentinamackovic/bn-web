@@ -55,7 +55,11 @@ class ChildDialog extends React.Component {
 			.then(response => {
 				const hold = response.data;
 
-				this.setState({ child: hold });
+				this.setState({ hold: hold });
+
+				if (this.props.holdType == "edit") {
+					this.setState({ child: hold });
+				}
 			})
 			.catch(error => {
 				notifications.showFromErrorResponse({
