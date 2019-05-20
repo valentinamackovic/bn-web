@@ -120,7 +120,11 @@ const PaginationBlock = props => {
 		if (pageIndex <= maxStartRange || pageIndex + 1 >= maxEndRange) {
 			const active = page === pageIndex;
 			numberBlocks.push(
-				<NumberBlock onClick={!active ? () => onPageChange(pageIndex) : null} key={pageIndex} active={active && !isLoading} classes={classes}>
+				<NumberBlock 
+				onClick={!active ? () => onPageChange(pageIndex) : null} 
+				key={pageIndex} 
+				active={active && !isLoading} 
+				classes={classes}>
 					{pageIndex + 1}
 				</NumberBlock>
 			);
@@ -136,7 +140,7 @@ const PaginationBlock = props => {
 	}
 
 	let onPrevious;
-	if (!page > 1 ) {
+	if (page > 1 ) {
 		onPrevious = () => onPageChange(page - 1);
 	}
 

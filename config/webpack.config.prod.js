@@ -15,7 +15,9 @@ const eslintFormatter = require("react-dev-utils/eslintFormatter");
 const ModuleScopePlugin = require("react-dev-utils/ModuleScopePlugin");
 const paths = require("./paths");
 const getClientEnvironment = require("./env");
-
+//const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+//	.BundleAnalyzerPlugin;
+const MomentTimezoneDataPlugin = require("moment-timezone-data-webpack-plugin");
 // Webpack uses `publicPath` to determine where the app is being served from.
 // It requires a trailing slash, or the file assets will get an incorrect path.
 const publicPath = paths.servedPath;
@@ -232,6 +234,11 @@ module.exports = {
 		]
 	},
 	plugins: [
+		//new BundleAnalyzerPlugin(),
+		new MomentTimezoneDataPlugin({
+			startYear: 2018,
+			endYear: 2028
+		}),
 		// Makes some environment variables available in index.html.
 		// The public URL is available as %PUBLIC_URL% in index.html, e.g.:
 		// <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
@@ -310,7 +317,6 @@ module.exports = {
 					// https://github.com/facebookincubator/create-react-app/issues/2612
 					return;
 				}
-				console.log(message);
 			},
 			minify: true,
 			// For unknown URLs, fallback to the index page

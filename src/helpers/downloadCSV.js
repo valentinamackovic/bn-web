@@ -5,9 +5,10 @@ export default (rows, name = "data") => {
 		csvContent += `"${row}"\r\n`;
 	});
 
-	const encodedUri = encodeURI(csvContent);
+	const blob = new Blob([csvContent], { type: "text/csv" });
+	const href = window.URL.createObjectURL(blob);
 	const link = document.createElement("a");
-	link.setAttribute("href", encodedUri);
+	link.setAttribute("href", href);
 
 	const timeStamp = Math.floor(Date.now() / 1000);
 	link.setAttribute("download", `${name}_${timeStamp}.csv`);
