@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import BoxInput from "../form/BoxInput";
+import BoxInput from "./form/BoxInput";
 
 const DEBOUNCE_DELAY = 500;
 

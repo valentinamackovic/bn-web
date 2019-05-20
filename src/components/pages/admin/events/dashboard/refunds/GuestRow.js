@@ -3,7 +3,10 @@ import PropTypes from "prop-types";
 import { withStyles, Typography, Collapse } from "@material-ui/core";
 
 import Card from "../../../../../elements/Card";
-import { fontFamilyDemiBold, secondaryHex } from "../../../../../../config/theme";
+import {
+	fontFamilyDemiBold,
+	secondaryHex
+} from "../../../../../../config/theme";
 import GuestTicketRow from "./GuestTicketRow";
 import CheckBox from "../../../../../elements/form/CheckBox";
 
@@ -70,7 +73,7 @@ const GuestRow = props => {
 		classes
 	} = props;
 
-	let displayName = `Guest (No Details Provided))`;
+	let displayName = `Guest (No Details Provided)`;
 	if (first_name && last_name) {
 		displayName = `${last_name}, ${first_name}`;
 	} else if (first_name) {
@@ -80,7 +83,10 @@ const GuestRow = props => {
 	return (
 		<div className={classes.root}>
 			<Card>
-				<div onClick={() => onExpandChange(expanded ? null : userId)} className={classes.inner}>
+				<div
+					onClick={() => onExpandChange(expanded ? null : userId)}
+					className={classes.inner}
+				>
 					<div className={classes.leftContent}>
 						<div className={classes.topRow}>
 							<Typography className={classes.indexNumber}>
@@ -97,9 +103,7 @@ const GuestRow = props => {
 						</div>
 					</div>
 					<div className={classes.rightContent}>
-						<div
-							className={classes.expandContainer}
-						>
+						<div className={classes.expandContainer}>
 							<img
 								alt="Expand icon"
 								className={classes.expandIcon}

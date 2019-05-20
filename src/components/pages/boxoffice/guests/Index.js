@@ -122,12 +122,7 @@ class GuestList extends Component {
 		const filteredHolds = {};
 		Object.keys(childHolds).forEach(id => {
 			const { name, redemption_code } = childHolds[id];
-			if (
-				this.stringContainedInArray(
-					[name, redemption_code],
-					searchQuery
-				)
-			) {
+			if (this.stringContainedInArray([name, redemption_code], searchQuery)) {
 				filteredHolds[id] = childHolds[id];
 			}
 		});
@@ -250,7 +245,6 @@ class GuestList extends Component {
 		cart.refreshCart(() => {
 			this.setState({ showCheckoutModal: true });
 		});
-
 	}
 
 	renderBottomBar() {
@@ -282,7 +276,6 @@ class GuestList extends Component {
 					}
 				});
 			}
-			
 		} else if (Object.keys(selectedHolds).length > 0) {
 			checkoutType = "holds";
 			totalNumberSelected = Object.keys(selectedHolds).length;
@@ -308,7 +301,11 @@ class GuestList extends Component {
 					col1Text={`Total tickets available: ${totalAvailable}`}
 					col3Text={`Total tickets selected: ${totalNumberSelected}`}
 					disabled={isCheckingIn || !(totalNumberSelected > 0)}
-					onSubmit={checkoutType === "tickets" ? this.onRedeemSelectedTickets.bind(this) : this.onCheckoutHolds.bind(this)}
+					onSubmit={
+						checkoutType === "tickets"
+							? this.onRedeemSelectedTickets.bind(this)
+							: this.onCheckoutHolds.bind(this)
+					}
 					buttonText={buttonText}
 					disabledButtonText={
 						totalNumberSelected > 0 ? "Checking in..." : "Check in"
@@ -331,11 +328,25 @@ class GuestList extends Component {
 			return <BlankSlate>No active event selected.</BlankSlate>;
 		}
 
-		if (boxOffice.childHolds !== null && Object.keys(boxOffice.childHolds).length === 0 && boxOffice.guests !== null && Object.keys(boxOffice.guests).length === 0) {
+		if (
+			boxOffice.childHolds !== null &&
+			Object.keys(boxOffice.childHolds).length === 0 &&
+			boxOffice.guests !== null &&
+			Object.keys(boxOffice.guests).length === 0
+		) {
 			return <BlankSlate>No guests found for event.</BlankSlate>;
 		}
 
-		const { searchQuery, expandedRowKey, selectedTickets, selectedHolds, showCheckoutModal, currentOrderDetails, successMessage, holdCheckoutType } = this.state;
+		const {
+			searchQuery,
+			expandedRowKey,
+			selectedTickets,
+			selectedHolds,
+			showCheckoutModal,
+			currentOrderDetails,
+			successMessage,
+			holdCheckoutType
+		} = this.state;
 
 		const { classes } = this.props;
 
@@ -407,7 +418,7 @@ class GuestList extends Component {
 					const expanded = id === expandedRowKey;
 					const { first_name, last_name, tickets } = guests[id];
 
-					let name = `Guest (No Details Provided))`;
+					let name = `Guest (No Details Provided)`;
 					if (first_name && last_name) {
 						name = `${last_name}, ${first_name}`;
 					} else if (first_name) {
@@ -434,7 +445,9 @@ class GuestList extends Component {
 					<div>
 						<CheckoutDialog
 							open={showCheckoutModal}
-							onClose={() => this.setState({ showCheckoutModal: false, isCheckingIn: false })}
+							onClose={() =>
+								this.setState({ showCheckoutModal: false, isCheckingIn: false })
+							}
 							ticketTypes={ticketTypes || {}}
 							onSuccess={this.onCheckoutSuccess.bind(this)}
 							onError={() => {

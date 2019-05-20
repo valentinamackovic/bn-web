@@ -13,7 +13,7 @@ import Loader from "../../../../elements/loaders/Loader";
 import { dollars } from "../../../../../helpers/money";
 import ReportsDate from "../ReportDate";
 import reportDateRangeHeading from "../../../../../helpers/reportDateRangeHeading";
-import SearchInput from "../../../../elements/search";
+import SearchInput from "../../../../elements/SearchBox";
 import { Pagination, urlPageParam } from "../../../../elements/Pagination";
 import user from "../../../../../stores/user";
 import { observer } from "mobx-react";
