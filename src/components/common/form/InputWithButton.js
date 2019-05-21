@@ -106,12 +106,21 @@ class InputWithButton extends Component {
 			showClearButton,
 			successState,
 			clearText,
+			inputDisabled,
 			iconStyle
 		} = this.props;
 
 		return (
-			<div className={classNames({ [classes.root]: true, [classes.successStateRoot]: successState })} style={style}>
-				{iconUrl ? <img className={classes.icon} style={iconStyle} src={iconUrl}/> : null}
+			<div
+				className={classNames({
+					[classes.root]: true,
+					[classes.successStateRoot]: successState
+				})}
+				style={style}
+			>
+				{iconUrl ? (
+					<img className={classes.icon} style={iconStyle} src={iconUrl}/>
+				) : null}
 				<div className={classes.inputContainer}>
 					<input
 						className={classes.input}
@@ -123,6 +132,10 @@ class InputWithButton extends Component {
 								value = value.toUpperCase();
 							}
 							this.setState({ value });
+						}}
+						disabled={inputDisabled}
+						style={{
+							backgroundColor: inputDisabled ? "#fff" : ""
 						}}
 						placeholder={placeholder}
 						onKeyPress={this.handleKeyPress.bind(this)}
