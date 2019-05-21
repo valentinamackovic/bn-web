@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
+import "./index.css";
 import Routes from "./components/routes/Routes";
 import Bigneon from "./helpers/bigneon";
 import analytics from "./helpers/analytics";
