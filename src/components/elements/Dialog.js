@@ -12,6 +12,7 @@ import { fontFamilyBold } from "../../config/theme";
 import TopCardIcon from "./TopCardIcon";
 import iosScrollBackgroundHack from "../../helpers/iosScrollBackgroundHack";
 import getScreenWidth from "../../helpers/getScreenWidth";
+import servedImage from "../../helpers/imagePathHelper";
 
 const screenWidth = getScreenWidth();
 
@@ -86,7 +87,7 @@ class CustomDialog extends Component {
 								<img
 									alt="close"
 									className={classes.closeIcon}
-									src="/icons/delete-active.svg"
+									src={servedImage("/icons/delete-active.svg")}
 								/>
 							</div>
 						) : null}

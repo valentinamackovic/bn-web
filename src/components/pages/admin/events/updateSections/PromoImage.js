@@ -12,6 +12,7 @@ import MaintainAspectRatio from "../../../../elements/MaintainAspectRatio";
 import CheckBox from "../../../../elements/form/CheckBox";
 import { fontFamily } from "../../../../../config/theme";
 import settings from "../../../../../config/settings";
+import servedImage from "../../../../../helpers/imagePathHelper";
 
 const height = 480;
 
@@ -135,7 +136,16 @@ const uploadWidget = onSuccess => {
 };
 
 const CustomCardMedia = props => {
-	const { classes, src, alt, caption, onUrlUpdate, noMediaTitle, showCoverImage, onChangeCoverImage } = props;
+	const {
+		classes,
+		src,
+		alt,
+		caption,
+		onUrlUpdate,
+		noMediaTitle,
+		showCoverImage,
+		onChangeCoverImage
+	} = props;
 
 	const onUploadClick = () => {
 		uploadWidget(url => onUrlUpdate(url));
@@ -144,7 +154,11 @@ const CustomCardMedia = props => {
 	if (src) {
 		const coverImageCheckbox = (
 			<div className={classes.checkboxContainer}>
-				<CheckBox labelClass={classes.caption} active={showCoverImage} onClick={onChangeCoverImage}>
+				<CheckBox
+					labelClass={classes.caption}
+					active={showCoverImage}
+					onClick={onChangeCoverImage}
+				>
 					Use frosted event image as event cover image on the web
 				</CheckBox>
 			</div>
@@ -157,9 +171,7 @@ const CustomCardMedia = props => {
 				</MaintainAspectRatio>
 
 				<div className={classes.bottomRowContainer}>
-					<Hidden smDown>
-						{coverImageCheckbox}
-					</Hidden>
+					<Hidden smDown>{coverImageCheckbox}</Hidden>
 
 					<div className={classes.iconDiv}>
 						<div className={classes.captionContainer}>
@@ -169,16 +181,14 @@ const CustomCardMedia = props => {
 						<Avatar className={classes.iconOuter} onClick={onUploadClick}>
 							<img
 								alt="Card"
-								src={"/icons/camera-white.svg"}
+								src={servedImage("/icons/camera-white.svg")}
 								className={classes.icon}
 							/>
 						</Avatar>
 					</div>
 				</div>
 
-				<Hidden mdUp>
-					{coverImageCheckbox}
-				</Hidden>
+				<Hidden mdUp>{coverImageCheckbox}</Hidden>
 			</div>
 		);
 	}
@@ -188,7 +198,7 @@ const CustomCardMedia = props => {
 			<div className={classes.noMediaContent}>
 				<img
 					alt="Card"
-					src={"/icons/camera-white.svg"}
+					src={servedImage("/icons/camera-white.svg")}
 					className={classes.noMediaIcon}
 				/>
 				<Typography variant="title" className={classes.noMediaText}>

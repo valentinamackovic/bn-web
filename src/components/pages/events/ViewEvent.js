@@ -11,6 +11,7 @@ import Divider from "../../common/Divider";
 import notifications from "../../../stores/notifications";
 import selectedEvent from "../../../stores/selectedEvent";
 import EventHeaderImage from "../../elements/event/EventHeaderImage";
+import servedImage from "../../../helpers/imagePathHelper";
 import {
 	fontFamilyBold,
 	secondaryHex,
@@ -124,7 +125,7 @@ const styles = theme => {
 const EventDetail = ({ classes, children, iconUrl }) => (
 	<div className={classes.eventDetailsRow}>
 		<div className={classes.iconContainer}>
-			<img className={classes.icon} src={iconUrl}/>
+			<img className={classes.icon} src={servedImage(iconUrl)}/>
 		</div>
 
 		<div className={classes.eventDetailContainer}>{children}</div>
