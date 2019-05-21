@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles, Typography } from "@material-ui/core";
+import { withStyles, Typography, Hidden } from "@material-ui/core";
 import classnames from "classnames";
 import { fontFamilyBold } from "../../../config/theme";
 import AppButton from "../../elements/AppButton";
@@ -58,7 +58,8 @@ const styles = theme => ({
 			justifyContent: "flex-center"
 		}
 	},
-	mobilePreviewImage: {
+	featureImage: {
+		flex: 0,
 		width: 380,
 		[theme.breakpoints.up("sm")]: {
 			width: 600
@@ -71,7 +72,6 @@ const styles = theme => ({
 
 const Hero = ({ classes }) => (
 	<div className={classes.root}>
-		
 		<div className={classes.headingContainer}>
 			<Typography
 				className={classnames({
@@ -95,7 +95,7 @@ const Hero = ({ classes }) => (
 					variant="ios"
 					color="white"
 					href={process.env.REACT_APP_STORE_IOS}
-					style={{ 
+					style={{
 						marginRight: 5
 					}}
 				>
@@ -115,13 +115,18 @@ const Hero = ({ classes }) => (
 			</div>
 		</div>
 		<div className={classes.appLinkContainer}>
-			<img
-				style={{
-					flex: 0
-				}}
-				className={classes.mobilePreviewImage}
-				src="/images/iospreview-chopped.png"
-			/>
+			<Hidden xsDown>
+				<img
+					className={classes.featureImage}
+					src="/images/iospreview-chopped.png"
+				/>
+			</Hidden>
+			<Hidden smUp>
+				<img
+					className={classes.featureImage}
+					src="/images/iospreview-chopped-mobile.png"
+				/>
+			</Hidden>
 		</div>
 	</div>
 );
