@@ -483,6 +483,7 @@ class CheckoutSelection extends Component {
 						buttonText="Apply"
 						onSubmit={this.onSubmitPromo.bind(this)}
 						disabled={isSubmittingPromo}
+						inputDisabled={promoCodeApplied}
 						toUpperCase
 					/>
 
