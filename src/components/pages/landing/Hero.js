@@ -125,7 +125,7 @@ const Hero = ({ classes }) => (
 			<Hidden smUp>
 				<img
 					className={classes.featureImage}
-          src={servedImage("/images/iospreview-chopped-mobile.png")}
+					src={servedImage("/images/iospreview-chopped-mobile.png")}
 				/>
 			</Hidden>
 		</div>
