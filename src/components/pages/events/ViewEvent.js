@@ -34,7 +34,7 @@ import TwoColumnLayout from "./TwoColumnLayout";
 import EventDescriptionBody from "./EventDescriptionBody";
 import addressLineSplit from "../../../helpers/addressLineSplit";
 import layout from "../../../stores/layout";
-import settings from "../../../config/settings";
+import Settings from "../../../config/settings";
 import EventCallToActionAppBar from "../../elements/header/EventCallToActionAppBar";
 import user from "../../../stores/user";
 
@@ -468,7 +468,7 @@ class ViewEvent extends Component {
 
 				{/*MOBILE*/}
 				<Hidden mdUp>
-					<MaintainAspectRatio aspectRatio={settings().promoImageAspectRatio}>
+					<MaintainAspectRatio aspectRatio={Settings().promoImageAspectRatio}>
 						<div
 							className={classes.mobileHeaderImage}
 							style={mobilePromoImageStyle}

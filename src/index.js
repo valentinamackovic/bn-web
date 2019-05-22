@@ -6,6 +6,7 @@ import Routes from "./components/routes/Routes";
 import Bigneon from "./helpers/bigneon";
 import analytics from "./helpers/analytics";
 import errorReporting from "./helpers/errorReporting";
+import Settings from "./config/settings";
 
 window.bigneonVersion = REACT_APP_VERSION;
 console.debug("BigNeon Version: ", REACT_APP_VERSION);
@@ -28,6 +29,7 @@ function insertScript(url, id) {
 }
 
 Bigneon({}, {});
+Settings();
 analytics.init();
 errorReporting.init();
 

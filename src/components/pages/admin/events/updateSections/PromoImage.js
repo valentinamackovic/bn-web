@@ -11,7 +11,7 @@ import cloudinaryWidget from "../../../../../helpers/cloudinaryWidget";
 import MaintainAspectRatio from "../../../../elements/MaintainAspectRatio";
 import CheckBox from "../../../../elements/form/CheckBox";
 import { fontFamily } from "../../../../../config/theme";
-import settings from "../../../../../config/settings";
+import Settings from "../../../../../config/settings";
 import servedImage from "../../../../../helpers/imagePathHelper";
 
 const height = 480;
@@ -130,7 +130,7 @@ const uploadWidget = onSuccess => {
 		{
 			cropping: true,
 			cropping_coordinates_mode: "custom",
-			cropping_aspect_ratio: settings().promoImageAspectRatio
+			cropping_aspect_ratio: Settings().promoImageAspectRatio
 		}
 	);
 };
@@ -166,7 +166,7 @@ const CustomCardMedia = props => {
 
 		return (
 			<div className={classes.root}>
-				<MaintainAspectRatio aspectRatio={settings().promoImageAspectRatio}>
+				<MaintainAspectRatio aspectRatio={Settings().promoImageAspectRatio}>
 					<CardMedia className={classes.media} image={src} title={alt}/>
 				</MaintainAspectRatio>
 
