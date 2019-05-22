@@ -107,6 +107,7 @@ class InputWithButton extends Component {
 			showClearButton,
 			successState,
 			clearText,
+			inputDisabled,
 			iconStyle
 		} = this.props;
 
@@ -136,6 +137,10 @@ class InputWithButton extends Component {
 								value = value.toUpperCase();
 							}
 							this.setState({ value });
+						}}
+						disabled={inputDisabled}
+						style={{
+							backgroundColor: inputDisabled ? "#fff" : ""
 						}}
 						placeholder={placeholder}
 						onKeyPress={this.handleKeyPress.bind(this)}
