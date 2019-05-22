@@ -3,6 +3,7 @@ import { withStyles, Typography, Hidden } from "@material-ui/core";
 import classnames from "classnames";
 import { fontFamilyBold } from "../../../config/theme";
 import AppButton from "../../elements/AppButton";
+import servedImage from "../../../helpers/imagePathHelper";
 
 const styles = theme => ({
 	root: {
@@ -118,13 +119,13 @@ const Hero = ({ classes }) => (
 			<Hidden xsDown>
 				<img
 					className={classes.featureImage}
-					src="/images/iospreview-chopped.png"
+					src={servedImage("/images/iospreview-chopped.png")}
 				/>
 			</Hidden>
 			<Hidden smUp>
 				<img
 					className={classes.featureImage}
-					src="/images/iospreview-chopped-mobile.png"
+          src={servedImage("/images/iospreview-chopped-mobile.png")}
 				/>
 			</Hidden>
 		</div>

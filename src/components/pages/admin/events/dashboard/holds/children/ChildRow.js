@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles, Typography } from "@material-ui/core";
 import classNames from "classnames";
+import servedImage from "../../../../../../../helpers/imagePathHelper";
 
 const styles = theme => {
 	return {
@@ -76,7 +77,11 @@ const ChildRow = props => {
 							onClick && onClick(id, name);
 						}}
 					>
-						<img alt={name} src={iconUrl} className={classes.icon}/>
+						<img
+							alt={name}
+							src={servedImage(iconUrl)}
+							className={classes.icon}
+						/>
 					</span>
 				))}
 			</span>

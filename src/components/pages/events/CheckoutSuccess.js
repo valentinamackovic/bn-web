@@ -28,6 +28,7 @@ import Divider from "../../common/Divider";
 import user from "../../../stores/user";
 import getUrlParam from "../../../helpers/getUrlParam";
 import getPhoneOS from "../../../helpers/getPhoneOS";
+import servedImage from "../../../helpers/imagePathHelper";
 
 const heroHeight = 800;
 
@@ -224,7 +225,7 @@ const styles = theme => {
 const EventDetail = ({ classes, children, iconUrl }) => (
 	<div className={classes.desktopEventDetailsRow}>
 		<div className={classes.desktopIconContainer}>
-			<img className={classes.desktopIcon} src={iconUrl}/>
+			<img className={classes.desktopIcon} src={servedImage(iconUrl)}/>
 		</div>
 
 		<div className={classes.desktopEventDetailContainer}>{children}</div>
@@ -433,11 +434,11 @@ class CheckoutSuccess extends Component {
 									<img
 										className={classes.mobileHeaderIcon}
 										alt="close"
-										src="/icons/close-white.svg"
+										src={servedImage("/icons/close-white.svg")}
 									/>
 								</div>
 								<div>
-									{/*<img className={classes.mobileHeaderIcon} alt="share" src="/icons/share-white.svg"/>*/}
+									{/*<img className={classes.mobileHeaderIcon} alt="share" src={servedImage("/icons/share-white.svg")}/>*/}
 								</div>
 							</div>
 
