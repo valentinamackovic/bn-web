@@ -9,6 +9,7 @@ import LeftAlignedSubCard from "../../../../elements/LeftAlignedSubCard";
 import TicketType from "./TicketType";
 import eventUpdateStore from "../../../../../stores/eventUpdate";
 import Button from "../../../../elements/Button";
+import servedImage from "../../../../../helpers/imagePathHelper";
 import { DEFAULT_END_TIME_HOURS_AFTER_SHOW_TIME } from "./Details";
 
 const formatForSaving = (ticketTypes, event) => {
@@ -618,7 +619,10 @@ class EventTickets extends Component {
 					className={classes.addTicketType}
 					onClick={() => eventUpdateStore.addTicketType()}
 				>
-					<img className={classes.addIcon} src="/icons/add-ticket.svg"/>
+					<img
+						className={classes.addIcon}
+						src={servedImage("/icons/add-ticket.svg")}
+					/>
 					<Typography className={classes.addText} variant="body2">
 						Add another ticket type
 					</Typography>

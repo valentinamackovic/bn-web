@@ -5,6 +5,7 @@ import classNames from "classnames";
 import { Typography } from "@material-ui/core";
 
 import { fontFamilyDemiBold, secondaryHex } from "../../../config/theme";
+import servedImage from "../../../helpers/imagePathHelper";
 
 const height = 40;
 
@@ -119,7 +120,11 @@ class InputWithButton extends Component {
 				style={style}
 			>
 				{iconUrl ? (
-					<img className={classes.icon} style={iconStyle} src={iconUrl}/>
+					<img
+						className={classes.icon}
+						style={iconStyle}
+						src={servedImage(iconUrl)}
+					/>
 				) : null}
 				<div className={classes.inputContainer}>
 					<input
