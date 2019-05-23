@@ -110,10 +110,7 @@ class GuestList extends Component {
 			});
 
 			if (
-				this.stringContainedInArray(
-					[first_name, last_name, ...ticketIds],
-					searchQuery
-				) ||
+				this.stringContainedInArray(ticketIds, searchQuery) ||
 				RegExp(searchQuery.replace(" ", ".*"), "gi").test(
 					[first_name, last_name].join(" ")
 				)
