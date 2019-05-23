@@ -50,9 +50,9 @@ class Tickets {
 					const tickets = ticketGroup[1];
 
 					event.eventDate = moment(
-						event.event_start,
-						moment.HTML5_FMT.DATETIME_LOCAL_MS
-					).tz(event.venue.timezone || moment.tz.guess());
+						event.localized_times.event_start,
+						"D MMM YYYY HH:mm:ss"
+					);
 
 					event.formattedDate = event.eventDate.format("ddd MM/DD/YY, h:mm A");
 
