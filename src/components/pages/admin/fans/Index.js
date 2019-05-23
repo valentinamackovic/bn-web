@@ -13,8 +13,9 @@ import { fontFamilyDemiBold, primaryHex } from "../../../../config/theme";
 import user from "../../../../stores/user";
 import Button from "../../../elements/Button";
 import downloadCSV from "../../../../helpers/downloadCSV";
-import { Pagination, urlPageParam } from "../../../elements/Pagination";
+import { Pagination, urlPageParam } from "../../../elements/pagination";
 import Loader from "../../../elements/loaders/Loader";
+import servedImage from "../../../../helpers/imagePathHelper";
 
 const imageSize = 40;
 
@@ -103,7 +104,7 @@ class FanList extends Component {
 			.then(response => {
 				const { data } = response.data;
 
-				if (!data ||  data.length === 0) {
+				if (!data || data.length === 0) {
 					this.setState({ isExporting: false });
 					return notifications.show({
 						message: "No fans to export."
@@ -139,10 +140,16 @@ class FanList extends Component {
 						first_name,
 						last_name,
 						email,
-						moment.utc(last_order_time).local().format("MM/DD/YYYY h:mm:A"),
+						moment
+							.utc(last_order_time)
+							.local()
+							.format("MM/DD/YYYY h:mm:A"),
 						order_count,
 						`$${Math.round(revenue_in_cents / 100)}`,
-						moment.utc(created_at).local().format("MM/DD/YYYY h:mm:A")
+						moment
+							.utc(created_at)
+							.local()
+							.format("MM/DD/YYYY h:mm:A")
 					]);
 				});
 
@@ -162,7 +169,7 @@ class FanList extends Component {
 	}
 
 	loadFans(page = urlPageParam()) {
-		this.setState(({ isLoading: true }));
+		this.setState({ isLoading: true });
 		const organization_id = user.currentOrganizationId;
 
 		if (!organization_id) {
@@ -181,7 +188,7 @@ class FanList extends Component {
 				const { data, paging } = response.data;
 				this.setState({ users: data, paging });
 
-				this.setState(({ isLoading: false }));
+				this.setState({ isLoading: false });
 			})
 			.catch(error => {
 				console.error(error);
@@ -190,7 +197,7 @@ class FanList extends Component {
 					defaultMessage: "Listing fans failed."
 				});
 
-				this.setState(({ isLoading: false }));
+				this.setState({ isLoading: false });
 			});
 	}
 
@@ -244,7 +251,9 @@ class FanList extends Component {
 											<div className={classes.missingProfileImageBackground}>
 												<img
 													className={classes.missingProfileImage}
-													src={"/images/profile-pic-placeholder-white.png"}
+													src={servedImage(
+														"/images/profile-pic-placeholder-white.png"
+													)}
 													alt={`${first_name} ${last_name}`}
 												/>
 											</div>
@@ -258,7 +267,10 @@ class FanList extends Component {
 									<Typography className={classes.itemText}>{email}</Typography>
 									<Typography className={classes.itemText}>
 										{last_order_time
-											? moment.utc(last_order_time).local().format("MM/DD/YYYY")
+											? moment
+												.utc(last_order_time)
+												.local()
+												.format("MM/DD/YYYY")
 											: "-"}
 									</Typography>
 									<Typography className={classes.itemText}>
@@ -268,7 +280,12 @@ class FanList extends Component {
 										${Math.round(revenue_in_cents / 100)}
 									</Typography>
 									<Typography className={classes.itemText}>
-										{created_at ? moment.utc(created_at).local().format("MM/DD/YYYY") : "-"}
+										{created_at
+											? moment
+												.utc(created_at)
+												.local()
+												.format("MM/DD/YYYY")
+											: "-"}
 									</Typography>
 								</FanRow>
 							</Link>
@@ -276,7 +293,11 @@ class FanList extends Component {
 					})}
 
 					<br/>
-					<Pagination isLoading={isLoading} paging={paging} onChange={this.loadFans.bind(this)}/>
+					<Pagination
+						isLoading={isLoading}
+						paging={paging}
+						onChange={this.loadFans.bind(this)}
+					/>
 				</div>
 			</Card>
 		);
@@ -288,13 +309,14 @@ class FanList extends Component {
 
 		return (
 			<div>
-
 				<div className={classes.header}>
 					<PageHeading
 						iconUrl="/icons/my-events-multi.svg"
-						subheading={paging && paging.total ? `${paging.total} total fans` : null}
+						subheading={
+							paging && paging.total ? `${paging.total} total fans` : null
+						}
 					>
-					Fans
+						Fans
 					</PageHeading>
 					<Button
 						iconUrl="/icons/csv-active.svg"

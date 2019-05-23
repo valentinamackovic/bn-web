@@ -10,6 +10,7 @@ import {
 } from "../../../../../../config/theme";
 import CustomTooltip from "../../../../../elements/Tooltip";
 import ColorTag from "../../../../../elements/ColorTag";
+import servedImage from "../../../../../../helpers/imagePathHelper";
 
 const styles = theme => {
 	return {

@@ -11,6 +11,7 @@ import Divider from "../../common/Divider";
 import notifications from "../../../stores/notifications";
 import selectedEvent from "../../../stores/selectedEvent";
 import EventHeaderImage from "../../elements/event/EventHeaderImage";
+import servedImage from "../../../helpers/imagePathHelper";
 import {
 	fontFamilyBold,
 	secondaryHex,
@@ -33,7 +34,7 @@ import TwoColumnLayout from "./TwoColumnLayout";
 import EventDescriptionBody from "./EventDescriptionBody";
 import addressLineSplit from "../../../helpers/addressLineSplit";
 import layout from "../../../stores/layout";
-import settings from "../../../config/settings";
+import Settings from "../../../config/settings";
 import EventCallToActionAppBar from "../../elements/header/EventCallToActionAppBar";
 import user from "../../../stores/user";
 
@@ -124,7 +125,7 @@ const styles = theme => {
 const EventDetail = ({ classes, children, iconUrl }) => (
 	<div className={classes.eventDetailsRow}>
 		<div className={classes.iconContainer}>
-			<img className={classes.icon} src={iconUrl}/>
+			<img className={classes.icon} src={servedImage(iconUrl)}/>
 		</div>
 
 		<div className={classes.eventDetailContainer}>{children}</div>
@@ -467,7 +468,7 @@ class ViewEvent extends Component {
 
 				{/*MOBILE*/}
 				<Hidden mdUp>
-					<MaintainAspectRatio aspectRatio={settings().promoImageAspectRatio}>
+					<MaintainAspectRatio aspectRatio={Settings().promoImageAspectRatio}>
 						<div
 							className={classes.mobileHeaderImage}
 							style={mobilePromoImageStyle}
