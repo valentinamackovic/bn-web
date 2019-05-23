@@ -9,6 +9,7 @@ import {
 	textColorPrimary
 } from "../../../../../../../config/theme";
 import ColorTag from "../../../../../../elements/ColorTag";
+import CustomTooltip from "../../../../../../elements/Tooltip";
 
 const styles = theme => {
 	return {
@@ -206,20 +207,31 @@ const ChildRow = props => {
 	if (actions) {
 		actionButtons = (
 			<span>
-				{actions.map(({ id, name, iconName, onClick }) => (
-					<span
-						key={name}
-						onClick={() => {
-							onClick && onClick(id, name);
-						}}
-					>
-						<img
-							alt={name}
-							src={`/icons/${iconName}-${active ? "active" : "gray"}.svg`}
-							className={classes.icon}
-						/>
-					</span>
-				))}
+				{actions.map(({ id, name, iconName, onClick, tooltipText }) => {
+					const icon = (
+						<span
+							key={name}
+							onClick={() => {
+								onClick && onClick(id, name);
+							}}
+						>
+							<img
+								alt={name}
+								src={`/icons/${iconName}-${active ? "active" : "gray"}.svg`}
+								className={classes.icon}
+							/>
+						</span>
+					);
+					if (tooltipText) {
+						return (
+							<CustomTooltip key={name} title={tooltipText} forceShow>
+								{icon}
+							</CustomTooltip>
+						);
+					} else {
+						return icon;
+					}
+				})}
 			</span>
 		);
 	}
@@ -228,26 +240,37 @@ const ChildRow = props => {
 	if (actions) {
 		mobileActionButtons = (
 			<div className={classes.mobileActionButtonGroup}>
-				{actions.map(({ id, name, iconName, onClick }) => (
-					<div
-						key={name}
-						className={classes.mobileActionButtonContainer}
-						onClick={e => {
-							// e.stopPropagation();
-							// e.nativeEvent.stopImmediatePropagation();
-							onClick && onClick(id, name);
-						}}
-					>
-						<img
-							alt={name}
-							src={`/icons/${iconName}-${active ? "gray" : "active"}.svg`}
-							className={classes.icon}
-						/>
-						<Typography className={classes.mobileActionLabel}>
-							{name}
-						</Typography>
-					</div>
-				))}
+				{actions.map(({ id, name, iconName, onClick, tooltipText }) => {
+					const icon = (
+						<div
+							key={name}
+							className={classes.mobileActionButtonContainer}
+							onClick={e => {
+								// e.stopPropagation();
+								// e.nativeEvent.stopImmediatePropagation();
+								onClick && onClick(id, name);
+							}}
+						>
+							<img
+								alt={name}
+								src={`/icons/${iconName}-${active ? "gray" : "active"}.svg`}
+								className={classes.icon}
+							/>
+							<Typography className={classes.mobileActionLabel}>
+								{name}
+							</Typography>
+						</div>
+					);
+					if (tooltipText) {
+						return (
+							<CustomTooltip key={id} title={tooltipText} forceShow>
+								{icon}
+							</CustomTooltip>
+						);
+					} else {
+						return icon;
+					}
+				})}
 			</div>
 		);
 	}

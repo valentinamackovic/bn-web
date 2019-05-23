@@ -11,6 +11,7 @@ import Container from "../../Container";
 import Loader from "../../../../../../elements/loaders/Loader";
 import user from "../../../../../../../stores/user";
 import Dialog from "../../../../../../elements/Dialog";
+import copyToClipboard from "../../../../../../../helpers/copyToClipboard";
 
 const styles = theme => ({
 	root: {},
@@ -38,6 +39,9 @@ class ChildrenList extends Component {
 			showHoldDialog: null,
 			deleteId: null,
 			expandRowId: null,
+			codes: [],
+			linkCopiedId: null,
+			linkIsCopied: false,
 			holdId: this.props.match.params.holdId
 		};
 	}
@@ -198,6 +202,36 @@ class ChildrenList extends Component {
 		);
 	}
 
+	copyToClipboard(id) {
+		const { linkCopiedId, children } = this.state;
+
+		const autoClose = () =>
+			setTimeout(() => {
+				const { linkCopiedId } = this.state;
+				if (id === linkCopiedId) {
+					this.setState({ linkCopiedId: null });
+				}
+			}, 2000);
+
+		let url = null;
+		if (id) {
+			const hold = children.find(c => c.id === id);
+			const { redemption_code, event_id } = hold;
+
+			url = `${window.location.protocol}//${
+				window.location.host
+			}/events/${event_id}/tickets?code=${redemption_code}`;
+		}
+
+		if (url) {
+			copyToClipboard(url);
+			this.setState({ linkCopiedId: id }, () => {
+				this.setState({ linkIsCopied: true });
+				autoClose();
+			});
+		}
+	}
+
 	renderDesktopHeadings() {
 		const { classes } = this.props;
 		const headings = [
@@ -236,7 +270,13 @@ class ChildrenList extends Component {
 	}
 
 	renderList() {
-		const { children, hoverId, expandRowId } = this.state;
+		const {
+			children,
+			hoverId,
+			expandRowId,
+			linkCopiedId,
+			linkIsCopied
+		} = this.state;
 		const { classes } = this.props;
 
 		if (children === null) {
@@ -267,7 +307,7 @@ class ChildrenList extends Component {
 				}
 
 				if (action === "Link") {
-					return this.setState({ showShareableLinkId: id });
+					return this.copyToClipboard(id);
 				}
 			};
 
@@ -303,6 +343,7 @@ class ChildrenList extends Component {
 										id: id,
 										name: "Link",
 										iconName: "link",
+										tooltipText: linkCopiedId === id ? "Link Copied!" : null,
 										onClick: onAction.bind(this)
 									},
 									{
