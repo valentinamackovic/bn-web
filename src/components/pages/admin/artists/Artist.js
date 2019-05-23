@@ -15,6 +15,7 @@ import { validUrl } from "../../../../validators";
 import cloudinaryWidget from "../../../../helpers/cloudinaryWidget";
 import Bigneon from "../../../../helpers/bigneon";
 import PageHeading from "../../../elements/PageHeading";
+import user from "../../../../stores/user";
 
 const styles = theme => ({
 	paper: {
@@ -38,8 +39,11 @@ class Artist extends Component {
 			artistId = props.match.params.id;
 		}
 
+		const organizationId = user.currentOrganizationId;
+
 		this.state = {
 			artistId,
+			organizationId,
 			imageUrl: "",
 			name: "",
 			bio: "",
@@ -65,6 +69,7 @@ class Artist extends Component {
 					const {
 						name,
 						bio,
+						organization_id,
 						website_url,
 						facebook_username,
 						instagram_username,
@@ -80,6 +85,7 @@ class Artist extends Component {
 						name: name || "",
 						bio: bio || "",
 						website_url: website_url || "",
+						organizationId: organization_id,
 						facebook_username: facebook_username || "",
 						instagram_username: instagram_username || "",
 						snapchat_username: snapchat_username || "",
@@ -258,6 +264,7 @@ class Artist extends Component {
 
 		const {
 			artistId,
+			organizationId,
 			imageUrl,
 			name,
 			bio,
@@ -280,6 +287,7 @@ class Artist extends Component {
 			thumb_image_url: cleanParam(imageUrl),
 			name,
 			bio,
+			organization_id: organizationId,
 			website_url: cleanParam(website_url),
 			facebook_username: cleanParam(facebook_username),
 			instagram_username: cleanParam(instagram_username),
