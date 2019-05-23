@@ -14,6 +14,7 @@ import Loader from "../../../../../elements/loaders/Loader";
 import user from "../../../../../../stores/user";
 import { secondaryHex } from "../../../../../../config/theme";
 import Hidden from "@material-ui/core/es/Hidden/Hidden";
+import copyToClipboard from "../../../../../../helpers/copyToClipboard";
 
 const styles = theme => ({
 	root: {},
@@ -45,6 +46,8 @@ class TicketHoldList extends Component {
 			ticketTypes: [],
 			holds: [],
 			deleteId: null,
+			linkCopiedId: null,
+			linkIsCopied: false,
 			expandRowId: null
 		};
 	}
@@ -123,6 +126,36 @@ class TicketHoldList extends Component {
 			});
 	}
 
+	copyToClipboard(id) {
+		const { linkCopiedId, holds } = this.state;
+
+		const autoClose = () =>
+			setTimeout(() => {
+				const { linkCopiedId } = this.state;
+				if (id === linkCopiedId) {
+					this.setState({ linkCopiedId: null });
+				}
+			}, 2000);
+
+		let url = null;
+		if (id) {
+			const hold = holds.find(c => c.id === id);
+			const { redemption_code, event_id } = hold;
+
+			url = `${window.location.protocol}//${
+				window.location.host
+			}/events/${event_id}/tickets?code=${redemption_code}`;
+		}
+
+		if (url) {
+			copyToClipboard(url);
+			this.setState({ linkCopiedId: id }, () => {
+				this.setState({ linkIsCopied: true });
+				autoClose();
+			});
+		}
+	}
+
 	renderDesktopHeadings() {
 		const { classes } = this.props;
 		const headings = [
@@ -160,7 +193,13 @@ class TicketHoldList extends Component {
 	}
 
 	renderList() {
-		const { holds, activeHoldId, showHoldDialog, expandRowId } = this.state;
+		const {
+			holds,
+			activeHoldId,
+			showHoldDialog,
+			expandRowId,
+			linkCopiedId
+		} = this.state;
 
 		if (holds === null) {
 			return <Loader/>;
@@ -197,7 +236,8 @@ class TicketHoldList extends Component {
 				}
 
 				if (action === "Link") {
-					return this.setState({ showShareableLinkId: id });
+					// return this.setState({ showShareableLinkId: id });
+					return this.copyToClipboard(id);
 				}
 			};
 
@@ -259,6 +299,8 @@ class TicketHoldList extends Component {
 												id: id,
 												name: "Link",
 												iconName: "link",
+												tooltipText:
+														linkCopiedId === id ? "Link Copied!" : null,
 												onClick: onAction.bind(this)
 											},
 											{

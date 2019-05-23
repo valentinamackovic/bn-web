@@ -249,23 +249,34 @@ const HoldRow = props => {
 	if (actions) {
 		actionButtons = (
 			<span>
-				{actions.map(({ id, name, iconName, active, onClick }) => (
-					<span
-						key={name}
-						onClick={e => {
-							// e.stopPropagation();
-							// e.nativeEvent.stopImmediatePropagation();
-							onClick && onClick(id, name);
-						}}
-					>
-						{/*<img alt={name} src={iconUrl} className={classes.icon}/>*/}
-						<img
-							alt={name}
-							src={`/icons/${iconName}-${active ? "active" : "gray"}.svg`}
-							className={classes.icon}
-						/>
-					</span>
-				))}
+				{actions.map(({ id, name, iconName, active, onClick, tooltipText }) => {
+					const icon = (
+						<span
+							key={name}
+							onClick={e => {
+								// e.stopPropagation();
+								// e.nativeEvent.stopImmediatePropagation();
+								onClick && onClick(id, name);
+							}}
+						>
+							{/*<img alt={name} src={iconUrl} className={classes.icon}/>*/}
+							<img
+								alt={name}
+								src={`/icons/${iconName}-${active ? "active" : "gray"}.svg`}
+								className={classes.icon}
+							/>
+						</span>
+					);
+					if (tooltipText) {
+						return (
+							<CustomTooltip key={id} title={tooltipText} forceShow>
+								{icon}
+							</CustomTooltip>
+						);
+					} else {
+						return icon;
+					}
+				})}
 			</span>
 		);
 	}
@@ -274,26 +285,37 @@ const HoldRow = props => {
 	if (actions) {
 		mobileActionButtons = (
 			<div className={classes.mobileActionButtonGroup}>
-				{actions.map(({ id, name, iconName, onClick }) => (
-					<div
-						key={name}
-						className={classes.mobileActionButtonContainer}
-						onClick={e => {
-							// e.stopPropagation();
-							// e.nativeEvent.stopImmediatePropagation();
-							onClick && onClick(id, name);
-						}}
-					>
-						<img
-							alt={name}
-							src={`/icons/${iconName}-${active ? "gray" : "active"}.svg`}
-							className={classes.icon}
-						/>
-						<Typography className={classes.mobileActionLabel}>
-							{name}
-						</Typography>
-					</div>
-				))}
+				{actions.map(({ id, name, iconName, onClick, tooltipText }) => {
+					const icon = (
+						<div
+							key={name}
+							className={classes.mobileActionButtonContainer}
+							onClick={e => {
+								// e.stopPropagation();
+								// e.nativeEvent.stopImmediatePropagation();
+								onClick && onClick(id, name);
+							}}
+						>
+							<img
+								alt={name}
+								src={`/icons/${iconName}-${active ? "gray" : "active"}.svg`}
+								className={classes.icon}
+							/>
+							<Typography className={classes.mobileActionLabel}>
+								{name}
+							</Typography>
+						</div>
+					);
+					if (tooltipText) {
+						return (
+							<CustomTooltip key={id} title={tooltipText} forceShow>
+								{icon}
+							</CustomTooltip>
+						);
+					} else {
+						return icon;
+					}
+				})}
 			</div>
 		);
 	}
