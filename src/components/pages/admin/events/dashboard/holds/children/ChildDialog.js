@@ -8,6 +8,7 @@ import Button from "../../../../../../elements/Button";
 import Bigneon from "../../../../../../../helpers/bigneon";
 import Dialog from "../../../../../../elements/Dialog";
 import InputGroup from "../../../../../../common/form/InputGroup";
+import { CODE_TYPES } from "../../codes/CodeDialog";
 
 const createHold = BnServer.ResourceInterfaces.createHold;
 
@@ -142,6 +143,9 @@ class ChildDialog extends React.Component {
 		}
 		if (saveData.phone === "") {
 			delete saveData.phone;
+		}
+		if (saveData.quantity) {
+			saveData.quantity = Number(saveData.quantity);
 		}
 
 		const { id, hold_type, discount_in_cents, max_per_order, end_at } = hold;
@@ -297,9 +301,9 @@ class ChildDialog extends React.Component {
 						name="quantity"
 						label="Total Tickets"
 						placeholder="1"
-						type="text"
+						type="number"
 						onChange={e => {
-							child.quantity = +e.target.value;
+							child.quantity = e.target.value;
 							this.setState({ child });
 						}}
 						// onBlur={this.validateFields.bind(this)}
