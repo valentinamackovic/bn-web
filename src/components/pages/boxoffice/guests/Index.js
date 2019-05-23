@@ -111,7 +111,12 @@ class GuestList extends Component {
 
 			if (
 				this.stringContainedInArray(
-					[first_name, last_name, ...ticketIds],
+					[
+						first_name,
+						last_name,
+						[first_name, last_name].join(" "),
+						...ticketIds
+					],
 					searchQuery
 				)
 			) {
