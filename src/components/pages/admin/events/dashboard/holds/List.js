@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Typography, withStyles } from "@material-ui/core";
+import { Typography, withStyles, Hidden } from "@material-ui/core";
 
 import notifications from "../../../../../../stores/notifications";
 import Button from "../../../../../elements/Button";
@@ -13,7 +13,6 @@ import Dialog from "../../../../../elements/Dialog";
 import Loader from "../../../../../elements/loaders/Loader";
 import user from "../../../../../../stores/user";
 import { secondaryHex } from "../../../../../../config/theme";
-import Hidden from "@material-ui/core/es/Hidden/Hidden";
 import copyToClipboard from "../../../../../../helpers/copyToClipboard";
 
 const styles = theme => ({
