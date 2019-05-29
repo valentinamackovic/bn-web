@@ -557,8 +557,7 @@ class CheckoutSelection extends Component {
 
 		return (
 			<div>
-				<Meta type={"selection"} {...event}/>
-
+				<Meta {...event} venue={venue} artists={artists} type={"selection"}/>
 				{/*DESKTOP*/}
 				<Hidden smDown>
 					<EventHeaderImage {...event} artists={artists}/>

@@ -333,7 +333,7 @@ class CheckoutSuccess extends Component {
 	render() {
 		const { classes } = this.props;
 
-		const { event, venue } = selectedEvent;
+		const { event, venue, artists } = selectedEvent;
 
 		if (event === null) {
 			return (
@@ -368,7 +368,7 @@ class CheckoutSuccess extends Component {
 
 		return (
 			<div className={classes.root}>
-				<Meta type={"success"} {...event}/>
+				<Meta {...event} venue={venue} artists={artists} type={"success"}/>
 
 				{/*DESKTOP*/}
 				<Hidden smDown>

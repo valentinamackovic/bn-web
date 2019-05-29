@@ -37,6 +37,7 @@ import layout from "../../../stores/layout";
 import Settings from "../../../config/settings";
 import EventCallToActionAppBar from "../../elements/header/EventCallToActionAppBar";
 import user from "../../../stores/user";
+import { insertScript } from "../../../helpers/insertScript";
 
 const ADDITIONAL_INFO_CHAR_LIMIT = 300;
 
@@ -77,7 +78,8 @@ const styles = theme => {
 		mobileEventName: {
 			fontFamily: fontFamilyBold,
 			fontSize: theme.typography.fontSize * 1.565,
-			lineHeight: 1
+			lineHeight: 1,
+			color: "#3C383F"
 		},
 		spacer: {
 			marginTop: theme.spacing.unit * 4
@@ -162,8 +164,6 @@ class ViewEvent extends Component {
 		} else {
 			//TODO return 404
 		}
-
-		//TODO add footer padding if on mobile to account for popup CAT
 	}
 
 	componentWillUnmount() {
@@ -299,14 +299,14 @@ class ViewEvent extends Component {
 		}
 
 		if (min === null || isNaN(min)) {
-			return dollars(max);
+			return dollars(max, true);
 		}
 
 		if (max === null || isNaN(max) || min === max) {
-			return dollars(min);
+			return dollars(min, true);
 		}
 
-		return `${dollars(min)} ${separator} ${dollars(max)}`;
+		return `${dollars(min, true)} ${separator} ${dollars(max, true)}`;
 	}
 
 	render() {
@@ -425,7 +425,7 @@ class ViewEvent extends Component {
 		return (
 			<div className={classes.root}>
 				<OrgAnalytics trackingKeys={tracking_keys}/>
-				<Meta {...event}/>
+				<Meta {...event} venue={venue} artists={artists} type={"eventView"}/>
 
 				{/*DESKTOP*/}
 				<Hidden smDown>
@@ -481,7 +481,12 @@ class ViewEvent extends Component {
 							</Typography>
 						) : null}
 
-						<Typography className={classes.mobileEventName}>{name}</Typography>
+						<Typography
+							variant={"display1"}
+							className={classes.mobileEventName}
+						>
+							{name}
+						</Typography>
 
 						{artists && artists.length !== 0 ? (
 							<Typography className={classes.cardArtists}>
