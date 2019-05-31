@@ -590,49 +590,49 @@ class CheckoutSelection extends Component {
 				{/*MOBILE*/}
 				<Hidden mdUp>
 					<div className={classes.mobileContainer}>
-						<div className={classes.mobileEventDetailsContainer}>
-							<div
-								className={classes.mobilePromoImage}
-								style={{ backgroundImage: `url(${promo_image_url})` }}
-							/>
-							<div style={{ flex: 1 }}>
-								<Typography
-									noWrap
-									variant={"display1"}
-									className={classes.mobileEventName}
-								>
-									{ellipsis(name, 45)}
-								</Typography>
-								<div
-									style={{
-										display: "flex",
-										justifyContent: "space-between",
-										flex: 1
-									}}
-								>
-									<div>
-										<Typography className={classes.mobileVenueName}>
-											{venue.name}
-											{venue.city ? ` - ${venue.city}` : ""}
-										</Typography>
-										<Typography className={classes.mobileEventTime}>
-											{displayTime(event.start_date, venue.timezone)}
-										</Typography>
-									</div>
-									<Link
-										to={`/events/${id}`}
-										style={{
-											display: "flex",
-											alignItems: "flex-end"
-										}}
-									>
-										<Typography className={classes.mobileViewDetailsLinkText}>
-											View details
-										</Typography>
-									</Link>
-								</div>
-							</div>
-						</div>
+						{/*<div className={classes.mobileEventDetailsContainer}>*/}
+						{/*<div*/}
+						{/*className={classes.mobilePromoImage}*/}
+						{/*style={{ backgroundImage: `url(${promo_image_url})` }}*/}
+						{/*/>*/}
+						{/*<div style={{ flex: 1 }}>*/}
+						{/*<Typography*/}
+						{/*noWrap*/}
+						{/*variant={"display1"}*/}
+						{/*className={classes.mobileEventName}*/}
+						{/*>*/}
+						{/*{ellipsis(name, 45)}*/}
+						{/*</Typography>*/}
+						{/*<div*/}
+						{/*style={{*/}
+						{/*display: "flex",*/}
+						{/*justifyContent: "space-between",*/}
+						{/*flex: 1*/}
+						{/*}}*/}
+						{/*>*/}
+						{/*<div>*/}
+						{/*<Typography className={classes.mobileVenueName}>*/}
+						{/*{venue.name}*/}
+						{/*{venue.city ? ` - ${venue.city}` : ""}*/}
+						{/*</Typography>*/}
+						{/*<Typography className={classes.mobileEventTime}>*/}
+						{/*{displayTime(event.start_date, venue.timezone)}*/}
+						{/*</Typography>*/}
+						{/*</div>*/}
+						{/*<Link*/}
+						{/*to={`/events/${id}`}*/}
+						{/*style={{*/}
+						{/*display: "flex",*/}
+						{/*alignItems: "flex-end"*/}
+						{/*}}*/}
+						{/*>*/}
+						{/*<Typography className={classes.mobileViewDetailsLinkText}>*/}
+						{/*View details*/}
+						{/*</Typography>*/}
+						{/*</Link>*/}
+						{/*</div>*/}
+						{/*</div>*/}
+						{/*</div>*/}
 						<div className={classes.mobileTicketSelectionContainer}>
 							{sharedContent}
 						</div>
