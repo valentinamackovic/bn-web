@@ -130,12 +130,24 @@ class Fan extends Component {
 		this.state = {
 			profile: null,
 			fanHistory: historyDummy,
-			activeHeadings: { sales: true, attendance: false }
+			activeHeadings: { sales: true, attendance: false },
+			expandedRowKey: null
 		};
+		this.onExpandChange = this.onExpandChange.bind(this);
 	}
 
 	componentDidMount() {
 		this.loadFan();
+	}
+
+	onExpandChange(expandedRowKey) {
+		if (expandedRowKey === this.state.expandedRowKey) {
+			this.setState({
+				expandedRowKey: null
+			});
+		} else {
+			this.setState({ expandedRowKey });
+		}
 	}
 
 	loadFan() {
@@ -164,14 +176,21 @@ class Fan extends Component {
 	}
 
 	renderCards() {
-		const { fanHistory } = this.state;
-
+		const { fanHistory, expandedRowKey } = this.state;
 		if (fanHistory === null) {
 			return <Loader>Loading history...</Loader>;
 		}
 
 		return fanHistory.map((item, index) => {
-			return <FanHistoryEventCard key={index} {...item}/>;
+			const expanded = expandedRowKey === index;
+			return (
+				<FanHistoryEventCard
+					onExpandChange={() => this.onExpandChange(index)}
+					expanded={expanded}
+					key={index}
+					{...item}
+				/>
+			);
 		});
 	}
 

@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { withStyles, Typography } from "@material-ui/core";
+import { withStyles, Typography, Collapse } from "@material-ui/core";
 
 import moment from "moment";
 import Card from "../../../elements/Card";
@@ -43,10 +43,12 @@ const FanHistoryEventCard = ({
 	event_start,
 	event_id,
 	event_history,
+	onExpandChange,
+	expanded,
 	classes
 }) => (
 	<div className={classes.root}>
-		<Card variant="subCard">
+		<Card variant="subCard" onClick={onExpandChange}>
 			<div className={classes.card}>
 				<Typography>
 					<span className={classes.boldSpan}>{event_name}</span>
@@ -57,6 +59,9 @@ const FanHistoryEventCard = ({
 				<Typography className={classes.greySubtitle}>{event_loc}</Typography>
 			</div>
 		</Card>
+		<Collapse in={expanded}>
+			<Card>helloo ?</Card>
+		</Collapse>
 	</div>
 );
 
@@ -69,6 +74,8 @@ FanHistoryEventCard.propTypes = {
 	revenue_in_cents: PropTypes.number,
 	order_id: PropTypes.string,
 	event_loc: PropTypes.string,
+	onExpandChange: PropTypes.func.isRequired,
+	expanded: PropTypes.bool.isRequired,
 	event_history: PropTypes.array,
 	type: PropTypes.oneOf(["Purchase", "Attendance"]).isRequired
 };
