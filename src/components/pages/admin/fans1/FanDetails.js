@@ -15,30 +15,8 @@ import Loader from "../../../elements/loaders/Loader";
 import PropTypes from "prop-types";
 import moment from "moment-timezone";
 import servedImage from "../../../../helpers/imagePathHelper";
-import FanHistoryEventCard from "./FanHistoryEventCard";
 
 const imageSize = 100;
-
-const historyDummy = [
-	{
-		event_id: "9bdc1bba-7144-4b8b-9446-a095f14e9578",
-		event_name: "Simple Event",
-		event_start: "2019-08-31T19:00:00",
-		event_loc: "Some location"
-	},
-	{
-		event_id: "c52d9cef-1d18-487c-ad28-597c541953c8",
-		event_name: "Open Mike Eagle",
-		event_start: "2019-05-09T15:00:00",
-		event_loc: "Some location"
-	},
-	{
-		event_id: "d82921d1-7c24-4838-a098-f0235a226af7",
-		event_name: "Huge ticket sales",
-		event_start: "2019-05-08T19:00:00",
-		event_loc: "Some location"
-	}
-];
 
 const styles = theme => ({
 	card: {
@@ -68,9 +46,12 @@ const styles = theme => ({
 		height: "auto"
 	},
 	profileContainer: {
+		//borderStyle: "solid",
 		display: "flex"
 	},
 	profileDetails: {
+		// borderStyle: "solid",
+		// borderColor: "red",
 		marginLeft: theme.spacing.unit * 2,
 		display: "flex",
 		flexDirection: "column",
@@ -129,7 +110,7 @@ class Fan extends Component {
 
 		this.state = {
 			profile: null,
-			fanHistory: historyDummy,
+			activities: null,
 			activeHeadings: { sales: true, attendance: false }
 		};
 	}
@@ -153,7 +134,12 @@ class Fan extends Component {
 			.then(response => {
 				const { attendance_information, ...profile } = response.data;
 
-				this.setState({ profile });
+				const activities = [];
+				attendance_information.forEach(item => {
+					activities.push({ ...item, type: "Attendance" });
+				});
+
+				this.setState({ profile, activities }, this.loadFanHistory.bind(this));
 			})
 			.catch(error =>
 				notifications.showFromErrorResponse({
@@ -163,15 +149,48 @@ class Fan extends Component {
 			);
 	}
 
-	renderCards() {
-		const { fanHistory } = this.state;
+	loadFanHistory() {
+		const organization_id = user.currentOrganizationId;
+		const user_id = this.userId;
 
-		if (fanHistory === null) {
-			return <Loader>Loading history...</Loader>;
-		}
+		Bigneon()
+			.organizations.fans.history({ user_id, organization_id })
+			.then(result => {
+				this.setState(({ activities }) => {
+					activities = [...activities, ...result.data.data];
+					return { activities };
+				}, this.sortActivity.bind(this));
+			})
+			.catch(error =>
+				notifications.showFromErrorResponse({
+					error,
+					defaultMessage: "Failed to load fan history."
+				})
+			);
+	}
 
-		return fanHistory.map((item, index) => {
-			return <FanHistoryEventCard key={index} {...item}/>;
+	sortActivity() {
+		const { activities } = this.state;
+
+		activities.sort((a, b) => {
+			//Gte the dates we need to compare
+			const aDate = a.type === "Purchase" ? a.order_date : a.event_start;
+			const bDate = b.type === "Purchase" ? b.order_date : b.event_start;
+
+			if (moment(aDate).diff(moment(bDate)) < 0) {
+				return 1;
+			} else {
+				return -1;
+			}
+		});
+
+		this.setState({ activities });
+	}
+
+	changeSelectedHeading(key) {
+		this.setState(({ activeHeadings }) => {
+			activeHeadings[key] = !activeHeadings[key];
+			return { activeHeadings };
 		});
 	}
 
@@ -226,16 +245,82 @@ class Fan extends Component {
 		);
 	}
 
+	renderMenu() {
+		const { classes } = this.props;
+		const { activeHeadings } = this.state;
+
+		//return null;
+		// TODO add back when displaying attendance
+		return (
+			<Grid item xs={12} sm={6} md={4} lg={3}>
+				<Grid container spacing={24}>
+					<Grid item xs={3} sm={3} lg={3}>
+						<Typography className={classes.menuText}>
+							<StyledLink
+								underlined={activeHeadings.sales}
+								onClick={() => this.changeSelectedHeading("sales")}
+							>
+								Sales
+							</StyledLink>
+						</Typography>
+					</Grid>
+
+					<Grid item xs={1} sm={1} lg={1}>
+						<div className={classes.verticalDividerSmall}/>
+					</Grid>
+
+					<Grid item xs={3} sm={3} lg={3}>
+						<Typography className={classes.menuText}>
+							<StyledLink
+								underlined={activeHeadings.attendance}
+								onClick={() => this.changeSelectedHeading("attendance")}
+							>
+								Attendance
+							</StyledLink>
+						</Typography>
+					</Grid>
+				</Grid>
+			</Grid>
+		);
+	}
+
+	renderCards() {
+		const { activeHeadings, activities } = this.state;
+
+		if (activities === null) {
+			return <Loader>Loading history...</Loader>;
+		}
+
+		return activities.map((item, index) => {
+			if (item.type === "Purchase" && !activeHeadings.sales) {
+				return;
+			}
+
+			if (item.type === "Attendance" && !activeHeadings.attendance) {
+				return;
+			}
+
+			return <FanActivityCard key={index} {...item}/>;
+		});
+	}
+
 	render() {
-		const { profile } = this.state;
+		const { profile, activeHeadings } = this.state;
+
 		if (profile === null) {
 			return <Loader>Loading fan details...</Loader>;
 		}
+
+		const { event_count, revenue_in_cents, ticket_sales } = profile;
+
 		const { classes } = this.props;
 
 		return (
 			<div>
-				<PageHeading iconUrl="/icons/my-events-active.svg">
+				<PageHeading
+					iconUrl="/icons/my-events-active.svg"
+					// subheading={<Link to="/admin/fans">Go back</Link>}
+				>
 					Fan Profile
 				</PageHeading>
 
@@ -245,6 +330,60 @@ class Fan extends Component {
 							<Grid item xs={12} sm={8} lg={8}>
 								{this.renderProfile()}
 							</Grid>
+
+							<Grid
+								item
+								xs={12}
+								sm={4}
+								lg={4}
+								className={classes.overviewStatsContainer}
+							>
+								<Grid container spacing={24}>
+									<Grid item xs={3} sm={3} lg={3}>
+										<Typography className={classes.statsHeading}>
+											Events
+										</Typography>
+										<Typography className={classes.statValue}>
+											{event_count}
+										</Typography>
+									</Grid>
+
+									<Grid item xs={1} sm={1} lg={1}>
+										<div className={classes.verticalDivider}/>
+									</Grid>
+
+									<Grid item xs={3} sm={3} lg={3}>
+										<Typography className={classes.statsHeading}>
+											Revenue
+										</Typography>
+										<Typography className={classes.statValue}>
+											${(revenue_in_cents / 100).toFixed(2)}
+										</Typography>
+									</Grid>
+
+									<Grid item xs={1} sm={1} lg={1}>
+										<div className={classes.verticalDivider}/>
+									</Grid>
+
+									<Grid item xs={3} sm={3} lg={3}>
+										<Typography className={classes.statsHeading}>
+											Tickets
+										</Typography>
+										<Typography className={classes.statValue}>
+											{ticket_sales}
+										</Typography>
+									</Grid>
+								</Grid>
+							</Grid>
+
+							<Grid item xs={12}>
+								<Divider/>
+								<Typography className={classes.historyHeading}>
+									History
+								</Typography>
+							</Grid>
+
+							{this.renderMenu()}
 						</Grid>
 
 						<Grid
