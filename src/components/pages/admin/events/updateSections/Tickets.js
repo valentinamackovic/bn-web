@@ -226,7 +226,7 @@ const formatForInput = (ticket_types, event) => {
 		}
 
 		let saleStartTimeOption = parent_id ? "parent" : "custom";
-		if (ticketStartDate.isBefore(moment.utc().local())) {
+		if (ticketStartDate && ticketStartDate.isBefore(moment.utc().local())) {
 			saleStartTimeOption = "immediately";
 		}
 
