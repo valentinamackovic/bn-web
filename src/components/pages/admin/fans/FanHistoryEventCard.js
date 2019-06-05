@@ -8,6 +8,7 @@ import { fontFamilyDemiBold, secondaryHex } from "../../../../config/theme";
 import Loader from "../../../elements/loaders/Loader";
 import Grid from "@material-ui/core/Grid";
 import FanHistoryActivityCard from "./FanHistoryActivityCard";
+import servedImage from "../../../../helpers/imagePathHelper";
 
 const styles = theme => ({
 	root: {
@@ -36,6 +37,19 @@ const styles = theme => ({
 	},
 	bottomRow: {
 		display: "flex"
+	},
+	showHide: {
+		color: secondaryHex
+	},
+	showHideRow: {
+		display: "flex",
+		flexDirection: "row",
+		cursor: "pointer",
+		paddingTop: theme.spacing.unit * 2
+	},
+	showHideIcon: {
+		paddingLeft: theme.spacing.unit,
+		paddingBottom: theme.spacing.unit / 2
 	}
 });
 
@@ -106,6 +120,27 @@ class FanHistoryEventCard extends Component {
 						<Typography className={classes.greySubtitle}>
 							{event_loc}
 						</Typography>
+						{!expanded ? (
+							<div className={classes.showHideRow}>
+								<Typography className={classes.showHide}>
+									Show all details
+								</Typography>
+								<img
+									className={classes.showHideIcon}
+									src={servedImage("/icons/down-active.svg")}
+								/>
+							</div>
+						) : (
+							<div className={classes.showHideRow}>
+								<Typography className={classes.showHide}>
+									Hide details
+								</Typography>
+								<img
+									className={classes.showHideIcon}
+									src={servedImage("/icons/up-active.svg")}
+								/>
+							</div>
+						)}
 					</div>
 				</Card>
 				<Collapse in={expanded}>

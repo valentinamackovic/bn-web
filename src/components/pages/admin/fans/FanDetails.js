@@ -6,7 +6,6 @@ import notifications from "../../../../stores/notifications";
 import Bigneon from "../../../../helpers/bigneon";
 import PageHeading from "../../../elements/PageHeading";
 import user from "../../../../stores/user";
-import FanActivityCard from "./FanActivityCard";
 import Card from "../../../elements/Card";
 import { fontFamilyDemiBold } from "../../../../config/theme";
 import SocialIconLink from "../../../elements/social/SocialIconLink";
