@@ -38,16 +38,16 @@ const historyDummy = [
 				order_date: "2019-05-22T15:17:04.181624",
 				order_id: "1946606e-8853-4111-99d0-892ae56a5f91",
 				revenue_in_cents: 6273,
-				ticket_sales: 1,
-				type: "Purchase"
+				type: "CheckIn"
 			},
 			{
 				event_name: "Huge ticket sales",
 				order_date: "2019-05-10T15:00:12.087543",
 				order_id: "79d359d6-8015-4e10-bd4a-c257d79f2576",
-				revenue_in_cents: 255,
+				amount_refunded: 255,
 				ticket_sales: 1,
-				type: "Purchase"
+				type: "Refund",
+				refunded: "John Smith"
 			},
 			{
 				event_name: "Simple Event",

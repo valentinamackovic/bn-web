@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles, Typography, Collapse } from "@material-ui/core";
 
@@ -8,7 +8,7 @@ import { fontFamilyDemiBold, secondaryHex } from "../../../../config/theme";
 
 const styles = theme => ({
 	root: {
-		marginTop: theme.spacing.unit
+		marginBottom: theme.spacing.unit
 	},
 	card: { padding: theme.spacing.unit * 2 },
 	greySubtitle: {
@@ -36,37 +36,49 @@ const styles = theme => ({
 	}
 });
 
-const FanHistoryActivityCard = ({
-	order_date,
-	event_name,
-	event_loc,
-	event_start,
-	event_id,
-	event_history,
-	onExpandChange,
-	expanded,
-	classes
-}) => (
-	<div className={classes.root}>
-		<Card variant="subCard" onClick={onExpandChange}>
-			<div className={classes.card}>
-				<Typography>
-					<span className={classes.boldSpan}>{event_name}</span>
-				</Typography>
-				<Typography className={classes.greySubtitle}>
-					{moment(event_start).format("M/D/Y hh:mmA")}
-				</Typography>
-				<Typography className={classes.greySubtitle}>{event_loc}</Typography>
-			</div>
-		</Card>
-		<Collapse in={expanded}>
-			<div className={classes.card}>
-				<Card variant="subCard">helloo ?</Card>
-			</div>
-		</Collapse>
-	</div>
-);
+class FanHistoryActivityCard extends Component {
+	constructor(props) {
+		super(props);
 
+		this.state = {};
+	}
+
+	renderPurchase() {
+		const {
+			event_name,
+			event_start,
+			event_loc,
+			event_history,
+			onExpandChange,
+			expanded,
+			classes
+		} = this.props;
+		return (
+			<div className={classes.root}>
+				<Card onClick={onExpandChange} className={classes.card}>
+					<div className={classes.card}>
+						<Typography>
+							<span className={classes.boldSpan}>{event_name}</span>
+						</Typography>
+						<Typography className={classes.greySubtitle}>
+							{moment(event_start).format("M/D/Y hh:mmA")}
+						</Typography>
+						<Typography className={classes.greySubtitle}>
+							{event_loc}
+						</Typography>
+					</div>
+					<Collapse in={expanded}>
+						<div className={classes.card}>helloo ?</div>
+					</Collapse>
+				</Card>
+			</div>
+		);
+	}
+
+	render() {
+		return this.renderPurchase();
+	}
+}
 FanHistoryActivityCard.propTypes = {
 	order_date: PropTypes.string,
 	event_start: PropTypes.string,
@@ -79,7 +91,7 @@ FanHistoryActivityCard.propTypes = {
 	onExpandChange: PropTypes.func.isRequired,
 	expanded: PropTypes.bool.isRequired,
 	event_history: PropTypes.array,
-	type: PropTypes.oneOf(["Purchase", "Attendance"]).isRequired
+	type: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(FanHistoryActivityCard);

@@ -109,7 +109,7 @@ class FanHistoryEventCard extends Component {
 
 		return (
 			<div className={classes.root}>
-				<Card variant="subCard" onClick={onExpandChange}>
+				<Card onClick={onExpandChange}>
 					<div className={classes.card}>
 						<Typography>
 							<span className={classes.boldSpan}>{event_name}</span>
@@ -144,7 +144,7 @@ class FanHistoryEventCard extends Component {
 					</div>
 				</Card>
 				<Collapse in={expanded}>
-					<div className={classes.card}>
+					<div>
 						<Grid
 							item
 							xs={12}
@@ -172,7 +172,6 @@ FanHistoryEventCard.propTypes = {
 	event_loc: PropTypes.string,
 	onExpandChange: PropTypes.func.isRequired,
 	expanded: PropTypes.bool.isRequired,
-	event_history: PropTypes.array,
-	type: PropTypes.oneOf(["Purchase", "Attendance"]).isRequired
+	event_history: PropTypes.array
 };
 export default withStyles(styles)(FanHistoryEventCard);
