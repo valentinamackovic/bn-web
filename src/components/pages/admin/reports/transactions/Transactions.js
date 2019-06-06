@@ -13,7 +13,7 @@ import Loader from "../../../../elements/loaders/Loader";
 import { dollars } from "../../../../../helpers/money";
 import ReportsDate from "../ReportDate";
 import reportDateRangeHeading from "../../../../../helpers/reportDateRangeHeading";
-import SearchInput from "../../../../elements/SearchBox";
+import SearchBox from "../../../../elements/SearchBox";
 import { Pagination, urlPageParam } from "../../../../elements/pagination";
 import user from "../../../../../stores/user";
 import { observer } from "mobx-react";
@@ -454,7 +454,7 @@ class Transactions extends Component {
 						</Typography>
 					</Grid>
 					<Grid item xs={12} sm={12} md={4} lg={4}>
-						<SearchInput
+						<SearchBox
 							placeholder="Search by guest name, email or event name"
 							onSearch={this.onSearch.bind(this)}
 						/>

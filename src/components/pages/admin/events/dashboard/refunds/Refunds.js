@@ -1,3 +1,4 @@
+//TODO remove this component when the new order management is complete
 import React, { Component } from "react";
 import { Typography, withStyles, Grid } from "@material-ui/core";
 import { observer } from "mobx-react";

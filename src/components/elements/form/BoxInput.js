@@ -42,7 +42,6 @@ const BoxInput = props => {
 };
 
 BoxInput.defaultPropTypes = {
-	buttonText: "Submit",
 	style: {}
 };
 
