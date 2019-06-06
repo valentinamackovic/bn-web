@@ -6,27 +6,80 @@ import Button from "../../elements/Button";
 import notification from "../../../stores/notifications";
 import Bigneon from "../../../helpers/bigneon";
 import Dialog from "../../elements/Dialog";
+import { Typography } from "@material-ui/core";
+import { fontFamilyDemiBold, secondaryHex } from "../../../config/theme";
 
-const styles = {
+const styles = theme => ({
 	content: {
 		minWidth: 400,
 		alignContent: "center",
 		textAlign: "center"
 	},
 	actionButtons: {
-		display: "flex"
+		display: "flex",
+		justifyContent: "center"
+	},
+	infoText: {
+		fontSize: theme.typography.fontSize * 1.125,
+		textAlign: "center"
+	},
+	emailText: {
+		color: secondaryHex,
+		fontFamily: fontFamilyDemiBold
 	}
-};
+});
 
 class CancelTransferDialog extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			isCancelling: false
+			isCancelling: false,
+			recipientEmail: null,
+			transferId: null,
+			cancelSuccess: false
 		};
 
 		this.onClose = this.onClose.bind(this);
+	}
+
+	componentDidMount() {
+		this.loadTransferDetails();
+	}
+
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		if (
+			this.props.transferKey &&
+			prevProps.transferKey !== this.props.transferKey
+		) {
+			this.loadTransferDetails();
+		}
+	}
+
+	loadTransferDetails() {
+		const { transferKey } = this.props;
+
+		if (!transferKey) {
+			return null;
+		}
+
+		Bigneon()
+			.transfers.read({
+				id: transferKey
+			})
+			.then(response => {
+				const { id, transfer_address } = response.data;
+				this.setState({ recipientEmail: transfer_address, transferId: id });
+			})
+			.catch(error => {
+				this.setState({ isCancelling: false });
+				console.error(error);
+				notification.showFromErrorResponse({
+					error,
+					defaultMessage: "Could not find transfer details.",
+					variant: "error"
+				});
+			});
 	}
 
 	onClose() {
@@ -35,28 +88,22 @@ class CancelTransferDialog extends Component {
 			return;
 		}
 
-		const { onClose } = this.props;
-		onClose();
+		this.setState({ recipientEmail: null, cancelSuccess: false }, () => {
+			const { onClose } = this.props;
+			onClose();
+		});
 	}
 
 	onCancel() {
-		const { transferId } = this.props;
-
 		this.setState({ isCancelling: true });
+		const { transferId } = this.state;
 
 		Bigneon()
 			.transfers.cancel({
 				id: transferId
 			})
 			.then(response => {
-				this.setState({ isCancelling: false }, () => {
-					this.onClose();
-
-					notification.show({
-						message: "Ticket transfer cancelled.",
-						variant: "success"
-					});
-				});
+				this.setState({ isCancelling: false, cancelSuccess: true });
 			})
 			.catch(error => {
 				this.setState({ isCancelling: false });
@@ -69,19 +116,26 @@ class CancelTransferDialog extends Component {
 			});
 	}
 
-	render() {
-		const { transferId, classes, ...other } = this.props;
-		const { isCancelling } = this.state;
+	renderCancelContent() {
+		const { classes } = this.props;
 
-		const iconUrl = "/icons/close-white.svg";
+		const { recipientEmail, isCancelling, transferId } = this.state;
+
+		let explainerText = null;
+		if (recipientEmail) {
+			explainerText = (
+				<Typography className={classes.infoText}>
+					Please confirm that you want to cancel this transfer. We’ll send{" "}
+					<span className={classes.emailText}>{recipientEmail}</span> a message
+					to let them know.
+				</Typography>
+			);
+		}
+
 		return (
-			<Dialog
-				onClose={this.onClose}
-				iconUrl={iconUrl}
-				title={"Cancel ticket transfer"}
-				open={!!transferId}
-				{...other}
-			>
+			<React.Fragment>
+				<br/>
+				{explainerText}
 				<br/>
 				<div className={classes.actionButtons}>
 					<Button
@@ -90,18 +144,77 @@ class CancelTransferDialog extends Component {
 						disabled={isCancelling}
 						onClick={this.onClose}
 					>
-						Close
+						Go back
 					</Button>
 					<Button
 						size="large"
 						style={{ flex: 1, marginLeft: 5 }}
 						onClick={this.onCancel.bind(this)}
-						variant="callToAction"
-						disabled={isCancelling}
+						variant="secondary"
+						disabled={isCancelling || !transferId}
 					>
 						{isCancelling ? "Cancelling..." : "Cancel transfer"}
 					</Button>
 				</div>
+			</React.Fragment>
+		);
+	}
+
+	renderSuccessContent() {
+		const { classes } = this.props;
+
+		const { recipientEmail } = this.state;
+
+		let explainerText = null;
+		if (recipientEmail) {
+			explainerText = (
+				<Typography className={classes.infoText}>
+					The message to{" "}
+					<span className={classes.emailText}>{recipientEmail}</span> has been
+					sent and the tickets have been assigned back to you.
+				</Typography>
+			);
+		}
+
+		return (
+			<React.Fragment>
+				<br/>
+				{explainerText}
+				<br/>
+				<div className={classes.actionButtons}>
+					<Button
+						size="large"
+						style={{ flex: 1, maxWidth: 300 }}
+						onClick={this.onClose}
+						variant="secondary"
+					>
+						Got it!
+					</Button>
+				</div>
+			</React.Fragment>
+		);
+	}
+
+	render() {
+		const { transferKey, classes, ...rest } = this.props;
+		const { cancelSuccess } = this.state;
+
+		const iconUrl = "/icons/tickets-white.svg";
+		return (
+			<Dialog
+				onClose={this.onClose}
+				iconUrl={iconUrl}
+				title={
+					cancelSuccess
+						? "We've cancelled the transfer!"
+						: "Want to cancel this transfer?"
+				}
+				open={!!transferKey}
+				{...rest}
+			>
+				{cancelSuccess
+					? this.renderSuccessContent()
+					: this.renderCancelContent()}
 			</Dialog>
 		);
 	}
@@ -110,7 +223,7 @@ class CancelTransferDialog extends Component {
 CancelTransferDialog.propTypes = {
 	classes: PropTypes.object.isRequired,
 	onClose: PropTypes.func.isRequired,
-	transferId: PropTypes.string
+	transferKey: PropTypes.string
 };
 
 export default withStyles(styles)(CancelTransferDialog);

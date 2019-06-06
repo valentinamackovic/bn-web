@@ -233,7 +233,7 @@ class EventTicketsCard extends Component {
 						price_in_cents,
 						order_id,
 						pending_transfer,
-						transfer_id
+						transfer_key
 					} = ticket;
 
 					const orderNumber = order_id.slice(-8); //TODO eventually this will also come in the API
@@ -262,12 +262,12 @@ class EventTicketsCard extends Component {
 					}
 
 					if (pending_transfer) {
-						if (transfer_id) {
+						if (transfer_key) {
 							actionCol = (
 								<Typography className={classes.ticketDetailsText}>
 									<StyledLink
 										underlined
-										onClick={() => onCancelTransfer(transfer_id)}
+										onClick={() => onCancelTransfer(transfer_key)}
 									>
 										cancel transfer
 									</StyledLink>
