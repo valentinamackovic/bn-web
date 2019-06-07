@@ -43,40 +43,101 @@ class FanHistoryActivityCard extends Component {
 		this.state = {};
 	}
 
-	renderPurchase() {
+	renderActivity(type) {
 		const {
 			event_name,
 			event_start,
 			event_loc,
-			event_history,
 			onExpandChange,
 			expanded,
 			classes
 		} = this.props;
-		return (
-			<div className={classes.root}>
-				<Card onClick={onExpandChange} className={classes.card}>
-					<div className={classes.card}>
-						<Typography>
-							<span className={classes.boldSpan}>{event_name}</span>
-						</Typography>
-						<Typography className={classes.greySubtitle}>
-							{moment(event_start).format("M/D/Y hh:mmA")}
-						</Typography>
-						<Typography className={classes.greySubtitle}>
-							{event_loc}
-						</Typography>
+
+		let activityCard = null;
+
+		switch (type) {
+			case "Purchase":
+				activityCard = (
+					<div className={classes.root}>
+						<Card onClick={onExpandChange} className={classes.card}>
+							<div className={classes.card}>
+								<Typography>
+									<span className={classes.boldSpan}>
+										Purchased ticket to {event_name}
+									</span>
+								</Typography>
+								<Typography className={classes.greySubtitle}>
+									{moment(event_start).format("M/D/Y hh:mmA")}
+								</Typography>
+								<Typography className={classes.greySubtitle}>
+									{event_loc}
+								</Typography>
+							</div>
+							<Collapse in={expanded}>
+								<div className={classes.card}>helloo ?</div>
+							</Collapse>
+						</Card>
 					</div>
-					<Collapse in={expanded}>
-						<div className={classes.card}>helloo ?</div>
-					</Collapse>
-				</Card>
-			</div>
-		);
+				);
+				break;
+			case "CheckIn":
+				activityCard = (
+					<div className={classes.root}>
+						<Card onClick={onExpandChange} className={classes.card}>
+							<div className={classes.card}>
+								<Typography>
+									<span className={classes.boldSpan}>
+										Checked in to {event_name}
+									</span>
+								</Typography>
+								<Typography className={classes.greySubtitle}>
+									{moment(event_start).format("M/D/Y hh:mmA")}
+								</Typography>
+								<Typography className={classes.greySubtitle}>
+									{event_loc}
+								</Typography>
+							</div>
+							<Collapse in={expanded}>
+								<div className={classes.card}>helloo ?</div>
+							</Collapse>
+						</Card>
+					</div>
+				);
+				break;
+			case "Refund":
+				activityCard = (
+					<div className={classes.root}>
+						<Card onClick={onExpandChange} className={classes.card}>
+							<div className={classes.card}>
+								<Typography>
+									<span className={classes.boldSpan}>
+										Refunded {event_name}
+									</span>
+								</Typography>
+								<Typography className={classes.greySubtitle}>
+									{moment(event_start).format("M/D/Y hh:mmA")}
+								</Typography>
+								<Typography className={classes.greySubtitle}>
+									{event_loc}
+								</Typography>
+							</div>
+							<Collapse in={expanded}>
+								<div className={classes.card}>helloo ?</div>
+							</Collapse>
+						</Card>
+					</div>
+				);
+				break;
+			default:
+				activityCard = <div>hello</div>;
+		}
+
+		return activityCard;
 	}
 
 	render() {
-		return this.renderPurchase();
+		const { type } = this.props;
+		return this.renderActivity(type);
 	}
 }
 FanHistoryActivityCard.propTypes = {
