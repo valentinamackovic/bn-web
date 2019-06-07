@@ -103,7 +103,11 @@ class CancelTransferDialog extends Component {
 				id: transferId
 			})
 			.then(response => {
-				this.setState({ isCancelling: false, cancelSuccess: true });
+				this.setState({ isCancelling: false, cancelSuccess: true }, () => {
+					if (this.props.onSuccess) {
+						this.props.onSuccess();
+					}
+				});
 			})
 			.catch(error => {
 				this.setState({ isCancelling: false });
@@ -196,7 +200,7 @@ class CancelTransferDialog extends Component {
 	}
 
 	render() {
-		const { transferKey, classes, ...rest } = this.props;
+		const { transferKey, classes, onSuccess, ...rest } = this.props;
 		const { cancelSuccess } = this.state;
 
 		const iconUrl = "/icons/tickets-white.svg";
@@ -223,7 +227,8 @@ class CancelTransferDialog extends Component {
 CancelTransferDialog.propTypes = {
 	classes: PropTypes.object.isRequired,
 	onClose: PropTypes.func.isRequired,
-	transferKey: PropTypes.string
+	transferKey: PropTypes.string,
+	onSuccess: PropTypes.func
 };
 
 export default withStyles(styles)(CancelTransferDialog);
