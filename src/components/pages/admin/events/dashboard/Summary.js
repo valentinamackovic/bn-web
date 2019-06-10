@@ -163,14 +163,14 @@ class Summary extends Component {
 	}
 
 	getDailyBreakdownValues(dayStats) {
-		const venueTimezone = this.state.venueTimeZone || "America/Los_Angeles";
-
 		const result = [];
 		for (let index = 0; index < dayStats.length; index++) {
-			const dayOfMonth = moment
-				.utc(dayStats[index].date)
-				.tz(venueTimezone)
-				.format("D");
+			//This endpoint returns the converted timezone from the database, not need to convert again.
+			const dayOfMonth = dayStats[index].date
+				.split("T")
+				.shift()
+				.split("-")
+				.pop();
 
 			result.push({
 				x: Number(dayOfMonth),
