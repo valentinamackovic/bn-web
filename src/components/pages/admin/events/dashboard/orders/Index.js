@@ -45,7 +45,7 @@ const styles = theme => ({
 
 const columnStyles = [
 	{ flex: 2 },
-	{ flex: 5 },
+	{ flex: 4 },
 	{ flex: 8 },
 	{ flex: 2 },
 	{ flex: 3 },
@@ -53,7 +53,7 @@ const columnStyles = [
 ];
 
 @observer
-class Orders extends Component {
+class OrderList extends Component {
 	constructor(props) {
 		super(props);
 
@@ -79,6 +79,8 @@ class Orders extends Component {
 	}
 
 	refreshOrders(query = "") {
+		const { currentOrgTimezone } = user;
+
 		this.setState({ orders: null });
 
 		const { promoFilterId, ticketTypeFilterId } = this.state;
@@ -91,15 +93,22 @@ class Orders extends Component {
 			.then(response => {
 				const { data, paging } = response.data; //@TODO Implement pagination
 
-				//Set the qty of tickets bought
+				//Set the qty of tickets bought and the formatted date
 				data.forEach(o => {
-					o.displayDate = `TODO ${o.date}`;
+					o.displayDate = moment(o.date)
+						.tz(currentOrgTimezone)
+						.format("MM/DD/YYYY h:mm A");
+
 					o.ticketCount = 0;
 					o.items.forEach(({ item_type, quantity, ...rest }) => {
 						if (item_type === "Tickets") {
 							o.ticketCount += quantity;
 						}
 					});
+					o.first_name = "Test";
+					o.last_name = "Tester van Test";
+					o.email = "test.tester@test.com";
+					o.pos = "Online";
 				});
 
 				this.setState({ orders: data });
@@ -304,11 +313,7 @@ class Orders extends Component {
 		const { classes } = this.props;
 
 		return (
-			<Container
-				eventId={this.eventId}
-				subheading={"tools"}
-				layout={"childrenInsideCard"}
-			>
+			<React.Fragment>
 				<Grid container spacing={24}>
 					<Grid item sm={2} md={2} lg={2}>
 						<Typography className={classes.pageSubTitle}>
@@ -333,7 +338,7 @@ class Orders extends Component {
 				<Divider style={{ marginBottom: 40 }}/>
 
 				{this.renderList()}
-			</Container>
+			</React.Fragment>
 		);
 	}
 
@@ -341,34 +346,41 @@ class Orders extends Component {
 		const { classes } = this.props;
 
 		return (
-			<Container
-				eventId={this.eventId}
-				subheading={"tools"}
-				layout={"childrenInsideCard"}
-			>
+			<React.Fragment>
 				<div className={classes.mobilePageTitleContainer}>
 					<Typography className={classes.pageTitle}>Orders</Typography>
 				</div>
 
 				{this.renderList()}
-			</Container>
+			</React.Fragment>
 		);
 	}
 
 	render() {
 		return (
-			<div>
+			<Container
+				eventId={this.eventId}
+				subheading={"tools"}
+				layout={"childrenInsideCard"}
+			>
 				<Hidden smDown>{this.renderDesktopContent()}</Hidden>
 				<Hidden mdUp>{this.renderMobileContent()}</Hidden>
-			</div>
+			</Container>
 		);
 	}
 }
 
-Orders.propTypes = {
+OrderList.propTypes = {
 	classes: PropTypes.object.isRequired,
-	match: PropTypes.object.isRequired,
-	timezone: PropTypes.string.isRequired
+	match: PropTypes.object.isRequired
 };
+
+const Orders = observer(props => {
+	if (!user.currentOrgTimezone) {
+		return <Loader>Loading organization details...</Loader>;
+	}
+
+	return <OrderList {...props}/>;
+});
 
 export default withStyles(styles)(Orders);

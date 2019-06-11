@@ -55,6 +55,10 @@ const OrderRow = props => {
 		displayDate,
 		ticketCount,
 		total_in_cents,
+		first_name,
+		last_name,
+		email,
+		pos,
 		...rest
 	} = props;
 
@@ -78,10 +82,10 @@ const OrderRow = props => {
 					>
 						<Typography>
 							<span className={classes.linkText}>
-								{ellipsis(`Todo TodotodoTodotodo`, 15)}
+								{ellipsis(`${first_name} ${last_name}`, 15)}
 							</span>{" "}
 							<span className={classes.emailText}>
-								{ellipsis(`(todoTodotodo@todo.todo)`, 15)}
+								{ellipsis(`(${email})`, 15)}
 							</span>
 						</Typography>
 					</Link>
@@ -92,7 +96,7 @@ const OrderRow = props => {
 						{dollars(total_in_cents)}
 					</Typography>
 
-					<Typography style={columnStyles[5]}>TODO</Typography>
+					<Typography style={columnStyles[5]}>{pos}</Typography>
 				</Card>
 			</Hidden>
 
