@@ -259,25 +259,32 @@ class Summary extends Component {
 						classes={classes}
 					/>
 				</Grid>
-				<Grid
-					item
-					xs={12}
-					sm={6}
-					lg={3}
-					onMouseEnter={() => this.setState({ activeNumbersCard: "daysLeft" })}
-					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
-				>
-					<NumberCard
-						active={activeNumbersCard === "daysLeft"}
-						label="Days left"
-						value={Math.max(
-							0,
-							moment(event.event_start).diff(moment(), "days")
-						)}
-						iconName="events"
-						classes={classes}
-					/>
-				</Grid>
+				{!Math.max(0, moment(event.event_start).diff(moment(), "days")) == 0 ||
+				!Math.max(0, moment(event.event_start).diff(moment(), "days")) < 0 ? (
+						<Grid
+							item
+							xs={12}
+							sm={6}
+							lg={3}
+							onMouseEnter={() =>
+								this.setState({ activeNumbersCard: "daysLeft" })
+							}
+							onMouseLeave={() => this.setState({ activeNumbersCard: null })}
+						>
+							<NumberCard
+								active={activeNumbersCard === "daysLeft"}
+								label="Days left"
+								value={Math.max(
+									0,
+									moment(event.event_start).diff(moment(), "days")
+								)}
+								iconName="events"
+								classes={classes}
+							/>
+						</Grid>
+					) : (
+						<div/>
+					)}
 			</Grid>
 		);
 	}
