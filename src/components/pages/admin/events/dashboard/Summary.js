@@ -111,7 +111,8 @@ class Summary extends Component {
 			activeNumbersCard: null,
 			chartValues: [],
 			dayStats: [],
-			venueTimeZone: ""
+			venueTimeZone: "",
+			daysLeft: 0
 		};
 	}
 
@@ -132,7 +133,11 @@ class Summary extends Component {
 				this.setState({
 					event,
 					dayStats: day_stats,
-					chartValues: this.getDailyBreakdownValues(day_stats)
+					chartValues: this.getDailyBreakdownValues(day_stats),
+					daysLeft: Math.max(
+						0,
+						moment(event.event_start).diff(moment(), "days")
+					)
 				});
 			})
 			.catch(error => {
@@ -189,7 +194,7 @@ class Summary extends Component {
 	}
 
 	renderNumbers() {
-		const { activeNumbersCard, event } = this.state;
+		const { activeNumbersCard, event, daysLeft } = this.state;
 		const { classes } = this.props;
 		return (
 			<Grid container spacing={32}>
@@ -259,25 +264,28 @@ class Summary extends Component {
 						classes={classes}
 					/>
 				</Grid>
-				<Grid
-					item
-					xs={12}
-					sm={6}
-					lg={3}
-					onMouseEnter={() => this.setState({ activeNumbersCard: "daysLeft" })}
-					onMouseLeave={() => this.setState({ activeNumbersCard: null })}
-				>
-					<NumberCard
-						active={activeNumbersCard === "daysLeft"}
-						label="Days left"
-						value={Math.max(
-							0,
-							moment(event.event_start).diff(moment(), "days")
-						)}
-						iconName="events"
-						classes={classes}
-					/>
-				</Grid>
+				{daysLeft > 0 ? (
+					<Grid
+						item
+						xs={12}
+						sm={6}
+						lg={3}
+						onMouseEnter={() =>
+							this.setState({ activeNumbersCard: "daysLeft" })
+						}
+						onMouseLeave={() => this.setState({ activeNumbersCard: null })}
+					>
+						<NumberCard
+							active={activeNumbersCard === "daysLeft"}
+							label="Days left"
+							value={daysLeft}
+							iconName="events"
+							classes={classes}
+						/>
+					</Grid>
+				) : (
+					<div/>
+				)}
 			</Grid>
 		);
 	}
