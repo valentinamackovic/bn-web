@@ -32,7 +32,7 @@ const styles = theme => ({
 		fontSize: theme.typography.fontSize * 1.75
 	},
 	mobilePageTitleContainer: {
-		marginTop: theme.spacing.unit * 2,
+		marginTop: theme.spacing.unit * 3,
 		marginBottom: theme.spacing.unit * 2
 	},
 	desktopHeadingRow: {
@@ -313,7 +313,11 @@ class OrderList extends Component {
 		const { classes } = this.props;
 
 		return (
-			<React.Fragment>
+			<Container
+				eventId={this.eventId}
+				subheading={"tools"}
+				layout={"childrenInsideCard"}
+			>
 				<Grid container spacing={24}>
 					<Grid item sm={2} md={2} lg={2}>
 						<Typography className={classes.pageSubTitle}>
@@ -338,7 +342,7 @@ class OrderList extends Component {
 				<Divider style={{ marginBottom: 40 }}/>
 
 				{this.renderList()}
-			</React.Fragment>
+			</Container>
 		);
 	}
 
@@ -346,26 +350,42 @@ class OrderList extends Component {
 		const { classes } = this.props;
 
 		return (
-			<React.Fragment>
+			<Container
+				eventId={this.eventId}
+				subheading={"tools"}
+				layout={"childrenOutsideNoCard"}
+			>
 				<div className={classes.mobilePageTitleContainer}>
+					<Typography className={classes.pageSubTitle}>
+						Order management
+					</Typography>
 					<Typography className={classes.pageTitle}>Orders</Typography>
 				</div>
 
+				<Grid container spacing={24}>
+					<Grid item xs={6}>
+						{this.renderPromoCodeFilter()}
+					</Grid>
+					<Grid item xs={6}>
+						{this.renderTicketTypeFilter()}
+					</Grid>
+				</Grid>
+				<SearchBox
+					placeholder="Search Order #, Name, Email, Ticket #"
+					onSearch={this.onSearch}
+				/>
+
 				{this.renderList()}
-			</React.Fragment>
+			</Container>
 		);
 	}
 
 	render() {
 		return (
-			<Container
-				eventId={this.eventId}
-				subheading={"tools"}
-				layout={"childrenInsideCard"}
-			>
+			<React.Fragment>
 				<Hidden smDown>{this.renderDesktopContent()}</Hidden>
 				<Hidden mdUp>{this.renderMobileContent()}</Hidden>
-			</Container>
+			</React.Fragment>
 		);
 	}
 }
