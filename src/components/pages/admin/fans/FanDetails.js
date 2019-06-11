@@ -277,7 +277,7 @@ class Fan extends Component {
 	}
 
 	renderCards() {
-		const { fanHistory, expandedRowKey } = this.state;
+		const { fanHistory, expandedRowKey, profile } = this.state;
 		if (fanHistory === null) {
 			return <Loader>Loading history...</Loader>;
 		}
@@ -289,6 +289,7 @@ class Fan extends Component {
 					onExpandChange={() => this.onExpandChange(index)}
 					expanded={expanded}
 					key={index}
+					profile={profile}
 					{...item}
 				/>
 			);

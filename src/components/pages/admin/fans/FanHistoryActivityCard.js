@@ -18,9 +18,10 @@ const styles = theme => ({
 	boldSpan: {
 		fontFamily: fontFamilyDemiBold
 	},
-	linkText: {
+	pinkSpan: {
 		color: secondaryHex,
-		fontFamily: fontFamilyDemiBold
+		fontFamily: fontFamilyDemiBold,
+		paddingLeft: theme.spacing.unit * 2
 	},
 	verticalDividerSmall: {
 		borderLeft: "1px solid #DEE2E8",
@@ -31,8 +32,9 @@ const styles = theme => ({
 	bold: {
 		fontFamily: fontFamilyDemiBold
 	},
-	bottomRow: {
-		display: "flex"
+	upperRow: {
+		display: "flex",
+		flexDirection: "row"
 	}
 });
 
@@ -50,6 +52,7 @@ class FanHistoryActivityCard extends Component {
 			event_loc,
 			onExpandChange,
 			expanded,
+			profile,
 			classes
 		} = this.props;
 
@@ -61,17 +64,22 @@ class FanHistoryActivityCard extends Component {
 					<div className={classes.root}>
 						<Card onClick={onExpandChange} className={classes.card}>
 							<div className={classes.card}>
-								<Typography>
-									<span className={classes.boldSpan}>
-										Purchased ticket to {event_name}
-									</span>
-								</Typography>
-								<Typography className={classes.greySubtitle}>
-									{moment(event_start).format("M/D/Y hh:mmA")}
-								</Typography>
-								<Typography className={classes.greySubtitle}>
-									{event_loc}
-								</Typography>
+								<div className={classes.upperRow}>
+									<Typography className={classes.greySubtitle}>
+										{moment(event_start).format("M/D/Y hh:mmA")} &nbsp;
+									</Typography>
+									<Typography>
+										<span className={classes.pinkSpan}>
+											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
+										</span>
+										<span className={classes.boldSpan}>
+											purchased ticket to {event_name}
+										</span>
+									</Typography>
+									<Typography className={classes.greySubtitle}>
+										{event_loc}
+									</Typography>
+								</div>
 							</div>
 							<Collapse in={expanded}>
 								<div className={classes.card}>helloo ?</div>

@@ -85,6 +85,7 @@ class FanHistoryEventCard extends Component {
 			const expanded = expandedRowKey === index;
 			return (
 				<FanHistoryActivityCard
+					profile={this.props.profile}
 					onExpandChange={() => this.onExpandChange(index)}
 					expanded={expanded}
 					key={index}
