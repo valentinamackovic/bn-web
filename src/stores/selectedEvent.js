@@ -56,7 +56,7 @@ class SelectedEvent {
 			this.currentlyAppliedCode = null;
 		}
 
-		this.id = id;
+		this.id = id; //This could be an event ID or slug.
 
 		const query = { id };
 
@@ -183,7 +183,7 @@ class SelectedEvent {
 		const updatedTicketTypes = ticketTypes || this.ticket_types;
 
 		Bigneon()
-			.redemptionCodes.read({ code: redemptionCode, event_id: this.id })
+			.redemptionCodes.read({ code: redemptionCode, event_id: this.event.id })
 			.then(
 				response => {
 					const { data } = response;
@@ -284,7 +284,7 @@ class SelectedEvent {
 		if (interestedStatus) {
 			//Set to true
 			Bigneon()
-				.events.interests.create({ event_id: this.id })
+				.events.interests.create({ event_id: this.event.id })
 				.then(
 					() => {
 						//If this was clicked twice, make sure current status is set
@@ -299,7 +299,7 @@ class SelectedEvent {
 		} else {
 			//Set to false
 			Bigneon()
-				.events.interests.remove({ event_id: this.id })
+				.events.interests.remove({ event_id: this.event.id })
 				.then(
 					() => {
 						//If this was clicked twice, make sure current status is set

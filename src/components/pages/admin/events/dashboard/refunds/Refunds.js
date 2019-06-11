@@ -11,6 +11,7 @@ import BottomRefundBar from "./BottomRefundBar";
 import ConfirmRefundDialog from "./ConfirmRefundDialog";
 import PageHeading from "../../../../../elements/PageHeading";
 import Loader from "../../../../../elements/loaders/Loader";
+import CancelTransferDialog from "../../../../myevents/CancelTransferDialog";
 
 const styles = theme => ({
 	root: {},
@@ -32,11 +33,15 @@ class Refunds extends Component {
 			selectedTickets: {},
 			isRefunding: false,
 			showConfirmRefund: false,
-			refundComplete: false
+			refundComplete: false,
+			cancelTransferKey: null
 		};
 
 		this.onExpandChange = this.onExpandChange.bind(this);
 		this.onTicketSelect = this.onTicketSelect.bind(this);
+		this.onOpenCancelTransferDialog = this.onOpenCancelTransferDialog.bind(
+			this
+		);
 	}
 
 	componentDidMount() {
@@ -63,6 +68,10 @@ class Refunds extends Component {
 		if (this.timeout) {
 			clearTimeout(this.timeout);
 		}
+	}
+
+	onOpenCancelTransferDialog(cancelTransferKey) {
+		this.setState({ cancelTransferKey });
 	}
 
 	refreshGuests() {
@@ -285,7 +294,8 @@ class Refunds extends Component {
 			selectedTickets,
 			showConfirmRefund,
 			isRefunding,
-			refundComplete
+			refundComplete,
+			cancelTransferKey
 		} = this.state;
 
 		const { classes } = this.props;
@@ -298,6 +308,11 @@ class Refunds extends Component {
 
 		return (
 			<div>
+				<CancelTransferDialog
+					transferKey={cancelTransferKey}
+					onClose={() => this.setState({ cancelTransferKey: null })}
+					onSuccess={() => this.refreshGuests()}
+				/>
 				<Grid className={classes.filterOptions} container>
 					<Grid item xs={12} sm={12} md={6} lg={8}>
 						<PageHeading iconUrl="/icons/events-multi.svg">
@@ -326,6 +341,7 @@ class Refunds extends Component {
 							expanded={expanded}
 							onTicketSelect={this.onTicketSelect}
 							selectedTickets={expanded ? selectedTickets : {}}
+							onCancelTransfer={this.onOpenCancelTransferDialog}
 						/>
 					);
 				})}
