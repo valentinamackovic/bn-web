@@ -11,6 +11,7 @@ import ConfirmRefundDialog from "./ConfirmRefundDialog";
 import PageHeading from "../../../../../elements/PageHeading";
 import Loader from "../../../../../elements/loaders/Loader";
 import CancelTransferDialog from "../../../../myevents/CancelTransferDialog";
+import { Pagination, urlPageParam } from "../../../../../elements/pagination";
 
 const styles = theme => ({
 	root: {},
@@ -33,6 +34,7 @@ class Refunds extends Component {
 			isRefunding: false,
 			showConfirmRefund: false,
 			refundComplete: false,
+			orderPaging: null,
 			cancelTransferKey: null
 		};
 
@@ -73,13 +75,24 @@ class Refunds extends Component {
 		this.setState({ cancelTransferKey });
 	}
 
-	refreshGuests() {
-		const event_id = this.props.match.params.id;
+	resetSelected(e) {
+		this.setState({
+			selectedTickets: {},
+			selectedHolds: {}
+		});
+	}
 
+	changePage(page = urlPageParam()) {
+		this.resetSelected();
+		this.refreshGuests(page, this.state.searchQuery);
+	}
+
+	refreshGuests(page = 0, query = "") {
+		const event_id = this.props.match.params.id;
 		Bigneon()
-			.events.guests.index({ event_id, query: "" })
+			.events.guests.index({ event_id, query, limit: 100, page })
 			.then(response => {
-				const { data, paging } = response.data; //@TODO Implement pagination
+				const { data, paging } = response.data;
 				const guests = {};
 
 				data.forEach(
@@ -107,8 +120,7 @@ class Refunds extends Component {
 						}
 					}
 				);
-
-				this.setState({ guests });
+				this.setState({ guests, orderPaging: paging });
 			})
 			.catch(error => {
 				console.error(error);
@@ -294,7 +306,8 @@ class Refunds extends Component {
 			showConfirmRefund,
 			isRefunding,
 			refundComplete,
-			cancelTransferKey
+			cancelTransferKey,
+			orderPaging
 		} = this.state;
 
 		const { classes } = this.props;
@@ -355,6 +368,17 @@ class Refunds extends Component {
 					selectedTickets={selectedTickets}
 					onConfirm={this.onRefundConfirm.bind(this)}
 				/>
+
+				{orderPaging !== null ? (
+					<Pagination
+						isLoading={false}
+						paging={orderPaging}
+						onChange={this.changePage.bind(this)}
+					/>
+				) : (
+					<div/>
+				)}
+
 				{this.renderBottomBar()}
 			</div>
 		);
