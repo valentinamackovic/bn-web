@@ -214,6 +214,11 @@ class Routes extends Component {
 								/>
 								<Route
 									exact
+									path="/tickets/transfers/receive"
+									component={ReceiveTransfer}
+								/>
+								<Route
+									exact
 									path="/tickets/transfers/cancel"
 									component={CancelTransfer}
 								/>
