@@ -39,6 +39,8 @@ import EventCallToActionAppBar from "../../elements/header/EventCallToActionAppB
 import user from "../../../stores/user";
 import { insertScript } from "../../../helpers/insertScript";
 import replaceIdWithSlug from "../../../helpers/replaceIdWithSlug";
+import analytics from "../../../helpers/analytics";
+import getAllUrlParams from "../../../helpers/getAllUrlParams";
 
 const ADDITIONAL_INFO_CHAR_LIMIT = 300;
 
@@ -171,6 +173,8 @@ class ViewEvent extends Component {
 					if (id === selectedEventId && slug) {
 						replaceIdWithSlug(id, slug);
 					}
+
+					analytics.viewContent([selectedEventId], getAllUrlParams());
 				}
 			);
 		} else {
