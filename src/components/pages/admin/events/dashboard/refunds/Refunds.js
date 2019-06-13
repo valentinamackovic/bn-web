@@ -1,17 +1,21 @@
 import React, { Component } from "react";
-import { Typography, withStyles, Grid } from "@material-ui/core";
+import { withStyles, Grid } from "@material-ui/core";
 import { observer } from "mobx-react";
 
 import Bigneon from "../../../../../../helpers/bigneon";
 import notifications from "../../../../../../stores/notifications";
 import GuestRow from "./GuestRow";
-import BoxInput from "../../../../../elements/form/BoxInput";
 import BottomRefundBar from "./BottomRefundBar";
 import ConfirmRefundDialog from "./ConfirmRefundDialog";
 import PageHeading from "../../../../../elements/PageHeading";
 import Loader from "../../../../../elements/loaders/Loader";
 import CancelTransferDialog from "../../../../myevents/CancelTransferDialog";
-import { Pagination, urlPageParam } from "../../../../../elements/pagination";
+import {
+	Pagination,
+	resetUrlPageParam,
+	urlPageParam
+} from "../../../../../elements/pagination";
+import SearchInput from "../../../../../elements/SearchBox";
 
 const styles = theme => ({
 	root: {},
@@ -85,6 +89,12 @@ class Refunds extends Component {
 	changePage(page = urlPageParam()) {
 		this.resetSelected();
 		this.refreshGuests(page, this.state.searchQuery);
+	}
+
+	onSearch(query) {
+		this.resetSelected();
+		resetUrlPageParam();
+		this.setState({ searchQuery: query }, () => this.refreshGuests(0, query));
 	}
 
 	refreshGuests(page = 0, query = "") {
@@ -332,11 +342,9 @@ class Refunds extends Component {
 						</PageHeading>
 					</Grid>
 					<Grid item xs={12} sm={12} md={6} lg={4}>
-						<BoxInput
-							name="Search"
-							value={searchQuery}
+						<SearchInput
 							placeholder="Search by guest name or order #"
-							onChange={this.filterGuestsOnQuery.bind(this)}
+							onSearch={this.onSearch.bind(this)}
 						/>
 					</Grid>
 				</Grid>
