@@ -227,10 +227,12 @@ const formatForInput = (ticket_types, event) => {
 		}
 
 		let saleStartTimeOption = parent_id ? "parent" : "custom";
+
 		//If there is no ticket start time or if the start time is in the past, we're assuming it sales start immediately
 		if (
-			!ticketStartDate ||
-			(ticketStartDate && ticketStartDate.isBefore(moment.utc().local()))
+			saleStartTimeOption !== "parent" &&
+			(!ticketStartDate ||
+				(ticketStartDate && ticketStartDate.isBefore(moment.utc().local())))
 		) {
 			saleStartTimeOption = "immediately";
 		}
