@@ -9,7 +9,7 @@ import BottomRefundBar from "./BottomRefundBar";
 import ConfirmRefundDialog from "./ConfirmRefundDialog";
 import PageHeading from "../../../../../elements/PageHeading";
 import Loader from "../../../../../elements/loaders/Loader";
-import CancelTransferDialog from "../../../../myevents/CancelTransferDialog";
+import CancelTransferDialog from "../../../../myevents/transfers/CancelTransferDialog";
 import {
 	Pagination,
 	resetUrlPageParam,
