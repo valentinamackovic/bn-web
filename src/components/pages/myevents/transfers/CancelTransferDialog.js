@@ -2,12 +2,12 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 
-import Button from "../../elements/Button";
-import notification from "../../../stores/notifications";
-import Bigneon from "../../../helpers/bigneon";
-import Dialog from "../../elements/Dialog";
+import Button from "../../../elements/Button";
+import notification from "../../../../stores/notifications";
+import Bigneon from "../../../../helpers/bigneon";
+import Dialog from "../../../elements/Dialog";
 import { Typography } from "@material-ui/core";
-import { fontFamilyDemiBold, secondaryHex } from "../../../config/theme";
+import { fontFamilyDemiBold, secondaryHex } from "../../../../config/theme";
 
 const styles = theme => ({
 	content: {
@@ -76,8 +76,7 @@ class CancelTransferDialog extends Component {
 				console.error(error);
 				notification.showFromErrorResponse({
 					error,
-					defaultMessage: "Could not find transfer details.",
-					variant: "error"
+					defaultMessage: "Could not find transfer details."
 				});
 			});
 	}

@@ -19,8 +19,8 @@ import Account from "../pages/account/Index";
 import OrderList from "../pages/orders/List";
 import Order from "../pages/orders/Order";
 import MyEvents from "../pages/myevents/Index";
-import ReceiveTransfer from "../pages/myevents/ReceiveTransfer";
-import CancelTransfer from "../pages/myevents/CancelTransfer";
+import ReceiveTransfer from "../pages/myevents/transfers/ReceiveTransfer";
+import CancelTransfer from "../pages/myevents/transfers/CancelTransfer";
 import Signup from "../pages/authentication/Signup";
 import Login from "../pages/authentication/Login";
 import PasswordReset from "../pages/authentication/PasswordReset";
@@ -212,7 +212,17 @@ class Routes extends Component {
 								<Route exact path="/invites/accept" component={InviteAccept}/>
 								<Route
 									exact
-									path="/tickets/receive"
+									path="/tickets/receive" //TODO remove this route
+									component={ReceiveTransfer}
+								/>
+								<Route
+									exact
+									path="/tickets/transfers/receive"
+									component={ReceiveTransfer}
+								/>
+								<Route
+									exact
+									path="/tickets/transfers/receive"
 									component={ReceiveTransfer}
 								/>
 								<Route

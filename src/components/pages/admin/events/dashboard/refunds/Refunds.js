@@ -1,17 +1,22 @@
 //TODO remove this component when the new order management is complete
 import React, { Component } from "react";
-import { Typography, withStyles, Grid } from "@material-ui/core";
+import { withStyles, Grid } from "@material-ui/core";
 import { observer } from "mobx-react";
 
 import Bigneon from "../../../../../../helpers/bigneon";
 import notifications from "../../../../../../stores/notifications";
 import GuestRow from "./GuestRow";
-import BoxInput from "../../../../../elements/form/BoxInput";
 import BottomRefundBar from "./BottomRefundBar";
 import ConfirmRefundDialog from "./ConfirmRefundDialog";
 import PageHeading from "../../../../../elements/PageHeading";
 import Loader from "../../../../../elements/loaders/Loader";
-import CancelTransferDialog from "../../../../myevents/CancelTransferDialog";
+import CancelTransferDialog from "../../../../myevents/transfers/CancelTransferDialog";
+import {
+	Pagination,
+	resetUrlPageParam,
+	urlPageParam
+} from "../../../../../elements/pagination";
+import SearchInput from "../../../../../elements/SearchBox";
 
 const styles = theme => ({
 	root: {},
@@ -34,6 +39,7 @@ class Refunds extends Component {
 			isRefunding: false,
 			showConfirmRefund: false,
 			refundComplete: false,
+			orderPaging: null,
 			cancelTransferKey: null
 		};
 
@@ -74,13 +80,30 @@ class Refunds extends Component {
 		this.setState({ cancelTransferKey });
 	}
 
-	refreshGuests() {
-		const event_id = this.props.match.params.id;
+	resetSelected(e) {
+		this.setState({
+			selectedTickets: {},
+			selectedHolds: {}
+		});
+	}
 
+	changePage(page = urlPageParam()) {
+		this.resetSelected();
+		this.refreshGuests(page, this.state.searchQuery);
+	}
+
+	onSearch(query) {
+		this.resetSelected();
+		resetUrlPageParam();
+		this.setState({ searchQuery: query }, () => this.refreshGuests(0, query));
+	}
+
+	refreshGuests(page = 0, query = "") {
+		const event_id = this.props.match.params.id;
 		Bigneon()
-			.events.guests.index({ event_id, query: "" })
+			.events.guests.index({ event_id, query, limit: 100, page })
 			.then(response => {
-				const { data, paging } = response.data; //@TODO Implement pagination
+				const { data, paging } = response.data;
 				const guests = {};
 
 				data.forEach(
@@ -108,8 +131,7 @@ class Refunds extends Component {
 						}
 					}
 				);
-
-				this.setState({ guests });
+				this.setState({ guests, orderPaging: paging });
 			})
 			.catch(error => {
 				console.error(error);
@@ -295,7 +317,8 @@ class Refunds extends Component {
 			showConfirmRefund,
 			isRefunding,
 			refundComplete,
-			cancelTransferKey
+			cancelTransferKey,
+			orderPaging
 		} = this.state;
 
 		const { classes } = this.props;
@@ -320,11 +343,9 @@ class Refunds extends Component {
 						</PageHeading>
 					</Grid>
 					<Grid item xs={12} sm={12} md={6} lg={4}>
-						<BoxInput
-							name="Search"
-							value={searchQuery}
+						<SearchInput
 							placeholder="Search by guest name or order #"
-							onChange={this.filterGuestsOnQuery.bind(this)}
+							onSearch={this.onSearch.bind(this)}
 						/>
 					</Grid>
 				</Grid>
@@ -356,6 +377,17 @@ class Refunds extends Component {
 					selectedTickets={selectedTickets}
 					onConfirm={this.onRefundConfirm.bind(this)}
 				/>
+
+				{orderPaging !== null ? (
+					<Pagination
+						isLoading={false}
+						paging={orderPaging}
+						onChange={this.changePage.bind(this)}
+					/>
+				) : (
+					<div/>
+				)}
+
 				{this.renderBottomBar()}
 			</div>
 		);
