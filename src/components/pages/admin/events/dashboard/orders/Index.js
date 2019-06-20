@@ -89,7 +89,7 @@ class OrderList extends Component {
 
 		//FIXME this is just the current user's orders for now
 		Bigneon()
-			.orders.index(params)
+			.admin.orders(params)
 			.then(response => {
 				const { data, paging } = response.data; //@TODO Implement pagination
 
@@ -105,9 +105,9 @@ class OrderList extends Component {
 							o.ticketCount += quantity;
 						}
 					});
-					o.first_name = "Test";
-					o.last_name = "Tester van Test";
-					o.email = "test.tester@test.com";
+					o.first_name = o.first_name || "Unknown";
+					o.last_name = o.last_name || "";
+					o.email = o.email || "Unknown email";
 					o.pos = "Online";
 				});
 
