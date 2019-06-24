@@ -74,11 +74,30 @@ class EventUpdate {
 				);
 
 				this.checkIfSalesStarted(id);
+
+				this.loadOrgDetails(organization_id);
 			})
 			.catch(error => {
 				console.error(error);
 				notifications.showFromErrorResponse({
 					defaultMessage: "Loading event details failed.",
+					error
+				});
+			});
+	}
+
+	@action
+	loadOrgDetails(id) {
+		Bigneon()
+			.organizations.read({ id })
+			.then(response => {
+				const { max_additional_fee_in_cents } = response.data;
+				this.maxTicketTypeAdditionalFeeInCents = max_additional_fee_in_cents;
+			})
+			.catch(error => {
+				console.error(error);
+				notifications.showFromErrorResponse({
+					defaultMessage: "Loading organization details failed.",
 					error
 				});
 			});
@@ -533,6 +552,7 @@ class EventUpdate {
 		this.ticketTypeActiveIndex = null;
 		this.timezone = "";
 		this.disabledExternalEvent = false;
+		this.maxTicketTypeAdditionalFeeInCents = null;
 
 		//this.addTicketType();
 	}
