@@ -19,6 +19,7 @@ import DateTimePickerGroup from "../../../../common/form/DateTimePickerGroup";
 import PricePoint from "./PricePoint";
 import eventUpdateStore from "../../../../../stores/eventUpdate";
 import SelectGroup from "../../../../common/form/SelectGroup";
+import { dollars } from "../../../../../helpers/money";
 
 const styles = theme => {
 	return {
@@ -158,7 +159,9 @@ const TicketDetails = observer(props => {
 		ticketTypes,
 		showMaxTicketsPerCustomer,
 		showVisibility,
-		showCartQuantityIncrement
+		showCartQuantityIncrement,
+		showAdditionalFee,
+		additionalFeeInDollars
 	} = props;
 
 	let useEndDate = endDate;
@@ -631,10 +634,61 @@ const TicketDetails = observer(props => {
 					</Grid>
 				</Grid>
 
+				<Grid container spacing={32}>
+					<Grid
+						className={classes.additionalInputContainer}
+						item
+						xs={12}
+						sm={6}
+					>
+						<Collapse in={!showAdditionalFee}>
+							<Button
+								variant="additional"
+								onClick={() => {
+									updateTicketType(index, { showAdditionalFee: true });
+								}}
+							>
+								Increase service fee/rev share
+							</Button>
+						</Collapse>
+
+						<Collapse in={showAdditionalFee}>
+							<InputGroup
+								InputProps={{
+									startAdornment: (
+										<InputAdornment position="start">$</InputAdornment>
+									)
+								}}
+								disabled={isCancelled}
+								error={errors.additionalFeeInDollars}
+								value={additionalFeeInDollars}
+								name="additionalFeeInDollars"
+								label={`Per ticket fee increase ${
+									eventUpdateStore.maxTicketTypeAdditionalFeeInCents
+										? `(Max ${dollars(
+											eventUpdateStore.maxTicketTypeAdditionalFeeInCents,
+											true
+										  )})`
+										: ""
+								}`}
+								placeholder=""
+								type="text"
+								onChange={e => {
+									updateTicketType(index, {
+										additionalFeeInDollars: e.target.value
+									});
+								}}
+								onBlur={validateFields}
+							/>
+						</Collapse>
+					</Grid>
+				</Grid>
+
+				<br/>
+				<br/>
+
 				{!showPricing && !isCancelled && saleStartTimeOption !== "parent" ? (
 					<div>
-						<br/>
-						<br/>
 						<FormHeading className={classes.title}>
 							Scheduled Price Changes
 						</FormHeading>
