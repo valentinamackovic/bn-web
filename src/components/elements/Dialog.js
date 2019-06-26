@@ -44,7 +44,8 @@ const styles = theme => ({
 	title: {
 		marginTop: 40,
 		fontFamily: fontFamilyBold,
-		textAlign: "center"
+		textAlign: "center",
+		textTransform: "capitalize"
 	},
 	closeDialogContainer: {
 		display: "flex",

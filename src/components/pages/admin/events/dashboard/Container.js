@@ -237,7 +237,7 @@ class EventDashboardContainer extends Component {
 				)}
 				{user.hasScope("event:write") ? (
 					<MenuItem onClick={this.openAffiliateLinkDialog.bind(this)}>
-						Affiliate link generator
+						Affiliate Tracking Links
 					</MenuItem>
 				) : (
 					<span/>
