@@ -18,6 +18,7 @@ import Card from "../../../../../elements/Card";
 
 import ellipsis from "../../../../../../helpers/ellipsis";
 import { dollars } from "../../../../../../helpers/money";
+import ColorTag from "../../../../../elements/ColorTag";
 
 const styles = theme => {
 	return {
@@ -41,6 +42,51 @@ const styles = theme => {
 		},
 		emailText: {
 			fontFamily: fontFamilyDemiBold
+		},
+
+		mobileRow1: {
+			display: "flex"
+			// justifyContent: "space-between"
+		},
+		mobileCol1: {
+			flex: 4
+		},
+		mobileCol2: {
+			flex: 3,
+			textAlign: "right"
+		},
+		mobileRow2: {
+			marginTop: 12,
+			display: "flex"
+		},
+		mobileRow2Col: {
+			marginRight: 50
+		},
+		mobileDate: {
+			fontSize: 12,
+			color: "#8b94a7"
+		},
+		mobileOrderNo: {
+			fontSize: 14
+		},
+		mobileUserName: {
+			marginTop: 12,
+			fontSize: 14,
+			color: secondaryHex,
+			fontFamily: fontFamilyDemiBold
+		},
+		mobileEmail: {
+			fontSize: 14,
+			color: "#8b94a7"
+		},
+		mobileHeading: {
+			fontSize: 12,
+			color: "#b2bdd4",
+			textTransform: "uppercase",
+			fontFamily: fontFamilyDemiBold
+		},
+		mobileValue: {
+			fontSize: 15
 		}
 	};
 };
@@ -55,22 +101,24 @@ const OrderRow = props => {
 		displayDate,
 		ticketCount,
 		total_in_cents,
-		first_name,
-		last_name,
-		email,
-		pos,
+		user,
+		platform,
+		ticketTypeList,
 		...rest
 	} = props;
+
+	const { first_name, last_name, email } = user;
+
+	const orderPath = `/orders/${id}`;
+	//TODO use new order view when it's ready
+	//const orderPath = `/admin/events/${eventId}/dashboard/orders/manage/${id}`
 
 	return (
 		<React.Fragment>
 			{/*DESKTOP*/}
 			<Hidden smDown>
 				<Card variant={"raisedLight"} className={classes.desktopCard}>
-					<Link
-						style={columnStyles[0]}
-						to={`/admin/events/${eventId}/dashboard/orders/manage/${id}`}
-					>
+					<Link style={columnStyles[0]} to={orderPath}>
 						<Typography className={classes.linkText}>{order_number}</Typography>
 					</Link>
 
@@ -96,15 +144,73 @@ const OrderRow = props => {
 						{dollars(total_in_cents)}
 					</Typography>
 
-					<Typography style={columnStyles[5]}>{pos}</Typography>
+					<Typography style={columnStyles[5]}>{platform}</Typography>
 				</Card>
 			</Hidden>
 
 			{/*MOBILE TODO*/}
 			<Hidden mdUp>
-				<Card variant={"block"} className={classes.mobileCard}>
-					<Typography> </Typography>
-				</Card>
+				<Link to={orderPath}>
+					<Card variant={"block"} className={classes.mobileCard}>
+						<div className={classes.mobileRow1}>
+							<div className={classes.mobileCol1}>
+								<Typography className={classes.mobileDate}>
+									{displayDate}
+								</Typography>
+
+								<Typography className={classes.mobileUserName}>
+									{first_name} {last_name}
+								</Typography>
+
+								<Typography className={classes.mobileEmail}>{email}</Typography>
+							</div>
+
+							<div className={classes.mobileCol2}>
+								<Typography className={classes.mobileOrderNo}>
+									#{order_number}
+								</Typography>
+								{ticketTypeList
+									? ticketTypeList.map((tt, index) =>
+										tt ? (
+											<ColorTag
+												size={"small"}
+												variant={index % 2 == 0 ? "green" : "secondary"}
+												key={tt}
+											>
+												{tt}
+											</ColorTag>
+										) : null
+									  )
+									: null}
+							</div>
+						</div>
+
+						<div className={classes.mobileRow2}>
+							<div className={classes.mobileRow2Col}>
+								<Typography className={classes.mobileHeading}>QTY</Typography>
+								<Typography className={classes.mobileValue}>
+									{ticketCount}
+								</Typography>
+							</div>
+
+							<div className={classes.mobileRow2Col}>
+								<Typography className={classes.mobileHeading}>
+									Order value
+								</Typography>
+								<Typography className={classes.mobileValue}>
+									{dollars(total_in_cents)}
+								</Typography>
+							</div>
+
+							<div className={classes.mobileRow2Col}>
+								<Typography className={classes.mobileHeading}>POS</Typography>
+								<Typography className={classes.mobileValue}>
+									{platform}
+								</Typography>
+							</div>
+						</div>
+					</Card>
+				</Link>
 			</Hidden>
 		</React.Fragment>
 	);
@@ -114,7 +220,8 @@ OrderRow.propTypes = {
 	classes: PropTypes.object.isRequired,
 	eventId: PropTypes.string.isRequired,
 	id: PropTypes.string.isRequired,
-	columnStyles: PropTypes.arrayOf(PropTypes.object).isRequired
+	columnStyles: PropTypes.arrayOf(PropTypes.object).isRequired,
+	ticketTypeList: PropTypes.arrayOf(PropTypes.string).isRequired
 };
 
 export default withStyles(styles)(OrderRow);

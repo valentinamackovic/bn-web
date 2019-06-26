@@ -69,7 +69,11 @@ const styles = theme => ({
 		alignItems: "center"
 	},
 	menuText: {
-		marginRight: theme.spacing.unit * 4
+		marginRight: theme.spacing.unit * 4,
+
+		[theme.breakpoints.down("sm")]: {
+			marginRight: theme.spacing.unit * 2
+		}
 	},
 	menuDividerContainer: {
 		marginBottom: theme.spacing.unit * 3,

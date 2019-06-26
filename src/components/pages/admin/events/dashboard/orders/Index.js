@@ -3,6 +3,7 @@ import { Hidden, Typography, withStyles, Grid } from "@material-ui/core";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import Bigneon from "../../../../../../helpers/bigneon";
+import ellipsis from "../../../../../../helpers/ellipsis";
 
 import user from "../../../../../../stores/user";
 import Container from "../Container";
@@ -17,6 +18,7 @@ import SelectGroup from "../../../../../common/form/SelectGroup";
 import moment from "moment-timezone";
 import SearchBox from "../../../../../elements/SearchBox";
 import OrderRow from "./OrderRow";
+import { Pagination, urlPageParam } from "../../../../../elements/pagination";
 
 const styles = theme => ({
 	root: {},
@@ -64,7 +66,9 @@ class OrderList extends Component {
 			promoCodes: [],
 			promoFilterId: "",
 			ticketTypes: [],
-			ticketTypeFilterId: ""
+			ticketTypeFilterId: "",
+			paging: null,
+			ticketTypesKetValue: {}
 		};
 
 		this.onChangePromoFilter = this.onChangePromoFilter.bind(this);
@@ -78,14 +82,14 @@ class OrderList extends Component {
 		this.loadTicketTypes();
 	}
 
-	refreshOrders(query = "") {
+	refreshOrders(query = "", page = 0) {
 		const { currentOrgTimezone } = user;
 
-		this.setState({ orders: null });
+		this.setState({ orders: null, paging: null });
 
 		const { promoFilterId, ticketTypeFilterId } = this.state;
 
-		const params = { event_id: this.eventId, query };
+		const params = { event_id: this.eventId, query, page, limit: 20 };
 
 		//FIXME this is just the current user's orders for now
 		Bigneon()
@@ -100,18 +104,19 @@ class OrderList extends Component {
 						.format("MM/DD/YYYY h:mm A");
 
 					o.ticketCount = 0;
-					o.items.forEach(({ item_type, quantity, ...rest }) => {
-						if (item_type === "Tickets") {
-							o.ticketCount += quantity;
+					o.ticketTypeIds = [];
+					o.items.forEach(
+						({ item_type, quantity, ticket_type_id, ...rest }) => {
+							if (item_type === "Tickets") {
+								o.ticketCount += quantity;
+								o.ticketTypeIds.push(ticket_type_id);
+							}
 						}
-					});
-					o.first_name = o.first_name || "Unknown";
-					o.last_name = o.last_name || "";
-					o.email = o.email || "Unknown email";
-					o.pos = "Online";
+					);
+					o.platform = o.platform || "-";
 				});
 
-				this.setState({ orders: data });
+				this.setState({ orders: data, paging });
 			})
 			.catch(error => {
 				console.error(error);
@@ -121,53 +126,15 @@ class OrderList extends Component {
 					error
 				});
 			});
-
-		// Bigneon()
-		// 	.events.guests.index({ event_id, query: "" })
-		// 	.then(response => {
-		// 		const { data, paging } = response.data; //@TODO Implement pagination
-		// 		const guests = {};
-		//
-		// 		const orders = {};
-		////
-		// 		data.forEach(
-		// 			({
-		// 				 order_id,
-		// 				user_id,
-		// 				email,
-		// 				first_name,
-		// 				last_name,
-		// 				phone,
-		// 				...ticketDetails
-		// 			}) => {
-		// 				if (!guests[user_id]) {
-		// 					guests[user_id] = {
-		// 						email,
-		// 						first_name,
-		// 						last_name,
-		// 						phone,
-		// 						ticketCount: 1
-		// 					};
-		// 				} else {
-		// 					guests[user_id].ticketCount++;
-		// 				}
-		// 			}
-		// 		);
-		//
-		// 		this.setState({ guests });
-		// 	})
-		// 	.catch(error => {
-		// 		console.error(error);
-		//
-		// 		notifications.showFromErrorResponse({
-		// 			defaultMessage: "Loading orders failed.",
-		// 			error
-		// 		});
-		// 	});
 	}
 
 	onSearch(query) {
+		this.query = query;
 		this.refreshOrders(query);
+	}
+
+	changePage(page = urlPageParam()) {
+		this.refreshOrders(this.query || "", page);
 	}
 
 	loadPromoCodes() {
@@ -198,6 +165,8 @@ class OrderList extends Component {
 			}
 		];
 
+		const ticketTypesKetValue = {};
+
 		Bigneon()
 			.events.ticketTypes.index({ event_id: this.eventId })
 			.then(response => {
@@ -205,9 +174,10 @@ class OrderList extends Component {
 
 				types.forEach(t => {
 					ticketTypes.push({ value: t.id, label: t.name });
+					ticketTypesKetValue[t.id] = t.name;
 				});
 
-				this.setState({ ticketTypes });
+				this.setState({ ticketTypes, ticketTypesKetValue });
 			});
 	}
 
@@ -286,7 +256,7 @@ class OrderList extends Component {
 	}
 
 	renderList() {
-		const { orders } = this.state;
+		const { orders, ticketTypesKetValue } = this.state;
 
 		if (orders === null) {
 			return <Loader>Loading orders...</Loader>;
@@ -295,12 +265,19 @@ class OrderList extends Component {
 		return (
 			<div>
 				<Hidden smDown>{this.renderDesktopHeadings()}</Hidden>
-				{orders.map(order => {
+				{orders.map(({ ticketTypeIds, ...order }) => {
+					const ticketTypeList = ticketTypeIds.map(ttId =>
+						ticketTypesKetValue[ttId]
+							? ellipsis(ticketTypesKetValue[ttId], 12)
+							: null
+					);
+
 					return (
 						<OrderRow
 							key={order.id}
 							eventId={this.eventId}
 							columnStyles={columnStyles}
+							ticketTypeList={ticketTypeList}
 							{...order}
 						/>
 					);
@@ -381,10 +358,21 @@ class OrderList extends Component {
 	}
 
 	render() {
+		const { paging } = this.state;
 		return (
 			<React.Fragment>
 				<Hidden smDown>{this.renderDesktopContent()}</Hidden>
 				<Hidden mdUp>{this.renderMobileContent()}</Hidden>
+
+				{paging !== null ? (
+					<Pagination
+						isLoading={false}
+						paging={paging}
+						onChange={this.changePage.bind(this)}
+					/>
+				) : (
+					<div/>
+				)}
 			</React.Fragment>
 		);
 	}
