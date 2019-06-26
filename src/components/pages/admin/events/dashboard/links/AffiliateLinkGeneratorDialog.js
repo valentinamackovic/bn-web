@@ -9,10 +9,17 @@ import Button from "../../../../../elements/Button";
 import notifications from "../../../../../../stores/notifications";
 import CustomTooltip from "../../../../../elements/Tooltip";
 import copyToClipboard from "../../../../../../helpers/copyToClipboard";
+import { Typography } from "@material-ui/core";
+import { secondaryHex } from "../../../../../../config/theme";
 
-const styles = {
-	root: {}
-};
+const styles = theme => ({
+	root: {},
+	subText: {
+		textAlign: "center",
+		marginTop: theme.spacing.unit,
+		marginBottom: theme.spacing.unit
+	}
+});
 
 class AffiliateLinkGeneratorDialog extends React.Component {
 	constructor(props) {
@@ -108,9 +115,10 @@ class AffiliateLinkGeneratorDialog extends React.Component {
 
 		const linkComponent = (
 			<InputGroup
+				InputProps={{ style: { color: secondaryHex } }}
 				value={shortLink}
 				name="shortLink"
-				label={"Copy the URL for tracking your campaign:"}
+				label={"Use this link to track your campaign:"}
 				type="text"
 				onChange={e => {}}
 			/>
@@ -158,16 +166,21 @@ class AffiliateLinkGeneratorDialog extends React.Component {
 			<Dialog
 				onClose={onClose}
 				iconUrl={"/icons/link-white.svg"}
-				title={"Affiliate link generator"}
+				title={"Affiliate tracking links"}
 				open={open}
 			>
+				<Typography className={classes.subText}>
+					Generate a link to track custom marketing campaigns and affiliate
+					performance.
+				</Typography>
+				<br/>
 				<div>
 					<InputGroup
 						error={errors.source}
 						value={source}
 						name="source"
-						label={"Marketing Affiliate or Channel (optional)"}
-						placeholder="Facebook"
+						label={"Campaign Source/Channel Name (optional)"}
+						placeholder="ie. Facebook, Twitter, Newsletter"
 						autofocus={true}
 						type="text"
 						onChange={e => {
@@ -180,7 +193,7 @@ class AffiliateLinkGeneratorDialog extends React.Component {
 						error={errors.medium}
 						value={medium}
 						name="medium"
-						label={"Marketing Medium (optional)"}
+						label={"Campaign Medium (optional)"}
 						placeholder="ie. cpc, social share, email"
 						type="text"
 						onChange={e => {
@@ -248,7 +261,7 @@ class AffiliateLinkGeneratorDialog extends React.Component {
 							onClick={this.onSubmit.bind(this)}
 							disabled={isSubmitting}
 						>
-							{isSubmitting ? "Generating..." : "Generate short URL"}
+							{isSubmitting ? "Generating..." : "Generate link"}
 						</Button>
 					</div>
 				</div>
