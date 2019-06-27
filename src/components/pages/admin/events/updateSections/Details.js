@@ -302,6 +302,12 @@ class Details extends Component {
 				.then(response => {
 					const { data, paging } = response.data; //@TODO Implement pagination
 					this.setState({ venues: data });
+
+					//If it's a new event and there is only one private venue available then auto select that one
+					const privateVenues = data.filter(v => v.is_private);
+					if (privateVenues.length === 1 && !eventUpdateStore.id) {
+						this.changeDetails({ venueId: privateVenues[0].id });
+					}
 				})
 				.catch(error => {
 					console.error(error);
@@ -317,21 +323,17 @@ class Details extends Component {
 	renderVenues() {
 		const { venues } = this.state;
 		const { errors } = this.props;
-		let { venueId } = eventUpdateStore.event;
+		const { venueId } = eventUpdateStore.event;
 
 		const venueOptions = [];
 
 		let label = "";
 
 		if (venues !== null) {
-			const privateVenues = venues.filter(v => v.is_private);
 			venues.forEach(venue => {
 				venueOptions.push({ value: venue.id, label: venue.name });
 			});
 
-			if (privateVenues.length == 1) {
-				venueId = venueId || privateVenues[0].id;
-			}
 			label = "Venue *";
 		} else {
 			label = "Loading venues...";

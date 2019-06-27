@@ -135,7 +135,7 @@ const formatForSaving = (ticketTypes, event) => {
 
 		if (
 			!parentId &&
-			isNaN(parentId) &&
+			parentId !== 0 &&
 			ticketTypeStartDate &&
 			ticketTypeStartDate.isValid()
 		) {
