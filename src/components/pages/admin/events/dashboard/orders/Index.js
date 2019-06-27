@@ -87,9 +87,16 @@ class OrderList extends Component {
 
 		this.setState({ orders: null, paging: null });
 
-		const { promoFilterId, ticketTypeFilterId } = this.state;
-
 		const params = { event_id: this.eventId, query, page, limit: 20 };
+
+		const { promoFilterId, ticketTypeFilterId } = this.state;
+		if (promoFilterId) {
+			params.promo_code = promoFilterId;
+		}
+
+		if (ticketTypeFilterId) {
+			params.ticket_type_id = ticketTypeFilterId;
+		}
 
 		//FIXME this is just the current user's orders for now
 		Bigneon()

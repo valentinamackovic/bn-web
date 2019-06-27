@@ -107,11 +107,13 @@ const OrderRow = props => {
 		...rest
 	} = props;
 
-	const { first_name, last_name, email } = user;
+	const { first_name, last_name, email, id: userId } = user;
 
 	const orderPath = `/orders/${id}`;
 	//TODO use new order view when it's ready
 	//const orderPath = `/admin/events/${eventId}/dashboard/orders/manage/${id}`
+
+	const userPath = `/admin/fans/${userId}`;
 
 	return (
 		<React.Fragment>
@@ -124,10 +126,7 @@ const OrderRow = props => {
 
 					<Typography style={columnStyles[1]}>{displayDate}</Typography>
 
-					<Link
-						style={columnStyles[2]}
-						to={`/admin/events/${eventId}/dashboard/users/${id}`}
-					>
+					<Link style={columnStyles[2]} to={userPath}>
 						<Typography>
 							<span className={classes.linkText}>
 								{ellipsis(`${first_name} ${last_name}`, 15)}
@@ -150,22 +149,24 @@ const OrderRow = props => {
 
 			{/*MOBILE TODO*/}
 			<Hidden mdUp>
-				<Link to={orderPath}>
-					<Card variant={"block"} className={classes.mobileCard}>
-						<div className={classes.mobileRow1}>
-							<div className={classes.mobileCol1}>
-								<Typography className={classes.mobileDate}>
-									{displayDate}
-								</Typography>
+				<Card variant={"block"} className={classes.mobileCard}>
+					<div className={classes.mobileRow1}>
+						<div className={classes.mobileCol1}>
+							<Typography className={classes.mobileDate}>
+								{displayDate}
+							</Typography>
 
+							<Link to={userPath}>
 								<Typography className={classes.mobileUserName}>
 									{first_name} {last_name}
 								</Typography>
 
 								<Typography className={classes.mobileEmail}>{email}</Typography>
-							</div>
+							</Link>
+						</div>
 
-							<div className={classes.mobileCol2}>
+						<div className={classes.mobileCol2}>
+							<Link to={orderPath}>
 								<Typography className={classes.mobileOrderNo}>
 									#{order_number}
 								</Typography>
@@ -182,35 +183,35 @@ const OrderRow = props => {
 										) : null
 									  )
 									: null}
-							</div>
+							</Link>
+						</div>
+					</div>
+
+					<div className={classes.mobileRow2}>
+						<div className={classes.mobileRow2Col}>
+							<Typography className={classes.mobileHeading}>QTY</Typography>
+							<Typography className={classes.mobileValue}>
+								{ticketCount}
+							</Typography>
 						</div>
 
-						<div className={classes.mobileRow2}>
-							<div className={classes.mobileRow2Col}>
-								<Typography className={classes.mobileHeading}>QTY</Typography>
-								<Typography className={classes.mobileValue}>
-									{ticketCount}
-								</Typography>
-							</div>
-
-							<div className={classes.mobileRow2Col}>
-								<Typography className={classes.mobileHeading}>
-									Order value
-								</Typography>
-								<Typography className={classes.mobileValue}>
-									{dollars(total_in_cents)}
-								</Typography>
-							</div>
-
-							<div className={classes.mobileRow2Col}>
-								<Typography className={classes.mobileHeading}>POS</Typography>
-								<Typography className={classes.mobileValue}>
-									{platform}
-								</Typography>
-							</div>
+						<div className={classes.mobileRow2Col}>
+							<Typography className={classes.mobileHeading}>
+								Order value
+							</Typography>
+							<Typography className={classes.mobileValue}>
+								{dollars(total_in_cents)}
+							</Typography>
 						</div>
-					</Card>
-				</Link>
+
+						<div className={classes.mobileRow2Col}>
+							<Typography className={classes.mobileHeading}>POS</Typography>
+							<Typography className={classes.mobileValue}>
+								{platform}
+							</Typography>
+						</div>
+					</div>
+				</Card>
 			</Hidden>
 		</React.Fragment>
 	);
