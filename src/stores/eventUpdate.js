@@ -16,6 +16,7 @@ import {
 } from "../components/pages/admin/events/updateSections/Tickets";
 import { updateTimezonesInObjects } from "../helpers/time";
 //TODO separate artists and ticketTypes into their own stores
+import user from "./user";
 
 const freshEvent = formatEventDataForInputs({});
 
@@ -74,30 +75,11 @@ class EventUpdate {
 				);
 
 				this.checkIfSalesStarted(id);
-
-				this.loadOrgDetails(organization_id);
 			})
 			.catch(error => {
 				console.error(error);
 				notifications.showFromErrorResponse({
 					defaultMessage: "Loading event details failed.",
-					error
-				});
-			});
-	}
-
-	@action
-	loadOrgDetails(id) {
-		Bigneon()
-			.organizations.read({ id })
-			.then(response => {
-				const { max_additional_fee_in_cents } = response.data;
-				this.maxTicketTypeAdditionalFeeInCents = max_additional_fee_in_cents;
-			})
-			.catch(error => {
-				console.error(error);
-				notifications.showFromErrorResponse({
-					defaultMessage: "Loading organization details failed.",
 					error
 				});
 			});
@@ -275,8 +257,23 @@ class EventUpdate {
 	}
 
 	@action
-	updateOrganizationId(organizationId) {
-		this.organizationId = organizationId;
+	updateOrganization(id) {
+		this.organizationId = id;
+
+		//Get the max fee used for display and validation
+		Bigneon()
+			.organizations.read({ id })
+			.then(response => {
+				const { max_additional_fee_in_cents } = response.data;
+				this.maxTicketTypeAdditionalFeeInCents = max_additional_fee_in_cents;
+			})
+			.catch(error => {
+				console.error(error);
+				notifications.showFromErrorResponse({
+					defaultMessage: "Loading organization details failed.",
+					error
+				});
+			});
 	}
 
 	@action
