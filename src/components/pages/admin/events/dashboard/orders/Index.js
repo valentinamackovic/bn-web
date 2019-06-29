@@ -83,8 +83,6 @@ class OrderList extends Component {
 	}
 
 	refreshOrders(query = "", page = 0) {
-		const { currentOrgTimezone } = user;
-
 		this.setState({ orders: null, paging: null });
 
 		const params = { event_id: this.eventId, query, page, limit: 20 };
@@ -98,16 +96,17 @@ class OrderList extends Component {
 			params.ticket_type_id = ticketTypeFilterId;
 		}
 
-		//FIXME this is just the current user's orders for now
 		Bigneon()
 			.admin.orders(params)
 			.then(response => {
-				const { data, paging } = response.data; //@TODO Implement pagination
+				const { data, paging } = response.data;
+
+				const { timezone } = this.props;
 
 				//Set the qty of tickets bought and the formatted date
 				data.forEach(o => {
 					o.displayDate = moment(o.date)
-						.tz(currentOrgTimezone)
+						.tz(timezone)
 						.format("MM/DD/YYYY h:mm A");
 
 					o.ticketCount = 0;
@@ -120,7 +119,7 @@ class OrderList extends Component {
 							}
 						}
 					);
-					o.platform = o.platform || "-";
+					o.platform = o.is_box_office ? "Box office" : o.platform || "-";
 				});
 
 				this.setState({ orders: data, paging });
@@ -387,15 +386,17 @@ class OrderList extends Component {
 
 OrderList.propTypes = {
 	classes: PropTypes.object.isRequired,
-	match: PropTypes.object.isRequired
+	match: PropTypes.object.isRequired,
+	timezone: PropTypes.string.isRequired
 };
 
 const Orders = observer(props => {
-	if (!user.currentOrgTimezone) {
+	const { currentOrgTimezone } = user;
+	if (!currentOrgTimezone) {
 		return <Loader>Loading organization details...</Loader>;
 	}
 
-	return <OrderList {...props}/>;
+	return <OrderList {...props} timezone={currentOrgTimezone}/>;
 });
 
 export default withStyles(styles)(Orders);

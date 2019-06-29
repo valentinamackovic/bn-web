@@ -109,9 +109,8 @@ const OrderRow = props => {
 
 	const { first_name, last_name, email, id: userId } = user;
 
-	const orderPath = `/orders/${id}`;
 	//TODO use new order view when it's ready
-	//const orderPath = `/admin/events/${eventId}/dashboard/orders/manage/${id}`
+	const orderPath = `/admin/events/${eventId}/dashboard/orders/manage/${id}`;
 
 	const userPath = `/admin/fans/${userId}`;
 
