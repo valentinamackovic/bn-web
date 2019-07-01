@@ -253,6 +253,7 @@ class DateTimePickerGroup extends Component {
 						ref={node => {
 							this.picker = node;
 						}}
+						autoComplete="off"
 					/>
 				) : null}
 
