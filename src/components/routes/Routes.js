@@ -83,7 +83,7 @@ const AdminEventDashboardOrders = asyncComponent(() =>
 	import("../pages/admin/events/dashboard/orders/Index")
 );
 const AdminEventDashboardOrder = asyncComponent(() =>
-	import("../pages/admin/events/dashboard/orders/Order")
+	import("../pages/admin/events/dashboard/orders/order/Index")
 );
 const AdminEventExportGuestList = asyncComponent(() =>
 	import("../pages/admin/events/dashboard/guests/Export")

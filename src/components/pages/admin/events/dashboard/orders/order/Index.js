@@ -4,19 +4,20 @@ import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 
-import user from "../../../../../../stores/user";
-import Loader from "../../../../../elements/loaders/Loader";
-import Card from "../../../../../elements/Card";
-import Bigneon from "../../../../../../helpers/bigneon";
+import user from "../../../../../../../stores/user";
+import Loader from "../../../../../../elements/loaders/Loader";
+import Card from "../../../../../../elements/Card";
+import Bigneon from "../../../../../../../helpers/bigneon";
 import moment from "moment-timezone";
-import notifications from "../../../../../../stores/notifications";
-import StyledLink from "../../../../../elements/StyledLink";
+import notifications from "../../../../../../../stores/notifications";
+import StyledLink from "../../../../../../elements/StyledLink";
 import {
 	fontFamilyDemiBold,
 	secondaryHex
-} from "../../../../../../config/theme";
-import { dollars } from "../../../../../../helpers/money";
-import Divider from "../../../../../common/Divider";
+} from "../../../../../../../config/theme";
+import { dollars } from "../../../../../../../helpers/money";
+import Divider from "../../../../../../common/Divider";
+import OrderItemsCard from "./OrderItemsCard";
 
 const styles = theme => ({
 	root: {
@@ -49,12 +50,40 @@ class SingleOrder extends Component {
 		this.orderId = this.props.match.params.orderId;
 
 		this.state = {
-			order: null
+			eventDetails: null,
+			order: null,
+			orderItems: null
 		};
 	}
 
 	componentDidMount() {
+		this.loadEventDetails();
 		this.loadOrder();
+		this.loadOrderItems();
+	}
+
+	loadEventDetails() {
+		Bigneon()
+			.events.read({ id: this.eventId })
+			.then(response => {
+				const { data } = response;
+
+				const { event_start, venue } = data;
+
+				const displayDate = moment(event_start)
+					.tz(venue.timezone)
+					.format("ddd, MMM DD, YYYY");
+
+				this.setState({ eventDetails: { ...data, displayDate } });
+			})
+			.catch(error => {
+				console.error(error);
+
+				notifications.showFromErrorResponse({
+					defaultMessage: "Loading event details failed.",
+					error
+				});
+			});
 	}
 
 	loadOrder() {
@@ -72,9 +101,9 @@ class SingleOrder extends Component {
 
 				const platform = is_box_office ? "Box office" : data.platform || "";
 
-				this.setState({ order: { ...data, displayDate, platform } });
-
-				//this.loadOrderDetails();
+				this.setState({ order: { ...data, displayDate, platform } }, () => {
+					console.log(this.state.order);
+				});
 			})
 			.catch(error => {
 				console.error(error);
@@ -86,28 +115,37 @@ class SingleOrder extends Component {
 			});
 	}
 
-	// loadOrderDetails() {
-	// 	Bigneon()
-	// 		.orders.details({ id: this.orderId })
-	// 		.then(response => {
-	// 			const { data } = response;
-	//
-	// 		})
-	// 		.catch(error => {
-	// 			console.error(error);
-	//
-	// 			notifications.showFromErrorResponse({
-	// 				defaultMessage: "Loading order details failed.",
-	// 				error
-	// 			});
-	// 		});
-	// }
+	loadOrderItems() {
+		Bigneon()
+			.orders.details({ id: this.orderId })
+			.then(response => {
+				const { data } = response;
+
+				this.setState({ orderItems: data.items });
+			})
+			.catch(error => {
+				console.error(error);
+
+				notifications.showFromErrorResponse({
+					defaultMessage: "Loading order details failed.",
+					error
+				});
+			});
+	}
 
 	renderHeader() {
 		const { order } = this.state;
 		const { classes } = this.props;
 
-		const { order_number, user, displayDate, platform, total_in_cents } = order;
+		const {
+			order_number,
+			user,
+			displayDate,
+			platform,
+			total_in_cents,
+			payment_method,
+			payment_provider
+		} = order;
 
 		const { first_name, last_name, id: userId } = user;
 
@@ -128,7 +166,8 @@ class SingleOrder extends Component {
 				</Typography>
 
 				<Typography className={classes.headerText}>
-					Paid by TODO {platform ? `via ${platform}` : ""}
+					Paid by {payment_method} ({payment_provider}){" "}
+					{platform ? `via ${platform}` : ""}
 				</Typography>
 
 				<Typography className={classes.orderTotalText}>
@@ -138,10 +177,8 @@ class SingleOrder extends Component {
 		);
 	}
 
-	renderSummary() {}
-
 	render() {
-		const { order } = this.state;
+		const { order, orderItems, eventDetails } = this.state;
 		const { classes } = this.props;
 
 		return (
@@ -151,10 +188,15 @@ class SingleOrder extends Component {
 						<Typography className={classes.linkText}>Back to sales</Typography>
 					</Link>
 
-					{order ? (
+					{order && eventDetails && orderItems ? (
 						<React.Fragment>
 							{this.renderHeader()}
 							<Divider style={{ marginTop: 20, marginBottom: 20 }}/>
+							<OrderItemsCard
+								eventDetails={eventDetails}
+								order={order}
+								items={orderItems}
+							/>
 						</React.Fragment>
 					) : (
 						<Loader/>
@@ -171,7 +213,7 @@ SingleOrder.propTypes = {
 	timezone: PropTypes.string.isRequired
 };
 
-const Order = observer(props => {
+const Index = observer(props => {
 	const { currentOrgTimezone } = user;
 
 	if (!currentOrgTimezone) {
@@ -181,4 +223,4 @@ const Order = observer(props => {
 	return <SingleOrder {...props} timezone={currentOrgTimezone}/>;
 });
 
-export default withStyles(styles)(Order);
+export default withStyles(styles)(Index);
