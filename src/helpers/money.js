@@ -1,4 +1,8 @@
 export const dollars = (cents, trimDecimalIfZero = false, prefix = "$") => {
+	if (!cents) {
+		return `${prefix}0`;
+	}
+
 	const dollars = cents / 100;
 
 	if (trimDecimalIfZero && dollars % 1 === 0) {

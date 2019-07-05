@@ -10,35 +10,16 @@ import Card from "../../../../../../elements/Card";
 import Bigneon from "../../../../../../../helpers/bigneon";
 import moment from "moment-timezone";
 import notifications from "../../../../../../../stores/notifications";
-import StyledLink from "../../../../../../elements/StyledLink";
-import {
-	fontFamilyDemiBold,
-	secondaryHex
-} from "../../../../../../../config/theme";
-import { dollars } from "../../../../../../../helpers/money";
 import Divider from "../../../../../../common/Divider";
 import OrderItemsCard from "./OrderItemsCard";
+import Header from "./Header";
+import BackLink from "../../../../../../elements/BackLink";
 
 const styles = theme => ({
 	root: {
 		padding: 31,
 		paddingLeft: 65,
 		paddingRight: 65
-	},
-	linkText: {
-		color: secondaryHex,
-		fontFamily: fontFamilyDemiBold
-	},
-	orderNumber: {
-		fontSize: 28,
-		fontFamily: fontFamilyDemiBold
-	},
-	headerText: {},
-	orderTotalText: {
-		fontSize: 17,
-		fontFamily: fontFamilyDemiBold,
-		textTransform: "uppercase",
-		marginTop: 20
 	}
 });
 
@@ -74,7 +55,9 @@ class SingleOrder extends Component {
 					.tz(venue.timezone)
 					.format("ddd, MMM DD, YYYY");
 
-				this.setState({ eventDetails: { ...data, displayDate } });
+				this.setState({
+					eventDetails: { ...data, displayDate }
+				});
 			})
 			.catch(error => {
 				console.error(error);
@@ -92,7 +75,7 @@ class SingleOrder extends Component {
 			.then(response => {
 				const { data } = response;
 
-				const { date, is_box_office } = data;
+				const { date, is_box_office, items } = data;
 
 				const { timezone } = this.props;
 				const displayDate = moment(date)
@@ -101,8 +84,15 @@ class SingleOrder extends Component {
 
 				const platform = is_box_office ? "Box office" : data.platform || "";
 
-				this.setState({ order: { ...data, displayDate, platform } }, () => {
-					console.log(this.state.order);
+				let fees_in_cents = 0;
+				items.forEach(({ item_type, unit_price_in_cents }) => {
+					if (item_type === "EventFees" || item_type === "PerUnitFees") {
+						fees_in_cents += unit_price_in_cents;
+					}
+				});
+
+				this.setState({
+					order: { ...data, displayDate, platform, fees_in_cents }
 				});
 			})
 			.catch(error => {
@@ -133,76 +123,47 @@ class SingleOrder extends Component {
 			});
 	}
 
-	renderHeader() {
-		const { order } = this.state;
-		const { classes } = this.props;
-
-		const {
-			order_number,
-			user,
-			displayDate,
-			platform,
-			total_in_cents,
-			payment_method,
-			payment_provider
-		} = order;
-
-		const { first_name, last_name, id: userId } = user;
-
-		return (
-			<div>
-				<Typography className={classes.orderNumber}>
-					Order #{order_number}
-				</Typography>
-
-				<Typography className={classes.headerText}>
-					Purchased by{" "}
-					<Link to={`/admin/fans/${userId}`}>
-						<span className={classes.linkText}>
-							{first_name} {last_name}
-						</span>
-					</Link>{" "}
-					on {displayDate}
-				</Typography>
-
-				<Typography className={classes.headerText}>
-					Paid by {payment_method} ({payment_provider}){" "}
-					{platform ? `via ${platform}` : ""}
-				</Typography>
-
-				<Typography className={classes.orderTotalText}>
-					Order total: {dollars(total_in_cents)}
-				</Typography>
-			</div>
-		);
-	}
-
 	render() {
 		const { order, orderItems, eventDetails } = this.state;
 		const { classes } = this.props;
 
-		return (
-			<Card className={classes.root}>
-				<div>
-					<Link to={`/admin/events/${this.eventId}/dashboard/orders/manage`}>
-						<Typography className={classes.linkText}>Back to sales</Typography>
-					</Link>
+		const isReady = order && eventDetails && orderItems;
 
-					{order && eventDetails && orderItems ? (
-						<React.Fragment>
-							{this.renderHeader()}
+		const header = isReady ? <Header {...order}/> : null;
+
+		const orderDetails = isReady ? (
+			<OrderItemsCard
+				eventDetails={eventDetails}
+				order={order}
+				items={orderItems}
+			/>
+		) : null;
+
+		return (
+			<React.Fragment>
+				<BackLink to={`/admin/events/${this.eventId}/dashboard/orders/manage`}>
+					Back to sales
+				</BackLink>
+
+				{!isReady ? <Loader/> : null}
+
+				{/*DESKTOP*/}
+				<Hidden smDown>
+					{isReady ? (
+						<Card className={classes.root}>
+							{header}
 							<Divider style={{ marginTop: 20, marginBottom: 20 }}/>
-							<OrderItemsCard
-								eventDetails={eventDetails}
-								order={order}
-								items={orderItems}
-							/>
-						</React.Fragment>
-					) : (
-						<Loader/>
-					)}
-				</div>
-			</Card>
+							{orderDetails}
+						</Card>
+					) : null}
+				</Hidden>
+
+				{/*MOBILE*/}
+				<Hidden mdUp>
+					{header}
+					{orderDetails}
+				</Hidden>
+			</React.Fragment>
 		);
 	}
 }
