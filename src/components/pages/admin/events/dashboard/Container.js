@@ -19,6 +19,7 @@ import ColorTag from "../../../../elements/ColorTag";
 import VisitEventPage from "../../../../elements/VisitEventPage";
 import Loader from "../../../../elements/loaders/Loader";
 import Divider from "../../../../common/Divider";
+import AffiliateLinkGeneratorDialog from "./links/AffiliateLinkGeneratorDialog";
 
 const styles = theme => ({
 	container: {
@@ -101,7 +102,8 @@ class EventDashboardContainer extends Component {
 			event: null,
 			anchorToolsEl: null,
 			anchorReportsEl: null,
-			anchorMarketingEl: null
+			anchorMarketingEl: null,
+			showAffiliateLinkDialog: false
 		};
 	}
 
@@ -152,6 +154,11 @@ class EventDashboardContainer extends Component {
 					error
 				});
 			});
+	}
+
+	openAffiliateLinkDialog() {
+		this.setState({ showAffiliateLinkDialog: true });
+		this.handleToolsMenuClose();
 	}
 
 	renderToolsMenu() {
@@ -225,6 +232,13 @@ class EventDashboardContainer extends Component {
 							Hospitality
 						</MenuItem>
 					</Link>
+				) : (
+					<span/>
+				)}
+				{user.hasScope("event:write") ? (
+					<MenuItem onClick={this.openAffiliateLinkDialog.bind(this)}>
+						Affiliate Tracking Links
+					</MenuItem>
 				) : (
 					<span/>
 				)}
@@ -428,7 +442,7 @@ class EventDashboardContainer extends Component {
 	}
 
 	render() {
-		const { event } = this.state;
+		const { event, showAffiliateLinkDialog } = this.state;
 		const {
 			classes,
 			children,
@@ -441,7 +455,7 @@ class EventDashboardContainer extends Component {
 			return <Loader/>;
 		}
 
-		const { publish_date, on_sale, localized_times } = event;
+		const { id, publish_date, on_sale, localized_times } = event;
 		const isPublished = moment.utc(publish_date).isBefore(moment.utc());
 		const isOnSale = isPublished && moment.utc(on_sale).isBefore(moment.utc());
 
@@ -456,6 +470,11 @@ class EventDashboardContainer extends Component {
 
 		return (
 			<div>
+				<AffiliateLinkGeneratorDialog
+					eventId={id}
+					open={showAffiliateLinkDialog}
+					onClose={() => this.setState({ showAffiliateLinkDialog: false })}
+				/>
 				<Grid container className={classes.headerContainer}>
 					<Grid item xs={12} sm={12} lg={8}>
 						<PageHeading iconUrl="/icons/events-multi.svg">

@@ -5,8 +5,8 @@ import Grid from "@material-ui/core/Grid";
 import { observer } from "mobx-react";
 
 import EventTicketsCard from "./EventTicketsCard";
-import TransferTicketsDialog from "./TransferTicketsDialog";
-import CancelTransferDialog from "./CancelTransferDialog";
+import TransferTicketsDialog from "./transfers/TransferTicketsDialog";
+import CancelTransferDialog from "./transfers/CancelTransferDialog";
 import TicketDialog from "./TicketDialog";
 import PageHeading from "../../elements/PageHeading";
 import AppPromoCard from "../../elements/AppPromoCard";

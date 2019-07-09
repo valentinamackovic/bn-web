@@ -53,7 +53,12 @@ export const logoutFB = (onLogoutCallback = () => {}) => {
 		onLogoutCallback();
 	}
 
-	const logoutCallback = () => window.FB.logout(onLogoutCallback);
+	const logoutCallback = () => {
+		//Don't logout if not accessToken is set
+		if (window.FB.getAccessToken()) {
+			window.FB.logout(onLogoutCallback);
+		}
+	};
 
 	if (!facebookInitialized) {
 		initFB(logoutCallback);
@@ -63,6 +68,8 @@ export const logoutFB = (onLogoutCallback = () => {}) => {
 };
 
 class FacebookButtonDisplay extends Component {
+	_isMounted = false;
+
 	constructor(props) {
 		super(props);
 
@@ -73,13 +80,21 @@ class FacebookButtonDisplay extends Component {
 	}
 
 	componentDidMount() {
+		this._isMounted = true;
 		initFB(this.onFBSignIn.bind(this));
+	}
+
+	componentWillUnmount() {
+		this._isMounted = false;
 	}
 
 	onFBSignIn(response) {
 		const { status, authResponse } = response;
 		const authenticated = status === "connected";
-		this.setState({ authenticated });
+
+		if (this._isMounted) {
+			this.setState({ authenticated });
+		}
 
 		if (authenticated) {
 			Bigneon()
@@ -115,11 +130,16 @@ class FacebookButtonDisplay extends Component {
 					});
 				});
 		} else {
-			notifications.show({
-				message: "Facebook authentication failed.",
-				variant: "error"
-			});
-			this.setState({ isAuthenticating: false });
+			if (status !== "unknown") {
+				notifications.show({
+					message: "Facebook authentication failed.",
+					variant: "error"
+				});
+			}
+
+			if (this._isMounted) {
+				this.setState({ isAuthenticating: false });
+			}
 		}
 	}
 

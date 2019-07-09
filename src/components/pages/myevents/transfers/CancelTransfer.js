@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 import { Typography, withStyles, CardMedia } from "@material-ui/core";
 
-import notifications from "../../../stores/notifications";
-import user from "../../../stores/user";
-import Bigneon from "../../../helpers/bigneon";
+import notifications from "../../../../stores/notifications";
+import user from "../../../../stores/user";
+import Bigneon from "../../../../helpers/bigneon";
 import { observer } from "mobx-react";
-import getUrlParam from "../../../helpers/getUrlParam";
+import getUrlParam from "../../../../helpers/getUrlParam";
 import CancelTransferDialog from "./CancelTransferDialog";
-import Loader from "../../elements/loaders/Loader";
+import Loader from "../../../elements/loaders/Loader";
 
 const styles = theme => ({});
 

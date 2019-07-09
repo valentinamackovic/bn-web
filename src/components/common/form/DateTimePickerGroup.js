@@ -253,6 +253,7 @@ class DateTimePickerGroup extends Component {
 						ref={node => {
 							this.picker = node;
 						}}
+						autoComplete="off"
 					/>
 				) : null}
 
@@ -269,6 +270,7 @@ class DateTimePickerGroup extends Component {
 							onFocus={onFocus}
 							onChange={this.onTimeChanged.bind(this)}
 							onBlur={onBlur}
+							autoComplete={"off"}
 							//TODO use pink dropdown icon from designs
 							// InputProps={{
 							// 	endAdornment: (

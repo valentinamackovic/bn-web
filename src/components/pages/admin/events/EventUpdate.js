@@ -106,7 +106,7 @@ class Event extends Component {
 			this.timeout = setTimeout(this.setOrganizationId.bind(this), 100);
 			return;
 		}
-		eventUpdateStore.updateOrganizationId(user.currentOrganizationId);
+		eventUpdateStore.updateOrganization(user.currentOrganizationId);
 	}
 
 	validateArtists(artists) {

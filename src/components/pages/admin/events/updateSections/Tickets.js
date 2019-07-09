@@ -11,6 +11,7 @@ import eventUpdateStore from "../../../../../stores/eventUpdate";
 import Button from "../../../../elements/Button";
 import servedImage from "../../../../../helpers/imagePathHelper";
 import { DEFAULT_END_TIME_HOURS_AFTER_SHOW_TIME } from "./Details";
+import { dollars } from "../../../../../helpers/money";
 
 const formatForSaving = (ticketTypes, event) => {
 	const ticket_types = [];
@@ -30,7 +31,8 @@ const formatForSaving = (ticketTypes, event) => {
 			priceForDisplay,
 			visibility,
 			description,
-			parentId
+			parentId,
+			additionalFeeInDollars
 		} = ticketType;
 
 		let { startDate: ticketTypeStartDate, endDate } = ticketType;
@@ -130,7 +132,13 @@ const formatForSaving = (ticketTypes, event) => {
 		}
 
 		let start_date = null;
-		if (!parentId && ticketTypeStartDate && ticketTypeStartDate.isValid()) {
+
+		if (
+			!parentId &&
+			parentId !== 0 &&
+			ticketTypeStartDate &&
+			ticketTypeStartDate.isValid()
+		) {
 			start_date = ticketTypeStartDate
 				.utc()
 				.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
@@ -149,7 +157,10 @@ const formatForSaving = (ticketTypes, event) => {
 			ticket_pricing,
 			visibility: visibility,
 			description,
-			parent_id: parentId
+			parent_id: parentId,
+			additional_fee_in_cents: additionalFeeInDollars
+				? Number(additionalFeeInDollars) * 100
+				: null
 		});
 	});
 
@@ -172,7 +183,8 @@ const formatForInput = (ticket_types, event) => {
 			price_in_cents,
 			status,
 			visibility,
-			parent_id
+			parent_id,
+			additional_fee_in_cents
 		} = ticket_type;
 
 		const pricing = [];
@@ -227,12 +239,21 @@ const formatForInput = (ticket_types, event) => {
 		}
 
 		let saleStartTimeOption = parent_id ? "parent" : "custom";
+
 		//If there is no ticket start time or if the start time is in the past, we're assuming it sales start immediately
 		if (
-			!ticketStartDate ||
-			(ticketStartDate && ticketStartDate.isBefore(moment.utc().local()))
+			saleStartTimeOption !== "parent" &&
+			(!ticketStartDate ||
+				(ticketStartDate && ticketStartDate.isBefore(moment.utc().local())))
 		) {
 			saleStartTimeOption = "immediately";
+		}
+
+		let additionalFeeInDollars = "";
+		let showAdditionalFee = false;
+		if (additional_fee_in_cents) {
+			additionalFeeInDollars = `${(additional_fee_in_cents / 100).toFixed(2)}`;
+			showAdditionalFee = true;
 		}
 
 		const ticketType = {
@@ -257,7 +278,9 @@ const formatForInput = (ticket_types, event) => {
 			parentId: parent_id,
 			showMaxTicketsPerCustomer: !!limit_per_person,
 			showVisibility: !visibility && visibility !== "Always",
-			showCartQuantityIncrement: !!increment && increment !== 1
+			showCartQuantityIncrement: !!increment && increment !== 1,
+			showAdditionalFee,
+			additionalFeeInDollars
 		};
 
 		ticketTypes.push(ticketType);
@@ -332,7 +355,8 @@ const validateFields = ticketTypes => {
 			pricing,
 			priceForDisplay,
 			status,
-			parentId
+			parentId,
+			additionalFeeInDollars
 		} = ticket;
 
 		if (status === "Cancelled") {
@@ -405,6 +429,22 @@ const validateFields = ticketTypes => {
 
 		if (!increment || increment < 1) {
 			ticketErrors.increment = "Increment must be more than 1";
+		}
+
+		if (additionalFeeInDollars) {
+			const additionalFeeInCents = Number(additionalFeeInDollars) * 100;
+
+			const maxCents = eventUpdateStore.maxTicketTypeAdditionalFeeInCents;
+
+			if (additionalFeeInCents < 0) {
+				ticketErrors.additionalFeeInDollars =
+					"Per ticket fee must be more than $0";
+			} else if (maxCents && additionalFeeInCents > maxCents) {
+				ticketErrors.additionalFeeInDollars = `Per ticket fee must be under ${dollars(
+					maxCents,
+					true
+				)}`;
+			}
 		}
 
 		if (

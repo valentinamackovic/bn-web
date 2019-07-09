@@ -16,6 +16,7 @@ import {
 } from "../components/pages/admin/events/updateSections/Tickets";
 import { updateTimezonesInObjects } from "../helpers/time";
 //TODO separate artists and ticketTypes into their own stores
+import user from "./user";
 
 const freshEvent = formatEventDataForInputs({});
 
@@ -194,17 +195,31 @@ class EventUpdate {
 		const { ticketTypes } = this;
 
 		const { pricing } = ticketTypes[index];
-		let startDate = moment(ticketTypes[index].startDate);
-		let startTime = moment(ticketTypes[index].startTime);
-		const endDate = moment(ticketTypes[index].endDate);
-		const endTime = moment(ticketTypes[index].endDate);
+
+		//Check there are dates set before using them to assume price point dates
+		let startDate = ticketTypes[index].startDate
+			? moment(ticketTypes[index].startDate)
+			: moment();
+		let startTime = ticketTypes[index].startTime
+			? moment(ticketTypes[index].startTime)
+			: moment();
+		const endDate = ticketTypes[index].endDate
+			? moment(ticketTypes[index].endDate)
+			: moment();
+		const endTime = ticketTypes[index].endDate
+			? moment(ticketTypes[index].endDate)
+			: moment();
 
 		if (pricing.length) {
-			startDate = moment(pricing[pricing.length - 1].endDate);
-			startTime = moment(pricing[pricing.length - 1].endTime);
+			startDate = pricing[pricing.length - 1].endDate
+				? moment(pricing[pricing.length - 1].endDate)
+				: moment();
+			startTime = pricing[pricing.length - 1].endTime
+				? moment(pricing[pricing.length - 1].endTime)
+				: moment();
 		}
 
-		pricing.push({
+		let pricePoint = {
 			id: "",
 			ticketId: "",
 			name: "",
@@ -213,7 +228,17 @@ class EventUpdate {
 			endDate,
 			endTime,
 			value: ticketTypes[index].priceForDisplay || ""
-		});
+		};
+
+		//Make sure timezones are set for price point dates
+		if (this.timezone) {
+			pricePoint = {
+				...pricePoint,
+				...updateTimezonesInObjects(pricePoint, this.timezone, true)
+			};
+		}
+
+		pricing.push(pricePoint);
 
 		ticketTypes[index].pricing = pricing;
 		this.ticketTypes = ticketTypes;
@@ -256,8 +281,23 @@ class EventUpdate {
 	}
 
 	@action
-	updateOrganizationId(organizationId) {
-		this.organizationId = organizationId;
+	updateOrganization(id) {
+		this.organizationId = id;
+
+		//Get the max fee used for display and validation
+		Bigneon()
+			.organizations.read({ id })
+			.then(response => {
+				const { max_additional_fee_in_cents } = response.data;
+				this.maxTicketTypeAdditionalFeeInCents = max_additional_fee_in_cents;
+			})
+			.catch(error => {
+				console.error(error);
+				notifications.showFromErrorResponse({
+					defaultMessage: "Loading organization details failed.",
+					error
+				});
+			});
 	}
 
 	@action
@@ -358,6 +398,10 @@ class EventUpdate {
 				);
 				if (!saveTicketResponse.result) {
 					return saveTicketResponse;
+				} else if (!ticketTypes[index].id) {
+					//Add the new ticket id to the current ticket type if it's a new ticket
+					//So if one ticket save fails it won't recreate the successfully saved ones
+					this.ticketTypes[index].id = saveTicketResponse.result.data.id;
 				}
 			}
 		}
@@ -529,6 +573,7 @@ class EventUpdate {
 		this.ticketTypeActiveIndex = null;
 		this.timezone = "";
 		this.disabledExternalEvent = false;
+		this.maxTicketTypeAdditionalFeeInCents = null;
 
 		//this.addTicketType();
 	}
