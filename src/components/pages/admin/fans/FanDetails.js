@@ -18,129 +18,6 @@ import FanHistoryEventCard from "./FanHistoryEventCard";
 
 const imageSize = 100;
 
-const historyDummy = [
-	{
-		event_id: "9bdc1bba-7144-4b8b-9446-a095f14e9578",
-		event_name: "Simple Event",
-		event_start: "2019-08-31T19:00:00",
-		event_loc: "Some location",
-		event_history: [
-			{
-				event_name: "Simple Event",
-				order_date: "2019-05-27T10:10:50.616616",
-				order_id: "e920bef8-6bb8-4131-84c1-7188be4585ba",
-				revenue_in_cents: 20655,
-				ticket_sales: 1,
-				type: "Purchase"
-			},
-			{
-				event_name: "Simple Event",
-				order_date: "2019-05-22T15:17:04.181624",
-				order_id: "1946606e-8853-4111-99d0-892ae56a5f91",
-				revenue_in_cents: 6273,
-				type: "CheckIn"
-			},
-			{
-				event_name: "Huge ticket sales",
-				order_date: "2019-05-10T15:00:12.087543",
-				order_id: "79d359d6-8015-4e10-bd4a-c257d79f2576",
-				amount_refunded: 255,
-				ticket_sales: 1,
-				type: "Refund",
-				refunded: "John Smith"
-			},
-			{
-				event_name: "Simple Event",
-				order_date: "2019-05-06T16:07:55.878461",
-				order_id: "49ad71b3-1971-4d86-a207-b068f60d9cc7",
-				revenue_in_cents: 4539,
-				ticket_sales: 2,
-				type: "Purchase"
-			}
-		]
-	},
-	{
-		event_id: "c52d9cef-1d18-487c-ad28-597c541953c8",
-		event_name: "Open Mike Eagle",
-		event_start: "2019-05-09T15:00:00",
-		event_loc: "Some location",
-		event_history: [
-			{
-				event_name: "Simple Event",
-				order_date: "2019-05-27T10:10:50.616616",
-				order_id: "e920bef8-6bb8-4131-84c1-7188be4585ba",
-				revenue_in_cents: 20655,
-				ticket_sales: 1,
-				type: "Purchase"
-			},
-			{
-				event_name: "Simple Event",
-				order_date: "2019-05-22T15:17:04.181624",
-				order_id: "1946606e-8853-4111-99d0-892ae56a5f91",
-				revenue_in_cents: 6273,
-				ticket_sales: 1,
-				type: "Purchase"
-			},
-			{
-				event_name: "Huge ticket sales",
-				order_date: "2019-05-10T15:00:12.087543",
-				order_id: "79d359d6-8015-4e10-bd4a-c257d79f2576",
-				revenue_in_cents: 255,
-				ticket_sales: 1,
-				type: "Purchase"
-			},
-			{
-				event_name: "Simple Event",
-				order_date: "2019-05-06T16:07:55.878461",
-				order_id: "49ad71b3-1971-4d86-a207-b068f60d9cc7",
-				revenue_in_cents: 4539,
-				ticket_sales: 2,
-				type: "Purchase"
-			}
-		]
-	},
-	{
-		event_id: "d82921d1-7c24-4838-a098-f0235a226af7",
-		event_name: "Huge ticket sales",
-		event_start: "2019-05-08T19:00:00",
-		event_loc: "Some location",
-		event_history: [
-			{
-				event_name: "Simple Event",
-				order_date: "2019-05-27T10:10:50.616616",
-				order_id: "e920bef8-6bb8-4131-84c1-7188be4585ba",
-				revenue_in_cents: 20655,
-				ticket_sales: 1,
-				type: "Purchase"
-			},
-			{
-				event_name: "Simple Event",
-				order_date: "2019-05-22T15:17:04.181624",
-				order_id: "1946606e-8853-4111-99d0-892ae56a5f91",
-				revenue_in_cents: 6273,
-				ticket_sales: 1,
-				type: "Purchase"
-			},
-			{
-				event_name: "Huge ticket sales",
-				order_date: "2019-05-10T15:00:12.087543",
-				order_id: "79d359d6-8015-4e10-bd4a-c257d79f2576",
-				revenue_in_cents: 255,
-				ticket_sales: 1,
-				type: "Purchase"
-			},
-			{
-				event_name: "Simple Event",
-				order_date: "2019-05-06T16:07:55.878461",
-				order_id: "49ad71b3-1971-4d86-a207-b068f60d9cc7",
-				revenue_in_cents: 4539,
-				ticket_sales: 2,
-				type: "Purchase"
-			}
-		]
-	}
-];
-
 const styles = theme => ({
 	card: {
 		padding: theme.spacing.unit * 5
@@ -230,7 +107,7 @@ class Fan extends Component {
 
 		this.state = {
 			profile: null,
-			fanHistory: historyDummy,
+			fanHistory: null,
 			activeHeadings: { sales: true, attendance: false },
 			expandedRowKey: null
 		};
@@ -239,6 +116,7 @@ class Fan extends Component {
 
 	componentDidMount() {
 		this.loadFan();
+		this.loadHistory();
 	}
 
 	onExpandChange(expandedRowKey) {
@@ -272,6 +150,31 @@ class Fan extends Component {
 				notifications.showFromErrorResponse({
 					error,
 					defaultMessage: "Failed to load fan profile."
+				})
+			);
+	}
+
+	loadHistory() {
+		const organization_id = user.currentOrganizationId;
+
+		if (!organization_id) {
+			this.timeout = setTimeout(this.loadFan.bind(this), 500);
+			return;
+		}
+
+		const user_id = this.userId;
+
+		Bigneon()
+			.organizations.fans.activity({ user_id, organization_id })
+			.then(response => {
+				// const { ...fanHistory } = response.data;
+
+				this.setState({ fanHistory: response.data.data });
+			})
+			.catch(error =>
+				notifications.showFromErrorResponse({
+					error,
+					defaultMessage: "Failed to load fan history."
 				})
 			);
 	}

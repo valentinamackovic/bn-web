@@ -136,6 +136,28 @@ class FanHistoryActivityCard extends Component {
 					</div>
 				);
 				break;
+			case "Note":
+				activityCard = (
+					<div className={classes.root}>
+						<Card onClick={onExpandChange} className={classes.card}>
+							<div className={classes.card}>
+								<Typography>
+									<span className={classes.boldSpan}>Note {event_name}</span>
+								</Typography>
+								<Typography className={classes.greySubtitle}>
+									{moment(event_start).format("M/D/Y hh:mmA")}
+								</Typography>
+								<Typography className={classes.greySubtitle}>
+									{event_loc}
+								</Typography>
+							</div>
+							<Collapse in={expanded}>
+								<div className={classes.card}>helloo ?</div>
+							</Collapse>
+						</Card>
+					</div>
+				);
+				break;
 			default:
 				activityCard = <div>hello</div>;
 		}

@@ -76,12 +76,12 @@ class FanHistoryEventCard extends Component {
 
 	renderActivities() {
 		const { expandedRowKey } = this.state;
-		const { event_history } = this.props;
-		if (event_history === null) {
+		const { activity_items } = this.props;
+		if (activity_items === null) {
 			return <Loader>Loading history...</Loader>;
 		}
 
-		return event_history.map((item, index) => {
+		return activity_items.map((item, index) => {
 			const expanded = expandedRowKey === index;
 			return (
 				<FanHistoryActivityCard
@@ -102,7 +102,7 @@ class FanHistoryEventCard extends Component {
 			event_loc,
 			event_start,
 			event_id,
-			event_history,
+			activity_items,
 			onExpandChange,
 			expanded,
 			classes
@@ -163,16 +163,9 @@ class FanHistoryEventCard extends Component {
 	}
 }
 FanHistoryEventCard.propTypes = {
-	order_date: PropTypes.string,
-	event_start: PropTypes.string,
-	ticket_sales: PropTypes.number,
-	event_name: PropTypes.string.isRequired,
-	event_id: PropTypes.string,
-	revenue_in_cents: PropTypes.number,
-	order_id: PropTypes.string,
-	event_loc: PropTypes.string,
+	event: PropTypes.object,
 	onExpandChange: PropTypes.func.isRequired,
 	expanded: PropTypes.bool.isRequired,
-	event_history: PropTypes.array
+	activity_items: PropTypes.array
 };
 export default withStyles(styles)(FanHistoryEventCard);
