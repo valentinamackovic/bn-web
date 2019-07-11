@@ -76,7 +76,7 @@ class FanHistoryEventCard extends Component {
 
 	renderActivities() {
 		const { expandedRowKey } = this.state;
-		const { activity_items } = this.props;
+		const { activity_items, event } = this.props;
 		if (activity_items === null) {
 			return <Loader>Loading history...</Loader>;
 		}
@@ -90,6 +90,7 @@ class FanHistoryEventCard extends Component {
 					expanded={expanded}
 					key={index}
 					item={item}
+					event={event}
 				/>
 			);
 		});
@@ -147,7 +148,8 @@ class FanHistoryEventCard extends Component {
 						)}
 					</div>
 				</Card>
-				<Collapse in={expanded}>
+				{/*<Collapse in={expanded}>*/}
+				<Collapse in={true}>
 					<div>
 						<Grid
 							item

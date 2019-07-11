@@ -73,10 +73,13 @@ class FanHistoryActivityCard extends Component {
 		const {
 			ticket_quantity,
 			order_number,
-			event_name,
-			event_start,
-			event_loc
+			action,
+			total_in_cents,
+			ticket_ids,
+			destination_addresses
 		} = this.props.item;
+
+		const { name, event_start } = this.props.event;
 
 		const { onExpandChange, expanded, profile, classes } = this.props;
 
@@ -101,8 +104,9 @@ class FanHistoryActivityCard extends Component {
 										<span className={classes.boldSpan}>Purchased</span>
 										&nbsp;
 										<span>
-											{ticket_quantity} tickets {event_name}
+											{ticket_quantity} tickets {name}
 										</span>
+										&nbsp;
 										<span>
 											(
 											<span className={classes.pinkSpan}>
@@ -166,8 +170,13 @@ class FanHistoryActivityCard extends Component {
 										{moment(event_start).format("l hh:mmA")}
 									</Typography>
 									<Typography>
-										<span className={classes.boldSpan}>Checked in to</span>
-										&nbsp;the event
+										<span className={classes.pinkSpan + " " + classes.boldSpan}>
+											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
+										</span>
+										<span className={classes.boldSpan}>checked-in&nbsp;</span>
+										<span>
+											{"to " + name}&nbsp;{"(" + ticket_quantity + ")"}
+										</span>
 									</Typography>
 
 									{!expanded ? (
@@ -226,8 +235,16 @@ class FanHistoryActivityCard extends Component {
 										<span className={classes.pinkSpan + " " + classes.boldSpan}>
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
 										</span>
-										<span className={classes.boldSpan}>
-											Refunded ticket to {event_name}
+										<span className={classes.boldSpan}>refunded&nbsp;</span>
+										<span className={classes.totalRevenue}>{`$${(
+											total_in_cents / 100
+										).toFixed(2)}`}</span>
+										<span>
+											&nbsp;(
+											<span className={classes.pinkSpan}>
+												{"Order #" + order_number + ""}
+											</span>
+											)
 										</span>
 									</Typography>
 
@@ -288,7 +305,7 @@ class FanHistoryActivityCard extends Component {
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>
-											Added note to {event_name}
+											added a note to {name}
 										</span>
 									</Typography>
 
@@ -345,10 +362,20 @@ class FanHistoryActivityCard extends Component {
 										{moment(event_start).format("l hh:mmA")}
 									</Typography>
 									<Typography>
-										<span className={classes.boldSpan}>
-											Successfully transferred{" "}
+										<span className={classes.pinkSpan + " " + classes.boldSpan}>
+											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
 										</span>
-										&nbsp;the event
+										<span className={classes.boldSpan}>
+											{"transferred (" + action + ") "}
+										</span>
+										{ticket_ids.length > 1 ? (
+											<span>{ticket_ids.length + " tickets to "}</span>
+										) : (
+											<span>{ticket_ids.length + " ticket to "}</span>
+										)}
+										<span className={classes.boldSpan}>
+											{destination_addresses}
+										</span>
 									</Typography>
 
 									{!expanded ? (
@@ -404,7 +431,6 @@ class FanHistoryActivityCard extends Component {
 
 FanHistoryActivityCard.propTypes = {
 	item: PropTypes.object,
-
 	event: PropTypes.object,
 	event_id: PropTypes.string,
 	revenue_in_cents: PropTypes.number,
