@@ -89,7 +89,7 @@ class FanHistoryEventCard extends Component {
 					onExpandChange={() => this.onExpandChange(index)}
 					expanded={expanded}
 					key={index}
-					{...item}
+					item={item}
 				/>
 			);
 		});

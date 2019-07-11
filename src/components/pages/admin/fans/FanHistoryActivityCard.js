@@ -75,12 +75,10 @@ class FanHistoryActivityCard extends Component {
 			order_number,
 			event_name,
 			event_start,
-			event_loc,
-			onExpandChange,
-			expanded,
-			profile,
-			classes
-		} = this.props;
+			event_loc
+		} = this.props.item;
+
+		const { onExpandChange, expanded, profile, classes } = this.props;
 
 		let activityCard = null;
 
@@ -399,17 +397,14 @@ class FanHistoryActivityCard extends Component {
 	}
 
 	render() {
-		const { type } = this.props;
+		const { type } = this.props.item;
 		return this.renderActivity(type);
 	}
 }
 
 FanHistoryActivityCard.propTypes = {
-	ticket_quantity: PropTypes.number,
-	order_number: PropTypes.number,
-	order_date: PropTypes.string,
-	event_start: PropTypes.string,
-	ticket_sales: PropTypes.number,
+	item: PropTypes.object,
+
 	event: PropTypes.object,
 	event_id: PropTypes.string,
 	revenue_in_cents: PropTypes.number,
@@ -417,8 +412,8 @@ FanHistoryActivityCard.propTypes = {
 	event_loc: PropTypes.string,
 	onExpandChange: PropTypes.func.isRequired,
 	expanded: PropTypes.bool.isRequired,
-	event_history: PropTypes.array,
-	type: PropTypes.string.isRequired
+	event_history: PropTypes.array
+	//	type: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(FanHistoryActivityCard);
