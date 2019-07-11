@@ -34,6 +34,7 @@ const validateFields = event => {
 		eventDate,
 		venueId,
 		doorTime,
+		endTime,
 		ageLimit,
 		additionalInfo,
 		topLineInfo,
@@ -71,7 +72,13 @@ const validateFields = event => {
 			"Access code needs to be less than 6 characters.";
 	}
 
-	//TODO validate all fields
+	if (!endTime) {
+		errors.endTime = "Event end time required.";
+	} else if (!eventDate) {
+		errors.eventDate = "Event start time required.";
+	} else if (endTime.diff(eventDate) <= 0) {
+		errors.endTime = "End time must be after event date.";
+	}
 
 	if (Object.keys(errors).length > 0) {
 		return errors;
