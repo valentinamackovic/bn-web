@@ -104,7 +104,8 @@ class FanHistoryActivityCard extends Component {
 										<span className={classes.boldSpan}>Purchased</span>
 										&nbsp;
 										<span>
-											{ticket_quantity} tickets {name}
+											{ticket_quantity} tickets to{" "}
+											<span className={classes.boldSpan}>{name}</span>
 										</span>
 										&nbsp;
 										<span>
@@ -303,6 +304,12 @@ class FanHistoryActivityCard extends Component {
 									<Typography>
 										<span className={classes.pinkSpan + " " + classes.boldSpan}>
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
+										</span>
+										<span className={classes.boldSpan}>
+											added a note to {name}
+										</span>
+										<span className={classes.boldSpan}>
+											added a note to {name}
 										</span>
 										<span className={classes.boldSpan}>
 											added a note to {name}
