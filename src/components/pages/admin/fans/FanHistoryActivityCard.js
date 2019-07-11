@@ -10,7 +10,12 @@ const styles = theme => ({
 	root: {
 		marginBottom: theme.spacing.unit
 	},
-	card: { padding: theme.spacing.unit * 2 },
+	card: {
+		paddingLeft: theme.spacing.unit * 2,
+		paddingRight: theme.spacing.unit * 2,
+		paddingTop: theme.spacing.unit,
+		paddingBottom: theme.spacing.unit
+	},
 	greySubtitle: {
 		color: "#9DA3B4",
 		fontSize: theme.typography.fontSize * 0.9
@@ -174,7 +179,7 @@ FanHistoryActivityCard.propTypes = {
 	order_date: PropTypes.string,
 	event_start: PropTypes.string,
 	ticket_sales: PropTypes.number,
-	event_name: PropTypes.string.isRequired,
+	event: PropTypes.object,
 	event_id: PropTypes.string,
 	revenue_in_cents: PropTypes.number,
 	order_id: PropTypes.string,

@@ -184,7 +184,6 @@ class Fan extends Component {
 		if (fanHistory === null) {
 			return <Loader>Loading history...</Loader>;
 		}
-
 		return fanHistory.map((item, index) => {
 			const expanded = expandedRowKey === index;
 			return (

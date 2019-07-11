@@ -98,7 +98,7 @@ class FanHistoryEventCard extends Component {
 	render() {
 		const {
 			order_date,
-			event_name,
+			event,
 			event_loc,
 			event_start,
 			event_id,
@@ -113,7 +113,10 @@ class FanHistoryEventCard extends Component {
 				<Card onClick={onExpandChange}>
 					<div className={classes.card}>
 						<Typography>
-							<span className={classes.boldSpan}>{event_name}</span>
+							<span className={classes.boldSpan}>{event.name}</span>
+						</Typography>
+						<Typography className={classes.greySubtitle}>
+							{event.venue.address}
 						</Typography>
 						<Typography className={classes.greySubtitle}>
 							{moment(event_start).format("M/D/Y hh:mmA")}
