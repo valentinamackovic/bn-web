@@ -119,7 +119,7 @@ class FanHistoryEventCard extends Component {
 							{event.venue.address}
 						</Typography>
 						<Typography className={classes.greySubtitle}>
-							{moment(event_start).format("M/D/Y hh:mmA")}
+							{moment(event_start).format("llll")}
 						</Typography>
 						<Typography className={classes.greySubtitle}>
 							{event_loc}

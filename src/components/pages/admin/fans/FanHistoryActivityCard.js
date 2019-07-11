@@ -19,6 +19,15 @@ const styles = theme => ({
 		paddingTop: theme.spacing.unit,
 		paddingBottom: theme.spacing.unit
 	},
+	bottomCard: {
+		margin: theme.spacing.unit / 2,
+		paddingLeft: theme.spacing.unit * 2,
+		paddingRight: theme.spacing.unit * 2,
+		paddingTop: theme.spacing.unit,
+		paddingBottom: theme.spacing.unit,
+		display: "flex",
+		flexDirection: "row"
+	},
 	greySubtitle: {
 		color: "#9DA3B4",
 		fontSize: theme.typography.fontSize * 0.9
@@ -133,9 +142,9 @@ class FanHistoryActivityCard extends Component {
 									)}
 								</FanActivityCardRow>
 								<Collapse in={expanded}>
-									<div className={classes.card}>
+									<div className={classes.bottomCard}>
 										<Typography className={classes.greySubtitle}>
-											Checked in tickets:
+											Event:
 										</Typography>
 									</div>
 								</Collapse>
