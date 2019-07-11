@@ -110,7 +110,7 @@ class FanHistoryEventCard extends Component {
 
 		return (
 			<div className={classes.root}>
-				<Card onClick={onExpandChange}>
+				<Card variant={"raisedLight"} onClick={onExpandChange}>
 					<div className={classes.card}>
 						<Typography>
 							<span className={classes.boldSpan}>{event.name}</span>

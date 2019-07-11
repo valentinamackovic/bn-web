@@ -5,12 +5,15 @@ import { withStyles, Typography, Collapse } from "@material-ui/core";
 import moment from "moment";
 import Card from "../../../elements/Card";
 import { fontFamilyDemiBold, secondaryHex } from "../../../../config/theme";
+import FanActivityCardRow from "./FanActivityCardRow";
+import servedImage from "../../../../helpers/imagePathHelper";
 
 const styles = theme => ({
 	root: {
-		marginBottom: theme.spacing.unit
+		marginBottom: theme.spacing.unit * 2
 	},
 	card: {
+		margin: theme.spacing.unit / 2,
 		paddingLeft: theme.spacing.unit * 2,
 		paddingRight: theme.spacing.unit * 2,
 		paddingTop: theme.spacing.unit,
@@ -24,9 +27,7 @@ const styles = theme => ({
 		fontFamily: fontFamilyDemiBold
 	},
 	pinkSpan: {
-		color: secondaryHex,
-		fontFamily: fontFamilyDemiBold,
-		paddingLeft: theme.spacing.unit * 2
+		color: secondaryHex
 	},
 	verticalDividerSmall: {
 		borderLeft: "1px solid #DEE2E8",
@@ -36,6 +37,15 @@ const styles = theme => ({
 	},
 	bold: {
 		fontFamily: fontFamilyDemiBold
+	},
+	showHideRow: {
+		display: "flex",
+		flexDirection: "row",
+		cursor: "pointer"
+	},
+	showHideIcon: {
+		paddingLeft: theme.spacing.unit,
+		paddingBottom: theme.spacing.unit / 2
 	},
 	upperRow: {
 		display: "flex",
@@ -52,6 +62,8 @@ class FanHistoryActivityCard extends Component {
 
 	renderActivity(type) {
 		const {
+			ticket_quantity,
+			order_number,
 			event_name,
 			event_start,
 			event_loc,
@@ -67,28 +79,67 @@ class FanHistoryActivityCard extends Component {
 			case "Purchase":
 				activityCard = (
 					<div className={classes.root}>
-						<Card onClick={onExpandChange} className={classes.card}>
-							<div className={classes.card}>
-								<div className={classes.upperRow}>
+						<Card
+							variant={"raisedLight"}
+							onClick={onExpandChange}
+							className={classes.card}
+						>
+							<div>
+								<FanActivityCardRow>
+									<img src={servedImage("/icons/events-active.svg")}/>
 									<Typography className={classes.greySubtitle}>
-										{moment(event_start).format("M/D/Y hh:mmA")} &nbsp;
+										{moment(event_start).format("l hh:mmA")}
 									</Typography>
 									<Typography>
-										<span className={classes.pinkSpan}>
-											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
+										<span className={classes.boldSpan}>Purchased</span>
+										&nbsp;
+										<span>
+											{ticket_quantity} tickets {event_name}
 										</span>
-										<span className={classes.boldSpan}>
-											purchased ticket to {event_name}
+										<span>
+											(
+											<span className={classes.pinkSpan}>
+												{"Order #" + order_number + ""}
+											</span>
+											)
 										</span>
+										&nbsp;
 									</Typography>
-									<Typography className={classes.greySubtitle}>
-										{event_loc}
-									</Typography>
-								</div>
+
+									{!expanded ? (
+										<div className={classes.showHideRow}>
+											<Typography className={classes.showHide}>
+												<span className={classes.greySubtitle}>
+													Show Details
+												</span>
+											</Typography>
+											<img
+												className={classes.showHideIcon}
+												src={servedImage("/icons/down-gray.svg")}
+											/>
+										</div>
+									) : (
+										<div className={classes.showHideRow}>
+											<Typography className={classes.showHide}>
+												<span className={classes.greySubtitle}>
+													Hide Details
+												</span>
+											</Typography>
+											<img
+												className={classes.showHideIcon}
+												src={servedImage("/icons/up-gray.svg")}
+											/>
+										</div>
+									)}
+								</FanActivityCardRow>
+								<Collapse in={expanded}>
+									<div className={classes.card}>
+										<Typography className={classes.greySubtitle}>
+											Checked in tickets:
+										</Typography>
+									</div>
+								</Collapse>
 							</div>
-							<Collapse in={expanded}>
-								<div className={classes.card}>helloo ?</div>
-							</Collapse>
 						</Card>
 					</div>
 				);
@@ -96,23 +147,56 @@ class FanHistoryActivityCard extends Component {
 			case "CheckIn":
 				activityCard = (
 					<div className={classes.root}>
-						<Card onClick={onExpandChange} className={classes.card}>
-							<div className={classes.card}>
-								<Typography>
-									<span className={classes.boldSpan}>
-										Checked in to {event_name}
-									</span>
-								</Typography>
-								<Typography className={classes.greySubtitle}>
-									{moment(event_start).format("M/D/Y hh:mmA")}
-								</Typography>
-								<Typography className={classes.greySubtitle}>
-									{event_loc}
-								</Typography>
+						<Card
+							variant={"raisedLight"}
+							onClick={onExpandChange}
+							className={classes.card}
+						>
+							<div>
+								<FanActivityCardRow>
+									<img src={servedImage("/icons/events-active.svg")}/>
+									<Typography className={classes.greySubtitle}>
+										{moment(event_start).format("l hh:mmA")}
+									</Typography>
+									<Typography>
+										<span className={classes.boldSpan}>Checked in to</span>
+										&nbsp;the event
+									</Typography>
+
+									{!expanded ? (
+										<div className={classes.showHideRow}>
+											<Typography className={classes.showHide}>
+												<span className={classes.greySubtitle}>
+													Show Details
+												</span>
+											</Typography>
+											<img
+												className={classes.showHideIcon}
+												src={servedImage("/icons/down-gray.svg")}
+											/>
+										</div>
+									) : (
+										<div className={classes.showHideRow}>
+											<Typography className={classes.showHide}>
+												<span className={classes.greySubtitle}>
+													Hide Details
+												</span>
+											</Typography>
+											<img
+												className={classes.showHideIcon}
+												src={servedImage("/icons/up-gray.svg")}
+											/>
+										</div>
+									)}
+								</FanActivityCardRow>
+								<Collapse in={expanded}>
+									<div className={classes.card}>
+										<Typography className={classes.greySubtitle}>
+											Checked in tickets:
+										</Typography>
+									</div>
+								</Collapse>
 							</div>
-							<Collapse in={expanded}>
-								<div className={classes.card}>helloo ?</div>
-							</Collapse>
 						</Card>
 					</div>
 				);
@@ -120,23 +204,60 @@ class FanHistoryActivityCard extends Component {
 			case "Refund":
 				activityCard = (
 					<div className={classes.root}>
-						<Card onClick={onExpandChange} className={classes.card}>
-							<div className={classes.card}>
-								<Typography>
-									<span className={classes.boldSpan}>
-										Refunded {event_name}
-									</span>
-								</Typography>
-								<Typography className={classes.greySubtitle}>
-									{moment(event_start).format("M/D/Y hh:mmA")}
-								</Typography>
-								<Typography className={classes.greySubtitle}>
-									{event_loc}
-								</Typography>
+						<Card
+							variant={"raisedLight"}
+							onClick={onExpandChange}
+							className={classes.card}
+						>
+							<div>
+								<FanActivityCardRow>
+									<img src={servedImage("/icons/events-active.svg")}/>
+									<Typography className={classes.greySubtitle}>
+										{moment(event_start).format("l hh:mmA")}
+									</Typography>
+									<Typography>
+										<span className={classes.pinkSpan + " " + classes.boldSpan}>
+											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
+										</span>
+										<span className={classes.boldSpan}>
+											Refunded ticket to {event_name}
+										</span>
+									</Typography>
+
+									{!expanded ? (
+										<div className={classes.showHideRow}>
+											<Typography className={classes.showHide}>
+												<span className={classes.greySubtitle}>
+													Show Details
+												</span>
+											</Typography>
+											<img
+												className={classes.showHideIcon}
+												src={servedImage("/icons/down-gray.svg")}
+											/>
+										</div>
+									) : (
+										<div className={classes.showHideRow}>
+											<Typography className={classes.showHide}>
+												<span className={classes.greySubtitle}>
+													Hide Details
+												</span>
+											</Typography>
+											<img
+												className={classes.showHideIcon}
+												src={servedImage("/icons/up-gray.svg")}
+											/>
+										</div>
+									)}
+								</FanActivityCardRow>
+								<Collapse in={expanded}>
+									<div className={classes.card}>
+										<Typography className={classes.greySubtitle}>
+											Checked in tickets:
+										</Typography>
+									</div>
+								</Collapse>
 							</div>
-							<Collapse in={expanded}>
-								<div className={classes.card}>helloo ?</div>
-							</Collapse>
 						</Card>
 					</div>
 				);
@@ -144,27 +265,125 @@ class FanHistoryActivityCard extends Component {
 			case "Note":
 				activityCard = (
 					<div className={classes.root}>
-						<Card onClick={onExpandChange} className={classes.card}>
-							<div className={classes.card}>
-								<Typography>
-									<span className={classes.boldSpan}>Note {event_name}</span>
-								</Typography>
-								<Typography className={classes.greySubtitle}>
-									{moment(event_start).format("M/D/Y hh:mmA")}
-								</Typography>
-								<Typography className={classes.greySubtitle}>
-									{event_loc}
-								</Typography>
+						<Card
+							variant={"raisedLight"}
+							onClick={onExpandChange}
+							className={classes.card}
+						>
+							<div>
+								<FanActivityCardRow>
+									<img src={servedImage("/icons/events-active.svg")}/>
+									<Typography className={classes.greySubtitle}>
+										{moment(event_start).format("l hh:mmA")}
+									</Typography>
+									<Typography>
+										<span className={classes.pinkSpan + " " + classes.boldSpan}>
+											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
+										</span>
+										<span className={classes.boldSpan}>
+											Added note to {event_name}
+										</span>
+									</Typography>
+
+									{!expanded ? (
+										<div className={classes.showHideRow}>
+											<Typography className={classes.showHide}>
+												<span className={classes.greySubtitle}>
+													Show Details
+												</span>
+											</Typography>
+											<img
+												className={classes.showHideIcon}
+												src={servedImage("/icons/down-gray.svg")}
+											/>
+										</div>
+									) : (
+										<div className={classes.showHideRow}>
+											<Typography className={classes.showHide}>
+												<span className={classes.greySubtitle}>
+													Hide Details
+												</span>
+											</Typography>
+											<img
+												className={classes.showHideIcon}
+												src={servedImage("/icons/up-gray.svg")}
+											/>
+										</div>
+									)}
+								</FanActivityCardRow>
+								<Collapse in={expanded}>
+									<div className={classes.card}>
+										<Typography className={classes.greySubtitle}>
+											Checked in tickets:
+										</Typography>
+									</div>
+								</Collapse>
 							</div>
-							<Collapse in={expanded}>
-								<div className={classes.card}>helloo ?</div>
-							</Collapse>
+						</Card>
+					</div>
+				);
+				break;
+			case "Transfer":
+				activityCard = (
+					<div className={classes.root}>
+						<Card
+							variant={"raisedLight"}
+							onClick={onExpandChange}
+							className={classes.card}
+						>
+							<div>
+								<FanActivityCardRow>
+									<img src={servedImage("/icons/events-active.svg")}/>
+									<Typography className={classes.greySubtitle}>
+										{moment(event_start).format("l hh:mmA")}
+									</Typography>
+									<Typography>
+										<span className={classes.boldSpan}>
+											Successfully transferred{" "}
+										</span>
+										&nbsp;the event
+									</Typography>
+
+									{!expanded ? (
+										<div className={classes.showHideRow}>
+											<Typography className={classes.showHide}>
+												<span className={classes.greySubtitle}>
+													Show Details
+												</span>
+											</Typography>
+											<img
+												className={classes.showHideIcon}
+												src={servedImage("/icons/down-gray.svg")}
+											/>
+										</div>
+									) : (
+										<div className={classes.showHideRow}>
+											<Typography className={classes.showHide}>
+												<span className={classes.greySubtitle}>
+													Hide Details
+												</span>
+											</Typography>
+											<img
+												className={classes.showHideIcon}
+												src={servedImage("/icons/up-gray.svg")}
+											/>
+										</div>
+									)}
+								</FanActivityCardRow>
+								<Collapse in={expanded}>
+									<div className={classes.card}>
+										<Typography className={classes.greySubtitle}>
+											Checked in tickets:
+										</Typography>
+									</div>
+								</Collapse>
+							</div>
 						</Card>
 					</div>
 				);
 				break;
 			default:
-				activityCard = <div>hello</div>;
+				activityCard = <div/>;
 		}
 
 		return activityCard;
@@ -175,7 +394,10 @@ class FanHistoryActivityCard extends Component {
 		return this.renderActivity(type);
 	}
 }
+
 FanHistoryActivityCard.propTypes = {
+	ticket_quantity: PropTypes.number,
+	order_number: PropTypes.number,
 	order_date: PropTypes.string,
 	event_start: PropTypes.string,
 	ticket_sales: PropTypes.number,
