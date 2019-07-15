@@ -21,9 +21,9 @@ const FanActivityTransferRow = props => {
 	const { heading, children, shaded, classes } = props;
 
 	const columnStyles = [
-		{ flex: 1, textAlign: "center" },
-		{ flex: 3, textAlign: "left" },
 		{ flex: 4, textAlign: "left" },
+		{ flex: 2, textAlign: "left" },
+		{ flex: 3, textAlign: "left" },
 		{ flex: 4, textAlign: "left" },
 		{ flex: 3, textAlign: "right" }
 	];

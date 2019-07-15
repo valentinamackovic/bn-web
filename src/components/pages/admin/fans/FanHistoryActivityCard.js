@@ -77,7 +77,10 @@ class FanHistoryActivityCard extends Component {
 			action,
 			total_in_cents,
 			ticket_ids,
-			destination_addresses
+			transfer_id,
+			destination_addresses,
+			accepted_by,
+			initiated_by
 		} = this.props.item;
 
 		const { name, event_start } = this.props.event;
@@ -413,13 +416,27 @@ class FanHistoryActivityCard extends Component {
 												Tickets:
 											</Typography>
 											<Typography className={classes.greySubtitle}>
-												Tickets:
+												Initiated by:
 											</Typography>
 											<Typography className={classes.greySubtitle}>
-												Tickets:
+												Transfer Address:
 											</Typography>
 											<Typography className={classes.greySubtitle}>
-												Tickets:
+												Accepted by:
+											</Typography>
+										</FanActivityTransferRow>
+										<FanActivityTransferRow>
+											<Typography className={classes.greySubtitle}>
+												{transfer_id}
+											</Typography>
+											<Typography className={classes.greySubtitle}>
+												Fake name for now
+											</Typography>
+											<Typography className={classes.greySubtitle}>
+												{destination_addresses}
+											</Typography>
+											<Typography className={classes.greySubtitle}>
+												Also Fake name
 											</Typography>
 										</FanActivityTransferRow>
 									</div>
