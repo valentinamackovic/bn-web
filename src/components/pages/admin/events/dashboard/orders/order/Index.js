@@ -35,9 +35,15 @@ class SingleOrder extends Component {
 			order: null,
 			orderItems: null
 		};
+
+		this.refreshOrder = this.loadAll.bind(this);
 	}
 
 	componentDidMount() {
+		this.loadAll();
+	}
+
+	loadAll() {
 		this.loadEventDetails();
 		this.loadOrder();
 		this.loadOrderItems();
@@ -136,6 +142,7 @@ class SingleOrder extends Component {
 				eventDetails={eventDetails}
 				order={order}
 				items={orderItems}
+				refreshOrder={this.refreshOrder}
 			/>
 		) : null;
 

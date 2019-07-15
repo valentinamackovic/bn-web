@@ -8,6 +8,7 @@ export default ({
 	dashed = false,
 	light = false,
 	height = null,
+	marginTop = 12,
 	...rest
 }) => {
 	let dashedStyle = {};
@@ -23,7 +24,7 @@ export default ({
 			light={light}
 			style={{
 				flex: 1,
-				marginTop: 12,
+				marginTop,
 				height,
 				...dashedStyle
 			}}

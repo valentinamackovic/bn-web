@@ -17,6 +17,11 @@ import {
 } from "../../../../../../../config/theme";
 import { dollars } from "../../../../../../../helpers/money";
 import TicketCard from "./TicketCard";
+import Menu from "@material-ui/core/Menu";
+import MenuItem from "@material-ui/core/MenuItem";
+import MobileOptionsControlDialog from "../../../../../../elements/MobileOptionsControlDialog";
+import notification from "../../../../../../../stores/notifications";
+import RefundDialog from "./RefundDialog";
 
 const styles = theme => ({
 	root: {
@@ -81,7 +86,8 @@ const styles = theme => ({
 	mobileBottomRow: {
 		display: "flex",
 		paddingLeft: 18,
-		paddingRight: 18
+		paddingRight: 18,
+		paddingBottom: 18
 	},
 	mobileSubHeadingText: {
 		fontSize: 12,
@@ -90,10 +96,15 @@ const styles = theme => ({
 	},
 	mobileValueText: {
 		fontSize: 15,
-		textTransform: "uppercase"
+		textTransform: "uppercase",
+		fontFamily: fontFamilyDemiBold
 	},
 	mobileValueHighlightedText: {
 		color: secondaryHex
+	},
+	mobileSubText: {
+		fontSize: 13,
+		color: "#8b94a7"
 	}
 });
 
@@ -103,8 +114,12 @@ class OrderItemsCard extends Component {
 
 		this.state = {
 			showOrderDetails: false,
+			anchorOptionsEl: null,
 
-			selectedRefundOrderItem: {}
+			selectedRefundOrderItem: {},
+			mobileOptionsControlOpen: false,
+
+			showRefundDialog: false
 		};
 
 		this.toggleShowOrderDetails = this.toggleShowOrderDetails.bind(this);
@@ -112,6 +127,35 @@ class OrderItemsCard extends Component {
 
 	componentDidMount() {
 		setTimeout(this.toggleShowOrderDetails, 200);
+	}
+
+	resendConfirmationEmail() {
+		//TODO
+		setTimeout(() => {
+			notification.show({
+				message: "Not yet implemented",
+				variant: "warning"
+			});
+
+			this.setState({ mobileOptionsControlOpen: false });
+
+			this.props.refreshOrder();
+		}, 0);
+	}
+
+	onRefundClick() {
+		this.setState({ showRefundDialog: true, mobileOptionsControlOpen: false });
+	}
+
+	handleOptionsMenuClose() {
+		this.setState({ anchorOptionsEl: null });
+	}
+
+	handleOptionsMenu(event) {
+		this.setState({
+			anchorOptionsEl: event.currentTarget,
+			mobileOptionsControlOpen: !this.state.mobileOptionsControlOpen
+		});
 	}
 
 	toggleShowOrderDetails() {
@@ -125,6 +169,49 @@ class OrderItemsCard extends Component {
 			selectedRefundOrderItem[id] = !selectedRefundOrderItem[id];
 			return { selectedRefundOrderItem };
 		});
+	}
+
+	orderRefundable() {
+		const { items } = this.props;
+
+		let result = false;
+		if (items) {
+			items.forEach(i => {
+				if (i.refundable) {
+					result = true;
+				}
+			});
+		}
+
+		return result;
+	}
+
+	renderOptionsMenu(orderControlOptions) {
+		const { anchorOptionsEl } = this.state;
+		const open = Boolean(anchorOptionsEl);
+
+		return (
+			<Menu
+				id="menu-appbar"
+				anchorEl={anchorOptionsEl}
+				anchorOrigin={{
+					vertical: "top",
+					horizontal: "right"
+				}}
+				transformOrigin={{
+					vertical: "top",
+					horizontal: "right"
+				}}
+				open={open}
+				onClose={this.handleOptionsMenuClose.bind(this)}
+			>
+				{orderControlOptions.map((o, index) => (
+					<MenuItem key={index} onClick={o.onClick}>
+						{o.label}
+					</MenuItem>
+				))}
+			</Menu>
+		);
 	}
 
 	renderTickets() {
@@ -179,7 +266,11 @@ class OrderItemsCard extends Component {
 
 	render() {
 		const { classes, eventDetails, order, items } = this.props;
-		const { showOrderDetails } = this.state;
+		const {
+			showOrderDetails,
+			mobileOptionsControlOpen,
+			showRefundDialog
+		} = this.state;
 
 		const {
 			name: eventName,
@@ -205,10 +296,24 @@ class OrderItemsCard extends Component {
 		];
 
 		const moreIcon = (
-			<IconButton onClick={e => {}}>
+			<IconButton onClick={this.handleOptionsMenu.bind(this)}>
 				<MoreHorizIcon nativeColor="#2c3136"/>
 			</IconButton>
 		);
+
+		const orderRefundable = this.orderRefundable();
+
+		const orderControlOptions = [
+			{
+				label: "Resend Confirmation Email",
+				onClick: this.resendConfirmationEmail.bind(this)
+			},
+			{
+				label: `Refund Event Total ${!orderRefundable ? "(Unavailable)" : ""}`,
+				disabled: !orderRefundable,
+				onClick: this.onRefundClick.bind(this)
+			}
+		];
 
 		const venueDisplayName = `${venue.name}, ${venue.address}, ${venue.city}`;
 
@@ -217,8 +322,17 @@ class OrderItemsCard extends Component {
 
 		return (
 			<React.Fragment>
+				<RefundDialog
+					open={showRefundDialog}
+					onClose={() => this.setState({ showRefundDialog: false })}
+					items={items}
+					order={order}
+				/>
+
 				{/*DESKTOP*/}
 				<Hidden smDown>
+					{this.renderOptionsMenu(orderControlOptions)}
+
 					<div
 						className={classnames({
 							[classes.row]: true,
@@ -322,7 +436,9 @@ class OrderItemsCard extends Component {
 								<Typography className={classes.mobileValueText}>
 									{code}
 								</Typography>
-								<Typography>{accessCodeType}</Typography>
+								<Typography className={classes.mobileSubText}>
+									{accessCodeType}
+								</Typography>
 							</div>
 							<div style={{ flex: 2 }}>
 								<Typography className={classes.mobileSubHeadingText}>
@@ -337,12 +453,25 @@ class OrderItemsCard extends Component {
 								<Typography className={classes.mobileSubHeadingText}>
 									Total
 								</Typography>
-								<Typography className={classes.mobileValueText}>
+								<Typography
+									className={classnames({
+										[classes.mobileValueText]: true,
+										[classes.mobileValueHighlightedText]: true
+									})}
+								>
 									{dollars(total_in_cents - fees_in_cents)}
 								</Typography>
-								<Typography>+ {dollars(fees_in_cents)} fees</Typography>
+								<Typography className={classes.mobileSubText}>
+									+ {dollars(fees_in_cents)} fees
+								</Typography>
 							</div>
 						</div>
+
+						<MobileOptionsControlDialog
+							open={!!mobileOptionsControlOpen}
+							onClose={() => this.setState({ mobileOptionsControlOpen: null })}
+							options={orderControlOptions}
+						/>
 					</Card>
 				</Hidden>
 			</React.Fragment>
@@ -354,7 +483,8 @@ OrderItemsCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	eventDetails: PropTypes.object.isRequired,
 	items: PropTypes.array.isRequired,
-	order: PropTypes.object.isRequired
+	order: PropTypes.object.isRequired,
+	refreshOrder: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(OrderItemsCard);
