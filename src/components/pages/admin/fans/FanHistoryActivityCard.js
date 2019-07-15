@@ -6,6 +6,7 @@ import moment from "moment";
 import Card from "../../../elements/Card";
 import { fontFamilyDemiBold, secondaryHex } from "../../../../config/theme";
 import FanActivityCardRow from "./FanActivityCardRow";
+import FanActivityTransferRow from "./FanActivityTransferRow";
 import servedImage from "../../../../helpers/imagePathHelper";
 
 const styles = theme => ({
@@ -305,15 +306,9 @@ class FanHistoryActivityCard extends Component {
 										<span className={classes.pinkSpan + " " + classes.boldSpan}>
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
 										</span>
-										<span className={classes.boldSpan}>
-											added a note to {name}
-										</span>
-										<span className={classes.boldSpan}>
-											added a note to {name}
-										</span>
-										<span className={classes.boldSpan}>
-											added a note to {name}
-										</span>
+										<span className={classes.boldSpan}>added a note</span>
+										<span>to</span>
+										<span className={classes.boldSpan}>{name}</span>
 									</Typography>
 
 									{!expanded ? (
@@ -413,9 +408,20 @@ class FanHistoryActivityCard extends Component {
 								</FanActivityCardRow>
 								<Collapse in={expanded}>
 									<div className={classes.card}>
-										<Typography className={classes.greySubtitle}>
-											Checked in tickets:
-										</Typography>
+										<FanActivityTransferRow>
+											<Typography className={classes.greySubtitle}>
+												Tickets:
+											</Typography>
+											<Typography className={classes.greySubtitle}>
+												Tickets:
+											</Typography>
+											<Typography className={classes.greySubtitle}>
+												Tickets:
+											</Typography>
+											<Typography className={classes.greySubtitle}>
+												Tickets:
+											</Typography>
+										</FanActivityTransferRow>
 									</div>
 								</Collapse>
 							</div>
