@@ -148,8 +148,7 @@ class FanHistoryEventCard extends Component {
 						)}
 					</div>
 				</Card>
-				{/*<Collapse in={expanded}>*/}
-				<Collapse in={true}>
+				<Collapse in={expanded}>
 					<div>
 						<Grid
 							item

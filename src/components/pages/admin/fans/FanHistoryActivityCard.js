@@ -242,7 +242,7 @@ class FanHistoryActivityCard extends Component {
 											Checked-in tickets
 										</Typography>
 										<Typography className={classes.darkGreySubtitle}>
-											{"#" + ticket_instance_id + " ("}
+											{"#" + ticket_instance_id + " ( "}
 											<span className={classes.pinkSpan}>
 												{"Order #" + order_number}&nbsp;
 											</span>
