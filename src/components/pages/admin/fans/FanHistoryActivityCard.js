@@ -102,7 +102,11 @@ class FanHistoryActivityCard extends Component {
 			reason,
 			refund_items,
 			note,
-			initiated_by
+			initiated_by,
+			redeemed_by,
+			redeemed_for,
+			occured_at,
+			ticket_instance_id
 		} = this.props.item;
 
 		const { name, event_start } = this.props.event;
@@ -198,7 +202,7 @@ class FanHistoryActivityCard extends Component {
 									</Typography>
 									<Typography>
 										<span className={classes.pinkSpan + " " + classes.boldSpan}>
-											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
+											{redeemed_by.full_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>checked-in&nbsp;</span>
 										<span>
@@ -234,8 +238,22 @@ class FanHistoryActivityCard extends Component {
 								</FanActivityCardRow>
 								<Collapse in={expanded}>
 									<div className={classes.card}>
-										<Typography className={classes.greySubtitle}>
-											Checked in tickets:
+										<Typography className={classes.greySubtitleCap}>
+											Checked-in tickets
+										</Typography>
+										<Typography className={classes.darkGreySubtitle}>
+											{"#" + ticket_instance_id + " ("}
+											<span className={classes.pinkSpan}>
+												{"Order #" + order_number}&nbsp;
+											</span>
+											) by&nbsp;
+											<span className={classes.pinkSpan}>
+												{redeemed_for.full_name}&nbsp;
+											</span>
+											on&nbsp;
+											<span className={classes.greySubtitle}>
+												{moment(occured_at).format("l hh:mmA")}
+											</span>
 										</Typography>
 									</div>
 								</Collapse>
