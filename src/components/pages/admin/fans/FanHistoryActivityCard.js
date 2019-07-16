@@ -9,6 +9,8 @@ import FanActivityCardRow from "./FanActivityCardRow";
 import FanActivityTransferRow from "./FanActivityTransferRow";
 import servedImage from "../../../../helpers/imagePathHelper";
 import FanActivityPurchaseRow from "./FanActivityPurchaseRow";
+import { Link } from "react-router-dom";
+import Button from "../../../elements/Button";
 
 const styles = theme => ({
 	root: {
@@ -33,6 +35,12 @@ const styles = theme => ({
 	greySubtitle: {
 		color: "#9DA3B4",
 		fontSize: theme.typography.fontSize * 0.9
+	},
+	smallTextCap: {
+		fontSize: theme.typography.fontSize * 0.8,
+		textTransform: "uppercase",
+		color: "#fff",
+		whiteSpace: "nowrap"
 	},
 	darkGreySubtitle: {
 		color: "#0e0e0e",
@@ -103,6 +111,7 @@ class FanHistoryActivityCard extends Component {
 			reason,
 			refund_items,
 			note,
+			order_id,
 			initiated_by,
 			redeemed_by,
 			redeemed_for,
@@ -190,7 +199,13 @@ class FanHistoryActivityCard extends Component {
 											<Typography className={classes.greySubtitleCap}>
 												Total
 											</Typography>
-											<button>View Order</button>
+											<Link to={`/orders/${order_id}`}>
+												<Button variant="secondary" size="small">
+													<span className={classes.smallTextCap}>
+														View order
+													</span>
+												</Button>
+											</Link>
 										</FanActivityPurchaseRow>
 										<FanActivityPurchaseRow>
 											<Typography>
@@ -573,7 +588,11 @@ class FanHistoryActivityCard extends Component {
 												Accepted by:
 											</Typography>
 											{action === "Started" ? (
-												<button>Cancel Transfer</button>
+												<Button variant="warning" size="small">
+													<span className={classes.smallTextCap}>
+														Cancel Transfer
+													</span>
+												</Button>
 											) : (
 												<div/>
 											)}
