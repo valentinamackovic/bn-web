@@ -140,11 +140,9 @@ class OrganizationUpdateCard extends Component {
 				this.setState({ isSubmitting: false });
 
 				notifications.show({
-					message: "Integrations updated",
+					message: "API key updated",
 					variant: "success"
 				});
-
-				this.props.history.push(`/admin/marketing/${organizationId}`);
 			});
 
 			return;

@@ -145,8 +145,6 @@ class OrganizationUpdateCard extends Component {
 					message: "Integrations updated",
 					variant: "success"
 				});
-
-				this.props.history.push(`/admin/marketing/${organizationId}`);
 			});
 
 			return;
