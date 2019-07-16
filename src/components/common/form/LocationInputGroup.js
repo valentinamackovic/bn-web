@@ -69,12 +69,13 @@ class LocationInputGroup extends React.Component {
 			onAddressChange,
 			onLatLngResult,
 			onFullResult,
-			onError
+			onError,
+			showManualEntry
 		} = this.props;
 
 		const { showGoogle } = this.state;
 
-		const usingGoogleMaps = showGoogle;
+		const usingGoogleMaps = showGoogle && !showManualEntry;
 		const geocodeByAddressPromise = usingGoogleMaps
 			? geocodeByAddress
 			: address =>
@@ -213,6 +214,7 @@ class LocationInputGroup extends React.Component {
 	render() {
 		const { overrideManualEntry } = this.state;
 		const { showManualEntry } = this.props;
+
 		return (
 			<div>
 				{this.renderGoogle()}

@@ -5,6 +5,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
 import Card from "@material-ui/core/Card";
+import moment from "moment-timezone";
 
 import InputGroup from "../../../common/form/InputGroup";
 import LocationInputGroup from "../../../common/form/LocationInputGroup";
@@ -17,7 +18,6 @@ import { validPhone } from "../../../../validators";
 import PageHeading from "../../../elements/PageHeading";
 import removePhoneFormatting from "../../../../helpers/removePhoneFormatting";
 import cloudinaryWidget from "../../../../helpers/cloudinaryWidget";
-import moment from "moment-timezone";
 
 const styles = theme => ({
 	paper: {
@@ -45,7 +45,7 @@ class Venue extends Component {
 
 		this.state = {
 			venueId,
-			regionId: null,
+			regionId: "",
 			imageUrl: "",
 			name: "",
 			address: "",
@@ -544,7 +544,6 @@ class Venue extends Component {
 									<Button
 										disabled={isSubmitting}
 										type="submit"
-										style={{ marginRight: 10 }}
 										variant="callToAction"
 									>
 										{isSubmitting
