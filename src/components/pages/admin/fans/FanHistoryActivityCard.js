@@ -199,25 +199,11 @@ class FanHistoryActivityCard extends Component {
 											<Typography className={classes.greySubtitleCap}>
 												Total
 											</Typography>
-											<Link to={`/orders/${order_id}`}>
-												<Button variant="secondary" size="small">
-													<span className={classes.smallTextCap}>
-														View order
-													</span>
-												</Button>
-											</Link>
+											<div/>
 										</FanActivityPurchaseRow>
 										<FanActivityPurchaseRow>
 											<Typography>
 												<span className={classes.boldSpan}>{name}</span>
-												<br/>
-												<span className={classes.greySubtitle}>
-													{venue.address}
-												</span>
-												<br/>
-												<span className={classes.greySubtitle}>
-													{moment(event_start).format("llll")}
-												</span>
 											</Typography>
 											<Typography className={classes.darkGreySubtitle}>
 												THISWILLBECODE
@@ -230,8 +216,23 @@ class FanHistoryActivityCard extends Component {
 													total_in_cents / 100
 												).toFixed(2)}`}</span>
 											</Typography>
-											<div/>
+											<Link to={`/orders/${order_id}`}>
+												<Button variant="secondary" size="small">
+													<span className={classes.smallTextCap}>
+														View order
+													</span>
+												</Button>
+											</Link>
 										</FanActivityPurchaseRow>
+										<Typography>
+											<span className={classes.greySubtitle}>
+												{venue.address}
+											</span>
+											<br/>
+											<span className={classes.greySubtitle}>
+												{moment(event_start).format("llll")}
+											</span>
+										</Typography>
 									</div>
 								</Collapse>
 							</div>
