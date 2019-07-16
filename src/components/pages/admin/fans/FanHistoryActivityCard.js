@@ -33,6 +33,15 @@ const styles = theme => ({
 		color: "#9DA3B4",
 		fontSize: theme.typography.fontSize * 0.9
 	},
+	darkGreySubtitle: {
+		color: "#0e0e0e",
+		fontSize: theme.typography.fontSize * 0.9
+	},
+	greySubtitleCap: {
+		color: "#9DA3B4",
+		fontSize: theme.typography.fontSize * 0.9,
+		textTransform: "uppercase"
+	},
 	boldSpan: {
 		fontFamily: fontFamilyDemiBold
 	},
@@ -80,6 +89,7 @@ class FanHistoryActivityCard extends Component {
 			transfer_id,
 			destination_addresses,
 			accepted_by,
+			note,
 			initiated_by
 		} = this.props.item;
 
@@ -310,7 +320,9 @@ class FanHistoryActivityCard extends Component {
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>added a note</span>
+										&nbsp;
 										<span>to</span>
+										&nbsp;
 										<span className={classes.boldSpan}>{name}</span>
 									</Typography>
 
@@ -342,8 +354,11 @@ class FanHistoryActivityCard extends Component {
 								</FanActivityCardRow>
 								<Collapse in={expanded}>
 									<div className={classes.card}>
-										<Typography className={classes.greySubtitle}>
-											Checked in tickets:
+										<Typography className={classes.greySubtitleCap}>
+											Note:
+										</Typography>
+										<Typography className={classes.darkGreySubtitle}>
+											{note}
 										</Typography>
 									</div>
 								</Collapse>
@@ -412,32 +427,42 @@ class FanHistoryActivityCard extends Component {
 								<Collapse in={expanded}>
 									<div className={classes.card}>
 										<FanActivityTransferRow>
-											<Typography className={classes.greySubtitle}>
+											<Typography className={classes.greySubtitleCap}>
 												Tickets:
 											</Typography>
-											<Typography className={classes.greySubtitle}>
+											<Typography className={classes.greySubtitleCap}>
 												Initiated by:
 											</Typography>
-											<Typography className={classes.greySubtitle}>
+											<Typography className={classes.greySubtitleCap}>
 												Transfer Address:
 											</Typography>
-											<Typography className={classes.greySubtitle}>
+											<Typography className={classes.greySubtitleCap}>
 												Accepted by:
 											</Typography>
+											{action === "Started" ? (
+												<button>Cancel Transfer</button>
+											) : (
+												<div/>
+											)}
 										</FanActivityTransferRow>
 										<FanActivityTransferRow>
-											<Typography className={classes.greySubtitle}>
+											<Typography className={classes.darkGreySubtitle}>
 												{transfer_id}
 											</Typography>
-											<Typography className={classes.greySubtitle}>
-												{initiated_by !== null ? initiated_by.full_name : "-"}
+											<Typography className={classes.darkGreySubtitle}>
+												<span className={classes.pinkSpan}>
+													{initiated_by !== null ? initiated_by.full_name : "-"}
+												</span>
 											</Typography>
-											<Typography className={classes.greySubtitle}>
+											<Typography className={classes.darkGreySubtitle}>
 												{destination_addresses}
 											</Typography>
-											<Typography className={classes.greySubtitle}>
-												{accepted_by !== null ? accepted_by.full_name : "-"}
+											<Typography className={classes.darkGreySubtitle}>
+												<span className={classes.pinkSpan}>
+													{accepted_by !== null ? accepted_by.full_name : "-"}
+												</span>
 											</Typography>
+											<div/>
 										</FanActivityTransferRow>
 									</div>
 								</Collapse>
