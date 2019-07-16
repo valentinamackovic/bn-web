@@ -66,6 +66,11 @@ const styles = theme => ({
 		paddingLeft: theme.spacing.unit,
 		paddingBottom: theme.spacing.unit / 2
 	},
+	halfFlex: {
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "space-around"
+	},
 	upperRow: {
 		display: "flex",
 		flexDirection: "row"
@@ -291,9 +296,14 @@ class FanHistoryActivityCard extends Component {
 								</FanActivityCardRow>
 								<Collapse in={expanded}>
 									<div className={classes.card}>
-										<Typography className={classes.greySubtitle}>
-											Checked in tickets:
-										</Typography>
+										<div className={classes.halfFlex}>
+											<Typography className={classes.greySubtitle}>
+												Items refunded
+											</Typography>
+											<Typography className={classes.greySubtitle}>
+												Reason
+											</Typography>
+										</div>
 									</div>
 								</Collapse>
 							</div>
