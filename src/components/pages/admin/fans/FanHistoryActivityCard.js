@@ -69,7 +69,12 @@ const styles = theme => ({
 	halfFlex: {
 		display: "flex",
 		flexDirection: "row",
-		justifyContent: "space-around"
+		justifyContent: "flex-start"
+	},
+	halfFlexItem: {
+		display: "flex",
+		minWidth: "49%",
+		flexDirection: "column"
 	},
 	upperRow: {
 		display: "flex",
@@ -94,6 +99,8 @@ class FanHistoryActivityCard extends Component {
 			transfer_id,
 			destination_addresses,
 			accepted_by,
+			reason,
+			refund_items,
 			note,
 			initiated_by
 		} = this.props.item;
@@ -115,7 +122,7 @@ class FanHistoryActivityCard extends Component {
 						>
 							<div>
 								<FanActivityCardRow>
-									<img src={servedImage("/icons/events-active.svg")}/>
+									<img src={servedImage("/icons/money-circle-active.svg")}/>
 									<Typography className={classes.greySubtitle}>
 										{moment(event_start).format("l hh:mmA")}
 									</Typography>
@@ -185,7 +192,7 @@ class FanHistoryActivityCard extends Component {
 						>
 							<div>
 								<FanActivityCardRow>
-									<img src={servedImage("/icons/events-active.svg")}/>
+									<img src={servedImage("/icons/calendar-active.svg")}/>
 									<Typography className={classes.greySubtitle}>
 										{moment(event_start).format("l hh:mmA")}
 									</Typography>
@@ -247,7 +254,7 @@ class FanHistoryActivityCard extends Component {
 						>
 							<div>
 								<FanActivityCardRow>
-									<img src={servedImage("/icons/events-active.svg")}/>
+									<img src={servedImage("/icons/refund-active.svg")}/>
 									<Typography className={classes.greySubtitle}>
 										{moment(event_start).format("l hh:mmA")}
 									</Typography>
@@ -297,11 +304,59 @@ class FanHistoryActivityCard extends Component {
 								<Collapse in={expanded}>
 									<div className={classes.card}>
 										<div className={classes.halfFlex}>
-											<Typography className={classes.greySubtitle}>
+											<Typography
+												className={
+													classes.greySubtitleCap + " " + classes.halfFlexItem
+												}
+											>
 												Items refunded
 											</Typography>
-											<Typography className={classes.greySubtitle}>
+											<Typography
+												className={
+													classes.greySubtitleCap + " " + classes.halfFlexItem
+												}
+											>
 												Reason
+											</Typography>
+										</div>
+										<div className={classes.halfFlex}>
+											<div
+												className={
+													classes.darkGreySubtitle + " " + classes.halfFlexItem
+												}
+											>
+												{refund_items.map((item, index) => {
+													return (
+														<Typography
+															key={index}
+															className={classes.darkGreySubtitle}
+														>
+															{item.item_type +
+																" | " +
+																item.ticket_type_name +
+																" | #" +
+																order_number +
+																" | "}
+															<span
+																className={
+																	classes.totalRevenue + " " + classes.boldSpan
+																}
+															>{`$${(item.amount / 100).toFixed(2)}`}</span>
+														</Typography>
+													);
+												})}
+												<span
+													className={classes.totalRevenue}
+												>{`Per Ticket Fee - $${(total_in_cents / 100).toFixed(
+														2
+													)}`}</span>
+											</div>
+											<Typography
+												className={
+													classes.darkGreySubtitle + " " + classes.halfFlexItem
+												}
+											>
+												{reason === null ? "-" : reason}
 											</Typography>
 										</div>
 									</div>
@@ -321,7 +376,7 @@ class FanHistoryActivityCard extends Component {
 						>
 							<div>
 								<FanActivityCardRow>
-									<img src={servedImage("/icons/events-active.svg")}/>
+									<img src={servedImage("/icons/note-circle-gray.svg")}/>
 									<Typography className={classes.greySubtitle}>
 										{moment(event_start).format("l hh:mmA")}
 									</Typography>
@@ -387,7 +442,19 @@ class FanHistoryActivityCard extends Component {
 						>
 							<div>
 								<FanActivityCardRow>
-									<img src={servedImage("/icons/events-active.svg")}/>
+									{action === "Cancelled" ? (
+										<img
+											src={servedImage("/icons/transfer-circle-error.svg")}
+										/>
+									) : action === "Accepted" ? (
+										<img
+											src={servedImage("/icons/transfer-circle-success.svg")}
+										/>
+									) : (
+										<img
+											src={servedImage("/icons/transfer-circle-warning.svg")}
+										/>
+									)}
 									<Typography className={classes.greySubtitle}>
 										{moment(event_start).format("l hh:mmA")}
 									</Typography>
