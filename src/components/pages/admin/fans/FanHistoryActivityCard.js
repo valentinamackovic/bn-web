@@ -8,6 +8,7 @@ import { fontFamilyDemiBold, secondaryHex } from "../../../../config/theme";
 import FanActivityCardRow from "./FanActivityCardRow";
 import FanActivityTransferRow from "./FanActivityTransferRow";
 import servedImage from "../../../../helpers/imagePathHelper";
+import FanActivityPurchaseRow from "./FanActivityPurchaseRow";
 
 const styles = theme => ({
 	root: {
@@ -39,7 +40,7 @@ const styles = theme => ({
 	},
 	greySubtitleCap: {
 		color: "#9DA3B4",
-		fontSize: theme.typography.fontSize * 0.9,
+		fontSize: theme.typography.fontSize * 0.8,
 		textTransform: "uppercase"
 	},
 	boldSpan: {
@@ -109,7 +110,7 @@ class FanHistoryActivityCard extends Component {
 			ticket_instance_id
 		} = this.props.item;
 
-		const { name, event_start } = this.props.event;
+		const { name, event_start, venue } = this.props.event;
 
 		const { onExpandChange, expanded, profile, classes } = this.props;
 
@@ -175,10 +176,47 @@ class FanHistoryActivityCard extends Component {
 									)}
 								</FanActivityCardRow>
 								<Collapse in={expanded}>
-									<div className={classes.bottomCard}>
-										<Typography className={classes.greySubtitle}>
-											Event:
-										</Typography>
+									<div className={classes.card}>
+										<FanActivityPurchaseRow>
+											<Typography className={classes.greySubtitleCap}>
+												Event
+											</Typography>
+											<Typography className={classes.greySubtitleCap}>
+												Code
+											</Typography>
+											<Typography className={classes.greySubtitleCap}>
+												Qty
+											</Typography>
+											<Typography className={classes.greySubtitleCap}>
+												Total
+											</Typography>
+											<button>View Order</button>
+										</FanActivityPurchaseRow>
+										<FanActivityPurchaseRow>
+											<Typography>
+												<span className={classes.boldSpan}>{name}</span>
+												<br/>
+												<span className={classes.greySubtitle}>
+													{venue.address}
+												</span>
+												<br/>
+												<span className={classes.greySubtitle}>
+													{moment(event_start).format("llll")}
+												</span>
+											</Typography>
+											<Typography className={classes.darkGreySubtitle}>
+												THISWILLBECODE
+											</Typography>
+											<Typography className={classes.darkGreySubtitle}>
+												{ticket_quantity}
+											</Typography>
+											<Typography className={classes.darkGreySubtitle}>
+												<span className={classes.totalRevenue}>{`$${(
+													total_in_cents / 100
+												).toFixed(2)}`}</span>
+											</Typography>
+											<div/>
+										</FanActivityPurchaseRow>
 									</div>
 								</Collapse>
 							</div>
@@ -585,7 +623,7 @@ FanHistoryActivityCard.propTypes = {
 	event_id: PropTypes.string,
 	revenue_in_cents: PropTypes.number,
 	order_id: PropTypes.string,
-	event_loc: PropTypes.string,
+	venue: PropTypes.string,
 	onExpandChange: PropTypes.func.isRequired,
 	expanded: PropTypes.bool.isRequired,
 	event_history: PropTypes.array
