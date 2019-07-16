@@ -106,7 +106,8 @@ const formatDataForSaving = (event, organizationId) => {
 		endTime,
 		eventType = "Music",
 		showCoverImage,
-		privateAccessCode
+		privateAccessCode,
+		facebookPixelKey
 	} = event;
 
 	const eventDetails = {
@@ -120,7 +121,8 @@ const formatDataForSaving = (event, organizationId) => {
 		override_status,
 		video_url: videoUrl,
 		event_type: eventType,
-		private_access_code: privateAccessCode
+		private_access_code: privateAccessCode,
+		facebook_pixel_key: facebookPixelKey
 	};
 
 	if (eventDate && moment(eventDate).isValid()) {
@@ -201,7 +203,8 @@ const formatDataForInputs = event => {
 		status = "Draft",
 		event_type = "Music",
 		cover_image_url,
-		private_access_code
+		private_access_code,
+		facebook_pixel_key
 	} = event;
 
 	const tomorrowNoon = moment
@@ -249,6 +252,7 @@ const formatDataForInputs = event => {
 		showTopLineInfo: !!top_line_info,
 		showEventStatus: !!override_status,
 		showPrivateCode: !!private_access_code,
+		showMarketingSettings: !!facebook_pixel_key,
 		showEmbeddedMedia: !!video_url,
 		promoImageUrl: promo_image_url,
 		isExternal: is_external,
@@ -256,7 +260,8 @@ const formatDataForInputs = event => {
 		status,
 		eventType: event_type,
 		showCoverImage: !!cover_image_url,
-		privateAccessCode: private_access_code || ""
+		privateAccessCode: private_access_code || "",
+		facebookPixelKey: facebook_pixel_key || ""
 	};
 
 	return eventDetails;
@@ -397,6 +402,23 @@ class Details extends Component {
 		);
 	}
 
+	renderMarketing() {
+		const { errors } = this.props;
+		const { facebookPixelKey } = eventUpdateStore.event;
+
+		return (
+			<InputGroup
+				error={errors.facebookPixelKey}
+				value={facebookPixelKey}
+				name="facebookPixelKey"
+				label="Facebook Pixel"
+				type="text"
+				onChange={e => this.changeDetails({ facebookPixelKey: e.target.value })}
+				onBlur={validateFields}
+			/>
+		);
+	}
+
 	renderAgeInput() {
 		const { ageLimit } = eventUpdateStore.event;
 		const { errors = {}, validateFields, classes } = this.props;
@@ -513,6 +535,7 @@ class Details extends Component {
 			videoUrl,
 			showTopLineInfo,
 			showEventStatus,
+			showMarketingSettings,
 			showPrivateCode,
 			showEmbeddedMedia,
 			doorTimeHours = "1",
@@ -819,6 +842,25 @@ class Details extends Component {
 							</Button>
 						</Collapse>
 						<Collapse in={showEventStatus}>{this.renderStatus()}</Collapse>
+					</Grid>
+				</Grid>
+
+				<Grid container spacing={32}>
+					<Grid item xs={12} sm={12} md={5} lg={5}>
+						<Collapse in={!showMarketingSettings}>
+							<Button
+								style={{ marginBottom: 20, width: "100%" }}
+								variant="additional"
+								onClick={() =>
+									this.changeDetails({ showMarketingSettings: true })
+								}
+							>
+								Marketing settings
+							</Button>
+						</Collapse>
+						<Collapse in={showMarketingSettings}>
+							{this.renderMarketing()}
+						</Collapse>
 					</Grid>
 				</Grid>
 			</React.Fragment>
