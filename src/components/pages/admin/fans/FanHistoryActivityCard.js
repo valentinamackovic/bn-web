@@ -430,13 +430,13 @@ class FanHistoryActivityCard extends Component {
 												{transfer_id}
 											</Typography>
 											<Typography className={classes.greySubtitle}>
-												Fake name for now
+												{initiated_by !== null ? initiated_by.full_name : "-"}
 											</Typography>
 											<Typography className={classes.greySubtitle}>
 												{destination_addresses}
 											</Typography>
 											<Typography className={classes.greySubtitle}>
-												Also Fake name
+												{accepted_by !== null ? accepted_by.full_name : "-"}
 											</Typography>
 										</FanActivityTransferRow>
 									</div>
