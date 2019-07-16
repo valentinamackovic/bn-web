@@ -126,7 +126,7 @@ class OrderItemsCard extends Component {
 	}
 
 	componentDidMount() {
-		setTimeout(this.toggleShowOrderDetails, 200);
+		//setTimeout(this.toggleShowOrderDetails, 200);
 	}
 
 	resendConfirmationEmail() {
@@ -206,7 +206,7 @@ class OrderItemsCard extends Component {
 				onClose={this.handleOptionsMenuClose.bind(this)}
 			>
 				{orderControlOptions.map((o, index) => (
-					<MenuItem key={index} onClick={o.onClick}>
+					<MenuItem key={index} onClick={o.onClick} disabled={o.disabled}>
 						{o.label}
 					</MenuItem>
 				))}

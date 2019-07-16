@@ -38,6 +38,9 @@ const styles = theme => ({
 		color: secondaryHex,
 		fontFamily: fontFamilyDemiBold
 	},
+	boldText: {
+		fontFamily: fontFamilyDemiBold
+	},
 	subText: {
 		color: "#8b94a7",
 		fontSize: 14
@@ -112,7 +115,7 @@ const TicketCard = ({
 					</div>
 					<Typography style={colStyles[4]}>1</Typography>
 					<Typography style={colStyles[5]}>
-						{dollars(total_price_in_cents)}
+						{dollars(total_price_in_cents - fees_price_in_cents)}
 					</Typography>
 					<Typography style={colStyles[6]} className={classes.statusText}>
 						{status}
@@ -129,6 +132,14 @@ const TicketCard = ({
 						/>
 						<Typography>Per ticket fee</Typography>
 					</span>
+					<span style={colStyles[1]}/>
+					<span style={colStyles[2]}/>
+					<span style={colStyles[3]}/>
+					<span style={colStyles[4]}/>
+					<Typography style={colStyles[5]} className={classes.boldText}>
+						{dollars(fees_price_in_cents)}
+					</Typography>
+					<span style={colStyles[6]}/>
 				</div>
 			</Card>
 		);
@@ -138,7 +149,7 @@ const TicketCard = ({
 		<div className={classes.detailsRow}>
 			<div style={colStyles[0]} className={classes.col1}>
 				{checkbox}
-				<Typography>Per order fee</Typography>
+				<Typography className={classes.boldText}>Per order fee</Typography>
 			</div>
 
 			<Typography style={colStyles[1]}/>

@@ -11,9 +11,10 @@ const styles = theme => {
 		root: {
 			cursor: "pointer",
 			marginRight: theme.spacing.unit * 2,
-			display: "flex"
+			display: "flex",
+			userSelect: "none"
 		},
-		label: { color: "#868f9b", paddingTop: 2 },
+		label: { color: "#868f9b", paddingTop: 2, textDecoration: "capitalize" },
 		labelActive: {
 			fontFamily: fontFamilyDemiBold,
 			color: textColorPrimary
