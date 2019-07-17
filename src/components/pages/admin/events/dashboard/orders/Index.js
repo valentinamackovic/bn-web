@@ -298,7 +298,7 @@ class OrderList extends Component {
 		return (
 			<Container
 				eventId={this.eventId}
-				subheading={"tools"}
+				subheading={"orders"}
 				layout={"childrenInsideCard"}
 			>
 				<Grid container spacing={24}>
@@ -335,7 +335,7 @@ class OrderList extends Component {
 		return (
 			<Container
 				eventId={this.eventId}
-				subheading={"tools"}
+				subheading={"orders"}
 				layout={"childrenOutsideNoCard"}
 			>
 				<div className={classes.mobilePageTitleContainer}>

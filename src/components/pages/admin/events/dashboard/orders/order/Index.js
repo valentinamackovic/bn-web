@@ -14,12 +14,21 @@ import Divider from "../../../../../../common/Divider";
 import OrderItemsCard from "./OrderItemsCard";
 import Header from "./Header";
 import BackLink from "../../../../../../elements/BackLink";
+import CreateNote from "./CreateNote";
+import { fontFamilyDemiBold } from "../../../../../../../config/theme";
 
 const styles = theme => ({
 	root: {
 		padding: 31,
 		paddingLeft: 65,
 		paddingRight: 65
+	},
+	heading: {
+		fontFamily: fontFamilyDemiBold,
+		fontSize: 20,
+		textDecoration: "capitalize",
+		marginTop: 20,
+		marginBottom: 10
 	}
 });
 
@@ -170,6 +179,14 @@ class SingleOrder extends Component {
 					{header}
 					{orderDetails}
 				</Hidden>
+
+				<Typography className={classes.heading}>Order history</Typography>
+
+				<Typography className={classes.heading}>Add note</Typography>
+
+				{isReady ? <CreateNote orderId={order.id}/> : null}
+
+				<Typography className={classes.heading}>Related orders</Typography>
 			</React.Fragment>
 		);
 	}

@@ -143,6 +143,11 @@ class OrderItemsCard extends Component {
 		}, 0);
 	}
 
+	onRefundDialogClose() {
+		this.setState({ showRefundDialog: false });
+		this.props.refreshOrder();
+	}
+
 	onRefundClick() {
 		this.setState({ showRefundDialog: true, mobileOptionsControlOpen: false });
 	}
@@ -324,7 +329,7 @@ class OrderItemsCard extends Component {
 			<React.Fragment>
 				<RefundDialog
 					open={showRefundDialog}
-					onClose={() => this.setState({ showRefundDialog: false })}
+					onClose={this.onRefundDialogClose.bind(this)}
 					items={items}
 					order={order}
 				/>

@@ -102,7 +102,8 @@ class RefundDialog extends Component {
 
 		this.defaultState = {
 			reasonVal: "",
-			selectedRefundType: "fullRefund"
+			selectedRefundType: "fullRefund",
+			isRefunding: false
 		};
 
 		this.state = this.defaultState;
@@ -125,6 +126,8 @@ class RefundDialog extends Component {
 
 		const { reasonVal, selectedRefundType } = this.state;
 
+		//TODO use selectedRefundType to adjust which items should be refunded
+
 		const items = [];
 
 		if (itemDetails) {
@@ -139,9 +142,7 @@ class RefundDialog extends Component {
 			});
 		}
 
-		if (selectedRefundType) {
-			return;
-		}
+		this.setState({ isRefunding: true });
 
 		const reason = refundReasons[reasonVal];
 
@@ -169,9 +170,9 @@ class RefundDialog extends Component {
 			})
 			.finally(() => {
 				this.setState({
-					mobileOptionsControlOpen: false
+					mobileOptionsControlOpen: false,
+					isRefunding: false
 				});
-				this.props.refreshOrder();
 			});
 	}
 
@@ -201,12 +202,13 @@ class RefundDialog extends Component {
 			}
 		});
 
+		//TODO put other options back
 		return {
-			faceOnly: {
-				label: "Ticket face only",
-				cents: faceOnlyInCents
-			},
-			feesOnly: { label: "Fees only", cents: feesOnlyInCents },
+			// faceOnly: {
+			// 	label: "Ticket face only",
+			// 	cents: faceOnlyInCents
+			// },
+			// feesOnly: { label: "Fees only", cents: feesOnlyInCents },
 			fullRefund: {
 				label: "Full refund",
 				cents: total_in_cents
@@ -277,12 +279,12 @@ class RefundDialog extends Component {
 	}
 
 	renderMobileOrderDetails() {
-		return <div>mobile Order details</div>;
+		return <div>{""}</div>;
 	}
 
 	render() {
 		const { classes, open, order } = this.props;
-		const { reasonVal, selectedRefundType } = this.state;
+		const { reasonVal, selectedRefundType, isRefunding } = this.state;
 
 		const refundValues = this.refundValues(order);
 
@@ -349,9 +351,10 @@ class RefundDialog extends Component {
 						<Button
 							style={{ marginLeft: 5, width: 150 }}
 							variant="secondary"
+							disabled={isRefunding}
 							onClick={this.refund.bind(this)}
 						>
-							Confirm
+							{isRefunding ? "Refunding..." : "Confirm"}
 						</Button>
 					</div>
 				</div>
