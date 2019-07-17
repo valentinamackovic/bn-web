@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withStyles, Typography, Divider } from "@material-ui/core";
+import { withStyles, Typography, Divider, Hidden } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 
 import notifications from "../../../../stores/notifications";
@@ -21,6 +21,10 @@ const imageSize = 100;
 const styles = theme => ({
 	card: {
 		padding: theme.spacing.unit * 3
+	},
+	mobileContainer: {
+		padding: theme.spacing.unit * 1,
+		maxWidth: "100vw"
 	},
 	profileImage: {
 		width: imageSize,
@@ -262,8 +266,31 @@ class Fan extends Component {
 					Fan Profile
 				</PageHeading>
 
-				<Card>
-					<div className={classes.card}>
+				<Hidden smDown>
+					<Card>
+						<div className={classes.card}>
+							<Grid container spacing={24}>
+								<Grid item xs={12} sm={8} lg={8}>
+									{this.renderProfile()}
+								</Grid>
+							</Grid>
+
+							<Grid
+								item
+								xs={12}
+								sm={12}
+								md={12}
+								lg={12}
+								style={{ paddingTop: 20 }}
+							>
+								{this.renderCards()}
+							</Grid>
+						</div>
+					</Card>
+				</Hidden>
+
+				<Hidden mdUp>
+					<div className={classes.mobileContainer}>
 						<Grid container spacing={24}>
 							<Grid item xs={12} sm={8} lg={8}>
 								{this.renderProfile()}
@@ -281,7 +308,7 @@ class Fan extends Component {
 							{this.renderCards()}
 						</Grid>
 					</div>
-				</Card>
+				</Hidden>
 			</div>
 		);
 	}

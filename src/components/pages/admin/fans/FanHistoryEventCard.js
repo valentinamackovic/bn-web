@@ -1,6 +1,12 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { withStyles, Typography, Collapse, Hidden } from "@material-ui/core";
+import {
+	withStyles,
+	Typography,
+	Collapse,
+	Hidden,
+	Divider
+} from "@material-ui/core";
 
 import moment from "moment";
 import Card from "../../../elements/Card";
@@ -9,7 +15,6 @@ import Loader from "../../../elements/loaders/Loader";
 import Grid from "@material-ui/core/Grid";
 import FanHistoryActivityCard from "./FanHistoryActivityCard";
 import servedImage from "../../../../helpers/imagePathHelper";
-import Divider from "../../../common/Divider";
 
 const styles = theme => ({
 	root: {
@@ -40,13 +45,21 @@ const styles = theme => ({
 		display: "flex"
 	},
 	showHide: {
-		color: secondaryHex
+		// color: "#9DA3B4"
+		fontFamily: fontFamilyDemiBold
+	},
+	linkBox: {
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center"
 	},
 	showHideRow: {
 		display: "flex",
 		flexDirection: "row",
 		cursor: "pointer",
-		paddingTop: theme.spacing.unit * 2
+		paddingTop: theme.spacing.unit * 2,
+		marginBottom: theme.spacing.unit * 2
 	},
 	showHideIcon: {
 		paddingLeft: theme.spacing.unit,
@@ -55,6 +68,7 @@ const styles = theme => ({
 	mobileCard: {
 		borderRadius: 6,
 		marginTop: theme.spacing.unit * 2,
+		marginRight: theme.spacing.unit * 2,
 		padding: theme.spacing.unit * 2
 	}
 });
@@ -117,65 +131,10 @@ class FanHistoryEventCard extends Component {
 
 		return (
 			<div>
-				<div className={classes.root}>
-					<Card variant={"raisedLight"} onClick={onExpandChange}>
-						<div className={classes.card}>
-							<Typography>
-								<span className={classes.boldSpan}>{event.name}</span>
-							</Typography>
-							<Typography className={classes.greySubtitle}>
-								{event.venue.address}
-							</Typography>
-							<Typography className={classes.greySubtitle}>
-								{moment(event_start).format("llll")}
-							</Typography>
-							<Typography className={classes.greySubtitle}>
-								{event_loc}
-							</Typography>
-							{!expanded ? (
-								<div className={classes.showHideRow}>
-									<Typography className={classes.showHide}>
-										Show all details
-									</Typography>
-									<img
-										className={classes.showHideIcon}
-										src={servedImage("/icons/down-active.svg")}
-									/>
-								</div>
-							) : (
-								<div className={classes.showHideRow}>
-									<Typography className={classes.showHide}>
-										Hide details
-									</Typography>
-									<img
-										className={classes.showHideIcon}
-										src={servedImage("/icons/up-active.svg")}
-									/>
-								</div>
-							)}
-						</div>
-					</Card>
-					<Collapse in={expanded}>
-						<div>
-							<Grid
-								item
-								xs={12}
-								sm={12}
-								md={12}
-								lg={12}
-								style={{ paddingTop: 20 }}
-							>
-								{this.renderActivities()}
-							</Grid>
-						</div>
-					</Collapse>
-				</div>
-
-				{/*MOBILE*/}
-				<Hidden mdUp>
+				<Hidden smDown>
 					<div className={classes.root}>
-						<Card variant={"raisedLight"} onClick={onExpandChange}>
-							<div className={classes.mobileCard}>
+						<Card variant={"raisedLight"}>
+							<div className={classes.card}>
 								<Typography>
 									<span className={classes.boldSpan}>{event.name}</span>
 								</Typography>
@@ -189,7 +148,7 @@ class FanHistoryEventCard extends Component {
 									{event_loc}
 								</Typography>
 								{!expanded ? (
-									<div className={classes.showHideRow}>
+									<div onClick={onExpandChange} className={classes.showHideRow}>
 										<Typography className={classes.showHide}>
 											Show all details
 										</Typography>
@@ -199,7 +158,7 @@ class FanHistoryEventCard extends Component {
 										/>
 									</div>
 								) : (
-									<div className={classes.showHideRow}>
+									<div onClick={onExpandChange} className={classes.showHideRow}>
 										<Typography className={classes.showHide}>
 											Hide details
 										</Typography>
@@ -225,6 +184,76 @@ class FanHistoryEventCard extends Component {
 								</Grid>
 							</div>
 						</Collapse>
+					</div>
+				</Hidden>
+
+				{/*MOBILE*/}
+				<Hidden mdUp>
+					<div className={classes.root}>
+						<Card className={classes.mobileCard} variant={"plain"}>
+							<div>
+								<Typography>
+									<span className={classes.boldSpan + " " + classes.linkText}>
+										{event.name}
+									</span>
+								</Typography>
+								<Typography className={classes.greySubtitle}>
+									{event.venue.address}
+								</Typography>
+								<Typography className={classes.greySubtitle}>
+									{moment(event_start).format("llll")}
+								</Typography>
+								<Typography className={classes.greySubtitle}>
+									{event_loc}
+								</Typography>
+								<div className={classes.linkBox}>
+									{!expanded ? (
+										<div
+											onClick={onExpandChange}
+											className={classes.showHideRow}
+										>
+											<Typography className={classes.showHide}>
+												Show all details
+											</Typography>
+											<img
+												className={classes.showHideIcon}
+												src={servedImage("/icons/down-gray.svg")}
+											/>
+										</div>
+									) : (
+										<div
+											onClick={onExpandChange}
+											className={classes.showHideRow}
+										>
+											<Typography className={classes.showHide}>
+												Hide details
+											</Typography>
+											<img
+												className={classes.showHideIcon}
+												src={servedImage("/icons/up-gray.svg")}
+											/>
+										</div>
+									)}
+									<Typography>
+										<span className={classes.linkText}>cat</span>
+									</Typography>
+								</div>
+							</div>
+							<Collapse in={expanded}>
+								<div>
+									<Grid
+										item
+										xs={12}
+										sm={12}
+										md={12}
+										lg={12}
+										style={{ paddingTop: 20 }}
+									>
+										{this.renderActivities()}
+									</Grid>
+								</div>
+							</Collapse>
+						</Card>
 					</div>
 				</Hidden>
 			</div>
