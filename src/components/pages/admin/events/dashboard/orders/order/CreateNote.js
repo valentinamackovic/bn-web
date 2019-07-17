@@ -68,9 +68,10 @@ class CreateNote extends Component {
 				/>
 				<div className={classes.buttonContainer}>
 					<Button
-						disabled={isSaving}
+						disabled={isSaving || !note}
 						variant={"secondary"}
 						onClick={this.saveNote.bind(this)}
+						style={{ minWidth: 100 }}
 					>
 						{isSaving ? "Saving..." : "Add"}
 					</Button>

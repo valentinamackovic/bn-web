@@ -66,6 +66,9 @@ const styles = theme => {
 			backgroundColor: "rgba(112, 124, 237, 0.12)",
 			boxShadow: "none"
 		},
+		disabled: {
+			opacity: 0.35
+		},
 		addIcon: {
 			position: "relative",
 			top: -2,
@@ -81,6 +84,9 @@ const styles = theme => {
 		boldLabel: {
 			textTransform: "capitalize",
 			fontFamily: fontFamilyDemiBold
+		},
+		disabledLabel: {
+			color: "#FFFFFF"
 		},
 		leftIcon: {
 			marginRight: theme.spacing.unit,
@@ -122,18 +128,23 @@ const CustomButton = props => {
 		rootStyle.paddingTop = 14;
 	}
 
+	const useThinLabel =
+		variant === "additional" || variant === "text" || variant === "default";
+
 	return (
 		<Button
 			classes={{
-				root: classNames(
-					classes.root,
-					!disabled ? classes[variant] : classes.default,
-					classes[size]
-				),
-				label:
-					variant === "additional" || variant === "text"
-						? classes.label
-						: classes.boldLabel
+				root: classNames({
+					[classes.root]: true,
+					[classes[variant || "default"]]: true,
+					[classes.disabled]: disabled,
+					[classes[size]]: true
+				}),
+				label: classNames({
+					[classes.label]: useThinLabel,
+					[classes.boldLabel]: !useThinLabel,
+					[classes.disabledLabel]: disabled && !useThinLabel
+				})
 			}}
 			disabled={disabled}
 			style={rootStyle}
