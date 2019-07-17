@@ -114,6 +114,7 @@ class FanHistoryActivityCard extends Component {
 			order_id,
 			initiated_by,
 			redeemed_by,
+			events,
 			redeemed_for,
 			occured_at,
 			ticket_instance_id
@@ -205,9 +206,33 @@ class FanHistoryActivityCard extends Component {
 											<Typography>
 												<span className={classes.boldSpan}>{name}</span>
 											</Typography>
-											<Typography className={classes.darkGreySubtitle}>
-												THISWILLBECODE
-											</Typography>
+											{events.map((item, index) => {
+												return (
+													<Typography
+														key={index}
+														className={classes.darkGreySubtitle}
+													>
+														<span className={classes.boldSpan}>
+															{item.code}
+														</span>
+														<span
+															className={
+																classes.greySubtitle + " " + classes.boldSpan
+															}
+														>{` / $${(item.total_in_cents / 100).toFixed(
+																2
+															)}`}</span>
+														<br/>
+														<span
+															className={
+																classes.greySubtitle + " " + classes.boldSpan
+															}
+														>
+															{item.code_type}
+														</span>
+													</Typography>
+												);
+											})}
 											<Typography className={classes.darkGreySubtitle}>
 												{ticket_quantity}
 											</Typography>

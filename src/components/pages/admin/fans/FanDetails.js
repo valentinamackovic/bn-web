@@ -20,7 +20,7 @@ const imageSize = 100;
 
 const styles = theme => ({
 	card: {
-		padding: theme.spacing.unit * 5
+		padding: theme.spacing.unit * 3
 	},
 	profileImage: {
 		width: imageSize,
