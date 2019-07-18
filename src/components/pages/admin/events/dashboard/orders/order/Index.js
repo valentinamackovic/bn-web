@@ -16,6 +16,7 @@ import Header from "./Header";
 import BackLink from "../../../../../../elements/BackLink";
 import CreateNote from "./CreateNote";
 import { fontFamilyDemiBold } from "../../../../../../../config/theme";
+import RelatedOrders from "./RelatedOrders";
 
 const styles = theme => ({
 	root: {
@@ -140,7 +141,7 @@ class SingleOrder extends Component {
 
 	render() {
 		const { order, orderItems, eventDetails } = this.state;
-		const { classes } = this.props;
+		const { classes, timezone, organizationId } = this.props;
 
 		const isReady = order && eventDetails && orderItems;
 
@@ -180,13 +181,22 @@ class SingleOrder extends Component {
 					{orderDetails}
 				</Hidden>
 
-				<Typography className={classes.heading}>Order history</Typography>
+				{isReady ? (
+					<React.Fragment>
+						<Typography className={classes.heading}>Order history</Typography>
 
-				<Typography className={classes.heading}>Add note</Typography>
+						<Typography className={classes.heading}>Add note</Typography>
+						<CreateNote orderId={order.id}/>
 
-				{isReady ? <CreateNote orderId={order.id}/> : null}
-
-				<Typography className={classes.heading}>Related orders</Typography>
+						<Typography className={classes.heading}>Related orders</Typography>
+						<RelatedOrders
+							eventId={this.eventId}
+							organizationId={organizationId}
+							userId={order.user_id}
+							timezone={timezone}
+						/>
+					</React.Fragment>
+				) : null}
 			</React.Fragment>
 		);
 	}
@@ -195,17 +205,24 @@ class SingleOrder extends Component {
 SingleOrder.propTypes = {
 	classes: PropTypes.object.isRequired,
 	match: PropTypes.object.isRequired,
-	timezone: PropTypes.string.isRequired
+	timezone: PropTypes.string.isRequired,
+	organizationId: PropTypes.string.isRequired
 };
 
 const Index = observer(props => {
-	const { currentOrgTimezone } = user;
+	const { currentOrgTimezone, currentOrganizationId } = user;
 
 	if (!currentOrgTimezone) {
 		return <Loader>Loading organization details...</Loader>;
 	}
 
-	return <SingleOrder {...props} timezone={currentOrgTimezone}/>;
+	return (
+		<SingleOrder
+			{...props}
+			timezone={currentOrgTimezone}
+			organizationId={currentOrganizationId}
+		/>
+	);
 });
 
 export default withStyles(styles)(Index);
