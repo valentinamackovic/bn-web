@@ -1104,29 +1104,26 @@ class FanHistoryActivityCard extends Component {
 			case "Transfer":
 				activityCard = (
 					<div className={classes.root}>
-						<div
-							variant={"raisedLight"}
-							onClick={onExpandChange}
-							className={classes.card}
-						>
+						<Divider/>
+						<div className={classes.mobileActivityHeader}>
 							<div>
-								<FanActivityCardRow>
+								<div className={classes.mobileHeaderTopRow}>
 									{action === "Cancelled" ? (
 										<img
+											className={classes.mobiIcon}
 											src={servedImage("/icons/transfer-circle-error.svg")}
 										/>
 									) : action === "Accepted" ? (
 										<img
+											className={classes.mobiIcon}
 											src={servedImage("/icons/transfer-circle-success.svg")}
 										/>
 									) : (
 										<img
+											className={classes.mobiIcon}
 											src={servedImage("/icons/transfer-circle-warning.svg")}
 										/>
 									)}
-									<Typography className={classes.greySubtitle}>
-										{moment(event_start).format("l hh:mmA")}
-									</Typography>
 									<Typography>
 										<span className={classes.pinkSpan + " " + classes.boldSpan}>
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
@@ -1143,9 +1140,16 @@ class FanHistoryActivityCard extends Component {
 											{destination_addresses}
 										</span>
 									</Typography>
-
+								</div>
+								<div className={classes.mobileHeaderBottomRow}>
+									<Typography className={classes.greySubtitle}>
+										{moment(event_start).format("l hh:mmA")}
+									</Typography>
 									{!expanded ? (
-										<div className={classes.showHideRow}>
+										<div
+											onClick={onExpandChange}
+											className={classes.showHideRow}
+										>
 											<Typography className={classes.showHide}>
 												<span className={classes.greySubtitle}>
 													Show Details
@@ -1157,7 +1161,10 @@ class FanHistoryActivityCard extends Component {
 											/>
 										</div>
 									) : (
-										<div className={classes.showHideRow}>
+										<div
+											onClick={onExpandChange}
+											className={classes.showHideRow}
+										>
 											<Typography className={classes.showHide}>
 												<span className={classes.greySubtitle}>
 													Hide Details
@@ -1169,22 +1176,18 @@ class FanHistoryActivityCard extends Component {
 											/>
 										</div>
 									)}
-								</FanActivityCardRow>
+								</div>
 								<Collapse in={expanded}>
-									<div className={classes.card}>
-										<FanActivityTransferRow>
+									<div className={classes.mobiCard}>
+										<div>
 											<Typography className={classes.greySubtitleCap}>
 												Tickets:
 											</Typography>
-											<Typography className={classes.greySubtitleCap}>
-												Initiated by:
+											<Typography className={classes.darkGreySubtitle}>
+												{transfer_id}
 											</Typography>
-											<Typography className={classes.greySubtitleCap}>
-												Transfer Address:
-											</Typography>
-											<Typography className={classes.greySubtitleCap}>
-												Accepted by:
-											</Typography>
+										</div>
+										<div>
 											{action === "Started" ? (
 												<Button
 													variant="warning"
@@ -1200,26 +1203,7 @@ class FanHistoryActivityCard extends Component {
 											) : (
 												<div/>
 											)}
-										</FanActivityTransferRow>
-										<FanActivityTransferRow>
-											<Typography className={classes.darkGreySubtitle}>
-												{transfer_id}
-											</Typography>
-											<Typography className={classes.darkGreySubtitle}>
-												<span className={classes.pinkSpan}>
-													{initiated_by !== null ? initiated_by.full_name : "-"}
-												</span>
-											</Typography>
-											<Typography className={classes.darkGreySubtitle}>
-												{destination_addresses}
-											</Typography>
-											<Typography className={classes.darkGreySubtitle}>
-												<span className={classes.pinkSpan}>
-													{accepted_by !== null ? accepted_by.full_name : "-"}
-												</span>
-											</Typography>
-											<div/>
-										</FanActivityTransferRow>
+										</div>
 									</div>
 								</Collapse>
 							</div>
