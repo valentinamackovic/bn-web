@@ -82,9 +82,14 @@ class TransactionDialog extends React.Component {
 			refunded_quantity,
 			promo_code_name,
 			promo_redemption_code,
+			promo_discount_value_in_cents,
+			promo_quantity,
 			...rest
 		} = item;
 
+		const face_value =
+			(quantity - refunded_quantity) * unit_price_in_cents +
+			promo_discount_value_in_cents * promo_quantity;
 		return (
 			<div>
 				<Detail label={"Quantity"} classes={classes}>
@@ -100,7 +105,7 @@ class TransactionDialog extends React.Component {
 				</Detail>
 
 				<Detail label={"Total face value"} classes={classes}>
-					{dollars((quantity - refunded_quantity) * unit_price_in_cents)}
+					{dollars(face_value)}
 				</Detail>
 
 				<Detail label={"Service fee"} classes={classes}>
