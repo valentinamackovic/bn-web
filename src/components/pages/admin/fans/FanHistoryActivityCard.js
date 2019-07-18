@@ -31,6 +31,9 @@ const styles = theme => ({
 		paddingTop: theme.spacing.unit,
 		paddingBottom: theme.spacing.unit
 	},
+	mobiCard: {
+		paddingBottom: theme.spacing.unit
+	},
 	mobileActivityHeader: {
 		marginBottom: theme.spacing.unit * 2,
 		paddingTop: theme.spacing.unit * 2,
@@ -886,7 +889,7 @@ class FanHistoryActivityCard extends Component {
 									)}
 								</div>
 								<Collapse in={expanded}>
-									<div className={classes.card}>
+									<div className={classes.mobiCard}>
 										<Typography className={classes.greySubtitleCap}>
 											Checked-in tickets
 										</Typography>
@@ -914,17 +917,14 @@ class FanHistoryActivityCard extends Component {
 			case "Refund":
 				activityCard = (
 					<div className={classes.root}>
-						<div
-							variant={"raisedLight"}
-							onClick={onExpandChange}
-							className={classes.card}
-						>
+						<Divider/>
+						<div className={classes.mobileActivityHeader}>
 							<div>
-								<FanActivityCardRow>
-									<img src={servedImage("/icons/refund-active.svg")}/>
-									<Typography className={classes.greySubtitle}>
-										{moment(event_start).format("l hh:mmA")}
-									</Typography>
+								<div className={classes.mobileHeaderTopRow}>
+									<img
+										className={classes.mobiIcon}
+										src={servedImage("/icons/refund-active.svg")}
+									/>
 									<Typography>
 										<span className={classes.pinkSpan + " " + classes.boldSpan}>
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
@@ -933,6 +933,7 @@ class FanHistoryActivityCard extends Component {
 										<span className={classes.totalRevenue}>{`$${(
 											total_in_cents / 100
 										).toFixed(2)}`}</span>
+										<br/>
 										<span>
 											&nbsp;(
 											<span className={classes.pinkSpan}>
@@ -941,9 +942,16 @@ class FanHistoryActivityCard extends Component {
 											)
 										</span>
 									</Typography>
-
+								</div>
+								<div className={classes.mobileHeaderBottomRow}>
+									<Typography className={classes.greySubtitle}>
+										{moment(event_start).format("l hh:mmA")}
+									</Typography>
 									{!expanded ? (
-										<div className={classes.showHideRow}>
+										<div
+											onClick={onExpandChange}
+											className={classes.showHideRow}
+										>
 											<Typography className={classes.showHide}>
 												<span className={classes.greySubtitle}>
 													Show Details
@@ -955,7 +963,10 @@ class FanHistoryActivityCard extends Component {
 											/>
 										</div>
 									) : (
-										<div className={classes.showHideRow}>
+										<div
+											onClick={onExpandChange}
+											className={classes.showHideRow}
+										>
 											<Typography className={classes.showHide}>
 												<span className={classes.greySubtitle}>
 													Hide Details
@@ -967,31 +978,19 @@ class FanHistoryActivityCard extends Component {
 											/>
 										</div>
 									)}
-								</FanActivityCardRow>
+								</div>
 								<Collapse in={expanded}>
-									<div className={classes.card}>
-										<div className={classes.halfFlex}>
-											<Typography
-												className={
-													classes.greySubtitleCap + " " + classes.halfFlexItem
-												}
-											>
+									<div className={classes.mobiCard}>
+										<FanActivityMobileRow>
+											<Typography className={classes.greySubtitleCap}>
 												Items refunded
 											</Typography>
-											<Typography
-												className={
-													classes.greySubtitleCap + " " + classes.halfFlexItem
-												}
-											>
+											<Typography className={classes.greySubtitleCap}>
 												Reason
 											</Typography>
-										</div>
-										<div className={classes.halfFlex}>
-											<div
-												className={
-													classes.darkGreySubtitle + " " + classes.halfFlexItem
-												}
-											>
+										</FanActivityMobileRow>
+										<FanActivityMobileRow>
+											<div className={classes.darkGreySubtitle}>
 												{refund_items.map((item, index) => {
 													return (
 														<Typography
@@ -1018,14 +1017,10 @@ class FanHistoryActivityCard extends Component {
 														2
 													)}`}</span>
 											</div>
-											<Typography
-												className={
-													classes.darkGreySubtitle + " " + classes.halfFlexItem
-												}
-											>
+											<Typography className={classes.darkGreySubtitle}>
 												{reason === null ? "-" : reason}
 											</Typography>
-										</div>
+										</FanActivityMobileRow>
 									</div>
 								</Collapse>
 							</div>
