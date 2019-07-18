@@ -9,9 +9,19 @@ import Button from "../../../../../../elements/Button";
 import BoxInput from "../../../../../../elements/form/BoxInput";
 import moment from "moment-timezone";
 import Loader from "../../../../../../elements/loaders/Loader";
+import Card from "../../../../../../elements/Card";
 
 const styles = theme => ({
-	root: {}
+	root: {},
+	orderCard: {
+		padding: 15,
+		paddingLeft: 25,
+		display: "flex"
+	},
+	icon: {
+		width: 20,
+		height: 20
+	}
 });
 
 class RelatedOrders extends Component {
@@ -19,16 +29,23 @@ class RelatedOrders extends Component {
 		super(props);
 
 		this.state = {
-			orders: null
+			orders: null,
+			firstName: "",
+			lastName: ""
 		};
 	}
 
 	componentDidMount() {
-		const { organizationId, userId } = this.props;
+		const { organizationId, user } = this.props;
+
+		const { id: userId, first_name: firstName, last_name: lastName } = user;
+
+		this.setState({ firstName, lastName });
 
 		const params = {
 			organization_id: organizationId,
-			user_id: userId
+			user_id: userId,
+			activity_type: "Purchased"
 		};
 
 		Bigneon()
@@ -58,10 +75,31 @@ class RelatedOrders extends Component {
 	}
 
 	orderList() {
-		const { orders } = this.state;
+		const { classes } = this.props;
+		const { orders, firstName, lastName } = this.state;
 
 		if (orders) {
-			return <div>TODO</div>;
+			return (
+				<div>
+					{orders.map(order => {
+						const { order_id, displayDate, ticket_sales } = order;
+
+						return (
+							<Card key={order_id} className={classes.orderCard}>
+								<img
+									src={"/icons/money-circle-active.svg"}
+									className={classes.icon}
+								/>
+								<Typography>{displayDate}</Typography>
+
+								<Typography>
+									{firstName} {lastName}
+								</Typography>
+							</Card>
+						);
+					})}
+				</div>
+			);
 		}
 		return null;
 	}
@@ -85,8 +123,8 @@ class RelatedOrders extends Component {
 RelatedOrders.propTypes = {
 	classes: PropTypes.object.isRequired,
 	organizationId: PropTypes.string.isRequired,
-	userId: PropTypes.string.isRequired,
-	timezone: PropTypes.string.isRequired
+	timezone: PropTypes.string.isRequired,
+	user: PropTypes.object.isRequired
 };
 
 export default withStyles(styles)(RelatedOrders);
