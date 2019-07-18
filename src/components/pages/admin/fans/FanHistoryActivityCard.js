@@ -18,6 +18,7 @@ import servedImage from "../../../../helpers/imagePathHelper";
 import FanActivityPurchaseRow from "./FanActivityPurchaseRow";
 import { Link } from "react-router-dom";
 import Button from "../../../elements/Button";
+import CancelTransferDialog from "../../myevents/transfers/CancelTransferDialog";
 
 const styles = theme => ({
 	root: {
@@ -124,7 +125,16 @@ class FanHistoryActivityCard extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = {};
+		this.state = {
+			cancelTransferKey: null
+		};
+		this.onOpenCancelTransferDialog = this.onOpenCancelTransferDialog.bind(
+			this
+		);
+	}
+
+	onOpenCancelTransferDialog(cancelTransferKey) {
+		this.setState({ cancelTransferKey });
 	}
 
 	renderActivity(type) {
@@ -561,11 +571,7 @@ class FanHistoryActivityCard extends Component {
 			case "Transfer":
 				activityCard = (
 					<div className={classes.root}>
-						<Card
-							variant={"raisedLight"}
-							onClick={onExpandChange}
-							className={classes.card}
-						>
+						<Card variant={"raisedLight"} className={classes.card}>
 							<div>
 								<FanActivityCardRow>
 									{action === "Cancelled" ? (
@@ -602,7 +608,10 @@ class FanHistoryActivityCard extends Component {
 									</Typography>
 
 									{!expanded ? (
-										<div className={classes.showHideRow}>
+										<div
+											onClick={onExpandChange}
+											className={classes.showHideRow}
+										>
 											<Typography className={classes.showHide}>
 												<span className={classes.greySubtitle}>
 													Show Details
@@ -614,7 +623,10 @@ class FanHistoryActivityCard extends Component {
 											/>
 										</div>
 									) : (
-										<div className={classes.showHideRow}>
+										<div
+											onClick={onExpandChange}
+											className={classes.showHideRow}
+										>
 											<Typography className={classes.showHide}>
 												<span className={classes.greySubtitle}>
 													Hide Details
@@ -643,7 +655,13 @@ class FanHistoryActivityCard extends Component {
 												Accepted by:
 											</Typography>
 											{action === "Started" ? (
-												<Button variant="warning" size="small">
+												<Button
+													variant="warning"
+													size="small"
+													onClick={() =>
+														this.onOpenCancelTransferDialog(transfer_id)
+													}
+												>
 													<span className={classes.smallTextCap}>
 														Cancel Transfer
 													</span>
@@ -1166,7 +1184,13 @@ class FanHistoryActivityCard extends Component {
 												Accepted by:
 											</Typography>
 											{action === "Started" ? (
-												<Button variant="warning" size="small">
+												<Button
+													variant="warning"
+													size="small"
+													onClick={() =>
+														this.onOpenCancelTransferDialog(transfer_id)
+													}
+												>
 													<span className={classes.smallTextCap}>
 														Cancel Transfer
 													</span>
@@ -1210,8 +1234,14 @@ class FanHistoryActivityCard extends Component {
 
 	render() {
 		const { type } = this.props.item;
+		const { cancelTransferKey } = this.state;
 		return (
 			<div>
+				<CancelTransferDialog
+					transferKey={cancelTransferKey}
+					onClose={() => this.setState({ cancelTransferKey: null })}
+					// onSuccess={() => this.refreshGuests()}
+				/>
 				<Hidden smDown>{this.renderActivity(type)}</Hidden>
 				<Hidden mdUp>{this.renderActivityMobile(type)}</Hidden>
 			</div>
