@@ -188,6 +188,9 @@ class Fan extends Component {
 		if (fanHistory === null) {
 			return <Loader>Loading history...</Loader>;
 		}
+		if (fanHistory.length === 0) {
+			return <Typography>No activity to display.</Typography>;
+		}
 		return fanHistory.map((item, index) => {
 			const expanded = expandedRowKey === index;
 			return (

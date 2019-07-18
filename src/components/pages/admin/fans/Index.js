@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { withStyles, Typography } from "@material-ui/core";
+import { withStyles, Typography, Hidden } from "@material-ui/core";
 import moment from "moment";
 
 import notifications from "../../../../stores/notifications";
@@ -29,6 +29,11 @@ const styles = theme => ({
 		padding: theme.spacing.unit * 6,
 		paddingLeft: theme.spacing.unit * 8,
 		paddingRight: theme.spacing.unit * 8
+	},
+	mobiContent: {
+		padding: theme.spacing.unit * 2,
+		paddingLeft: theme.spacing.unit * 2,
+		paddingRight: theme.spacing.unit * 2
 	},
 	spacer: {
 		marginTop: theme.spacing.unit * 4
@@ -303,6 +308,78 @@ class FanList extends Component {
 		);
 	}
 
+	renderUsersMobile() {
+		const { users, paging, isLoading } = this.state;
+		const { classes } = this.props;
+
+		if (users === null) {
+			return <Loader/>;
+		}
+
+		if (users.length === 0) {
+			return <Typography>No fans currently.</Typography>;
+		}
+
+		return (
+			<Card>
+				<div className={classes.mobiContent}>
+					<FanRow>
+						<Typography className={classes.heading}>Name</Typography>
+						<Typography className={classes.heading}>Email</Typography>
+					</FanRow>
+					{users.map((user, index) => {
+						const {
+							user_id,
+							first_name,
+							last_name,
+							email,
+							thumb_profile_pic_url
+						} = user;
+						return (
+							<Link to={`/admin/fans/${user_id}`} key={user_id}>
+								<FanRow shaded={!(index % 2)}>
+									<div className={classes.nameProfileImage}>
+										{thumb_profile_pic_url ? (
+											<div
+												className={classes.profileImageBackground}
+												style={{
+													backgroundImage: `url(${thumb_profile_pic_url})`
+												}}
+											/>
+										) : (
+											<div className={classes.missingProfileImageBackground}>
+												<img
+													className={classes.missingProfileImage}
+													src={servedImage(
+														"/images/profile-pic-placeholder-white.png"
+													)}
+													alt={`${first_name} ${last_name}`}
+												/>
+											</div>
+										)}
+										&nbsp;&nbsp;
+										<Typography className={classes.itemText}>
+											{first_name} {last_name}
+										</Typography>
+									</div>
+
+									<Typography className={classes.itemText}>{email}</Typography>
+								</FanRow>
+							</Link>
+						);
+					})}
+
+					<br/>
+					<Pagination
+						isLoading={isLoading}
+						paging={paging}
+						onChange={this.loadFans.bind(this)}
+					/>
+				</div>
+			</Card>
+		);
+	}
+
 	render() {
 		const { paging, isExporting } = this.state;
 		const { classes } = this.props;
@@ -329,7 +406,9 @@ class FanList extends Component {
 
 				<div className={classes.spacer}/>
 
-				{this.renderUsers()}
+				<Hidden smDown>{this.renderUsers()}</Hidden>
+
+				<Hidden mdUp>{this.renderUsersMobile()}</Hidden>
 			</div>
 		);
 	}

@@ -144,7 +144,7 @@ class FanHistoryActivityCard extends Component {
 		const {
 			ticket_quantity,
 			order_number,
-			action,
+			status,
 			total_in_cents,
 			ticket_ids,
 			transfer_id,
@@ -154,10 +154,13 @@ class FanHistoryActivityCard extends Component {
 			refund_items,
 			note,
 			order_id,
+			transfer_key,
+			ticket_number,
 			initiated_by,
 			redeemed_by,
 			events,
 			redeemed_for,
+			ticket_numbers,
 			occured_at,
 			ticket_instance_id
 		} = this.props.item;
@@ -363,7 +366,7 @@ class FanHistoryActivityCard extends Component {
 											Checked-in tickets
 										</Typography>
 										<Typography className={classes.darkGreySubtitle}>
-											{"#" + ticket_instance_id + " ( "}
+											{"#" + ticket_number + " ( "}
 											<span className={classes.pinkSpan}>
 												{"Order #" + order_number}&nbsp;
 											</span>
@@ -577,11 +580,11 @@ class FanHistoryActivityCard extends Component {
 						<Card variant={"raisedLight"} className={classes.card}>
 							<div>
 								<FanActivityCardRow>
-									{action === "Cancelled" ? (
+									{status === "Cancelled" ? (
 										<img
 											src={servedImage("/icons/transfer-circle-error.svg")}
 										/>
-									) : action === "Accepted" ? (
+									) : status === "Completed" ? (
 										<img
 											src={servedImage("/icons/transfer-circle-success.svg")}
 										/>
@@ -598,7 +601,7 @@ class FanHistoryActivityCard extends Component {
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>
-											{"transferred (" + action + ") "}
+											{"transferred (" + status + ") "}
 										</span>
 										{ticket_ids.length > 1 ? (
 											<span>{ticket_ids.length + " tickets to "}</span>
@@ -644,7 +647,7 @@ class FanHistoryActivityCard extends Component {
 								</FanActivityCardRow>
 								<Collapse in={expanded}>
 									<div className={classes.card}>
-										<FanActivityMobileRow>
+										<FanActivityTransferRow>
 											<Typography className={classes.greySubtitleCap}>
 												Tickets:
 											</Typography>
@@ -657,12 +660,12 @@ class FanHistoryActivityCard extends Component {
 											<Typography className={classes.greySubtitleCap}>
 												Accepted by:
 											</Typography>
-											{action === "Started" ? (
+											{status === "Pending" ? (
 												<Button
 													variant="warning"
 													size="small"
 													onClick={() =>
-														this.onOpenCancelTransferDialog(transfer_id)
+														this.onOpenCancelTransferDialog(transfer_key)
 													}
 												>
 													<span className={classes.smallTextCap}>
@@ -672,10 +675,12 @@ class FanHistoryActivityCard extends Component {
 											) : (
 												<div/>
 											)}
-										</FanActivityMobileRow>
-										<FanActivityMobileRow>
+										</FanActivityTransferRow>
+										<FanActivityTransferRow>
 											<Typography className={classes.darkGreySubtitle}>
-												{transfer_id}
+												{ticket_numbers.map((item, index) => {
+													return item;
+												})}
 											</Typography>
 											<Typography className={classes.darkGreySubtitle}>
 												<span className={classes.pinkSpan}>
@@ -691,7 +696,7 @@ class FanHistoryActivityCard extends Component {
 												</span>
 											</Typography>
 											<div/>
-										</FanActivityMobileRow>
+										</FanActivityTransferRow>
 									</div>
 								</Collapse>
 							</div>
@@ -711,6 +716,7 @@ class FanHistoryActivityCard extends Component {
 			ticket_quantity,
 			order_number,
 			action,
+			status,
 			total_in_cents,
 			ticket_ids,
 			transfer_id,
@@ -720,7 +726,10 @@ class FanHistoryActivityCard extends Component {
 			refund_items,
 			note,
 			order_id,
+			transfer_key,
 			initiated_by,
+			ticket_number,
+			ticket_numbers,
 			redeemed_by,
 			events,
 			redeemed_for,
@@ -894,7 +903,7 @@ class FanHistoryActivityCard extends Component {
 											Checked-in tickets
 										</Typography>
 										<Typography className={classes.darkGreySubtitle}>
-											{"#" + ticket_instance_id + " ( "}
+											{"#" + ticket_number + " ( "}
 											<span className={classes.pinkSpan}>
 												{"Order #" + order_number}&nbsp;
 											</span>
@@ -1108,12 +1117,12 @@ class FanHistoryActivityCard extends Component {
 						<div className={classes.mobileActivityHeader}>
 							<div>
 								<div className={classes.mobileHeaderTopRow}>
-									{action === "Cancelled" ? (
+									{status === "Cancelled" ? (
 										<img
 											className={classes.mobiIcon}
 											src={servedImage("/icons/transfer-circle-error.svg")}
 										/>
-									) : action === "Accepted" ? (
+									) : status === "Completed" ? (
 										<img
 											className={classes.mobiIcon}
 											src={servedImage("/icons/transfer-circle-success.svg")}
@@ -1129,7 +1138,7 @@ class FanHistoryActivityCard extends Component {
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>
-											{"transferred (" + action + ") "}
+											{"transferred (" + status + ") "}
 										</span>
 										{ticket_ids.length > 1 ? (
 											<span>{ticket_ids.length + " tickets to "}</span>
@@ -1184,16 +1193,18 @@ class FanHistoryActivityCard extends Component {
 												Tickets:
 											</Typography>
 											<Typography className={classes.darkGreySubtitle}>
-												{transfer_id}
+												{ticket_numbers.map((item, index) => {
+													return item;
+												})}
 											</Typography>
 										</div>
 										<div>
-											{action === "Started" ? (
+											{status === "Pending" ? (
 												<Button
 													variant="warning"
 													size="small"
 													onClick={() =>
-														this.onOpenCancelTransferDialog(transfer_id)
+														this.onOpenCancelTransferDialog(transfer_key)
 													}
 												>
 													<span className={classes.smallTextCap}>
