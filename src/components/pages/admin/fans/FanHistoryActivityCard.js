@@ -718,10 +718,7 @@ class FanHistoryActivityCard extends Component {
 				activityCard = (
 					<div className={classes.root}>
 						<Divider/>
-						<div
-							onClick={onExpandChange}
-							className={classes.mobileActivityHeader}
-						>
+						<div className={classes.mobileActivityHeader}>
 							<div>
 								<div className={classes.mobileHeaderTopRow}>
 									<img
@@ -751,7 +748,10 @@ class FanHistoryActivityCard extends Component {
 										{moment(event_start).format("l hh:mmA")}
 									</Typography>
 									{!expanded ? (
-										<div className={classes.showHideRow}>
+										<div
+											onClick={onExpandChange}
+											className={classes.showHideRow}
+										>
 											<Typography className={classes.showHide}>
 												<span className={classes.greySubtitle}>
 													Show Details
@@ -763,7 +763,10 @@ class FanHistoryActivityCard extends Component {
 											/>
 										</div>
 									) : (
-										<div className={classes.showHideRow}>
+										<div
+											onClick={onExpandChange}
+											className={classes.showHideRow}
+										>
 											<Typography className={classes.showHide}>
 												<span className={classes.greySubtitle}>
 													Hide Details
@@ -777,79 +780,30 @@ class FanHistoryActivityCard extends Component {
 									)}
 								</div>
 								<Collapse in={expanded}>
-									<div className={classes.card}>
-										<FanActivityPurchaseRow>
-											<Typography className={classes.greySubtitleCap}>
-												Event
-											</Typography>
-											<Typography className={classes.greySubtitleCap}>
-												Code
-											</Typography>
-											<Typography className={classes.greySubtitleCap}>
-												Qty
-											</Typography>
-											<Typography className={classes.greySubtitleCap}>
-												Total
-											</Typography>
-											<div/>
-										</FanActivityPurchaseRow>
-										<FanActivityPurchaseRow>
-											<Typography>
-												<span className={classes.boldSpan}>{name}</span>
-											</Typography>
-											{events.map((item, index) => {
-												return (
-													<Typography
-														key={index}
-														className={classes.darkGreySubtitle}
-													>
-														<span className={classes.boldSpan}>
-															{item.code}
-														</span>
-														<span
-															className={
-																classes.greySubtitle + " " + classes.boldSpan
-															}
-														>{` / $${(item.total_in_cents / 100).toFixed(
-																2
-															)}`}</span>
-														<br/>
-														<span
-															className={
-																classes.greySubtitle + " " + classes.boldSpan
-															}
-														>
-															{item.code_type}
-														</span>
-													</Typography>
-												);
-											})}
-											<Typography className={classes.darkGreySubtitle}>
-												{ticket_quantity}
-											</Typography>
-											<Typography className={classes.darkGreySubtitle}>
-												<span className={classes.totalRevenue}>{`$${(
-													total_in_cents / 100
-												).toFixed(2)}`}</span>
-											</Typography>
-											<Link to={`/orders/${order_id}`}>
-												<Button variant="secondary" size="small">
-													<span className={classes.smallTextCap}>
-														View order
-													</span>
-												</Button>
-											</Link>
-										</FanActivityPurchaseRow>
-										<Typography>
-											<span className={classes.greySubtitle}>
-												{venue.address}
-											</span>
-											<br/>
-											<span className={classes.greySubtitle}>
-												{moment(event_start).format("llll")}
-											</span>
+									<FanActivityMobileRow>
+										<Typography className={classes.greySubtitleCap}>
+											Qty
 										</Typography>
-									</div>
+										<Typography className={classes.greySubtitleCap}>
+											Order Value
+										</Typography>
+										<div/>
+									</FanActivityMobileRow>
+									<FanActivityMobileRow>
+										<Typography className={classes.darkGreySubtitle}>
+											{ticket_quantity}
+										</Typography>
+										<Typography className={classes.darkGreySubtitle}>
+											<span className={classes.totalRevenue}>{`$${(
+												total_in_cents / 100
+											).toFixed(2)}`}</span>
+										</Typography>
+										<Link to={`/orders/${order_id}`}>
+											<Button variant="secondary" size="small">
+												<span className={classes.smallTextCap}>View order</span>
+											</Button>
+										</Link>
+									</FanActivityMobileRow>
 								</Collapse>
 							</div>
 						</div>

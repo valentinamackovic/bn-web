@@ -6,6 +6,7 @@ import classNames from "classnames";
 const styles = theme => ({
 	root: {
 		display: "flex",
+		paddingTop: theme.spacing.unit * 2,
 		alignItems: "center"
 	},
 	shaded: {
