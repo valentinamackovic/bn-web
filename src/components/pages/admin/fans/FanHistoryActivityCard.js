@@ -1031,17 +1031,14 @@ class FanHistoryActivityCard extends Component {
 			case "Note":
 				activityCard = (
 					<div className={classes.root}>
-						<div
-							variant={"raisedLight"}
-							onClick={onExpandChange}
-							className={classes.card}
-						>
+						<Divider/>
+						<div className={classes.mobileActivityHeader}>
 							<div>
-								<FanActivityCardRow>
-									<img src={servedImage("/icons/note-circle-gray.svg")}/>
-									<Typography className={classes.greySubtitle}>
-										{moment(event_start).format("l hh:mmA")}
-									</Typography>
+								<div className={classes.mobileHeaderTopRow}>
+									<img
+										className={classes.mobiIcon}
+										src={servedImage("/icons/note-circle-gray.svg")}
+									/>
 									<Typography>
 										<span className={classes.pinkSpan + " " + classes.boldSpan}>
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
@@ -1052,9 +1049,16 @@ class FanHistoryActivityCard extends Component {
 										&nbsp;
 										<span className={classes.boldSpan}>{name}</span>
 									</Typography>
-
+								</div>
+								<div className={classes.mobileHeaderBottomRow}>
+									<Typography className={classes.greySubtitle}>
+										{moment(event_start).format("l hh:mmA")}
+									</Typography>
 									{!expanded ? (
-										<div className={classes.showHideRow}>
+										<div
+											onClick={onExpandChange}
+											className={classes.showHideRow}
+										>
 											<Typography className={classes.showHide}>
 												<span className={classes.greySubtitle}>
 													Show Details
@@ -1066,7 +1070,10 @@ class FanHistoryActivityCard extends Component {
 											/>
 										</div>
 									) : (
-										<div className={classes.showHideRow}>
+										<div
+											onClick={onExpandChange}
+											className={classes.showHideRow}
+										>
 											<Typography className={classes.showHide}>
 												<span className={classes.greySubtitle}>
 													Hide Details
@@ -1078,9 +1085,9 @@ class FanHistoryActivityCard extends Component {
 											/>
 										</div>
 									)}
-								</FanActivityCardRow>
+								</div>
 								<Collapse in={expanded}>
-									<div className={classes.card}>
+									<div className={classes.mobiCard}>
 										<Typography className={classes.greySubtitleCap}>
 											Note:
 										</Typography>
