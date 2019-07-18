@@ -64,17 +64,8 @@ const formatForSaving = (ticketTypes, event) => {
 			case "start":
 				endDate = moment(eventDate);
 				break;
-			case "close":
-				endDate = event.endTime
-					? moment(event.endTime)
-					: moment(eventDate).add(
-						DEFAULT_END_TIME_HOURS_AFTER_SHOW_TIME,
-						"hours"
-					  );
-				break;
 			//If no option or set to custom, assume they're updating it manually
 			case "custom":
-			default:
 				endDate = moment(endDate);
 				if (endTime) {
 					endDate = endDate.set({
@@ -83,6 +74,16 @@ const formatForSaving = (ticketTypes, event) => {
 						second: endTime.get("second")
 					});
 				}
+				break;
+			case "close":
+			default:
+				endDate = event.endTime
+					? moment(event.endTime)
+					: moment(eventDate).add(
+						DEFAULT_END_TIME_HOURS_AFTER_SHOW_TIME,
+						"hours"
+					  );
+				break;
 		}
 
 		const ticket_pricing = [];
