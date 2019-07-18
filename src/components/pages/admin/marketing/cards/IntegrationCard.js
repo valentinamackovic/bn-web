@@ -184,7 +184,15 @@ class OrganizationUpdateCard extends Component {
 							error={errors.facebook_pixel_key}
 							value={facebook_pixel_key}
 							name="facebook_pixel_key"
-							label="Facebook Pixel API key"
+							label="Facebook Pixel ID "
+							labelProps={{
+								superText: `(how do I find my ID?)`,
+								onSuperTextClick: () => {
+									window.open(
+										"https://www.facebook.com/business/help/952192354843755"
+									);
+								}
+							}}
 							type="text"
 							onChange={e =>
 								this.setState({ facebook_pixel_key: e.target.value })
