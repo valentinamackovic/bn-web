@@ -1,12 +1,19 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import { withStyles, Typography, Collapse, Hidden } from "@material-ui/core";
+import {
+	withStyles,
+	Typography,
+	Collapse,
+	Hidden,
+	Divider
+} from "@material-ui/core";
 
 import moment from "moment";
 import Card from "../../../elements/Card";
 import { fontFamilyDemiBold, secondaryHex } from "../../../../config/theme";
 import FanActivityCardRow from "./FanActivityCardRow";
 import FanActivityTransferRow from "./FanActivityTransferRow";
+import FanActivityMobileRow from "./FanActivityMobileRow";
 import servedImage from "../../../../helpers/imagePathHelper";
 import FanActivityPurchaseRow from "./FanActivityPurchaseRow";
 import { Link } from "react-router-dom";
@@ -25,7 +32,25 @@ const styles = theme => ({
 	},
 	mobileActivityHeader: {
 		marginBottom: theme.spacing.unit * 2,
-		padding: theme.spacing.unit * 2
+		paddingTop: theme.spacing.unit * 2,
+		paddingRight: theme.spacing.unit * 2,
+		paddingLeft: theme.spacing.unit * 2
+	},
+	mobileHeaderTopRow: {
+		display: "flex",
+		flexDirection: "row",
+		marginTop: theme.spacing.unit,
+		alignItems: "flex-start"
+	},
+	mobileHeaderBottomRow: {
+		display: "flex",
+		flexDirection: "row",
+		marginTop: theme.spacing.unit * 2,
+		justifyContent: "space-between",
+		alignItems: "flex-end"
+	},
+	mobiIcon: {
+		marginRight: theme.spacing.unit * 2
 	},
 	bottomCard: {
 		margin: theme.spacing.unit / 2,
@@ -604,7 +629,7 @@ class FanHistoryActivityCard extends Component {
 								</FanActivityCardRow>
 								<Collapse in={expanded}>
 									<div className={classes.card}>
-										<FanActivityTransferRow>
+										<FanActivityMobileRow>
 											<Typography className={classes.greySubtitleCap}>
 												Tickets:
 											</Typography>
@@ -626,8 +651,8 @@ class FanHistoryActivityCard extends Component {
 											) : (
 												<div/>
 											)}
-										</FanActivityTransferRow>
-										<FanActivityTransferRow>
+										</FanActivityMobileRow>
+										<FanActivityMobileRow>
 											<Typography className={classes.darkGreySubtitle}>
 												{transfer_id}
 											</Typography>
@@ -645,7 +670,7 @@ class FanHistoryActivityCard extends Component {
 												</span>
 											</Typography>
 											<div/>
-										</FanActivityTransferRow>
+										</FanActivityMobileRow>
 									</div>
 								</Collapse>
 							</div>
@@ -692,16 +717,17 @@ class FanHistoryActivityCard extends Component {
 			case "Purchase":
 				activityCard = (
 					<div className={classes.root}>
+						<Divider/>
 						<div
 							onClick={onExpandChange}
 							className={classes.mobileActivityHeader}
 						>
 							<div>
-								<FanActivityCardRow>
-									<img src={servedImage("/icons/money-circle-active.svg")}/>
-									<Typography className={classes.greySubtitle}>
-										{moment(event_start).format("l hh:mmA")}
-									</Typography>
+								<div className={classes.mobileHeaderTopRow}>
+									<img
+										className={classes.mobiIcon}
+										src={servedImage("/icons/money-circle-active.svg")}
+									/>
 									<Typography>
 										<span className={classes.boldSpan}>Purchased</span>
 										&nbsp;
@@ -719,7 +745,11 @@ class FanHistoryActivityCard extends Component {
 										</span>
 										&nbsp;
 									</Typography>
-
+								</div>
+								<div className={classes.mobileHeaderBottomRow}>
+									<Typography className={classes.greySubtitle}>
+										{moment(event_start).format("l hh:mmA")}
+									</Typography>
 									{!expanded ? (
 										<div className={classes.showHideRow}>
 											<Typography className={classes.showHide}>
@@ -745,7 +775,7 @@ class FanHistoryActivityCard extends Component {
 											/>
 										</div>
 									)}
-								</FanActivityCardRow>
+								</div>
 								<Collapse in={expanded}>
 									<div className={classes.card}>
 										<FanActivityPurchaseRow>
@@ -829,7 +859,7 @@ class FanHistoryActivityCard extends Component {
 			case "CheckIn":
 				activityCard = (
 					<div className={classes.root}>
-						<Card
+						<div
 							variant={"raisedLight"}
 							onClick={onExpandChange}
 							className={classes.card}
@@ -898,14 +928,14 @@ class FanHistoryActivityCard extends Component {
 									</div>
 								</Collapse>
 							</div>
-						</Card>
+						</div>
 					</div>
 				);
 				break;
 			case "Refund":
 				activityCard = (
 					<div className={classes.root}>
-						<Card
+						<div
 							variant={"raisedLight"}
 							onClick={onExpandChange}
 							className={classes.card}
@@ -1020,14 +1050,14 @@ class FanHistoryActivityCard extends Component {
 									</div>
 								</Collapse>
 							</div>
-						</Card>
+						</div>
 					</div>
 				);
 				break;
 			case "Note":
 				activityCard = (
 					<div className={classes.root}>
-						<Card
+						<div
 							variant={"raisedLight"}
 							onClick={onExpandChange}
 							className={classes.card}
@@ -1086,7 +1116,7 @@ class FanHistoryActivityCard extends Component {
 									</div>
 								</Collapse>
 							</div>
-						</Card>
+						</div>
 					</div>
 				);
 				break;

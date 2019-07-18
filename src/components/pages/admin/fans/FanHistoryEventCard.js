@@ -58,8 +58,8 @@ const styles = theme => ({
 		display: "flex",
 		flexDirection: "row",
 		cursor: "pointer",
-		paddingTop: theme.spacing.unit * 2,
-		marginBottom: theme.spacing.unit * 2
+		paddingTop: theme.spacing.unit * 2
+		// marginBottom: theme.spacing.unit * 2
 	},
 	showHideIcon: {
 		paddingLeft: theme.spacing.unit,
@@ -206,38 +206,27 @@ class FanHistoryEventCard extends Component {
 								<Typography className={classes.greySubtitle}>
 									{event_loc}
 								</Typography>
-								<div className={classes.linkBox}>
-									{!expanded ? (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												Show all details
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/down-gray.svg")}
-											/>
-										</div>
-									) : (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												Hide details
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/up-gray.svg")}
-											/>
-										</div>
-									)}
-									<Typography>
-										<span className={classes.linkText}>cat</span>
-									</Typography>
-								</div>
+								{!expanded ? (
+									<div onClick={onExpandChange} className={classes.showHideRow}>
+										<Typography className={classes.showHide}>
+											Show all details
+										</Typography>
+										<img
+											className={classes.showHideIcon}
+											src={servedImage("/icons/down-gray.svg")}
+										/>
+									</div>
+								) : (
+									<div onClick={onExpandChange} className={classes.showHideRow}>
+										<Typography className={classes.showHide}>
+											Hide details
+										</Typography>
+										<img
+											className={classes.showHideIcon}
+											src={servedImage("/icons/up-gray.svg")}
+										/>
+									</div>
+								)}
 							</div>
 							<Collapse in={expanded}>
 								<div>
