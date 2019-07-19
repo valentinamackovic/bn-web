@@ -35,9 +35,18 @@ class FBPixelDialog extends React.Component {
 	}
 
 	validateFields() {
+		const isNum = /^\d+$/.test(this.state.facebook_pixel_key);
 		//Don't validate every field if the user has not tried to submit at least once
 		if (!this.submitAttempted) {
 			return true;
+		}
+
+		if (!isNum) {
+			notifications.show({
+				message: "Please enter a valid Pixel ID",
+				variant: "error"
+			});
+			return false;
 		}
 
 		const { organizationId } = this.props;
@@ -186,7 +195,7 @@ class FBPixelDialog extends React.Component {
 								);
 							}
 						}}
-						type="text"
+						type="number"
 						onChange={e =>
 							this.setState({ facebook_pixel_key: e.target.value })
 						}
@@ -205,7 +214,7 @@ class FBPixelDialog extends React.Component {
 						<Button
 							disabled={isSubmitting}
 							type="submit"
-							style={{ marginRight: 10 }}
+							style={{ marginRight: 10, flex: 1 }}
 							variant="callToAction"
 						>
 							{isSubmitting
