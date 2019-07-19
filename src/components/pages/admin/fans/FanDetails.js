@@ -9,9 +9,7 @@ import user from "../../../../stores/user";
 import Card from "../../../elements/Card";
 import { fontFamilyDemiBold } from "../../../../config/theme";
 import SocialIconLink from "../../../elements/social/SocialIconLink";
-import StyledLink from "../../../elements/StyledLink";
 import Loader from "../../../elements/loaders/Loader";
-import PropTypes from "prop-types";
 import moment from "moment-timezone";
 import servedImage from "../../../../helpers/imagePathHelper";
 import FanHistoryEventCard from "./FanHistoryEventCard";
@@ -112,6 +110,8 @@ class Fan extends Component {
 		this.state = {
 			profile: null,
 			fanHistory: null,
+			formattedEventStart: null,
+			formattedOccurredAt: null,
 			activeHeadings: { sales: true, attendance: false },
 			expandedRowKey: null
 		};
@@ -121,6 +121,13 @@ class Fan extends Component {
 	componentDidMount() {
 		this.loadFan();
 		this.loadHistory();
+	}
+
+	displayOrderDate(date) {
+		return moment
+			.utc(date)
+			.tz(user.currentOrgTimezone)
+			.format("llll");
 	}
 
 	onExpandChange(expandedRowKey) {
@@ -197,6 +204,7 @@ class Fan extends Component {
 				<FanHistoryEventCard
 					onExpandChange={() => this.onExpandChange(index)}
 					expanded={expanded}
+					eventStart={this.displayOrderDate(item.event.event_start)}
 					key={index}
 					profile={profile}
 					{...item}

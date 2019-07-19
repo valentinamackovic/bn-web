@@ -7,8 +7,6 @@ import {
 	Hidden,
 	Divider
 } from "@material-ui/core";
-
-import moment from "moment";
 import Card from "../../../elements/Card";
 import { fontFamilyDemiBold, secondaryHex } from "../../../../config/theme";
 import FanActivityCardRow from "./FanActivityCardRow";
@@ -161,13 +159,20 @@ class FanHistoryActivityCard extends Component {
 			events,
 			redeemed_for,
 			ticket_numbers,
-			occured_at,
+			occurred_at,
 			ticket_instance_id
 		} = this.props.item;
 
 		const { name, event_start, venue } = this.props.event;
 
-		const { onExpandChange, expanded, profile, classes } = this.props;
+		const {
+			onExpandChange,
+			expanded,
+			profile,
+			occurredAt,
+			classes,
+			eventStart
+		} = this.props;
 
 		let activityCard = null;
 
@@ -180,7 +185,7 @@ class FanHistoryActivityCard extends Component {
 								<FanActivityCardRow>
 									<img src={servedImage("/icons/money-circle-active.svg")}/>
 									<Typography className={classes.greySubtitle}>
-										{moment(event_start).format("l hh:mmA")}
+										{occurredAt}
 									</Typography>
 									<Typography>
 										<span className={classes.boldSpan}>Purchased</span>
@@ -301,9 +306,7 @@ class FanHistoryActivityCard extends Component {
 												{venue.address}
 											</span>
 											<br/>
-											<span className={classes.greySubtitle}>
-												{moment(event_start).format("llll")}
-											</span>
+											<span className={classes.greySubtitle}>{eventStart}</span>
 										</Typography>
 									</div>
 								</Collapse>
@@ -320,7 +323,7 @@ class FanHistoryActivityCard extends Component {
 								<FanActivityCardRow>
 									<img src={servedImage("/icons/calendar-active.svg")}/>
 									<Typography className={classes.greySubtitle}>
-										{moment(event_start).format("l hh:mmA")}
+										{occurredAt}
 									</Typography>
 									<Typography>
 										<span className={classes.pinkSpan + " " + classes.boldSpan}>
@@ -379,9 +382,7 @@ class FanHistoryActivityCard extends Component {
 												{redeemed_for.full_name}&nbsp;
 											</span>
 											on&nbsp;
-											<span className={classes.greySubtitle}>
-												{moment(occured_at).format("l hh:mmA")}
-											</span>
+											<span className={classes.greySubtitle}>{occurredAt}</span>
 										</Typography>
 									</div>
 								</Collapse>
@@ -398,7 +399,7 @@ class FanHistoryActivityCard extends Component {
 								<FanActivityCardRow>
 									<img src={servedImage("/icons/refund-active.svg")}/>
 									<Typography className={classes.greySubtitle}>
-										{moment(event_start).format("l hh:mmA")}
+										{occurredAt}
 									</Typography>
 									<Typography>
 										<span className={classes.pinkSpan + " " + classes.boldSpan}>
@@ -522,7 +523,7 @@ class FanHistoryActivityCard extends Component {
 								<FanActivityCardRow>
 									<img src={servedImage("/icons/note-circle-gray.svg")}/>
 									<Typography className={classes.greySubtitle}>
-										{moment(event_start).format("l hh:mmA")}
+										{occurredAt}
 									</Typography>
 									<Typography>
 										<span className={classes.pinkSpan + " " + classes.boldSpan}>
@@ -602,7 +603,7 @@ class FanHistoryActivityCard extends Component {
 										/>
 									)}
 									<Typography className={classes.greySubtitle}>
-										{moment(event_start).format("l hh:mmA")}
+										{occurredAt}
 									</Typography>
 									<Typography>
 										<span className={classes.pinkSpan + " " + classes.boldSpan}>
@@ -741,13 +742,19 @@ class FanHistoryActivityCard extends Component {
 			redeemed_by,
 			events,
 			redeemed_for,
-			occured_at,
+			occurred_at,
 			ticket_instance_id
 		} = this.props.item;
 
 		const { name, event_start, venue } = this.props.event;
 
-		const { onExpandChange, expanded, profile, classes } = this.props;
+		const {
+			onExpandChange,
+			expanded,
+			profile,
+			occurredAt,
+			classes
+		} = this.props;
 
 		let activityCard = null;
 
@@ -783,7 +790,7 @@ class FanHistoryActivityCard extends Component {
 								</div>
 								<div className={classes.mobileHeaderBottomRow}>
 									<Typography className={classes.greySubtitle}>
-										{moment(event_start).format("l hh:mmA")}
+										{occurredAt}
 									</Typography>
 									{!expanded ? (
 										<div
@@ -871,7 +878,7 @@ class FanHistoryActivityCard extends Component {
 								</div>
 								<div className={classes.mobileHeaderBottomRow}>
 									<Typography className={classes.greySubtitle}>
-										{moment(event_start).format("l hh:mmA")}
+										{occurredAt}
 									</Typography>
 									{!expanded ? (
 										<div
@@ -920,9 +927,7 @@ class FanHistoryActivityCard extends Component {
 												{redeemed_for.full_name}&nbsp;
 											</span>
 											on&nbsp;
-											<span className={classes.greySubtitle}>
-												{moment(occured_at).format("l hh:mmA")}
-											</span>
+											<span className={classes.greySubtitle}>{occurredAt}</span>
 										</Typography>
 									</div>
 								</Collapse>
@@ -962,7 +967,7 @@ class FanHistoryActivityCard extends Component {
 								</div>
 								<div className={classes.mobileHeaderBottomRow}>
 									<Typography className={classes.greySubtitle}>
-										{moment(event_start).format("l hh:mmA")}
+										{occurredAt}
 									</Typography>
 									{!expanded ? (
 										<div
@@ -1069,7 +1074,7 @@ class FanHistoryActivityCard extends Component {
 								</div>
 								<div className={classes.mobileHeaderBottomRow}>
 									<Typography className={classes.greySubtitle}>
-										{moment(event_start).format("l hh:mmA")}
+										{occurredAt}
 									</Typography>
 									{!expanded ? (
 										<div
@@ -1160,7 +1165,7 @@ class FanHistoryActivityCard extends Component {
 								</div>
 								<div className={classes.mobileHeaderBottomRow}>
 									<Typography className={classes.greySubtitle}>
-										{moment(event_start).format("l hh:mmA")}
+										{occurredAt}
 									</Typography>
 									{!expanded ? (
 										<div

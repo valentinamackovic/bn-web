@@ -15,6 +15,7 @@ import Loader from "../../../elements/loaders/Loader";
 import Grid from "@material-ui/core/Grid";
 import FanHistoryActivityCard from "./FanHistoryActivityCard";
 import servedImage from "../../../../helpers/imagePathHelper";
+import user from "../../../../stores/user";
 
 const styles = theme => ({
 	root: {
@@ -94,9 +95,16 @@ class FanHistoryEventCard extends Component {
 		}
 	}
 
+	displayOrderDate(date) {
+		return moment
+			.utc(date)
+			.tz(user.currentOrgTimezone)
+			.format("l hh:mmA");
+	}
+
 	renderActivities() {
 		const { expandedRowKey } = this.state;
-		const { activity_items, event } = this.props;
+		const { activity_items, event, eventStart } = this.props;
 		if (activity_items === null) {
 			return <Loader>Loading history...</Loader>;
 		}
@@ -108,8 +116,10 @@ class FanHistoryEventCard extends Component {
 					profile={this.props.profile}
 					onExpandChange={() => this.onExpandChange(index)}
 					expanded={expanded}
+					eventStart={eventStart}
 					key={index}
 					item={item}
+					occurredAt={this.displayOrderDate(item.occurred_at)}
 					event={event}
 				/>
 			);
@@ -121,10 +131,8 @@ class FanHistoryEventCard extends Component {
 			order_date,
 			event,
 			event_loc,
-			event_start,
-			event_id,
-			activity_items,
 			onExpandChange,
+			eventStart,
 			expanded,
 			classes
 		} = this.props;
@@ -142,7 +150,7 @@ class FanHistoryEventCard extends Component {
 									{event.venue.address}
 								</Typography>
 								<Typography className={classes.greySubtitle}>
-									{moment(event_start).format("llll")}
+									{eventStart}
 								</Typography>
 								<Typography className={classes.greySubtitle}>
 									{event_loc}
@@ -201,7 +209,7 @@ class FanHistoryEventCard extends Component {
 									{event.venue.address}
 								</Typography>
 								<Typography className={classes.greySubtitle}>
-									{moment(event_start).format("llll")}
+									{eventStart}
 								</Typography>
 								<Typography className={classes.greySubtitle}>
 									{event_loc}
