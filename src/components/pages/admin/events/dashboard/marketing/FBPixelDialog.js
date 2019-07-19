@@ -35,23 +35,18 @@ class FBPixelDialog extends React.Component {
 	}
 
 	validateFields() {
-		const isNum = /^\d+$/.test(this.state.facebook_pixel_key);
+		const { facebook_pixel_key } = this.state;
+		const isNum = /^\d+$/.test(facebook_pixel_key);
 		//Don't validate every field if the user has not tried to submit at least once
 		if (!this.submitAttempted) {
 			return true;
 		}
 
-		if (!isNum) {
-			notifications.show({
-				message: "Please enter a valid Pixel ID",
-				variant: "error"
-			});
-			return false;
-		}
-
-		const { organizationId } = this.props;
-
 		const errors = {};
+
+		if (!isNum) {
+			errors.facebook_pixel_key = "Please enter a valid Pixel ID";
+		}
 
 		this.setState({ errors });
 
@@ -101,11 +96,14 @@ class FBPixelDialog extends React.Component {
 	}
 
 	updateOrganization(id, params, onSuccess) {
+		this.setState({ isSubmitting: true });
+
 		//Remove owner_user_id
 		Bigneon()
 			.organizations.update({ id, ...params })
 			.then(() => {
 				onSuccess(id);
+				this.props.onClose();
 			})
 			.catch(error => {
 				this.setState({ isSubmitting: false });
