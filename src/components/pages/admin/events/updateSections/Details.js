@@ -845,24 +845,24 @@ class Details extends Component {
 					</Grid>
 				</Grid>
 
-				<Grid container spacing={32}>
-					<Grid item xs={12} sm={12} md={5} lg={5}>
-						<Collapse in={!showMarketingSettings}>
-							<Button
-								style={{ marginBottom: 20, width: "100%" }}
-								variant="additional"
-								onClick={() =>
-									this.changeDetails({ showMarketingSettings: true })
-								}
-							>
-								Marketing settings
-							</Button>
-						</Collapse>
-						<Collapse in={showMarketingSettings}>
-							{this.renderMarketing()}
-						</Collapse>
-					</Grid>
-				</Grid>
+				{/*<Grid container spacing={32}>*/}
+				{/*	<Grid item xs={12} sm={12} md={5} lg={5}>*/}
+				{/*		<Collapse in={!showMarketingSettings}>*/}
+				{/*			<Button*/}
+				{/*				style={{ marginBottom: 20, width: "100%" }}*/}
+				{/*				variant="additional"*/}
+				{/*				onClick={() =>*/}
+				{/*					this.changeDetails({ showMarketingSettings: true })*/}
+				{/*				}*/}
+				{/*			>*/}
+				{/*				Marketing settings*/}
+				{/*			</Button>*/}
+				{/*		</Collapse>*/}
+				{/*		<Collapse in={showMarketingSettings}>*/}
+				{/*			{this.renderMarketing()}*/}
+				{/*		</Collapse>*/}
+				{/*	</Grid>*/}
+				{/*</Grid>*/}
 			</React.Fragment>
 		);
 	}
