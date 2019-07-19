@@ -175,7 +175,7 @@ class FanHistoryActivityCard extends Component {
 			case "Purchase":
 				activityCard = (
 					<div className={classes.root}>
-						<Card variant={"raisedLight"} className={classes.card}>
+						<Card variant={"subCard"} className={classes.card}>
 							<div>
 								<FanActivityCardRow>
 									<img src={servedImage("/icons/money-circle-active.svg")}/>
@@ -315,7 +315,7 @@ class FanHistoryActivityCard extends Component {
 			case "CheckIn":
 				activityCard = (
 					<div className={classes.root}>
-						<Card variant={"raisedLight"} className={classes.card}>
+						<Card variant={"subCard"} className={classes.card}>
 							<div>
 								<FanActivityCardRow>
 									<img src={servedImage("/icons/calendar-active.svg")}/>
@@ -393,7 +393,7 @@ class FanHistoryActivityCard extends Component {
 			case "Refund":
 				activityCard = (
 					<div className={classes.root}>
-						<Card variant={"raisedLight"} className={classes.card}>
+						<Card variant={"subCard"} className={classes.card}>
 							<div>
 								<FanActivityCardRow>
 									<img src={servedImage("/icons/refund-active.svg")}/>
@@ -517,7 +517,7 @@ class FanHistoryActivityCard extends Component {
 			case "Note":
 				activityCard = (
 					<div className={classes.root}>
-						<Card variant={"raisedLight"} className={classes.card}>
+						<Card variant={"subCard"} className={classes.card}>
 							<div>
 								<FanActivityCardRow>
 									<img src={servedImage("/icons/note-circle-gray.svg")}/>
@@ -585,7 +585,7 @@ class FanHistoryActivityCard extends Component {
 			case "Transfer":
 				activityCard = (
 					<div className={classes.root}>
-						<Card variant={"raisedLight"} className={classes.card}>
+						<Card variant={"subCard"} className={classes.card}>
 							<div>
 								<FanActivityCardRow>
 									{status === "Cancelled" ? (
