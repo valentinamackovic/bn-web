@@ -34,6 +34,9 @@ const styles = theme => ({
 		paddingLeft: 10,
 		paddingRight: 10,
 		color: "gray"
+	},
+	creditCardFee: {
+		textAlign: "left"
 	}
 });
 
@@ -145,13 +148,15 @@ class FeeSchedule extends Component {
 				const {
 					client_event_fee_in_cents,
 					company_event_fee_in_cents,
-					event_fee_in_cents
+					event_fee_in_cents,
+					cc_fee_percent
 				} = response.data;
 
 				this.setState({
 					company_event_fee_in_cents,
 					client_event_fee_in_cents,
-					event_fee_in_cents
+					event_fee_in_cents,
+					cc_fee_percent
 				});
 			})
 			.catch(error => {
@@ -539,7 +544,8 @@ class FeeSchedule extends Component {
 			ranges,
 			company_event_fee_in_cents,
 			client_event_fee_in_cents,
-			event_fee_in_cents
+			event_fee_in_cents,
+			cc_fee_percent
 		} = this.state;
 
 		return (
@@ -597,16 +603,24 @@ class FeeSchedule extends Component {
 				<FeeRow>
 					<Typography className={classes.tableHeading}>Company</Typography>
 					<Typography className={classes.tableHeading}>Client</Typography>
-					<Typography className={classes.tableHeading}>&nbsp;</Typography>
+					<Typography
+						className={[classes.tableHeading, classes.creditCardFee].join(" ")}
+					>
+						Credit Card
+					</Typography>
 					<Typography className={classes.tableHeading}>&nbsp;</Typography>
 					<Typography className={classes.tableHeading}>Total</Typography>
 				</FeeRow>
 				<FeeRow shaded>
 					<DollarValue>{company_event_fee_in_cents}</DollarValue>
 					<DollarValue>{client_event_fee_in_cents}</DollarValue>
+					<Typography className={classes.creditCardFee}>
+						{cc_fee_percent}%
+					</Typography>
 					<Typography className={classes.tableHeading}>&nbsp;</Typography>
-					<Typography className={classes.tableHeading}>&nbsp;</Typography>
-					<DollarValue>{event_fee_in_cents}</DollarValue>
+					<Typography>
+						${(event_fee_in_cents / 100).toFixed(2)} + {cc_fee_percent}%
+					</Typography>
 				</FeeRow>
 			</div>
 		);
