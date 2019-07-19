@@ -47,7 +47,7 @@ const SelectGroup = props => {
 	let content = <MenuItem disabled>{missingItemsLabel || "No items"}</MenuItem>;
 	if (items.length > 0) {
 		content = items.map(item => (
-			<MenuItem key={item.value} value={item.value}>
+			<MenuItem disabled={item.disabled} key={item.value} value={item.value}>
 				{item.label || item.name || item.value}
 			</MenuItem>
 		));

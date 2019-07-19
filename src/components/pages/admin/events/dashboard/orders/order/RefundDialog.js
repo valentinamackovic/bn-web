@@ -83,12 +83,37 @@ const styles = theme => ({
 
 const refundReasons = [
 	{
-		value: "exchange",
-		label: "Exchange"
+		value: "empty",
+		label: "Select a reason",
+		disabled: true
 	},
 	{
-		value: "event-cancelled",
-		label: "Event cancelled"
+		value: "cancellation",
+		label: "Cancellation/Postponement"
+	},
+	{
+		value: "exchange",
+		label: "Exchange/Upgrade"
+	},
+	{
+		value: "overcart",
+		label: "Overcart"
+	},
+	{
+		value: "unable-to-attend",
+		label: "Unable to attend"
+	},
+	{
+		value: "fraud",
+		label: "Fraud/Chargeback"
+	},
+	{
+		value: "snad",
+		label: "SNAD (significantly not as described)"
+	},
+	{
+		value: "price",
+		label: "Price discrepancy"
 	},
 	{
 		value: "other",
@@ -101,7 +126,7 @@ class RefundDialog extends Component {
 		super(props);
 
 		this.defaultState = {
-			reasonVal: "",
+			reasonVal: "empty",
 			selectedRefundType: "fullRefund",
 			isRefunding: false
 		};
