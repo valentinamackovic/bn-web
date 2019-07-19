@@ -59,13 +59,12 @@ class FBPixelDialog extends React.Component {
 
 	componentDidMount() {
 		//If we're editing an existing org then load the current details
-		//"/organizations/{id}"
 
-		const { organizationId } = this.props;
+		const { eventId } = this.props;
 
-		if (organizationId) {
+		if (eventId) {
 			Bigneon()
-				.organizations.read({ id: organizationId })
+				.events.read({ id: eventId })
 				.then(response => {
 					const { owner_user_id, facebook_pixel_key } = response.data;
 
@@ -77,7 +76,7 @@ class FBPixelDialog extends React.Component {
 				.catch(error => {
 					console.error(error);
 
-					let message = "Loading organization details failed.";
+					let message = "Loading facebook pixel ID failed.";
 					if (
 						error.response &&
 						error.response.data &&
@@ -95,12 +94,12 @@ class FBPixelDialog extends React.Component {
 		}
 	}
 
-	updateOrganization(id, params, onSuccess) {
+	updateEvent(id, params, onSuccess) {
 		this.setState({ isSubmitting: true });
 
 		//Remove owner_user_id
 		Bigneon()
-			.organizations.update({ id, ...params })
+			.events.update({ id, ...params })
 			.then(() => {
 				onSuccess(id);
 				this.props.onClose();
@@ -108,7 +107,7 @@ class FBPixelDialog extends React.Component {
 			.catch(error => {
 				this.setState({ isSubmitting: false });
 
-				let message = "Update organization failed.";
+				let message = "Updating event failed.";
 				if (
 					error.response &&
 					error.response.data &&
@@ -134,19 +133,19 @@ class FBPixelDialog extends React.Component {
 		}
 
 		const { facebook_pixel_key } = this.state;
-		const { organizationId } = this.props;
+		const { eventId } = this.props;
 
 		const orgDetails = {
 			facebook_pixel_key
 		};
 
 		//If we're updating an existing org
-		if (organizationId) {
-			this.updateOrganization(organizationId, orgDetails, () => {
+		if (eventId) {
+			this.updateEvent(eventId, orgDetails, () => {
 				this.setState({ isSubmitting: false, wasSuccess: true });
 
 				notifications.show({
-					message: "Integrations updated",
+					message: "Pixel ID updated",
 					variant: "success"
 				});
 			});
@@ -156,7 +155,7 @@ class FBPixelDialog extends React.Component {
 	}
 
 	render() {
-		const { organizationId, onClose, open } = this.props;
+		const { eventId, onClose, open } = this.props;
 
 		const { classes } = this.props;
 		const {
@@ -215,13 +214,7 @@ class FBPixelDialog extends React.Component {
 							style={{ marginRight: 10, flex: 1 }}
 							variant="callToAction"
 						>
-							{isSubmitting
-								? organizationId
-									? "Creating..."
-									: "Updating..."
-								: organizationId
-									? "Update"
-									: "Create"}
+							{isSubmitting ? "Update" : "Create"}
 						</Button>
 					</div>
 				</form>
