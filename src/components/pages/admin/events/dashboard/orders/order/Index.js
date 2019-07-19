@@ -195,6 +195,7 @@ class SingleOrder extends Component {
 							timezone={timezone}
 							user={order.user}
 							eventId={eventDetails.id}
+							orderId={order.id}
 						/>
 					</React.Fragment>
 				) : null}
