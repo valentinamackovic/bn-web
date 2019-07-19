@@ -20,6 +20,7 @@ import VisitEventPage from "../../../../elements/VisitEventPage";
 import Loader from "../../../../elements/loaders/Loader";
 import Divider from "../../../../common/Divider";
 import AffiliateLinkGeneratorDialog from "./links/AffiliateLinkGeneratorDialog";
+import FBPixelDialog from "./marketing/FBPixelDialog";
 
 const styles = theme => ({
 	container: {
@@ -103,7 +104,8 @@ class EventDashboardContainer extends Component {
 			anchorToolsEl: null,
 			anchorReportsEl: null,
 			anchorMarketingEl: null,
-			showAffiliateLinkDialog: false
+			showAffiliateLinkDialog: false,
+			showFBPixelDialog: false
 		};
 	}
 
@@ -158,6 +160,11 @@ class EventDashboardContainer extends Component {
 
 	openAffiliateLinkDialog() {
 		this.setState({ showAffiliateLinkDialog: true });
+		this.handleToolsMenuClose();
+	}
+
+	openFBPixelDialog() {
+		this.setState({ showFBPixelDialog: true });
 		this.handleToolsMenuClose();
 	}
 
@@ -238,6 +245,13 @@ class EventDashboardContainer extends Component {
 				{user.hasScope("event:write") ? (
 					<MenuItem onClick={this.openAffiliateLinkDialog.bind(this)}>
 						Affiliate Tracking Links
+					</MenuItem>
+				) : (
+					<span/>
+				)}
+				{user.hasScope("event:write") ? (
+					<MenuItem onClick={this.openFBPixelDialog.bind(this)}>
+						Facebook Pixel ID
 					</MenuItem>
 				) : (
 					<span/>
@@ -442,7 +456,7 @@ class EventDashboardContainer extends Component {
 	}
 
 	render() {
-		const { event, showAffiliateLinkDialog } = this.state;
+		const { event, showAffiliateLinkDialog, showFBPixelDialog } = this.state;
 		const {
 			classes,
 			children,
@@ -450,6 +464,7 @@ class EventDashboardContainer extends Component {
 			layout,
 			additionalDesktopMenuContent
 		} = this.props;
+		const organizationId = user.currentOrganizationId;
 
 		if (!event) {
 			return <Loader/>;
@@ -474,6 +489,12 @@ class EventDashboardContainer extends Component {
 					eventId={id}
 					open={showAffiliateLinkDialog}
 					onClose={() => this.setState({ showAffiliateLinkDialog: false })}
+				/>
+				<FBPixelDialog
+					eventId={id}
+					organizationId={organizationId}
+					open={showFBPixelDialog}
+					onClose={() => this.setState({ showFBPixelDialog: false })}
 				/>
 				<Grid container className={classes.headerContainer}>
 					<Grid item xs={12} sm={12} lg={8}>
