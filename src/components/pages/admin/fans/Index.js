@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { withStyles, Typography, Hidden } from "@material-ui/core";
-import moment from "moment";
+import moment from "moment-timezone";
 
 import notifications from "../../../../stores/notifications";
 import Bigneon from "../../../../helpers/bigneon";

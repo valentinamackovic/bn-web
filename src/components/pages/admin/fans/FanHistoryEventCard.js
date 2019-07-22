@@ -8,7 +8,7 @@ import {
 	Divider
 } from "@material-ui/core";
 
-import moment from "moment";
+import moment from "moment-timezone";
 import Card from "../../../elements/Card";
 import { fontFamilyDemiBold, secondaryHex } from "../../../../config/theme";
 import Loader from "../../../elements/loaders/Loader";
