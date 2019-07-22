@@ -1,12 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import {
-	withStyles,
-	Typography,
-	Collapse,
-	Hidden,
-	Divider
-} from "@material-ui/core";
+import { withStyles, Typography, Collapse, Hidden } from "@material-ui/core";
 
 import moment from "moment-timezone";
 import Card from "../../../elements/Card";
@@ -15,7 +9,6 @@ import Loader from "../../../elements/loaders/Loader";
 import Grid from "@material-ui/core/Grid";
 import FanHistoryActivityCard from "./FanHistoryActivityCard";
 import servedImage from "../../../../helpers/imagePathHelper";
-import user from "../../../../stores/user";
 
 const styles = theme => ({
 	root: {

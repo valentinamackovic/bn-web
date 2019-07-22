@@ -72,6 +72,8 @@ const styles = theme => ({
 	}
 });
 
+const organization_tz = user.currentOrganizationId;
+
 class FanList extends Component {
 	constructor(props) {
 		super(props);
@@ -97,7 +99,6 @@ class FanList extends Component {
 
 	exportCSV() {
 		const organization_id = user.currentOrganizationId;
-
 		if (!organization_id) {
 			return null;
 		}
@@ -147,13 +148,13 @@ class FanList extends Component {
 						email,
 						moment
 							.utc(last_order_time)
-							.local()
+							.tz(organization_tz)
 							.format("MM/DD/YYYY h:mm:A"),
 						order_count,
 						`$${Math.round(revenue_in_cents / 100)}`,
 						moment
 							.utc(created_at)
-							.local()
+							.tz(organization_tz)
 							.format("MM/DD/YYYY h:mm:A")
 					]);
 				});
@@ -274,7 +275,7 @@ class FanList extends Component {
 										{last_order_time
 											? moment
 												.utc(last_order_time)
-												.local()
+												.tz(organization_tz)
 												.format("MM/DD/YYYY")
 											: "-"}
 									</Typography>
@@ -288,7 +289,7 @@ class FanList extends Component {
 										{created_at
 											? moment
 												.utc(created_at)
-												.local()
+												.tz(organization_tz)
 												.format("MM/DD/YYYY")
 											: "-"}
 									</Typography>

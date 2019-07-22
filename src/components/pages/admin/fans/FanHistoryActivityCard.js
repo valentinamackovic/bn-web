@@ -145,7 +145,6 @@ class FanHistoryActivityCard extends Component {
 			status,
 			total_in_cents,
 			ticket_ids,
-			transfer_id,
 			destination_addresses,
 			accepted_by,
 			reason,
@@ -158,12 +157,10 @@ class FanHistoryActivityCard extends Component {
 			redeemed_by,
 			events,
 			redeemed_for,
-			ticket_numbers,
-			occurred_at,
-			ticket_instance_id
+			ticket_numbers
 		} = this.props.item;
 
-		const { name, event_start, venue } = this.props.event;
+		const { name, venue } = this.props.event;
 
 		const {
 			onExpandChange,
@@ -724,29 +721,22 @@ class FanHistoryActivityCard extends Component {
 		const {
 			ticket_quantity,
 			order_number,
-			action,
 			status,
 			total_in_cents,
 			ticket_ids,
-			transfer_id,
 			destination_addresses,
-			accepted_by,
 			reason,
 			refund_items,
 			note,
 			order_id,
 			transfer_key,
-			initiated_by,
 			ticket_number,
 			ticket_numbers,
 			redeemed_by,
-			events,
-			redeemed_for,
-			occurred_at,
-			ticket_instance_id
+			redeemed_for
 		} = this.props.item;
 
-		const { name, event_start, venue } = this.props.event;
+		const { name } = this.props.event;
 
 		const {
 			onExpandChange,
