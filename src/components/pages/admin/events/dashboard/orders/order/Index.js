@@ -183,7 +183,7 @@ class SingleOrder extends Component {
 
 				{isReady ? (
 					<React.Fragment>
-						<Typography className={classes.heading}>Order history</Typography>
+						{/*<Typography className={classes.heading}>Order history</Typography>*/}
 
 						<Typography className={classes.heading}>Add note</Typography>
 						<CreateNote orderId={order.id}/>

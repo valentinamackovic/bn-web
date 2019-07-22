@@ -22,6 +22,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MobileOptionsControlDialog from "../../../../../../elements/MobileOptionsControlDialog";
 import notification from "../../../../../../../stores/notifications";
 import RefundDialog from "./RefundDialog";
+import user from "../../../../../../../stores/user";
 
 const styles = theme => ({
 	root: {
@@ -312,17 +313,20 @@ class OrderItemsCard extends Component {
 			{
 				label: "Resend Confirmation Email",
 				onClick: this.resendConfirmationEmail.bind(this)
-			},
-			{
-				label: `Refund Event Total ${!orderRefundable ? "(Unavailable)" : ""}`,
-				disabled: !orderRefundable,
-				onClick: this.onRefundClick.bind(this)
 			}
 		];
 
+		if (user.hasScope("order:refund")) {
+			orderControlOptions.push({
+				label: `Refund Event Total ${!orderRefundable ? "(Unavailable)" : ""}`,
+				disabled: !orderRefundable,
+				onClick: this.onRefundClick.bind(this)
+			});
+		}
+
 		const venueDisplayName = `${venue.name}, ${venue.address}, ${venue.city}`;
 
-		const accessCodeType = "TODO";
+		const accessCodeType = ""; //TODO
 		const qty = items.length;
 
 		return (
