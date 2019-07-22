@@ -220,6 +220,7 @@ class RefundDialog extends Component {
 			switch (item_type) {
 				case "PerUnitFees":
 				case "EventFees":
+				case "CreditCardFees":
 					feesOnlyInCents += unit_price_in_cents * quantity;
 					break;
 				case "Tickets":
