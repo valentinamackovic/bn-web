@@ -123,10 +123,10 @@ class Fan extends Component {
 		this.loadHistory();
 	}
 
-	displayOrderDate(date) {
+	displayOrderDate(date, timezone) {
 		return moment
 			.utc(date)
-			.tz(user.currentOrgTimezone)
+			.tz(timezone)
 			.format("llll");
 	}
 
@@ -204,7 +204,11 @@ class Fan extends Component {
 				<FanHistoryEventCard
 					onExpandChange={() => this.onExpandChange(index)}
 					expanded={expanded}
-					eventStart={this.displayOrderDate(item.event.event_start)}
+					eventStart={this.displayOrderDate(
+						item.event.event_start,
+						item.event.venue.timezone
+					)}
+					eventTimeZone={item.event.venue.timezone}
 					key={index}
 					profile={profile}
 					{...item}

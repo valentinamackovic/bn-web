@@ -95,16 +95,16 @@ class FanHistoryEventCard extends Component {
 		}
 	}
 
-	displayOrderDate(date) {
+	displayOrderDate(date, timezone) {
 		return moment
 			.utc(date)
-			.tz(user.currentOrgTimezone)
+			.tz(timezone)
 			.format("l hh:mmA");
 	}
 
 	renderActivities() {
 		const { expandedRowKey } = this.state;
-		const { activity_items, event, eventStart } = this.props;
+		const { activity_items, event, eventStart, eventTimeZone } = this.props;
 		if (activity_items === null) {
 			return <Loader>Loading history...</Loader>;
 		}
@@ -119,7 +119,7 @@ class FanHistoryEventCard extends Component {
 					eventStart={eventStart}
 					key={index}
 					item={item}
-					occurredAt={this.displayOrderDate(item.occurred_at)}
+					occurredAt={this.displayOrderDate(item.occurred_at, eventTimeZone)}
 					event={event}
 				/>
 			);
