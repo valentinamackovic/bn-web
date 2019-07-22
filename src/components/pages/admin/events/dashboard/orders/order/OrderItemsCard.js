@@ -193,6 +193,10 @@ class OrderItemsCard extends Component {
 	}
 
 	renderOptionsMenu(orderControlOptions) {
+		if (orderControlOptions.length === 0) {
+			return null;
+		}
+
 		const { anchorOptionsEl } = this.state;
 		const open = Boolean(anchorOptionsEl);
 
@@ -301,20 +305,17 @@ class OrderItemsCard extends Component {
 			{ flex: 1, textAlign: "right" }
 		];
 
-		const moreIcon = (
-			<IconButton onClick={this.handleOptionsMenu.bind(this)}>
-				<MoreHorizIcon nativeColor="#2c3136"/>
-			</IconButton>
-		);
-
 		const orderRefundable = this.orderRefundable();
 
-		const orderControlOptions = [
-			{
+		const orderControlOptions = [];
+
+		//TODO when api endpoint is ready use correct permission
+		if (user.isAdmin) {
+			orderControlOptions.push({
 				label: "Resend Confirmation Email",
 				onClick: this.resendConfirmationEmail.bind(this)
-			}
-		];
+			});
+		}
 
 		if (user.hasScope("order:refund")) {
 			orderControlOptions.push({
@@ -323,6 +324,16 @@ class OrderItemsCard extends Component {
 				onClick: this.onRefundClick.bind(this)
 			});
 		}
+
+		//Hide the button if there are no available menu options
+		const moreIcon =
+			orderControlOptions.length > 1 ? (
+				<IconButton onClick={this.handleOptionsMenu.bind(this)}>
+					<MoreHorizIcon nativeColor="#2c3136"/>
+				</IconButton>
+			) : (
+				<span/>
+			);
 
 		const venueDisplayName = `${venue.name}, ${venue.address}, ${venue.city}`;
 
@@ -478,7 +489,11 @@ class OrderItemsCard extends Component {
 
 						<MobileOptionsControlDialog
 							open={!!mobileOptionsControlOpen}
-							onClose={() => this.setState({ mobileOptionsControlOpen: null })}
+							onClose={() =>
+								this.setState({
+									mobileOptionsControlOpen: null
+								})
+							}
 							options={orderControlOptions}
 						/>
 					</Card>
