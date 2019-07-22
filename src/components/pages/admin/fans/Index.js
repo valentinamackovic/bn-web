@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import { withStyles, Typography } from "@material-ui/core";
-import moment from "moment";
+import { withStyles, Typography, Hidden } from "@material-ui/core";
+import moment from "moment-timezone";
 
 import notifications from "../../../../stores/notifications";
 import Bigneon from "../../../../helpers/bigneon";
@@ -29,6 +29,11 @@ const styles = theme => ({
 		padding: theme.spacing.unit * 6,
 		paddingLeft: theme.spacing.unit * 8,
 		paddingRight: theme.spacing.unit * 8
+	},
+	mobiContent: {
+		padding: theme.spacing.unit * 2,
+		paddingLeft: theme.spacing.unit * 2,
+		paddingRight: theme.spacing.unit * 2
 	},
 	spacer: {
 		marginTop: theme.spacing.unit * 4
@@ -67,6 +72,8 @@ const styles = theme => ({
 	}
 });
 
+const organization_tz = user.currentOrganizationId;
+
 class FanList extends Component {
 	constructor(props) {
 		super(props);
@@ -92,7 +99,6 @@ class FanList extends Component {
 
 	exportCSV() {
 		const organization_id = user.currentOrganizationId;
-
 		if (!organization_id) {
 			return null;
 		}
@@ -142,13 +148,13 @@ class FanList extends Component {
 						email,
 						moment
 							.utc(last_order_time)
-							.local()
+							.tz(organization_tz)
 							.format("MM/DD/YYYY h:mm:A"),
 						order_count,
 						`$${Math.round(revenue_in_cents / 100)}`,
 						moment
 							.utc(created_at)
-							.local()
+							.tz(organization_tz)
 							.format("MM/DD/YYYY h:mm:A")
 					]);
 				});
@@ -269,7 +275,7 @@ class FanList extends Component {
 										{last_order_time
 											? moment
 												.utc(last_order_time)
-												.local()
+												.tz(organization_tz)
 												.format("MM/DD/YYYY")
 											: "-"}
 									</Typography>
@@ -283,10 +289,82 @@ class FanList extends Component {
 										{created_at
 											? moment
 												.utc(created_at)
-												.local()
+												.tz(organization_tz)
 												.format("MM/DD/YYYY")
 											: "-"}
 									</Typography>
+								</FanRow>
+							</Link>
+						);
+					})}
+
+					<br/>
+					<Pagination
+						isLoading={isLoading}
+						paging={paging}
+						onChange={this.loadFans.bind(this)}
+					/>
+				</div>
+			</Card>
+		);
+	}
+
+	renderUsersMobile() {
+		const { users, paging, isLoading } = this.state;
+		const { classes } = this.props;
+
+		if (users === null) {
+			return <Loader/>;
+		}
+
+		if (users.length === 0) {
+			return <Typography>No fans currently.</Typography>;
+		}
+
+		return (
+			<Card>
+				<div className={classes.mobiContent}>
+					<FanRow>
+						<Typography className={classes.heading}>Name</Typography>
+						<Typography className={classes.heading}>Email</Typography>
+					</FanRow>
+					{users.map((user, index) => {
+						const {
+							user_id,
+							first_name,
+							last_name,
+							email,
+							thumb_profile_pic_url
+						} = user;
+						return (
+							<Link to={`/admin/fans/${user_id}`} key={user_id}>
+								<FanRow shaded={!(index % 2)}>
+									<div className={classes.nameProfileImage}>
+										{thumb_profile_pic_url ? (
+											<div
+												className={classes.profileImageBackground}
+												style={{
+													backgroundImage: `url(${thumb_profile_pic_url})`
+												}}
+											/>
+										) : (
+											<div className={classes.missingProfileImageBackground}>
+												<img
+													className={classes.missingProfileImage}
+													src={servedImage(
+														"/images/profile-pic-placeholder-white.png"
+													)}
+													alt={`${first_name} ${last_name}`}
+												/>
+											</div>
+										)}
+										&nbsp;&nbsp;
+										<Typography className={classes.itemText}>
+											{first_name} {last_name}
+										</Typography>
+									</div>
+
+									<Typography className={classes.itemText}>{email}</Typography>
 								</FanRow>
 							</Link>
 						);
@@ -329,7 +407,9 @@ class FanList extends Component {
 
 				<div className={classes.spacer}/>
 
-				{this.renderUsers()}
+				<Hidden smDown>{this.renderUsers()}</Hidden>
+
+				<Hidden mdUp>{this.renderUsersMobile()}</Hidden>
 			</div>
 		);
 	}
