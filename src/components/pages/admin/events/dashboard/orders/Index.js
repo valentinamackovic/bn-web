@@ -68,7 +68,7 @@ class OrderList extends Component {
 			ticketTypes: [],
 			ticketTypeFilterId: "",
 			paging: null,
-			ticketTypesKetValue: {}
+			ticketTypesKeyValue: {}
 		};
 
 		this.onChangePromoFilter = this.onChangePromoFilter.bind(this);
@@ -171,7 +171,7 @@ class OrderList extends Component {
 			}
 		];
 
-		const ticketTypesKetValue = {};
+		const ticketTypesKeyValue = {};
 
 		Bigneon()
 			.events.ticketTypes.index({ event_id: this.eventId })
@@ -180,10 +180,10 @@ class OrderList extends Component {
 
 				types.forEach(t => {
 					ticketTypes.push({ value: t.id, label: t.name });
-					ticketTypesKetValue[t.id] = t.name;
+					ticketTypesKeyValue[t.id] = t.name;
 				});
 
-				this.setState({ ticketTypes, ticketTypesKetValue });
+				this.setState({ ticketTypes, ticketTypesKeyValue });
 			});
 	}
 
@@ -262,7 +262,7 @@ class OrderList extends Component {
 	}
 
 	renderList() {
-		const { orders, ticketTypesKetValue } = this.state;
+		const { orders, ticketTypesKeyValue } = this.state;
 
 		if (orders === null) {
 			return <Loader>Loading orders...</Loader>;
@@ -273,8 +273,8 @@ class OrderList extends Component {
 				<Hidden smDown>{this.renderDesktopHeadings()}</Hidden>
 				{orders.map(({ ticketTypeIds, ...order }) => {
 					const ticketTypeList = ticketTypeIds.map(ttId =>
-						ticketTypesKetValue[ttId]
-							? ellipsis(ticketTypesKetValue[ttId], 12)
+						ticketTypesKeyValue[ttId]
+							? ellipsis(ticketTypesKeyValue[ttId], 12)
 							: null
 					);
 
