@@ -237,15 +237,15 @@ class EventDashboardContainer extends Component {
 				) : (
 					<span/>
 				)}
-				{user.hasScope("order:refund") ? (
-					<Link to={`/admin/events/${event.id}/manage-orders`}>
-						<MenuItem onClick={this.handleToolsMenuClose.bind(this)}>
-							Manage orders
-						</MenuItem>
-					</Link>
-				) : (
-					<span/>
-				)}
+				{/*{user.hasScope("order:refund") ? (*/}
+				{/*	<Link to={`/admin/events/${event.id}/manage-orders`}>*/}
+				{/*		<MenuItem onClick={this.handleToolsMenuClose.bind(this)}>*/}
+				{/*			Manage orders*/}
+				{/*		</MenuItem>*/}
+				{/*	</Link>*/}
+				{/*) : (*/}
+				{/*	<span/>*/}
+				{/*)}*/}
 				{user.isAdmin ? ( //TODO use scope when API is ready
 					<Link to={`/admin/events/${event.id}/hospitality/last-call`}>
 						<MenuItem onClick={this.handleToolsMenuClose.bind(this)}>
@@ -490,18 +490,18 @@ class EventDashboardContainer extends Component {
 		}
 
 		//TODO this scope will probably be something else later
-		if (user.hasScope("order:read")) {
-			items.push(
-				<Link
-					key="orders-activity"
-					to={`/admin/events/${event.id}/dashboard/orders/activity`}
-				>
-					<MenuItem onClick={this.handleOrdersMenuClose.bind(this)}>
-						Event activity
-					</MenuItem>
-				</Link>
-			);
-		}
+		// if (user.hasScope("order:read")) {
+		// 	items.push(
+		// 		<Link
+		// 			key="orders-activity"
+		// 			to={`/admin/events/${event.id}/dashboard/orders/activity`}
+		// 		>
+		// 			<MenuItem onClick={this.handleOrdersMenuClose.bind(this)}>
+		// 				Event activity
+		// 			</MenuItem>
+		// 		</Link>
+		// 	);
+		// }
 
 		if (items.length === 0) {
 			items.push(
