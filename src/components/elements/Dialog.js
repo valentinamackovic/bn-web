@@ -95,7 +95,7 @@ class CustomDialog extends Component {
 					</Dialog>
 				</Hidden>
 
-				{/*MOBILE> DIALOG*/}
+				{/*MOBILE DIALOG*/}
 				<Hidden mdUp>
 					<Dialog
 						fullScreen
