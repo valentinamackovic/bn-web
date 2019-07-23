@@ -283,7 +283,7 @@ class EventTicketsCard extends Component {
 					}
 
 					//Default action buttons
-					if (showActions && !actionCol) {
+					if (showActions && !actionCol && !disabled) {
 						actionCol = (
 							<Typography className={classes.ticketDetailsText}>
 								<StyledLink underlined onClick={() => onTicketSelect(ticket)}>
