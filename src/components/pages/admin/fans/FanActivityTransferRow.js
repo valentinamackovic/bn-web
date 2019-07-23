@@ -21,11 +21,11 @@ const FanActivityTransferRow = props => {
 	const { heading, children, shaded, classes } = props;
 
 	const columnStyles = [
-		{ flex: 5, textAlign: "left" },
-		{ flex: 3, textAlign: "left" },
+		{ flex: 4, textAlign: "left" },
 		{ flex: 3, textAlign: "left" },
 		{ flex: 4, textAlign: "left" },
-		{ flex: 3, textAlign: "center" }
+		{ flex: 4, textAlign: "left" },
+		{ flex: 2, textAlign: "center" }
 	];
 
 	const columns = children.map((child, index) => {
