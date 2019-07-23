@@ -77,23 +77,23 @@ const VenueHeaderImage = props => {
 				<Grid item xs={12} sm={12} md={8} lg={8}>
 					<Typography className={classes.venueName}>{name}</Typography>
 					<Typography className={classes.address}>{address}</Typography>
-					<div className={classes.socialLinks}>
-						<SocialIconLink
-							icon="facebook"
-							size={30}
-							style={{ marginRight: 5 }}
-						/>
-						<SocialIconLink
-							icon="twitter"
-							size={30}
-							style={{ marginRight: 5 }}
-						/>
-						<SocialIconLink
-							icon="website"
-							size={30}
-							style={{ marginRight: 5 }}
-						/>
-					</div>
+					{/*<div className={classes.socialLinks}>*/}
+					{/*	<SocialIconLink*/}
+					{/*		icon="facebook"*/}
+					{/*		size={30}*/}
+					{/*		style={{ marginRight: 5 }}*/}
+					{/*	/>*/}
+					{/*	<SocialIconLink*/}
+					{/*		icon="twitter"*/}
+					{/*		size={30}*/}
+					{/*		style={{ marginRight: 5 }}*/}
+					{/*	/>*/}
+					{/*	<SocialIconLink*/}
+					{/*		icon="website"*/}
+					{/*		size={30}*/}
+					{/*		style={{ marginRight: 5 }}*/}
+					{/*	/>*/}
+					{/*</div>*/}
 				</Grid>
 
 				<Grid
