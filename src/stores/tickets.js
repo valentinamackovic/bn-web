@@ -24,10 +24,6 @@ class Tickets {
 		const params = {};
 
 		const nowUTC = moment.utc().format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
-		const longLongAgoUTC = moment
-			.utc()
-			.subtract(100, "y")
-			.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
 
 		if (type === "upcoming") {
 			params.start_utc = nowUTC;

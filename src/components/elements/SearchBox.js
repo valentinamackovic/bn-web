@@ -1,9 +1,10 @@
 import React, { Component } from "react";
+import PropTypes from "prop-types";
 import BoxInput from "./form/BoxInput";
 
 const DEBOUNCE_DELAY = 500;
 
-class SearchInput extends Component {
+class SearchBox extends Component {
 	state = {
 		searchQuery: ""
 	};
@@ -44,4 +45,9 @@ class SearchInput extends Component {
 	}
 }
 
-export default SearchInput;
+SearchBox.propTypes = {
+	onSearch: PropTypes.func.isRequired,
+	placeholder: PropTypes.string
+};
+
+export default SearchBox;

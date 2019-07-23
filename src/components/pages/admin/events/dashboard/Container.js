@@ -70,7 +70,11 @@ const styles = theme => ({
 		alignItems: "center"
 	},
 	menuText: {
-		marginRight: theme.spacing.unit * 4
+		marginRight: theme.spacing.unit * 4,
+
+		[theme.breakpoints.down("sm")]: {
+			marginRight: theme.spacing.unit * 2
+		}
 	},
 	menuDividerContainer: {
 		marginBottom: theme.spacing.unit * 3,
@@ -104,6 +108,7 @@ class EventDashboardContainer extends Component {
 			anchorToolsEl: null,
 			anchorReportsEl: null,
 			anchorMarketingEl: null,
+			anchorOrdersEl: null,
 			showAffiliateLinkDialog: false,
 			showFBPixelDialog: false
 		};
@@ -125,6 +130,10 @@ class EventDashboardContainer extends Component {
 		this.setState({ anchorMarketingEl: event.currentTarget });
 	}
 
+	handleOrdersMenu(event) {
+		this.setState({ anchorOrdersEl: event.currentTarget });
+	}
+
 	handleToolsMenuClose() {
 		this.setState({ anchorToolsEl: null });
 	}
@@ -135,6 +144,10 @@ class EventDashboardContainer extends Component {
 
 	handleMarketingMenuClose() {
 		this.setState({ anchorMarketingEl: null });
+	}
+
+	handleOrdersMenuClose() {
+		this.setState({ anchorOrdersEl: null });
 	}
 
 	loadEventDetails(eventId) {
@@ -224,6 +237,7 @@ class EventDashboardContainer extends Component {
 				) : (
 					<span/>
 				)}
+				{/*TODO remove this when new order management is live*/}
 				{user.hasScope("order:refund") ? (
 					<Link to={`/admin/events/${event.id}/manage-orders`}>
 						<MenuItem onClick={this.handleToolsMenuClose.bind(this)}>
@@ -429,7 +443,7 @@ class EventDashboardContainer extends Component {
 
 		if (items.length === 0) {
 			items.push(
-				<MenuItem key="none" onClick={this.handleReportsMenuClose.bind(this)}>
+				<MenuItem key="none" onClick={this.handleMarketingMenuClose.bind(this)}>
 					No marketing available
 				</MenuItem>
 			);
@@ -449,6 +463,70 @@ class EventDashboardContainer extends Component {
 				}}
 				open={open}
 				onClose={this.handleMarketingMenuClose.bind(this)}
+			>
+				{items}
+			</Menu>
+		);
+	}
+
+	renderOrdersMenu() {
+		const { anchorOrdersEl } = this.state;
+		const open = Boolean(anchorOrdersEl);
+		const { event } = this.state;
+
+		const items = [];
+
+		//TODO this scope will be order:read when it's ready
+		if (user.isAdmin) {
+			//user.hasScope("order:read")
+			items.push(
+				<Link
+					key="manage-orders"
+					to={`/admin/events/${event.id}/dashboard/orders/manage`}
+				>
+					<MenuItem onClick={this.handleOrdersMenuClose.bind(this)}>
+						Manage orders
+					</MenuItem>
+				</Link>
+			);
+		}
+
+		//TODO this scope will probably be something else later
+		// if (user.hasScope("order:read")) {
+		// 	items.push(
+		// 		<Link
+		// 			key="orders-activity"
+		// 			to={`/admin/events/${event.id}/dashboard/orders/activity`}
+		// 		>
+		// 			<MenuItem onClick={this.handleOrdersMenuClose.bind(this)}>
+		// 				Event activity
+		// 			</MenuItem>
+		// 		</Link>
+		// 	);
+		// }
+
+		if (items.length === 0) {
+			items.push(
+				<MenuItem key="none" onClick={this.handleOrdersMenuClose.bind(this)}>
+					No options available
+				</MenuItem>
+			);
+		}
+
+		return (
+			<Menu
+				id="menu-appbar"
+				anchorEl={anchorOrdersEl}
+				anchorOrigin={{
+					vertical: "top",
+					horizontal: "right"
+				}}
+				transformOrigin={{
+					vertical: "top",
+					horizontal: "right"
+				}}
+				open={open}
+				onClose={this.handleOrdersMenuClose.bind(this)}
 			>
 				{items}
 			</Menu>
@@ -552,28 +630,39 @@ class EventDashboardContainer extends Component {
 									Dashboard
 								</StyledLink>
 							</Typography>
-							{event.is_external ? null : (
-								<Typography className={classes.menuText}>
-									{this.renderToolsMenu()}
-									<StyledLink
-										underlined={subheading === "tools"}
-										onClick={this.handleToolsMenu.bind(this)}
-									>
-										Tools
-									</StyledLink>
-								</Typography>
-							)}
-							{event.is_external ? null : (
-								<Typography className={classes.menuText}>
-									{this.renderReportsMenu()}
-									<StyledLink
-										underlined={subheading === "reports"}
-										onClick={this.handleReportsMenu.bind(this)}
-									>
-										Reports
-									</StyledLink>
-								</Typography>
-							)}
+
+							{!event.is_external ? (
+								<React.Fragment>
+									<Typography className={classes.menuText}>
+										{this.renderToolsMenu()}
+										<StyledLink
+											underlined={subheading === "tools"}
+											onClick={this.handleToolsMenu.bind(this)}
+										>
+											Tools
+										</StyledLink>
+									</Typography>
+									<Typography className={classes.menuText}>
+										{this.renderOrdersMenu()}
+										<StyledLink
+											underlined={subheading === "orders"}
+											onClick={this.handleOrdersMenu.bind(this)}
+										>
+											Orders
+										</StyledLink>
+									</Typography>
+									<Typography className={classes.menuText}>
+										{this.renderReportsMenu()}
+										<StyledLink
+											underlined={subheading === "reports"}
+											onClick={this.handleReportsMenu.bind(this)}
+										>
+											Reports
+										</StyledLink>
+									</Typography>
+								</React.Fragment>
+							) : null}
+
 							{/*TODO add back when Mike wants to work on it*/}
 							{/*{event.is_external ? null : (*/}
 							{/*<Typography className={classes.menuText}>*/}

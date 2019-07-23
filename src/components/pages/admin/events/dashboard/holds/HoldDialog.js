@@ -305,7 +305,7 @@ class HoldDialog extends React.Component {
 						value={hold.maxPerUser}
 						name="maxPerUser"
 						label="Max Per User"
-						placeholder="1"
+						placeholder="Unlimited"
 						type="text"
 						onChange={e => {
 							hold.maxPerUser = e.target.value;
