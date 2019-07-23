@@ -5,7 +5,7 @@ import Hidden from "@material-ui/core/Hidden";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import moment from "moment-timezone";
-import { Redirect } from "react-router-dom";
+import { Redirect, Link } from "react-router-dom";
 
 import OrgAnalytics from "../../common/OrgAnalytics";
 import Button from "../../elements/Button";
@@ -28,19 +28,9 @@ import EventDescriptionBody from "./EventDescriptionBody";
 import getUrlParam from "../../../helpers/getUrlParam";
 import analytics from "../../../helpers/analytics";
 import getAllUrlParams from "../../../helpers/getAllUrlParams";
+import ellipsis from "../../../helpers/ellipsis";
 
 const AUTO_SELECT_TICKET_AMOUNT = 2;
-
-const displayTime = (event_start, timezone) => {
-	const displayDate = moment(event_start)
-		.tz(timezone)
-		.format("ddd, D MMM YYYY");
-	const displayShowTime = moment(event_start)
-		.tz(timezone)
-		.format("hh:mm A");
-
-	return `${displayDate} - ${displayShowTime}`;
-};
 
 const styles = theme => ({
 	root: {},
@@ -615,49 +605,49 @@ class CheckoutSelection extends Component {
 				{/*MOBILE*/}
 				<Hidden mdUp>
 					<div className={classes.mobileContainer}>
-						{/*<div className={classes.mobileEventDetailsContainer}>*/}
-						{/*<div*/}
-						{/*className={classes.mobilePromoImage}*/}
-						{/*style={{ backgroundImage: `url(${promo_image_url})` }}*/}
-						{/*/>*/}
-						{/*<div style={{ flex: 1 }}>*/}
-						{/*<Typography*/}
-						{/*noWrap*/}
-						{/*variant={"display1"}*/}
-						{/*className={classes.mobileEventName}*/}
-						{/*>*/}
-						{/*{ellipsis(name, 45)}*/}
-						{/*</Typography>*/}
-						{/*<div*/}
-						{/*style={{*/}
-						{/*display: "flex",*/}
-						{/*justifyContent: "space-between",*/}
-						{/*flex: 1*/}
-						{/*}}*/}
-						{/*>*/}
-						{/*<div>*/}
-						{/*<Typography className={classes.mobileVenueName}>*/}
-						{/*{venue.name}*/}
-						{/*{venue.city ? ` - ${venue.city}` : ""}*/}
-						{/*</Typography>*/}
-						{/*<Typography className={classes.mobileEventTime}>*/}
-						{/*{displayTime(event.start_date, venue.timezone)}*/}
-						{/*</Typography>*/}
-						{/*</div>*/}
-						{/*<Link*/}
-						{/*to={`/events/${id}`}*/}
-						{/*style={{*/}
-						{/*display: "flex",*/}
-						{/*alignItems: "flex-end"*/}
-						{/*}}*/}
-						{/*>*/}
-						{/*<Typography className={classes.mobileViewDetailsLinkText}>*/}
-						{/*View details*/}
-						{/*</Typography>*/}
-						{/*</Link>*/}
-						{/*</div>*/}
-						{/*</div>*/}
-						{/*</div>*/}
+						<div className={classes.mobileEventDetailsContainer}>
+							<div
+								className={classes.mobilePromoImage}
+								style={{ backgroundImage: `url(${promo_image_url})` }}
+							/>
+							<div style={{ flex: 1 }}>
+								<Typography
+									noWrap
+									variant={"display1"}
+									className={classes.mobileEventName}
+								>
+									{ellipsis(name, 45)}
+								</Typography>
+								<div
+									style={{
+										display: "flex",
+										justifyContent: "space-between",
+										flex: 1
+									}}
+								>
+									<div>
+										<Typography className={classes.mobileVenueName}>
+											{venue.name}
+											{venue.city ? ` - ${venue.city}` : ""}
+										</Typography>
+										<Typography className={classes.mobileEventTime}>
+											{displayEventStartDate} - {displayShowTime}
+										</Typography>
+									</div>
+									<Link
+										to={`/events/${id}`}
+										style={{
+											display: "flex",
+											alignItems: "flex-end"
+										}}
+									>
+										<Typography className={classes.mobileViewDetailsLinkText}>
+											View details
+										</Typography>
+									</Link>
+								</div>
+							</div>
+						</div>
 						<div className={classes.mobileTicketSelectionContainer}>
 							{sharedContent}
 						</div>
