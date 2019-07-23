@@ -195,7 +195,7 @@ class Fan extends Component {
 		this.setState({ isLoading: true });
 
 		if (!organization_id) {
-			this.timeout = setTimeout(this.loadFan.bind(this), 500);
+			this.timeout = setTimeout(this.updateHistory().bind(this), 500);
 			return;
 		}
 
@@ -211,9 +211,7 @@ class Fan extends Component {
 			.then(response => {
 				// const { ...fanHistory } = response.data;
 
-				this.setState({ fanHistory: response.data.data }, () => {
-					this.setState({ isLoading: false });
-				});
+				this.setState({ fanHistory: response.data.data, isLoading: false });
 			})
 			.catch(error =>
 				notifications.showFromErrorResponse({
