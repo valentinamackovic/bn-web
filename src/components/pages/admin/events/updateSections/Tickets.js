@@ -647,7 +647,8 @@ class EventTickets extends Component {
 			validateFields,
 			errors,
 			ticketTimesDirty,
-			eventStartDate
+			eventStartDate,
+			onChangeDate
 		} = this.props;
 		const { ticketTypes, ticketTypeActiveIndex } = eventUpdateStore;
 
@@ -683,6 +684,7 @@ class EventTickets extends Component {
 								validateFields={validateFields}
 								errors={ticketTypeErrors}
 								ticketTimesDirty={ticketTimesDirty}
+								onChangeDate={onChangeDate}
 								eventStartDate={eventStartDate}
 								ticketTypes={ticketTypes}
 								{...ticketType}

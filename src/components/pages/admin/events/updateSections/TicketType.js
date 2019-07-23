@@ -161,7 +161,8 @@ const TicketDetails = observer(props => {
 		showVisibility,
 		showCartQuantityIncrement,
 		showAdditionalFee,
-		additionalFeeInDollars
+		additionalFeeInDollars,
+		onChangeDate
 	} = props;
 
 	let useEndDate = endDate;
@@ -353,9 +354,10 @@ const TicketDetails = observer(props => {
 								name="startDate.date"
 								label="Start date *"
 								type="date"
-								onChange={startDate =>
-									updateTicketType(index, { parentId: null, startDate })
-								}
+								onChange={startDate => {
+									onChangeDate();
+									updateTicketType(index, { parentId: null, startDate });
+								}}
 								onBlur={validateFields}
 								minDate={false}
 							/>
@@ -376,9 +378,10 @@ const TicketDetails = observer(props => {
 								name="startTime"
 								label="Start time *"
 								type="time"
-								onChange={startTime =>
-									updateTicketType(index, { parentId: null, startTime })
-								}
+								onChange={startTime => {
+									onChangeDate();
+									updateTicketType(index, { parentId: null, startTime });
+								}}
 								onBlur={validateFields}
 								minDate={false}
 							/>
@@ -457,6 +460,7 @@ const TicketDetails = observer(props => {
 								type="date"
 								label="End date *"
 								onChange={endDate => {
+									onChangeDate();
 									updateTicketType(index, { endDate });
 								}}
 								onBlur={validateFields}
@@ -480,6 +484,7 @@ const TicketDetails = observer(props => {
 								type="time"
 								label="End time *"
 								onChange={endTime => {
+									onChangeDate();
 									updateTicketType(index, { endTime });
 								}}
 								onBlur={validateFields}
@@ -787,7 +792,8 @@ TicketType.propTypes = {
 	visibility: PropTypes.string,
 	isCancelled: PropTypes.bool,
 	parentId: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-	ticketTypes: PropTypes.array
+	ticketTypes: PropTypes.array,
+	onChangeDate: PropTypes.func.isRequired
 	//id: PropTypes.string,
 	//capacity
 	//endDate
