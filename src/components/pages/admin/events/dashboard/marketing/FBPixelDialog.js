@@ -214,7 +214,7 @@ class FBPixelDialog extends React.Component {
 							style={{ marginRight: 10, flex: 1 }}
 							variant="callToAction"
 						>
-							{isSubmitting ? "Update" : "Create"}
+							{isSubmitting ? "Updating..." : "Update"}
 						</Button>
 					</div>
 				</form>
