@@ -12,6 +12,8 @@ import {
 } from "../../../../../../config/theme";
 import Dialog from "../../../../../elements/Dialog";
 import Loader from "../../../../../elements/loaders/Loader";
+import BoxInput from "../../../../../elements/form/BoxInput";
+import InputGroup from "../../../../../common/form/InputGroup";
 
 const styles = theme => ({
 	root: {},
@@ -52,7 +54,11 @@ class LastCall extends Component {
 			canTrigger: null,
 			isSending: false,
 			openConfirmDialog: false,
-			notificationTriggered: false
+			isCustom: false,
+			notificationTriggered: false,
+			lastCallMessage: "",
+			errors: [],
+			customNotificationMessage: ""
 		};
 	}
 
@@ -84,17 +90,34 @@ class LastCall extends Component {
 			});
 	}
 
-	onSend() {
-		this.setState({ isSending: true, openConfirmDialog: false });
+	onSend(e) {
+		e.preventDefault();
+
+		this.submitAttempted = true;
+
+		if (!this.validateFields()) {
+			notifications.show({
+				message: "Invalid field.",
+				variant: "warning"
+			});
+			return false;
+		}
+
+		this.setState({ isSending: true });
 
 		Bigneon()
 			.events.broadcasts.create({
 				event_id: this.eventId,
-				notification_type: "LastCall"
+				message: this.state.lastCallMessage.trim(),
+				channel: "PushNotification",
+				notification_type: "Custom"
 			})
 			.then(response => {
 				const { data } = response.data;
-				this.setState({ notificationTriggered: true });
+				this.setState({
+					notificationTriggered: true,
+					openConfirmDialog: false
+				});
 				notifications.show({
 					message: "Notification triggered!",
 					variant: "success"
@@ -111,47 +134,99 @@ class LastCall extends Component {
 			});
 	}
 
+	validateFields() {
+		const { lastCallMessage } = this.state;
+		//Don't validate every field if the user has not tried to submit at least once
+		if (!this.submitAttempted) {
+			return true;
+		}
+
+		const errors = {};
+
+		if (lastCallMessage.length > 255) {
+			errors.lastCallMessage = "That message is too long. 255 Char limit";
+		}
+
+		if (lastCallMessage.length < 1) {
+			errors.lastCallMessage = "That message is too short";
+		}
+
+		this.setState({ errors });
+		if (Object.keys(errors).length > 0) {
+			return false;
+		}
+
+		return true;
+	}
+
 	renderConfirmDialog() {
-		const { openConfirmDialog } = this.state;
+		const {
+			openConfirmDialog,
+			isCustom,
+			lastCallMessage,
+			errors,
+			isSending
+		} = this.state;
 		const { classes } = this.props;
+
+		const customLabel = "Send custom notification";
+		const lastCallLabel = "Send last call notification";
+		const customHeading = "Let your guests know what's going on";
+		const lastCallHeading = "This can only be sent once during your event.";
+		const description = `All attendees who have enabled notifications on their devices will receive the ${
+			isCustom ? "custom" : "Last Call"
+		} message`;
 
 		return (
 			<Dialog
 				open={openConfirmDialog}
-				title={"Send last call notification"}
+				title={isCustom ? customLabel : lastCallLabel}
 				iconUrl={"/icons/phone-white.svg"}
 				onClose={() => this.setState({ openConfirmDialog: false })}
 			>
 				<div className={classes.dialogContainer}>
 					<Typography className={classes.description}>
 						<span className={classes.descriptionHeading}>
-							This can only be sent once during your event.
+							{isCustom ? customHeading : lastCallHeading}
 						</span>
 						<br/>
-						All attendees who have enabled notifications on their devices will
-						receive the Last Call message
+						{description}
 					</Typography>
 				</div>
-				<div style={{ display: "flex" }}>
-					<Button
-						style={{ flex: 1, marginRight: 5 }}
-						onClick={() => this.setState({ openConfirmDialog: false })}
-					>
-						Cancel
-					</Button>
-					<Button
-						style={{ flex: 1, marginLeft: 5 }}
-						variant={"callToAction"}
-						onClick={this.onSend.bind(this)}
-					>
-						Send now
-					</Button>
-				</div>
+				<form onSubmit={this.onSend.bind(this)}>
+					<InputGroup
+						placeholder={"Enter your last call message"}
+						name={"LastCallMessage"}
+						error={errors.lastCallMessage}
+						label="Message"
+						value={lastCallMessage}
+						onChange={e => {
+							this.setState({ lastCallMessage: e.target.value });
+						}}
+						onBlur={this.validateFields.bind(this)}
+					/>
+					<div style={{ display: "flex" }}>
+						<Button
+							style={{ flex: 1, marginRight: 5 }}
+							onClick={() => this.setState({ openConfirmDialog: false })}
+						>
+							Cancel
+						</Button>
+						<Button
+							type="submit"
+							style={{ flex: 1, marginLeft: 5 }}
+							variant={"callToAction"}
+							disabled={isSending}
+						>
+							{isSending ? "Sending..." : "Send now"}
+						</Button>
+					</div>
+				</form>
 			</Dialog>
 		);
 	}
 
-	renderActionButton() {
+	renderActionButton(isCustom) {
 		const { canTrigger, isSending, notificationTriggered } = this.state;
 
 		if (notificationTriggered) {
@@ -173,7 +248,9 @@ class LastCall extends Component {
 		return (
 			<Button
 				variant={"callToAction"}
-				onClick={() => this.setState({ openConfirmDialog: true })}
+				onClick={() =>
+					this.setState({ openConfirmDialog: true, isCustom: isCustom })
+				}
 			>
 				Send now
 			</Button>
@@ -183,7 +260,6 @@ class LastCall extends Component {
 	render() {
 		const { classes } = this.props;
 		const { canTrigger } = this.state;
-
 		return (
 			<Container
 				eventId={this.eventId}
@@ -192,6 +268,18 @@ class LastCall extends Component {
 			>
 				{this.renderConfirmDialog()}
 				<Typography className={classes.parentHeading}>Hospitality</Typography>
+				<Typography className={classes.heading}>Custom notification</Typography>
+
+				<Typography>
+					Custom Notifications are here for anything you'd like to send out to
+					your attendees. Whether it be drink specials, letting them know an act
+					is starting soon, cancellations, and everything in-between.
+				</Typography>
+
+				<div className={classes.actionButtonContainer}>
+					{this.renderActionButton(true)}
+				</div>
+
 				<Typography className={classes.heading}>
 					Last call notification
 				</Typography>
@@ -203,7 +291,7 @@ class LastCall extends Component {
 				</Typography>
 
 				<div className={classes.actionButtonContainer}>
-					{this.renderActionButton()}
+					{this.renderActionButton(false)}
 				</div>
 
 				{!canTrigger ? (
