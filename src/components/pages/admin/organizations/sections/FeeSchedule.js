@@ -286,9 +286,9 @@ class FeeSchedule extends Component {
 		this.setState({ isSubmitting: true });
 		const formattedRanges = ranges.map(
 			({ min_price, client_fee, company_fee }) => ({
-				min_price_in_cents: Number(min_price) * 100,
-				client_fee_in_cents: Number(client_fee) * 100,
-				company_fee_in_cents: Number(company_fee) * 100
+				min_price_in_cents: Math.floor(Number(min_price) * 100),
+				client_fee_in_cents: Math.floor(Number(client_fee) * 100),
+				company_fee_in_cents: Math.floor(Number(company_fee) * 100)
 			})
 		);
 
