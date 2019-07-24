@@ -37,6 +37,7 @@ class MyEvents extends Component {
 			selectedTransferTicketIds: null,
 			selectedTicket: null,
 			cancelTransferKey: null,
+			transferTicketAmount: null,
 			type: "upcoming"
 		};
 	}
@@ -122,8 +123,11 @@ class MyEvents extends Component {
 							onShowTransferQR={selectedTransferTicketIds =>
 								this.setState({ selectedTransferTicketIds })
 							}
-							onCancelTransfer={transferKey =>
-								this.setState({ cancelTransferKey: transferKey })
+							onCancelTransfer={(transferKey, ticketcount) =>
+								this.setState({
+									cancelTransferKey: transferKey,
+									transferTicketAmount: ticketcount
+								})
 							}
 							history={history}
 							onExpand={() => this.onExpandTickets(id)}
@@ -146,7 +150,8 @@ class MyEvents extends Component {
 			selectedTicket,
 			selectedTransferTicketIds,
 			type,
-			cancelTransferKey
+			cancelTransferKey,
+			transferTicketAmount
 		} = this.state;
 
 		const { classes } = this.props;
@@ -176,8 +181,12 @@ class MyEvents extends Component {
 				/>
 				<CancelTransferDialog
 					transferKey={cancelTransferKey}
+					ticketcount={transferTicketAmount}
 					onClose={() =>
-						this.setState({ cancelTransferKey: null }, this.refreshTickets)
+						this.setState(
+							{ cancelTransferKey: null, transferTicketAmount: null },
+							this.refreshTickets
+						)
 					}
 				/>
 

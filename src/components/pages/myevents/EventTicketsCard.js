@@ -267,7 +267,7 @@ class EventTicketsCard extends Component {
 								<Typography className={classes.ticketDetailsText}>
 									<StyledLink
 										underlined
-										onClick={() => onCancelTransfer(transfer_key)}
+										onClick={() => onCancelTransfer(transfer_key, index + 1)}
 									>
 										cancel transfer
 									</StyledLink>
