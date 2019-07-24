@@ -129,15 +129,16 @@ class FanHistoryActivityCard extends Component {
 		super(props);
 
 		this.state = {
-			cancelTransferKey: null
+			cancelTransferKey: null,
+			transferTicketAmount: null
 		};
 		this.onOpenCancelTransferDialog = this.onOpenCancelTransferDialog.bind(
 			this
 		);
 	}
 
-	onOpenCancelTransferDialog(cancelTransferKey) {
-		this.setState({ cancelTransferKey });
+	onOpenCancelTransferDialog(cancelTransferKey, transferTicketAmount) {
+		this.setState({ cancelTransferKey, transferTicketAmount });
 	}
 
 	renderActivity(type) {
@@ -718,7 +719,10 @@ class FanHistoryActivityCard extends Component {
 													variant="warning"
 													size="small"
 													onClick={() =>
-														this.onOpenCancelTransferDialog(transfer_key)
+														this.onOpenCancelTransferDialog(
+															transfer_key,
+															ticket_ids.length
+														)
 													}
 												>
 													<span className={classes.smallTextCap}>
@@ -1282,7 +1286,10 @@ class FanHistoryActivityCard extends Component {
 													variant="warning"
 													size="small"
 													onClick={() =>
-														this.onOpenCancelTransferDialog(transfer_key)
+														this.onOpenCancelTransferDialog(
+															transfer_key,
+															ticket_ids.length
+														)
 													}
 												>
 													<span className={classes.smallTextCap}>
@@ -1309,12 +1316,18 @@ class FanHistoryActivityCard extends Component {
 
 	render() {
 		const { type } = this.props.item;
-		const { cancelTransferKey } = this.state;
+		const { cancelTransferKey, transferTicketAmount } = this.state;
 		return (
 			<div>
 				<CancelTransferDialog
 					transferKey={cancelTransferKey}
-					onClose={() => this.setState({ cancelTransferKey: null })}
+					ticketCount={transferTicketAmount}
+					onClose={() =>
+						this.setState({
+							cancelTransferKey: null,
+							transferTicketAmount: null
+						})
+					}
 					// onSuccess={() => this.refreshGuests()}
 				/>
 				<Hidden smDown>{this.renderActivity(type)}</Hidden>

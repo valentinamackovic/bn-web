@@ -23,7 +23,7 @@ const styles = theme => ({
 		fontSize: theme.typography.fontSize * 1.125,
 		textAlign: "center"
 	},
-	emailText: {
+	pinkText: {
 		color: secondaryHex,
 		fontFamily: fontFamilyDemiBold
 	}
@@ -120,7 +120,7 @@ class CancelTransferDialog extends Component {
 	}
 
 	renderCancelContent() {
-		const { classes } = this.props;
+		const { classes, ticketCount } = this.props;
 
 		const { recipientEmail, isCancelling, transferId } = this.state;
 
@@ -128,9 +128,14 @@ class CancelTransferDialog extends Component {
 		if (recipientEmail) {
 			explainerText = (
 				<Typography className={classes.infoText}>
-					Please confirm that you want to cancel this transfer. We’ll send{" "}
-					<span className={classes.emailText}>{recipientEmail}</span> a message
-					to let them know.
+					Please confirm that you want to cancel transferring the{" "}
+					<span className={classes.pinkText}>
+						{ticketCount}
+						{ticketCount > 1 ? " tickets" : " ticket"}
+					</span>{" "}
+					you sent to{" "}
+					<span className={classes.pinkText}>{recipientEmail}.</span> They will
+					be returned to your Big Neon app.
 				</Typography>
 			);
 		}
@@ -173,7 +178,7 @@ class CancelTransferDialog extends Component {
 			explainerText = (
 				<Typography className={classes.infoText}>
 					The message to{" "}
-					<span className={classes.emailText}>{recipientEmail}</span> has been
+					<span className={classes.pinkText}>{recipientEmail}</span> has been
 					sent and the tickets have been assigned back to you.
 				</Typography>
 			);
@@ -210,7 +215,7 @@ class CancelTransferDialog extends Component {
 				title={
 					cancelSuccess
 						? "We've cancelled the transfer!"
-						: "Want to cancel this transfer?"
+						: "Cancelling Transfer"
 				}
 				open={!!transferKey}
 				{...rest}
@@ -227,6 +232,7 @@ CancelTransferDialog.propTypes = {
 	classes: PropTypes.object.isRequired,
 	onClose: PropTypes.func.isRequired,
 	transferKey: PropTypes.string,
+	ticketCount: PropTypes.number,
 	onSuccess: PropTypes.func
 };
 
