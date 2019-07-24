@@ -1321,7 +1321,7 @@ class FanHistoryActivityCard extends Component {
 			<div>
 				<CancelTransferDialog
 					transferKey={cancelTransferKey}
-					ticketCount={transferTicketAmount}
+					ticketcount={transferTicketAmount}
 					onClose={() =>
 						this.setState({
 							cancelTransferKey: null,

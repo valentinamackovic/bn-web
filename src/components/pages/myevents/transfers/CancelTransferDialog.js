@@ -120,7 +120,7 @@ class CancelTransferDialog extends Component {
 	}
 
 	renderCancelContent() {
-		const { classes, ticketCount } = this.props;
+		const { classes, ticketcount } = this.props;
 
 		const { recipientEmail, isCancelling, transferId } = this.state;
 
@@ -130,8 +130,13 @@ class CancelTransferDialog extends Component {
 				<Typography className={classes.infoText}>
 					Please confirm that you want to cancel transferring the{" "}
 					<span className={classes.pinkText}>
-						{ticketCount}
-						{ticketCount > 1 ? " tickets" : " ticket"}
+						{ticketcount === 0 ||
+						typeof ticketcount === "undefined" ||
+						ticketcount === null
+							? "tickets"
+							: ticketcount > 1
+								? `${ticketcount} tickets`
+								: `${ticketcount} ticket`}
 					</span>{" "}
 					you sent to{" "}
 					<span className={classes.pinkText}>{recipientEmail}.</span> They will
@@ -232,7 +237,7 @@ CancelTransferDialog.propTypes = {
 	classes: PropTypes.object.isRequired,
 	onClose: PropTypes.func.isRequired,
 	transferKey: PropTypes.string,
-	ticketCount: PropTypes.number,
+	ticketcount: PropTypes.number,
 	onSuccess: PropTypes.func
 };
 
