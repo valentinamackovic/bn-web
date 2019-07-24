@@ -13,6 +13,7 @@ import Loader from "../../../elements/loaders/Loader";
 import moment from "moment-timezone";
 import servedImage from "../../../../helpers/imagePathHelper";
 import FanHistoryEventCard from "./FanHistoryEventCard";
+import StyledLink from "../../../elements/StyledLink";
 
 const imageSize = 100;
 
@@ -94,6 +95,14 @@ const styles = theme => ({
 		borderLeft: "1px solid #DEE2E8",
 		height: 20
 	},
+	menuContainer: {
+		display: "flex",
+		paddingTop: theme.spacing.unit * 2,
+		paddingBottom: theme.spacing.unit * 2
+	},
+	menuText: {
+		marginRight: theme.spacing.unit * 4
+	},
 	historyHeading: {
 		fontFamily: fontFamilyDemiBold,
 		fontSize: theme.typography.fontSize * 1.5,
@@ -110,17 +119,33 @@ class Fan extends Component {
 		this.state = {
 			profile: null,
 			fanHistory: null,
+			isLoading: false,
 			formattedEventStart: null,
 			formattedOccurredAt: null,
 			activeHeadings: { sales: true, attendance: false },
-			expandedRowKey: null
+			expandedRowKey: null,
+			upcomingOrPast: this.props.match.params.upcomingOrPast || "upcoming"
 		};
 		this.onExpandChange = this.onExpandChange.bind(this);
 	}
 
 	componentDidMount() {
 		this.loadFan();
-		this.loadHistory();
+		this.updateHistory();
+	}
+
+	componentDidUpdate() {
+		const { upcomingOrPast } = this.state;
+		if (
+			upcomingOrPast !== (this.props.match.params.upcomingOrPast || "upcoming")
+		) {
+			this.setState(
+				{
+					upcomingOrPast: this.props.match.params.upcomingOrPast || "upcoming"
+				},
+				() => this.updateHistory()
+			);
+		}
 	}
 
 	displayOrderDate(date, timezone) {
@@ -165,22 +190,28 @@ class Fan extends Component {
 			);
 	}
 
-	loadHistory() {
+	updateHistory() {
 		const organization_id = user.currentOrganizationId;
+		this.setState({ isLoading: true });
 
 		if (!organization_id) {
-			this.timeout = setTimeout(this.loadFan.bind(this), 500);
+			this.timeout = setTimeout(this.updateHistory().bind(this), 500);
 			return;
 		}
 
 		const user_id = this.userId;
+		const { upcomingOrPast } = this.state;
 
 		Bigneon()
-			.organizations.fans.activity({ user_id, organization_id })
+			.organizations.fans.activity({
+				user_id,
+				organization_id,
+				past_or_upcoming: upcomingOrPast
+			})
 			.then(response => {
 				// const { ...fanHistory } = response.data;
 
-				this.setState({ fanHistory: response.data.data });
+				this.setState({ fanHistory: response.data.data, isLoading: false });
 			})
 			.catch(error =>
 				notifications.showFromErrorResponse({
@@ -191,8 +222,9 @@ class Fan extends Component {
 	}
 
 	renderCards() {
-		const { fanHistory, expandedRowKey, profile } = this.state;
-		if (fanHistory === null) {
+		const { fanHistory, expandedRowKey, profile, isLoading } = this.state;
+
+		if (isLoading) {
 			return <Loader>Loading history...</Loader>;
 		}
 		if (fanHistory.length === 0) {
@@ -226,10 +258,7 @@ class Fan extends Component {
 			last_name,
 			email,
 			facebook_linked,
-			profile_pic_url,
-			event_count,
-			revenue_in_cents,
-			ticket_sales
+			profile_pic_url
 		} = profile;
 
 		const profilePic = profile_pic_url ? (
@@ -269,11 +298,12 @@ class Fan extends Component {
 	}
 
 	render() {
-		const { profile } = this.state;
+		const { profile, upcomingOrPast } = this.state;
 		if (profile === null) {
 			return <Loader>Loading fan details...</Loader>;
 		}
 		const { classes } = this.props;
+		const user_id = this.userId;
 
 		return (
 			<div>
@@ -298,6 +328,25 @@ class Fan extends Component {
 								lg={12}
 								style={{ paddingTop: 20 }}
 							>
+								<Typography className={classes.name}>Event Activity</Typography>
+								<div className={classes.menuContainer}>
+									<Typography className={classes.menuText}>
+										<StyledLink
+											underlined={upcomingOrPast === "upcoming"}
+											to={`/admin/fans/${user_id}/upcoming`}
+										>
+											Upcoming
+										</StyledLink>
+									</Typography>
+									<Typography className={classes.menuText}>
+										<StyledLink
+											underlined={upcomingOrPast === "past"}
+											to={`/admin/fans/${user_id}/past`}
+										>
+											Past
+										</StyledLink>
+									</Typography>
+								</div>
 								{this.renderCards()}
 							</Grid>
 						</div>
@@ -320,6 +369,25 @@ class Fan extends Component {
 							lg={12}
 							style={{ paddingTop: 20 }}
 						>
+							<Typography className={classes.name}>Event Activity</Typography>
+							<div className={classes.menuContainer}>
+								<Typography className={classes.menuText}>
+									<StyledLink
+										underlined={upcomingOrPast === "upcoming"}
+										to={`/admin/fans/${user_id}/upcoming`}
+									>
+										Upcoming
+									</StyledLink>
+								</Typography>
+								<Typography className={classes.menuText}>
+									<StyledLink
+										underlined={upcomingOrPast === "past"}
+										to={`/admin/fans/${user_id}/past`}
+									>
+										Past
+									</StyledLink>
+								</Typography>
+							</div>
 							{this.renderCards()}
 						</Grid>
 					</div>

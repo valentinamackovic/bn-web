@@ -13,6 +13,8 @@ import FanActivityCardRow from "./FanActivityCardRow";
 import FanActivityTransferRow from "./FanActivityTransferRow";
 import FanActivityMobileRow from "./FanActivityMobileRow";
 import servedImage from "../../../../helpers/imagePathHelper";
+import classNames from "classnames";
+
 import FanActivityPurchaseRow from "./FanActivityPurchaseRow";
 import { Link } from "react-router-dom";
 import Button from "../../../elements/Button";
@@ -154,9 +156,11 @@ class FanHistoryActivityCard extends Component {
 			transfer_key,
 			ticket_number,
 			initiated_by,
+			refunded_by,
 			redeemed_by,
 			events,
 			redeemed_for,
+			cancelled_by,
 			ticket_numbers
 		} = this.props.item;
 
@@ -185,7 +189,15 @@ class FanHistoryActivityCard extends Component {
 										{occurredAt}
 									</Typography>
 									<Typography>
-										<span className={classes.boldSpan}>Purchased</span>
+										<span
+											className={classNames({
+												[classes.pinkSpan]: true,
+												[classes.boldSpan]: true
+											})}
+										>
+											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
+										</span>
+										<span className={classes.boldSpan}>purchased</span>
 										&nbsp;
 										<span>
 											{ticket_quantity} tickets to{" "}
@@ -265,17 +277,19 @@ class FanHistoryActivityCard extends Component {
 															{item.code}
 														</span>
 														<span
-															className={
-																classes.greySubtitle + " " + classes.boldSpan
-															}
+															className={classNames({
+																[classes.greySubtitle]: true,
+																[classes.boldSpan]: true
+															})}
 														>{` / $${(item.total_in_cents / 100).toFixed(
 																2
 															)}`}</span>
 														<br/>
 														<span
-															className={
-																classes.greySubtitle + " " + classes.boldSpan
-															}
+															className={classNames({
+																[classes.greySubtitle]: true,
+																[classes.boldSpan]: true
+															})}
 														>
 															{item.code_type}
 														</span>
@@ -323,13 +337,16 @@ class FanHistoryActivityCard extends Component {
 										{occurredAt}
 									</Typography>
 									<Typography>
-										<span className={classes.pinkSpan + " " + classes.boldSpan}>
+										<span
+											className={classNames({
+												[classes.pinkSpan]: true,
+												[classes.boldSpan]: true
+											})}
+										>
 											{redeemed_by.full_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>checked-in&nbsp;</span>
-										<span>
-											{"to " + name}&nbsp;{"(" + ticket_quantity + ")"}
-										</span>
+										<span>to {name} (1 Ticket)</span>
 									</Typography>
 
 									{!expanded ? (
@@ -399,17 +416,32 @@ class FanHistoryActivityCard extends Component {
 										{occurredAt}
 									</Typography>
 									<Typography>
-										<span className={classes.pinkSpan + " " + classes.boldSpan}>
-											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
+										<span
+											className={classNames({
+												[classes.pinkSpan]: true,
+												[classes.boldSpan]: true
+											})}
+										>
+											{refunded_by.full_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>refunded&nbsp;</span>
 										<span className={classes.totalRevenue}>{`$${(
 											total_in_cents / 100
 										).toFixed(2)}`}</span>
+										&nbsp;
 										<span>
+											to&nbsp;
+											<span
+												className={classNames({
+													[classes.pinkSpan]: true,
+													[classes.boldSpan]: true
+												})}
+											>
+												{profile.first_name}&nbsp;{profile.last_name}&nbsp;
+											</span>
 											&nbsp;(
 											<span className={classes.pinkSpan}>
-												{"Order #" + order_number + ""}
+												Order #{order_number}
 											</span>
 											)
 										</span>
@@ -451,25 +483,28 @@ class FanHistoryActivityCard extends Component {
 									<div className={classes.card}>
 										<div className={classes.halfFlex}>
 											<Typography
-												className={
-													classes.greySubtitleCap + " " + classes.halfFlexItem
-												}
+												className={classNames({
+													[classes.greySubtitleCap]: true,
+													[classes.halfFlexItem]: true
+												})}
 											>
 												Items refunded
 											</Typography>
 											<Typography
-												className={
-													classes.greySubtitleCap + " " + classes.halfFlexItem
-												}
+												className={classNames({
+													[classes.greySubtitleCap]: true,
+													[classes.halfFlexItem]: true
+												})}
 											>
 												Reason
 											</Typography>
 										</div>
 										<div className={classes.halfFlex}>
 											<div
-												className={
-													classes.darkGreySubtitle + " " + classes.halfFlexItem
-												}
+												className={classNames({
+													[classes.darkGreySubtitle]: true,
+													[classes.halfFlexItem]: true
+												})}
 											>
 												{refund_items.map((item, index) => {
 													return (
@@ -477,30 +512,30 @@ class FanHistoryActivityCard extends Component {
 															key={index}
 															className={classes.darkGreySubtitle}
 														>
-															{item.item_type +
-																" | " +
-																item.ticket_type_name +
-																" | #" +
-																order_number +
-																" | "}
+															{item.item_type} | {order_number} |
 															<span
-																className={
-																	classes.totalRevenue + " " + classes.boldSpan
-																}
+																className={classNames({
+																	[classes.totalRevenue]: true,
+																	[classes.boldSpan]: true
+																})}
 															>{`$${(item.amount / 100).toFixed(2)}`}</span>
+															<br/>
+															<span
+																className={classes.totalRevenue}
+															>{`Per Ticket Fee - $${(
+																	item.amount /
+																item.quantity /
+																100
+																).toFixed(2)}`}</span>
 														</Typography>
 													);
 												})}
-												<span
-													className={classes.totalRevenue}
-												>{`Per Ticket Fee - $${(total_in_cents / 100).toFixed(
-														2
-													)}`}</span>
 											</div>
 											<Typography
-												className={
-													classes.darkGreySubtitle + " " + classes.halfFlexItem
-												}
+												className={classNames({
+													[classes.darkGreySubtitle]: true,
+													[classes.halfFlexItem]: true
+												})}
 											>
 												{reason === null ? "-" : reason}
 											</Typography>
@@ -523,7 +558,12 @@ class FanHistoryActivityCard extends Component {
 										{occurredAt}
 									</Typography>
 									<Typography>
-										<span className={classes.pinkSpan + " " + classes.boldSpan}>
+										<span
+											className={classNames({
+												[classes.pinkSpan]: true,
+												[classes.boldSpan]: true
+											})}
+										>
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>added a note</span>
@@ -603,7 +643,12 @@ class FanHistoryActivityCard extends Component {
 										{occurredAt}
 									</Typography>
 									<Typography>
-										<span className={classes.pinkSpan + " " + classes.boldSpan}>
+										<span
+											className={classNames({
+												[classes.pinkSpan]: true,
+												[classes.boldSpan]: true
+											})}
+										>
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>
@@ -664,7 +709,9 @@ class FanHistoryActivityCard extends Component {
 												Transfer Address:
 											</Typography>
 											<Typography className={classes.greySubtitleCap}>
-												Accepted by:
+												{status === "Cancelled"
+													? "Cancelled by"
+													: "Accepted by"}
 											</Typography>
 											{status === "Pending" ? (
 												<Button
@@ -684,21 +731,35 @@ class FanHistoryActivityCard extends Component {
 										</FanActivityTransferRow>
 										<FanActivityTransferRow>
 											<Typography className={classes.darkGreySubtitle}>
-												{ticket_numbers.map((item, index) => {
+												{ticket_numbers.map(item => {
 													return item;
 												})}
+												<br/>
+												<span>
+													(
+													<span className={classes.pinkSpan}>
+														Order #{order_number}
+													</span>
+													)
+												</span>
 											</Typography>
-											<Typography className={classes.darkGreySubtitle}>
+											<Typography className={classes.greySubtitle}>
 												<span className={classes.pinkSpan}>
 													{initiated_by !== null ? initiated_by.full_name : "-"}
 												</span>
+												<br/>
+												{occurredAt}
 											</Typography>
 											<Typography className={classes.darkGreySubtitle}>
 												{destination_addresses}
 											</Typography>
 											<Typography className={classes.darkGreySubtitle}>
 												<span className={classes.pinkSpan}>
-													{accepted_by !== null ? accepted_by.full_name : "-"}
+													{status === "Cancelled"
+														? cancelled_by.full_name
+														: accepted_by !== null
+															? accepted_by.full_name
+															: "-"}
 												</span>
 											</Typography>
 											<div/>
@@ -764,14 +825,14 @@ class FanHistoryActivityCard extends Component {
 										<span className={classes.boldSpan}>Purchased</span>
 										&nbsp;
 										<span>
-											{ticket_quantity} tickets to{" "}
+											{ticket_quantity} tickets to&nbsp;
 											<span className={classes.boldSpan}>{name}</span>
 										</span>
 										&nbsp;
 										<span>
 											(
 											<span className={classes.pinkSpan}>
-												{"Order #" + order_number + ""}
+												Order #{order_number}
 											</span>
 											)
 										</span>
@@ -857,13 +918,16 @@ class FanHistoryActivityCard extends Component {
 										src={servedImage("/icons/calendar-active.svg")}
 									/>
 									<Typography>
-										<span className={classes.pinkSpan + " " + classes.boldSpan}>
+										<span
+											className={classNames({
+												[classes.pinkSpan]: true,
+												[classes.boldSpan]: true
+											})}
+										>
 											{redeemed_by.full_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>checked-in&nbsp;</span>
-										<span>
-											{"to " + name}&nbsp;{"(" + ticket_quantity + ")"}
-										</span>
+										to {name} (1 Ticket)
 									</Typography>
 								</div>
 								<div className={classes.mobileHeaderBottomRow}>
@@ -910,7 +974,7 @@ class FanHistoryActivityCard extends Component {
 										<Typography className={classes.darkGreySubtitle}>
 											{"#" + ticket_number + " ( "}
 											<span className={classes.pinkSpan}>
-												{"Order #" + order_number}&nbsp;
+												Order #{order_number}&nbsp;
 											</span>
 											) scanned by&nbsp;
 											<span className={classes.pinkSpan}>
@@ -938,7 +1002,12 @@ class FanHistoryActivityCard extends Component {
 										src={servedImage("/icons/refund-active.svg")}
 									/>
 									<Typography>
-										<span className={classes.pinkSpan + " " + classes.boldSpan}>
+										<span
+											className={classNames({
+												[classes.pinkSpan]: true,
+												[classes.boldSpan]: true
+											})}
+										>
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>refunded&nbsp;</span>
@@ -1009,16 +1078,12 @@ class FanHistoryActivityCard extends Component {
 															key={index}
 															className={classes.darkGreySubtitle}
 														>
-															{item.item_type +
-																" | " +
-																item.ticket_type_name +
-																" | #" +
-																order_number +
-																" | "}
+															{item.item_type} | ${order_number} |
 															<span
-																className={
-																	classes.totalRevenue + " " + classes.boldSpan
-																}
+																className={classNames({
+																	[classes.totalRevenue]: true,
+																	[classes.boldSpan]: true
+																})}
 															>{`$${(item.amount / 100).toFixed(2)}`}</span>
 														</Typography>
 													);
@@ -1052,7 +1117,12 @@ class FanHistoryActivityCard extends Component {
 										src={servedImage("/icons/note-circle-gray.svg")}
 									/>
 									<Typography>
-										<span className={classes.pinkSpan + " " + classes.boldSpan}>
+										<span
+											className={classNames({
+												[classes.pinkSpan]: true,
+												[classes.boldSpan]: true
+											})}
+										>
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>added a note</span>
@@ -1137,7 +1207,12 @@ class FanHistoryActivityCard extends Component {
 										/>
 									)}
 									<Typography>
-										<span className={classes.pinkSpan + " " + classes.boldSpan}>
+										<span
+											className={classNames({
+												[classes.pinkSpan]: true,
+												[classes.boldSpan]: true
+											})}
+										>
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>
