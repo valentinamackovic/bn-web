@@ -267,42 +267,45 @@ class FanHistoryActivityCard extends Component {
 											<Typography>
 												<span className={classes.boldSpan}>{name}</span>
 											</Typography>
+
 											{events.map((item, index) => {
-												return (
-													<Typography
-														key={index}
-														className={classes.darkGreySubtitle}
-													>
-														<span className={classes.boldSpan}>
-															{item.code}
-														</span>
-														<span
-															className={classNames({
-																[classes.greySubtitle]: true,
-																[classes.boldSpan]: true
-															})}
-														>{` / $${(item.total_in_cents / 100).toFixed(
-																2
-															)}`}</span>
-														<br/>
-														<span
-															className={classNames({
-																[classes.greySubtitle]: true,
-																[classes.boldSpan]: true
-															})}
+												if (item.code_discount_in_cents !== null) {
+													return (
+														<Typography
+															key={index}
+															className={classes.darkGreySubtitle}
 														>
-															{item.code_type}
-														</span>
-													</Typography>
-												);
+															<span className={classes.boldSpan}>
+																{item.code}
+															</span>
+															<span
+																className={classNames({
+																	[classes.greySubtitle]: true,
+																	[classes.boldSpan]: true
+																})}
+															>{` / $${(
+																	item.code_discount_in_cents / 100
+																).toFixed(2)}`}</span>
+															<br/>
+															<span
+																className={classNames({
+																	[classes.greySubtitle]: true,
+																	[classes.boldSpan]: true
+																})}
+															>
+																{item.code_type}
+															</span>
+														</Typography>
+													);
+												}
 											})}
 											<Typography className={classes.darkGreySubtitle}>
 												{ticket_quantity}
 											</Typography>
 											<Typography className={classes.darkGreySubtitle}>
-												<span className={classes.totalRevenue}>{`$${(
-													total_in_cents / 100
-												).toFixed(2)}`}</span>
+												<span className={classes.totalRevenue}>
+													{`$${(total_in_cents / 100).toFixed(2)}`}
+												</span>
 											</Typography>
 											<Link to={`/orders/${order_id}`}>
 												<Button variant="secondary" size="small">
@@ -754,13 +757,23 @@ class FanHistoryActivityCard extends Component {
 												{destination_addresses}
 											</Typography>
 											<Typography className={classes.darkGreySubtitle}>
-												<span className={classes.pinkSpan}>
-													{status === "Cancelled"
-														? cancelled_by.full_name
-														: accepted_by !== null
-															? accepted_by.full_name
-															: "-"}
-												</span>
+												{status === "Cancelled" ? (
+													<span className={classes.pinkSpan}>
+														{cancelled_by.full_name} <br/>
+														<span className={classes.greySubtitle}>
+															{occurredAt}
+														</span>
+													</span>
+												) : accepted_by !== null ? (
+													<span className={classes.pinkSpan}>
+														{accepted_by.full_name} <br/>
+														<span className={classes.greySubtitle}>
+															{occurredAt}
+														</span>
+													</span>
+												) : (
+													"-"
+												)}
 											</Typography>
 											<div/>
 										</FanActivityTransferRow>
