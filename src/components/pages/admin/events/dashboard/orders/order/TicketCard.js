@@ -124,12 +124,13 @@ const TicketCard = ({
 
 				<div className={classes.perTicketFeeRow}>
 					<span style={colStyles[0]} className={classes.col1}>
-						<CheckBox
-							style={checkboxStyle}
-							size={"small"}
-							variant={"white"}
-							active={false}
-						/>
+						{/*<CheckBox*/}
+						{/*	style={checkboxStyle}*/}
+						{/*	size={"small"}*/}
+						{/*	variant={"white"}*/}
+						{/*	active={false}*/}
+						{/*/>*/}
+						<span style={checkboxStyle}/>
 						<Typography>Per ticket fee</Typography>
 					</span>
 					<span style={colStyles[1]}/>

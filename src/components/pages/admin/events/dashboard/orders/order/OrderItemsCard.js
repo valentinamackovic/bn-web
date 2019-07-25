@@ -276,6 +276,7 @@ class OrderItemsCard extends Component {
 
 	render() {
 		const { classes, eventDetails, order, items } = this.props;
+
 		const {
 			showOrderDetails,
 			mobileOptionsControlOpen,
@@ -289,9 +290,11 @@ class OrderItemsCard extends Component {
 		} = eventDetails;
 
 		let code = "";
-		order.items.forEach(item => {
-			if (item.redemption_code) {
-				code = item.redemption_code;
+		let codeType = "";
+		items.forEach(item => {
+			if (item.code) {
+				code = item.code;
+				codeType = item.code_type;
 			}
 		});
 
@@ -337,7 +340,6 @@ class OrderItemsCard extends Component {
 
 		const venueDisplayName = `${venue.name}, ${venue.address}, ${venue.city}`;
 
-		const accessCodeType = ""; //TODO
 		const qty = items.length;
 
 		return (
@@ -397,7 +399,7 @@ class OrderItemsCard extends Component {
 											{code}
 										</Typography>
 										<Typography className={classes.subText}>
-											{accessCodeType}
+											{codeType}
 										</Typography>
 									</React.Fragment>
 								) : (
@@ -457,7 +459,7 @@ class OrderItemsCard extends Component {
 									{code}
 								</Typography>
 								<Typography className={classes.mobileSubText}>
-									{accessCodeType}
+									{codeType}
 								</Typography>
 							</div>
 							<div style={{ flex: 2 }}>
