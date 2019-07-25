@@ -208,15 +208,13 @@ class FanHistoryActivityCard extends Component {
 											{ticket_quantity} tickets to{" "}
 											<span className={classes.boldSpan}>{name}</span>
 										</span>
-										&nbsp;
+										&nbsp; (
 										<Link to={orderPath}>
-											(
 											<span className={classes.pinkSpan}>
 												Order #{order_number}
 											</span>
-											)
 										</Link>
-										&nbsp;
+										) &nbsp;
 									</Typography>
 
 									{!expanded ? (
@@ -747,16 +745,13 @@ class FanHistoryActivityCard extends Component {
 												{ticket_numbers.map(item => {
 													return item;
 												})}
-												<br/>
+												<br/>(
 												<Link to={orderPath}>
-													<span>
-														(
-														<span className={classes.pinkSpan}>
-															Order #{order_number}
-														</span>
-														)
+													<span className={classes.pinkSpan}>
+														Order #{order_number}
 													</span>
 												</Link>
+												)
 											</Typography>
 											<Typography className={classes.greySubtitle}>
 												<span className={classes.pinkSpan}>
@@ -853,17 +848,13 @@ class FanHistoryActivityCard extends Component {
 											{ticket_quantity} tickets to&nbsp;
 											<span className={classes.boldSpan}>{name}</span>
 										</span>
-										&nbsp;
+										&nbsp; (
 										<Link to={orderPath}>
-											<span>
-												(
-												<span className={classes.pinkSpan}>
-													Order #{order_number}
-												</span>
-												)
+											<span className={classes.pinkSpan}>
+												Order #{order_number}
 											</span>
 										</Link>
-										&nbsp;
+										) &nbsp;
 									</Typography>
 								</div>
 								<div className={classes.mobileHeaderBottomRow}>
@@ -999,7 +990,7 @@ class FanHistoryActivityCard extends Component {
 											Checked-in tickets
 										</Typography>
 										<Typography className={classes.darkGreySubtitle}>
-											{"#" + ticket_number + " ( "}
+											#{ticket_number} (
 											<Link to={orderPath}>
 												<span className={classes.pinkSpan}>
 													Order #{order_number}&nbsp;
@@ -1045,13 +1036,13 @@ class FanHistoryActivityCard extends Component {
 										</span>
 										<br/>
 										<span>
+											&nbsp;(
 											<Link to={orderPath}>
-												&nbsp;(
 												<span className={classes.pinkSpan}>
 													Order #{order_number}
 												</span>
-												)
 											</Link>
+											)
 										</span>
 									</Typography>
 								</div>
