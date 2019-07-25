@@ -107,7 +107,7 @@ class SelectedEvent {
 					.format("h:mm A");
 				const displayShowTime = moment(eventStartDateMoment)
 					.tz(venueTimezone)
-					.format("h:mm A");
+					.format("h:mm A z");
 
 				this.event = {
 					...event,

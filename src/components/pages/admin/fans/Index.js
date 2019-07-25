@@ -136,10 +136,10 @@ class FanList extends Component {
 						first_name,
 						last_name,
 						email,
-						last_order_time,
+						last_interaction_time,
 						order_count,
 						revenue_in_cents,
-						created_at
+						first_interaction_time
 					} = user;
 
 					csvRows.push([
@@ -147,13 +147,13 @@ class FanList extends Component {
 						last_name,
 						email,
 						moment
-							.utc(last_order_time)
+							.utc(last_interaction_time)
 							.tz(organization_tz)
 							.format("MM/DD/YYYY h:mm:A"),
 						order_count,
 						`$${Math.round(revenue_in_cents / 100)}`,
 						moment
-							.utc(created_at)
+							.utc(first_interaction_time)
 							.tz(organization_tz)
 							.format("MM/DD/YYYY h:mm:A")
 					]);
@@ -187,8 +187,8 @@ class FanList extends Component {
 			.organizations.fans.index({
 				organization_id,
 				page,
-				limit: 20
-				//sort?: ""
+				limit: 20,
+				sort: "LastInteracted"
 			})
 			.then(response => {
 				const { data, paging } = response.data;
@@ -236,10 +236,10 @@ class FanList extends Component {
 							first_name,
 							last_name,
 							email,
-							last_order_time,
+							last_interaction_time,
 							order_count,
+							first_interaction_time,
 							revenue_in_cents,
-							created_at,
 							thumb_profile_pic_url
 						} = user;
 						return (
@@ -272,9 +272,9 @@ class FanList extends Component {
 
 									<Typography className={classes.itemText}>{email}</Typography>
 									<Typography className={classes.itemText}>
-										{last_order_time
+										{last_interaction_time
 											? moment
-												.utc(last_order_time)
+												.utc(last_interaction_time)
 												.tz(organization_tz)
 												.format("MM/DD/YYYY")
 											: "-"}
@@ -286,9 +286,9 @@ class FanList extends Component {
 										${Math.round(revenue_in_cents / 100)}
 									</Typography>
 									<Typography className={classes.itemText}>
-										{created_at
+										{first_interaction_time
 											? moment
-												.utc(created_at)
+												.utc(first_interaction_time)
 												.tz(organization_tz)
 												.format("MM/DD/YYYY")
 											: "-"}
