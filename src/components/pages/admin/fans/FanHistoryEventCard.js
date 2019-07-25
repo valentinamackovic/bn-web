@@ -1,8 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles, Typography, Collapse, Hidden } from "@material-ui/core";
-
-import moment from "moment-timezone";
 import Card from "../../../elements/Card";
 import { fontFamilyDemiBold, secondaryHex } from "../../../../config/theme";
 import Loader from "../../../elements/loaders/Loader";
@@ -88,16 +86,9 @@ class FanHistoryEventCard extends Component {
 		}
 	}
 
-	displayOrderDate(date, timezone) {
-		return moment
-			.utc(date)
-			.tz(timezone)
-			.format("l hh:mmA");
-	}
-
 	renderActivities() {
 		const { expandedRowKey } = this.state;
-		const { activity_items, event, eventStart, eventTimeZone } = this.props;
+		const { activity_items, event, eventStart } = this.props;
 		if (activity_items === null) {
 			return <Loader>Loading history...</Loader>;
 		}
@@ -109,10 +100,9 @@ class FanHistoryEventCard extends Component {
 					profile={this.props.profile}
 					onExpandChange={() => this.onExpandChange(index)}
 					expanded={expanded}
-					eventStart={eventStart}
 					key={index}
 					item={item}
-					occurredAt={this.displayOrderDate(item.occurred_at, eventTimeZone)}
+					eventStart={eventStart}
 					event={event}
 				/>
 			);
@@ -121,7 +111,6 @@ class FanHistoryEventCard extends Component {
 
 	render() {
 		const {
-			order_date,
 			event,
 			event_loc,
 			onExpandChange,

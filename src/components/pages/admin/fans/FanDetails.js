@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { withStyles, Typography, Divider, Hidden } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-
 import notifications from "../../../../stores/notifications";
 import Bigneon from "../../../../helpers/bigneon";
 import PageHeading from "../../../elements/PageHeading";
@@ -179,7 +178,6 @@ class Fan extends Component {
 			.organizations.fans.read({ user_id, organization_id })
 			.then(response => {
 				const { attendance_information, ...profile } = response.data;
-
 				this.setState({ profile });
 			})
 			.catch(error =>
@@ -209,9 +207,26 @@ class Fan extends Component {
 				past_or_upcoming: upcomingOrPast
 			})
 			.then(response => {
-				// const { ...fanHistory } = response.data;
+				const fanHistory = response.data.data.map((item, index) => {
+					const eventStart = this.displayOrderDate(
+						item.event.event_start,
+						item.event.venue.timezone
+					);
 
-				this.setState({ fanHistory: response.data.data, isLoading: false });
+					const activityItems = item.activity_items.map(activityItem => {
+						const occurredAt = this.displayOrderDate(
+							activityItem.occurredAt,
+							item.event.venue.timezone
+						);
+
+						return { ...activityItem, occurredAt };
+					});
+
+					item.activity_items = activityItems;
+
+					return { ...item, eventStart };
+				});
+				this.setState({ fanHistory: fanHistory, isLoading: false });
 			})
 			.catch(error =>
 				notifications.showFromErrorResponse({
@@ -236,12 +251,8 @@ class Fan extends Component {
 				<FanHistoryEventCard
 					onExpandChange={() => this.onExpandChange(index)}
 					expanded={expanded}
-					eventStart={this.displayOrderDate(
-						item.event.event_start,
-						item.event.venue.timezone
-					)}
-					eventTimeZone={item.event.venue.timezone}
 					key={index}
+					eventStart={item.eventStart}
 					profile={profile}
 					{...item}
 				/>
