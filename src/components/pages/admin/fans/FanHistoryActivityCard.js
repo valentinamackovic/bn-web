@@ -174,9 +174,13 @@ class FanHistoryActivityCard extends Component {
 			expanded,
 			profile,
 			classes,
-			eventStart
+			eventStart,
+			event
 		} = this.props;
 
+		const orderPath = `/admin/events/${
+			event.id
+		}/dashboard/orders/manage/${order_id}`;
 		let activityCard = null;
 
 		switch (type) {
@@ -205,15 +209,13 @@ class FanHistoryActivityCard extends Component {
 											{ticket_quantity} tickets to{" "}
 											<span className={classes.boldSpan}>{name}</span>
 										</span>
-										&nbsp;
-										<span>
-											(
+										&nbsp; (
+										<Link to={orderPath}>
 											<span className={classes.pinkSpan}>
-												{"Order #" + order_number + ""}
+												Order #{order_number}
 											</span>
-											)
-										</span>
-										&nbsp;
+										</Link>
+										) &nbsp;
 									</Typography>
 
 									{!expanded ? (
@@ -310,7 +312,7 @@ class FanHistoryActivityCard extends Component {
 													{dollars(total_in_cents)}
 												</span>
 											</Typography>
-											<Link to={`/orders/${order_id}`}>
+											<Link to={orderPath}>
 												<Button variant="secondary" size="small">
 													<span className={classes.smallTextCap}>
 														View order
@@ -394,9 +396,11 @@ class FanHistoryActivityCard extends Component {
 										</Typography>
 										<Typography className={classes.darkGreySubtitle}>
 											{"#" + ticket_number + " ( "}
-											<span className={classes.pinkSpan}>
-												{"Order #" + order_number}&nbsp;
-											</span>
+											<Link to={orderPath}>
+												<span className={classes.pinkSpan}>
+													Order #{order_number}&nbsp;
+												</span>
+											</Link>
 											) scanned by&nbsp;
 											<span className={classes.pinkSpan}>
 												{redeemed_for.full_name}&nbsp;
@@ -446,9 +450,11 @@ class FanHistoryActivityCard extends Component {
 												{profile.first_name}&nbsp;{profile.last_name}&nbsp;
 											</span>
 											&nbsp;(
-											<span className={classes.pinkSpan}>
-												Order #{order_number}
-											</span>
+											<Link to={orderPath}>
+												<span className={classes.pinkSpan}>
+													Order #{order_number}
+												</span>
+											</Link>
 											)
 										</span>
 									</Typography>
@@ -740,14 +746,13 @@ class FanHistoryActivityCard extends Component {
 												{ticket_numbers.map(item => {
 													return item;
 												})}
-												<br/>
-												<span>
-													(
+												<br/>(
+												<Link to={orderPath}>
 													<span className={classes.pinkSpan}>
 														Order #{order_number}
 													</span>
-													)
-												</span>
+												</Link>
+												)
 											</Typography>
 											<Typography className={classes.greySubtitle}>
 												<span className={classes.pinkSpan}>
@@ -817,9 +822,13 @@ class FanHistoryActivityCard extends Component {
 
 		const { name } = this.props.event;
 
-		const { onExpandChange, expanded, profile, classes } = this.props;
+		const { onExpandChange, expanded, profile, classes, event } = this.props;
 
 		let activityCard = null;
+
+		const orderPath = `/admin/events/${
+			event.id
+		}/dashboard/orders/manage/${order_id}`;
 
 		switch (type) {
 			case "Purchase":
@@ -840,15 +849,13 @@ class FanHistoryActivityCard extends Component {
 											{ticket_quantity} tickets to&nbsp;
 											<span className={classes.boldSpan}>{name}</span>
 										</span>
-										&nbsp;
-										<span>
-											(
+										&nbsp; (
+										<Link to={orderPath}>
 											<span className={classes.pinkSpan}>
 												Order #{order_number}
 											</span>
-											)
-										</span>
-										&nbsp;
+										</Link>
+										) &nbsp;
 									</Typography>
 								</div>
 								<div className={classes.mobileHeaderBottomRow}>
@@ -984,10 +991,12 @@ class FanHistoryActivityCard extends Component {
 											Checked-in tickets
 										</Typography>
 										<Typography className={classes.darkGreySubtitle}>
-											{"#" + ticket_number + " ( "}
-											<span className={classes.pinkSpan}>
-												Order #{order_number}&nbsp;
-											</span>
+											#{ticket_number} (
+											<Link to={orderPath}>
+												<span className={classes.pinkSpan}>
+													Order #{order_number}&nbsp;
+												</span>
+											</Link>
 											) scanned by&nbsp;
 											<span className={classes.pinkSpan}>
 												{redeemed_for.full_name}&nbsp;
@@ -1029,9 +1038,11 @@ class FanHistoryActivityCard extends Component {
 										<br/>
 										<span>
 											&nbsp;(
-											<span className={classes.pinkSpan}>
-												{"Order #" + order_number + ""}
-											</span>
+											<Link to={orderPath}>
+												<span className={classes.pinkSpan}>
+													Order #{order_number}
+												</span>
+											</Link>
 											)
 										</span>
 									</Typography>
