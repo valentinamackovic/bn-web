@@ -28,7 +28,7 @@ class CreateNote extends Component {
 	}
 
 	saveNote() {
-		const { orderId } = this.props;
+		const { orderId, onSuccess } = this.props;
 		const { note } = this.state;
 
 		this.setState({ isSaving: true });
@@ -39,6 +39,7 @@ class CreateNote extends Component {
 				const { data } = response;
 				notifications.show({ variant: "success", message: "Note saved." });
 				this.setState({ note: "" });
+				onSuccess();
 			})
 			.catch(error => {
 				console.error(error);
@@ -83,7 +84,8 @@ class CreateNote extends Component {
 
 CreateNote.propTypes = {
 	classes: PropTypes.object.isRequired,
-	orderId: PropTypes.string.isRequired
+	orderId: PropTypes.string.isRequired,
+	onSuccess: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(CreateNote);

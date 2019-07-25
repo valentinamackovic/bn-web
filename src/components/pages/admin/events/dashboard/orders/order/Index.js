@@ -17,6 +17,7 @@ import BackLink from "../../../../../../elements/BackLink";
 import CreateNote from "./CreateNote";
 import { fontFamilyDemiBold } from "../../../../../../../config/theme";
 import RelatedOrders from "./RelatedOrders";
+import OrderHistory from "./OrderHistory";
 
 const styles = theme => ({
 	root: {
@@ -43,10 +44,12 @@ class SingleOrder extends Component {
 		this.state = {
 			eventDetails: null,
 			order: null,
-			orderItems: null
+			orderItems: null,
+			orderHistory: null
 		};
 
 		this.refreshOrder = this.loadAll.bind(this);
+		this.loadOrderHistory = this.loadOrderHistory.bind(this);
 	}
 
 	componentDidMount() {
@@ -57,6 +60,7 @@ class SingleOrder extends Component {
 		this.loadEventDetails();
 		this.loadOrder();
 		this.loadOrderItems();
+		this.loadOrderHistory();
 	}
 
 	loadEventDetails() {
@@ -90,8 +94,7 @@ class SingleOrder extends Component {
 			.orders.read({ id: this.orderId })
 			.then(response => {
 				const { data } = response;
-
-				const { date, is_box_office, items } = data;
+				const { date, is_box_office, items, user_id } = data;
 
 				const { timezone } = this.props;
 				const displayDate = moment(date)
@@ -144,8 +147,40 @@ class SingleOrder extends Component {
 			});
 	}
 
+	loadOrderHistory() {
+		const { timezone } = this.props;
+
+		Bigneon()
+			.orders.activity({
+				id: this.orderId
+			})
+			.then(response => {
+				const { data } = response.data;
+
+				const orderHistory = data.map(item => {
+					const occurredAt = moment
+						.utc(item.occurredAt)
+						.tz(timezone)
+						.format("llll");
+
+					return { ...item, occurredAt };
+				});
+
+				this.setState({
+					orderHistory
+				});
+			})
+			.catch(error => {
+				console.error(error);
+				notifications.showFromErrorResponse({
+					error,
+					defaultMessage: "Failed to load order history."
+				});
+			});
+	}
+
 	render() {
-		const { order, orderItems, eventDetails } = this.state;
+		const { order, orderItems, eventDetails, orderHistory } = this.state;
 		const { classes, timezone, organizationId } = this.props;
 
 		const isReady = order && eventDetails && orderItems;
@@ -188,10 +223,19 @@ class SingleOrder extends Component {
 
 				{isReady ? (
 					<React.Fragment>
-						{/*<Typography className={classes.heading}>Order history</Typography>*/}
+						<Typography className={classes.heading}>Order history</Typography>
+						{orderHistory ? (
+							<OrderHistory
+								orderHistory={orderHistory}
+								userId={order.user_id}
+								eventDetails={eventDetails}
+							/>
+						) : (
+							<Loader>Loading history...</Loader>
+						)}
 
 						<Typography className={classes.heading}>Add note</Typography>
-						<CreateNote orderId={order.id}/>
+						<CreateNote orderId={order.id} onSuccess={this.loadOrderHistory}/>
 
 						<Typography className={classes.heading}>Related orders</Typography>
 						<RelatedOrders
