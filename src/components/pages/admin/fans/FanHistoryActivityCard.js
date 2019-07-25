@@ -210,13 +210,11 @@ class FanHistoryActivityCard extends Component {
 										</span>
 										&nbsp;
 										<Link to={orderPath}>
-											<span>
-												(
-												<span className={classes.pinkSpan}>
-													{"Order #" + order_number + ""}
-												</span>
-												)
+											(
+											<span className={classes.pinkSpan}>
+												Order #{order_number}
 											</span>
+											)
 										</Link>
 										&nbsp;
 									</Typography>
@@ -401,7 +399,7 @@ class FanHistoryActivityCard extends Component {
 											{"#" + ticket_number + " ( "}
 											<Link to={orderPath}>
 												<span className={classes.pinkSpan}>
-													{"Order #" + order_number}&nbsp;
+													Order #{order_number}&nbsp;
 												</span>
 											</Link>
 											) scanned by&nbsp;
@@ -1050,7 +1048,7 @@ class FanHistoryActivityCard extends Component {
 											<Link to={orderPath}>
 												&nbsp;(
 												<span className={classes.pinkSpan}>
-													{"Order #" + order_number + ""}
+													Order #{order_number}
 												</span>
 												)
 											</Link>
