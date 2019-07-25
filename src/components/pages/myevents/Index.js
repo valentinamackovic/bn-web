@@ -123,7 +123,9 @@ class MyEvents extends Component {
 								this.setState({ selectedTransferTicketIds })
 							}
 							onCancelTransfer={transferKey =>
-								this.setState({ cancelTransferKey: transferKey })
+								this.setState({
+									cancelTransferKey: transferKey
+								})
 							}
 							history={history}
 							onExpand={() => this.onExpandTickets(id)}

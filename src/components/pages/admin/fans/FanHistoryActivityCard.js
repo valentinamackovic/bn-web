@@ -1328,7 +1328,11 @@ class FanHistoryActivityCard extends Component {
 			<div>
 				<CancelTransferDialog
 					transferKey={cancelTransferKey}
-					onClose={() => this.setState({ cancelTransferKey: null })}
+					onClose={() =>
+						this.setState({
+							cancelTransferKey: null
+						})
+					}
 					// onSuccess={() => this.refreshGuests()}
 				/>
 				<Hidden smDown>{this.renderActivity(type)}</Hidden>

@@ -23,7 +23,7 @@ const styles = theme => ({
 		fontSize: theme.typography.fontSize * 1.125,
 		textAlign: "center"
 	},
-	emailText: {
+	pinkText: {
 		color: secondaryHex,
 		fontFamily: fontFamilyDemiBold
 	}
@@ -37,7 +37,8 @@ class CancelTransferDialog extends Component {
 			isCancelling: false,
 			recipientEmail: null,
 			transferId: null,
-			cancelSuccess: false
+			cancelSuccess: false,
+			ticketIds: []
 		};
 
 		this.onClose = this.onClose.bind(this);
@@ -68,8 +69,12 @@ class CancelTransferDialog extends Component {
 				id: transferKey
 			})
 			.then(response => {
-				const { id, transfer_address } = response.data;
-				this.setState({ recipientEmail: transfer_address, transferId: id });
+				const { id, transfer_address, ticket_ids } = response.data;
+				this.setState({
+					recipientEmail: transfer_address,
+					transferId: id,
+					ticketIds: ticket_ids
+				});
 			})
 			.catch(error => {
 				this.setState({ isCancelling: false });
@@ -122,15 +127,23 @@ class CancelTransferDialog extends Component {
 	renderCancelContent() {
 		const { classes } = this.props;
 
-		const { recipientEmail, isCancelling, transferId } = this.state;
+		const { recipientEmail, isCancelling, transferId, ticketIds } = this.state;
 
 		let explainerText = null;
 		if (recipientEmail) {
 			explainerText = (
 				<Typography className={classes.infoText}>
-					Please confirm that you want to cancel this transfer. We’ll send{" "}
-					<span className={classes.emailText}>{recipientEmail}</span> a message
-					to let them know.
+					Please confirm that you want to cancel transferring the{" "}
+					<span className={classes.pinkText}>
+						{ticketIds.length === 0 || typeof ticketIds === "undefined"
+							? "tickets"
+							: ticketIds.length > 1
+								? `${ticketIds.length} tickets`
+								: `${ticketIds.length} ticket`}
+					</span>{" "}
+					you sent to{" "}
+					<span className={classes.pinkText}>{recipientEmail}.</span> They will
+					be returned to your Big Neon app.
 				</Typography>
 			);
 		}
@@ -173,7 +186,7 @@ class CancelTransferDialog extends Component {
 			explainerText = (
 				<Typography className={classes.infoText}>
 					The message to{" "}
-					<span className={classes.emailText}>{recipientEmail}</span> has been
+					<span className={classes.pinkText}>{recipientEmail}</span> has been
 					sent and the tickets have been assigned back to you.
 				</Typography>
 			);
@@ -210,7 +223,7 @@ class CancelTransferDialog extends Component {
 				title={
 					cancelSuccess
 						? "We've cancelled the transfer!"
-						: "Want to cancel this transfer?"
+						: "Cancelling Transfer"
 				}
 				open={!!transferKey}
 				{...rest}
