@@ -19,6 +19,7 @@ import FanActivityPurchaseRow from "./FanActivityPurchaseRow";
 import { Link } from "react-router-dom";
 import Button from "../../../elements/Button";
 import CancelTransferDialog from "../../myevents/transfers/CancelTransferDialog";
+import nl2br from "../../../../helpers/nl2br";
 
 const styles = theme => ({
 	root: {
@@ -616,7 +617,7 @@ class FanHistoryActivityCard extends Component {
 											Note:
 										</Typography>
 										<Typography className={classes.darkGreySubtitle}>
-											{note}
+											{nl2br(note)}
 										</Typography>
 									</div>
 								</Collapse>
