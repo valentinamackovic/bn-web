@@ -466,9 +466,6 @@ class OrderItemsCard extends Component {
 								<Typography className={classes.mobileSubHeadingText}>
 									QTY
 								</Typography>
-								<Typography className={classes.mobileValueText}>
-									{code}
-								</Typography>
 								<Typography>{qty}</Typography>
 							</div>
 							<div style={{ flex: 3 }}>

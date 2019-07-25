@@ -33,6 +33,13 @@ const styles = theme => ({
 		fontFamily: fontFamilyDemiBold,
 		color: "#8b94a7",
 		textTransform: "uppercase"
+	},
+	refundedText: {
+		marginLeft: 20,
+		textTransform: "uppercase",
+		fontFamily: fontFamilyDemiBold,
+		fontSize: 17,
+		color: secondaryHex
 	}
 });
 
@@ -45,9 +52,13 @@ const Header = ({
 	payment_provider,
 	platform,
 	total_in_cents,
-	fees_in_cents
+	fees_in_cents,
+	total_refunded_in_cents
 }) => {
 	const { first_name, last_name, id: userId } = user;
+
+	const orderTotalInCents =
+		total_in_cents - fees_in_cents + total_refunded_in_cents;
 
 	return (
 		<div>
@@ -72,10 +83,15 @@ const Header = ({
 			</Typography>
 
 			<Typography className={classes.orderTotalText}>
-				Order total: {dollars(total_in_cents - fees_in_cents)}{" "}
+				Order total: {dollars(orderTotalInCents)}{" "}
 				<span className={classes.feesText}>
 					+ {dollars(fees_in_cents)} fees
 				</span>
+				{total_refunded_in_cents ? (
+					<span className={classes.refundedText}>
+						&nbsp;Refunded: ({dollars(total_refunded_in_cents)})
+					</span>
+				) : null}
 			</Typography>
 		</div>
 	);
