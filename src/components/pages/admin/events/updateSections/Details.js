@@ -249,6 +249,7 @@ const formatDataForInputs = event => {
 		additionalInfo: additional_info || "",
 		topLineInfo: top_line_info ? top_line_info : "",
 		videoUrl: video_url || "",
+		showEventTypes: !!event_type && event_type !== "Music",
 		showTopLineInfo: !!top_line_info,
 		showEventStatus: !!override_status,
 		showPrivateCode: !!private_access_code,
@@ -497,11 +498,12 @@ class Details extends Component {
 		let { eventType } = eventUpdateStore.event;
 		eventType = eventType || "Music";
 
-		const eventTypes = [
-			{ value: "Music", label: "Music" },
-			{ value: "Conference", label: "Conference" }
-		];
-
+		const eventTypes = Object.keys(Bn.Enums.EVENT_TYPES_STRING || {})
+			.sort()
+			.map(value => ({
+				value,
+				label: Bn.Enums.EVENT_TYPES_STRING[value]
+			}));
 		return (
 			<SelectGroup
 				value={eventType}
@@ -533,6 +535,7 @@ class Details extends Component {
 			additionalInfo,
 			topLineInfo,
 			videoUrl,
+			showEventTypes,
 			showTopLineInfo,
 			showEventStatus,
 			showMarketingSettings,
@@ -575,17 +578,6 @@ class Details extends Component {
 					<Grid item xs={12} sm={12} md={4} lg={4}>
 						{this.renderVenues()}
 					</Grid>
-
-					{/*<Grid*/}
-					{/*style={{ paddingBottom: 0, marginBottom: 0 }}*/}
-					{/*item*/}
-					{/*xs={12}*/}
-					{/*sm={12}*/}
-					{/*md={6}*/}
-					{/*lg={6}*/}
-					{/*>*/}
-					{/*{this.renderEventTypes()}*/}
-					{/*</Grid>*/}
 				</Grid>
 
 				<Collapse in={!showTopLineInfo}>
@@ -773,6 +765,21 @@ class Details extends Component {
 
 					<Grid item xs={12} sm={12} md={5} lg={5}>
 						{this.renderAgeLimits()}
+					</Grid>
+				</Grid>
+
+				<Grid container spacing={32}>
+					<Grid item xs={12} sm={12} md={5} lg={5}>
+						<Collapse in={!showEventTypes}>
+							<Button
+								style={{ width: "100%" }}
+								variant="additional"
+								onClick={() => this.changeDetails({ showEventTypes: true })}
+							>
+								Change category
+							</Button>
+						</Collapse>
+						<Collapse in={showEventTypes}>{this.renderEventTypes()}</Collapse>
 					</Grid>
 				</Grid>
 
