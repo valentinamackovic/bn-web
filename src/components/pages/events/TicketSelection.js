@@ -99,9 +99,10 @@ class TicketSelection extends Component {
 			discount_in_cents,
 			discount_as_percentage,
 			redemption_code,
-			status
+			eventIsCancelled
 		} = this.props;
-
+		let { status } = this.props;
+		status = eventIsCancelled ? "Cancelled" : status;
 		const { showDescription } = this.state;
 
 		// const incrementText =
@@ -292,7 +293,8 @@ TicketSelection.propTypes = {
 	validateFields: PropTypes.func.isRequired,
 	limitPerPerson: PropTypes.number,
 	status: PropTypes.string.isRequired,
-	classes: PropTypes.object.isRequired
+	classes: PropTypes.object.isRequired,
+	eventIsCancelled: PropTypes.bool
 };
 
 export default withStyles(styles)(TicketSelection);
