@@ -129,16 +129,15 @@ class FanHistoryActivityCard extends Component {
 		super(props);
 
 		this.state = {
-			cancelTransferKey: null,
-			transferTicketAmount: null
+			cancelTransferKey: null
 		};
 		this.onOpenCancelTransferDialog = this.onOpenCancelTransferDialog.bind(
 			this
 		);
 	}
 
-	onOpenCancelTransferDialog(cancelTransferKey, transferTicketAmount) {
-		this.setState({ cancelTransferKey, transferTicketAmount });
+	onOpenCancelTransferDialog(cancelTransferKey) {
+		this.setState({ cancelTransferKey });
 	}
 
 	renderActivity(type) {
@@ -724,10 +723,7 @@ class FanHistoryActivityCard extends Component {
 													variant="warning"
 													size="small"
 													onClick={() =>
-														this.onOpenCancelTransferDialog(
-															transfer_key,
-															ticket_ids.length
-														)
+														this.onOpenCancelTransferDialog(transfer_key)
 													}
 												>
 													<span className={classes.smallTextCap}>
@@ -1300,10 +1296,7 @@ class FanHistoryActivityCard extends Component {
 													variant="warning"
 													size="small"
 													onClick={() =>
-														this.onOpenCancelTransferDialog(
-															transfer_key,
-															ticket_ids.length
-														)
+														this.onOpenCancelTransferDialog(transfer_key)
 													}
 												>
 													<span className={classes.smallTextCap}>
@@ -1330,16 +1323,14 @@ class FanHistoryActivityCard extends Component {
 
 	render() {
 		const { type } = this.props.item;
-		const { cancelTransferKey, transferTicketAmount } = this.state;
+		const { cancelTransferKey } = this.state;
 		return (
 			<div>
 				<CancelTransferDialog
 					transferKey={cancelTransferKey}
-					ticketcount={transferTicketAmount}
 					onClose={() =>
 						this.setState({
-							cancelTransferKey: null,
-							transferTicketAmount: null
+							cancelTransferKey: null
 						})
 					}
 					// onSuccess={() => this.refreshGuests()}

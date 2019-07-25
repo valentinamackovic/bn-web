@@ -37,7 +37,8 @@ class CancelTransferDialog extends Component {
 			isCancelling: false,
 			recipientEmail: null,
 			transferId: null,
-			cancelSuccess: false
+			cancelSuccess: false,
+			ticketIds: []
 		};
 
 		this.onClose = this.onClose.bind(this);
@@ -68,8 +69,12 @@ class CancelTransferDialog extends Component {
 				id: transferKey
 			})
 			.then(response => {
-				const { id, transfer_address } = response.data;
-				this.setState({ recipientEmail: transfer_address, transferId: id });
+				const { id, transfer_address, ticket_ids } = response.data;
+				this.setState({
+					recipientEmail: transfer_address,
+					transferId: id,
+					ticketIds: ticket_ids
+				});
 			})
 			.catch(error => {
 				this.setState({ isCancelling: false });
@@ -120,9 +125,9 @@ class CancelTransferDialog extends Component {
 	}
 
 	renderCancelContent() {
-		const { classes, ticketcount } = this.props;
+		const { classes } = this.props;
 
-		const { recipientEmail, isCancelling, transferId } = this.state;
+		const { recipientEmail, isCancelling, transferId, ticketIds } = this.state;
 
 		let explainerText = null;
 		if (recipientEmail) {
@@ -130,13 +135,11 @@ class CancelTransferDialog extends Component {
 				<Typography className={classes.infoText}>
 					Please confirm that you want to cancel transferring the{" "}
 					<span className={classes.pinkText}>
-						{ticketcount === 0 ||
-						typeof ticketcount === "undefined" ||
-						ticketcount === null
+						{ticketIds.length === 0 || typeof ticketIds === "undefined"
 							? "tickets"
-							: ticketcount > 1
-								? `${ticketcount} tickets`
-								: `${ticketcount} ticket`}
+							: ticketIds.length > 1
+								? `${ticketIds.length} tickets`
+								: `${ticketIds.length} ticket`}
 					</span>{" "}
 					you sent to{" "}
 					<span className={classes.pinkText}>{recipientEmail}.</span> They will
@@ -237,7 +240,6 @@ CancelTransferDialog.propTypes = {
 	classes: PropTypes.object.isRequired,
 	onClose: PropTypes.func.isRequired,
 	transferKey: PropTypes.string,
-	ticketcount: PropTypes.number,
 	onSuccess: PropTypes.func
 };
 
