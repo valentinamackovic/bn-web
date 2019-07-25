@@ -57,7 +57,8 @@ class LastCall extends Component {
 			isCustom: false,
 			notificationTriggered: false,
 			lastCallMessage: "",
-			errors: [],
+			errors: {},
+			broadcastData: {},
 			customNotificationMessage: ""
 		};
 	}
@@ -74,7 +75,10 @@ class LastCall extends Component {
 				let notificationTriggered = false;
 
 				data.forEach(({ id, notification_type, status }) => {
-					if (notification_type === "LastCall" && status === "Pending") {
+					if (
+						(notification_type === "LastCall" && status === "Pending") ||
+						(notification_type === "LastCall" && status === "InProgress")
+					) {
 						notificationTriggered = true;
 					}
 				});
@@ -91,11 +95,13 @@ class LastCall extends Component {
 	}
 
 	onSend(e) {
+		const { isCustom } = this.state;
 		e.preventDefault();
+		let broadcastData = {};
 
 		this.submitAttempted = true;
 
-		if (!this.validateFields()) {
+		if (!this.validateFields() && isCustom) {
 			notifications.show({
 				message: "Invalid field.",
 				variant: "warning"
@@ -105,33 +111,65 @@ class LastCall extends Component {
 
 		this.setState({ isSending: true });
 
-		Bigneon()
-			.events.broadcasts.create({
+		if (isCustom) {
+			broadcastData = {
 				event_id: this.eventId,
 				message: this.state.lastCallMessage.trim(),
 				channel: "PushNotification",
 				notification_type: "Custom"
-			})
+			};
+		} else {
+			broadcastData = {
+				event_id: this.eventId,
+				channel: "PushNotification",
+				notification_type: "LastCall"
+			};
+		}
+
+		Bigneon()
+			.events.broadcasts.create(broadcastData)
 			.then(response => {
-				const { data } = response.data;
+				let notificationTriggered = false;
+
+				if (
+					(response.data.notification_type === "LastCall" &&
+						response.data.status === "Pending") ||
+					(response.data.notification_type === "LastCall" &&
+						response.data.status === "InProgress")
+				) {
+					notificationTriggered = true;
+
+					this.setState({ notificationTriggered });
+				}
+
 				this.setState({
-					notificationTriggered: true,
-					openConfirmDialog: false
+					isSending: false,
+					openConfirmDialog: false,
+					lastCallMessage: "",
+					errors: {}
 				});
+				this.submitAttempted = false;
 				notifications.show({
 					message: "Notification triggered!",
 					variant: "success"
 				});
 			})
 			.catch(error => {
-				this.setState({ isSending: false });
-
-				console.error(error);
+				this.setState({
+					isSending: false
+				});
 				notifications.showFromErrorResponse({
 					error,
 					defaultMessage: "Failed to trigger notifications."
 				});
 			});
+	}
+
+	onDialogClose() {
+		this.setState({
+			openConfirmDialog: false,
+			errors: {}
+		});
 	}
 
 	validateFields() {
@@ -176,13 +214,14 @@ class LastCall extends Component {
 		const description = `All attendees who have enabled notifications on their devices will receive the ${
 			isCustom ? "custom" : "Last Call"
 		} message`;
-
 		return (
 			<Dialog
 				open={openConfirmDialog}
 				title={isCustom ? customLabel : lastCallLabel}
 				iconUrl={"/icons/phone-white.svg"}
-				onClose={() => this.setState({ openConfirmDialog: false })}
+				onClose={() => {
+					this.onDialogClose();
+				}}
 			>
 				<div className={classes.dialogContainer}>
 					<Typography className={classes.description}>
@@ -193,9 +232,10 @@ class LastCall extends Component {
 						{description}
 					</Typography>
 				</div>
-				<form onSubmit={this.onSend.bind(this)}>
+
+				{isCustom ? (
 					<InputGroup
-						placeholder={"Enter your last call message"}
+						placeholder={"Enter your custom message (Max 255 characters)"}
 						name={"LastCallMessage"}
 						error={errors.lastCallMessage}
 						label="Message"
@@ -205,29 +245,36 @@ class LastCall extends Component {
 						}}
 						onBlur={this.validateFields.bind(this)}
 					/>
-					<div style={{ display: "flex" }}>
-						<Button
-							style={{ flex: 1, marginRight: 5 }}
-							onClick={() => this.setState({ openConfirmDialog: false })}
-						>
-							Cancel
-						</Button>
-						<Button
-							type="submit"
-							style={{ flex: 1, marginLeft: 5 }}
-							variant={"callToAction"}
-							disabled={isSending}
-						>
-							{isSending ? "Sending..." : "Send now"}
-						</Button>
-					</div>
-				</form>
+				) : (
+					<div/>
+				)}
+				<div style={{ display: "flex" }}>
+					<Button
+						style={{ flex: 1, marginRight: 5 }}
+						onClick={() => this.onDialogClose()}
+					>
+						Cancel
+					</Button>
+					<Button
+						onClick={this.onSend.bind(this)}
+						style={{ flex: 1, marginLeft: 5 }}
+						variant={"callToAction"}
+						disabled={isSending && isCustom}
+					>
+						{isCustom && isSending ? "Sending..." : "Send now"}
+					</Button>
+				</div>
 			</Dialog>
 		);
 	}
 
-	renderActionButton(isCustom) {
-		const { canTrigger, isSending, notificationTriggered } = this.state;
+	renderActionButton() {
+		const {
+			canTrigger,
+			isSending,
+			notificationTriggered,
+			isCustom
+		} = this.state;
 
 		if (notificationTriggered) {
 			return <Button disabled>Notification triggered!</Button>;
@@ -241,7 +288,7 @@ class LastCall extends Component {
 			return <Button disabled>Not available</Button>;
 		}
 
-		if (isSending) {
+		if (isSending && !isCustom) {
 			return <Button disabled>Sending...</Button>;
 		}
 
@@ -249,7 +296,7 @@ class LastCall extends Component {
 			<Button
 				variant={"callToAction"}
 				onClick={() =>
-					this.setState({ openConfirmDialog: true, isCustom: isCustom })
+					this.setState({ openConfirmDialog: true, isCustom: false })
 				}
 			>
 				Send now
@@ -259,7 +306,7 @@ class LastCall extends Component {
 
 	render() {
 		const { classes } = this.props;
-		const { canTrigger } = this.state;
+		const { canTrigger, isSending, isCustom } = this.state;
 		return (
 			<Container
 				eventId={this.eventId}
@@ -277,7 +324,15 @@ class LastCall extends Component {
 				</Typography>
 
 				<div className={classes.actionButtonContainer}>
-					{this.renderActionButton(true)}
+					<Button
+						variant={"callToAction"}
+						disabled={isSending}
+						onClick={() =>
+							this.setState({ openConfirmDialog: true, isCustom: true })
+						}
+					>
+						{isSending && isCustom ? "Sending..." : "Send now"}
+					</Button>
 				</div>
 
 				<Typography className={classes.heading}>
@@ -291,7 +346,7 @@ class LastCall extends Component {
 				</Typography>
 
 				<div className={classes.actionButtonContainer}>
-					{this.renderActionButton(false)}
+					{this.renderActionButton()}
 				</div>
 
 				{!canTrigger ? (
