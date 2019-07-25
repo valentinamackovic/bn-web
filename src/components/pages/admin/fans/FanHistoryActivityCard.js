@@ -149,6 +149,7 @@ class FanHistoryActivityCard extends Component {
 			ticket_ids,
 			created_by,
 			destination_addresses,
+			occurredAt,
 			accepted_by,
 			reason,
 			refund_items,
@@ -171,7 +172,6 @@ class FanHistoryActivityCard extends Component {
 			onExpandChange,
 			expanded,
 			profile,
-			occurredAt,
 			classes,
 			eventStart
 		} = this.props;
@@ -802,6 +802,7 @@ class FanHistoryActivityCard extends Component {
 			ticket_ids,
 			destination_addresses,
 			reason,
+			occurredAt,
 			refund_items,
 			note,
 			created_by,
@@ -815,13 +816,7 @@ class FanHistoryActivityCard extends Component {
 
 		const { name } = this.props.event;
 
-		const {
-			onExpandChange,
-			expanded,
-			profile,
-			occurredAt,
-			classes
-		} = this.props;
+		const { onExpandChange, expanded, profile, classes } = this.props;
 
 		let activityCard = null;
 
@@ -1353,7 +1348,6 @@ FanHistoryActivityCard.propTypes = {
 	onExpandChange: PropTypes.func.isRequired,
 	expanded: PropTypes.bool.isRequired,
 	event_history: PropTypes.array
-	//	type: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(FanHistoryActivityCard);
