@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 import nl2br from "../../../helpers/nl2br";
 import { textColorPrimary } from "../../../config/theme";
 import ArtistSummary from "../../elements/event/ArtistSummary";
+import { Link } from "react-router-dom";
 
 const styles = theme => ({
 	root: {
@@ -31,10 +32,16 @@ const styles = theme => ({
 });
 
 const EventDescriptionBody = props => {
-	const { classes, children, artists } = props;
+	const { classes, children, artists, eventIsCancelled } = props;
 
 	return (
 		<div className={classes.root}>
+			{eventIsCancelled ? (
+				<div>
+					Sorry, this event is no longer available.{" "}
+					<Link to={"/"}>Browse other events</Link>
+				</div>
+			) : null}
 			{children ? (
 				<Typography className={classes.eventDetailText}>
 					{nl2br(children)}
@@ -42,17 +49,16 @@ const EventDescriptionBody = props => {
 			) : null}
 
 			{artists && artists.length !== 0 ? (
-				<Grid className={classes.artistsContainer} spacing={32} container direction="row" justify="flex-start" alignItems="flex-start">
+				<Grid
+					className={classes.artistsContainer}
+					spacing={32}
+					container
+					direction="row"
+					justify="flex-start"
+					alignItems="flex-start"
+				>
 					{artists.map(({ artist, importance }, index) => (
-						<Grid
-							item
-							xs={12}
-							sm={12}
-							md={12}
-							lg={6}
-							xl={6}
-							key={index}
-						>
+						<Grid item xs={12} sm={12} md={12} lg={6} xl={6} key={index}>
 							<ArtistSummary headliner={importance === 0} {...artist}/>
 						</Grid>
 					))}
@@ -62,14 +68,13 @@ const EventDescriptionBody = props => {
 	);
 };
 
-EventDescriptionBody.defaultProps = {
-
-};
+EventDescriptionBody.defaultProps = {};
 
 EventDescriptionBody.propTypes = {
 	classes: PropTypes.object.isRequired,
 	children: PropTypes.string,
-	artists: PropTypes.array
+	artists: PropTypes.array,
+	eventIsCancelled: PropTypes.bool
 };
 
 export default withStyles(styles)(EventDescriptionBody);

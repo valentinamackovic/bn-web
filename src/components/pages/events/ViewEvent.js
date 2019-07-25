@@ -226,6 +226,10 @@ class ViewEvent extends Component {
 		// if (hasAvailableTickets === false && !event.is_external) {
 		// 	return { ctaText: "No available tickets", enabled: false };
 		// }
+		const eventIsCancelled = !!(event && event.cancelled_at);
+		if (eventIsCancelled) {
+			return { ctaText: "Cancelled", enabled: false };
+		}
 
 		switch (event.override_status) {
 			case "PurchaseTickets":
@@ -365,6 +369,7 @@ class ViewEvent extends Component {
 			min_ticket_price,
 			max_ticket_price
 		} = event;
+		const eventIsCancelled = !!(event && event.cancelled_at);
 
 		const promo_image_url = event.promo_image_url
 			? optimizedImageUrl(event.promo_image_url)
@@ -460,7 +465,10 @@ class ViewEvent extends Component {
 						containerClass={classes.desktopContent}
 						containerStyle={{ minHeight: overlayCardHeightAdjustment }}
 						col1={(
-							<EventDescriptionBody artists={artists}>
+							<EventDescriptionBody
+								eventIsCancelled={eventIsCancelled}
+								artists={artists}
+							>
 								{additional_info}
 							</EventDescriptionBody>
 						)}

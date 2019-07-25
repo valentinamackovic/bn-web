@@ -391,11 +391,13 @@ class CheckoutSelection extends Component {
 	}
 
 	renderTicketPricing() {
-		const { ticket_types } = selectedEvent;
+		const { event, ticket_types } = selectedEvent;
 		const { ticketSelection, errors } = this.state;
 		if (!ticket_types) {
 			return <Loader>Loading tickets...</Loader>;
 		}
+
+		const eventIsCancelled = !!(event && event.cancelled_at);
 
 		const ticketTypeRendered = ticket_types
 			.map(ticketType => {
@@ -458,6 +460,7 @@ class CheckoutSelection extends Component {
 						}
 						validateFields={this.validateFields.bind(this)}
 						status={status}
+						eventIsCancelled={eventIsCancelled}
 					/>
 				);
 			})
@@ -474,6 +477,7 @@ class CheckoutSelection extends Component {
 		const { isSubmitting, isSubmittingPromo, ticketSelection } = this.state;
 
 		const { event, venue, artists, organization, id } = selectedEvent;
+		const eventIsCancelled = !!(event && event.cancelled_at);
 
 		if (event === null) {
 			return (
@@ -553,13 +557,17 @@ class CheckoutSelection extends Component {
 					/>
 
 					<Button
-						disabled={isSubmitting}
+						disabled={isSubmitting || eventIsCancelled}
 						onClick={() => this.onSubmit()}
 						size="large"
 						style={{ width: "100%" }}
 						variant="callToAction"
 					>
-						{isSubmitting ? "Adding..." : "Continue"}
+						{isSubmitting
+							? "Adding..."
+							: eventIsCancelled
+								? "Cancelled"
+								: "Continue"}
 					</Button>
 				</div>
 			);
@@ -580,7 +588,10 @@ class CheckoutSelection extends Component {
 						containerClass={classes.desktopContent}
 						containerStyle={{ minHeight: overlayCardHeightAdjustment }}
 						col1={(
-							<EventDescriptionBody artists={artists}>
+							<EventDescriptionBody
+								eventIsCancelled={eventIsCancelled}
+								artists={artists}
+							>
 								{additional_info}
 							</EventDescriptionBody>
 						)}

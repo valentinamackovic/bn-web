@@ -350,6 +350,7 @@ class CheckoutConfirmation extends Component {
 		const { cartSummary, formattedExpiryTime, cartExpired } = cart;
 
 		const { event, artists, id, venue } = selectedEvent;
+		const eventIsCancelled = !!(event && event.cancelled_at);
 
 		if (event === null) {
 			return (
@@ -409,6 +410,7 @@ class CheckoutConfirmation extends Component {
 							/>
 						) : (
 							<Button
+								disabled={eventIsCancelled}
 								variant="callToAction"
 								style={{ width: "100%" }}
 								onClick={this.onFreeCheckout.bind(this)}
