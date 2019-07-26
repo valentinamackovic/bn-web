@@ -137,6 +137,9 @@ const styles = theme => ({
 	upperRow: {
 		display: "flex",
 		flexDirection: "row"
+	},
+	mobiTitle: {
+		wordBreak: "break-all"
 	}
 });
 
@@ -318,7 +321,7 @@ class FanHistoryActivityCard extends Component {
 														</Typography>
 													);
 												} else {
-													return <Typography>-</Typography>;
+													return <Typography key={index}>-</Typography>;
 												}
 											})}
 											<Typography className={classes.darkGreySubtitle}>
@@ -834,6 +837,7 @@ class FanHistoryActivityCard extends Component {
 			ticket_number,
 			ticket_numbers,
 			redeemed_by,
+			refunded_by,
 			redeemed_for,
 			events
 		} = this.props.item;
@@ -982,7 +986,7 @@ class FanHistoryActivityCard extends Component {
 													</Typography>
 												);
 											} else {
-												return <Typography>-</Typography>;
+												return <Typography key={index}>-</Typography>;
 											}
 										})}
 										<Typography className={classes.darkGreySubtitle}>
@@ -1106,21 +1110,31 @@ class FanHistoryActivityCard extends Component {
 										className={classes.mobiIcon}
 										src={servedImage("/icons/refund-active.svg")}
 									/>
-									<Typography>
+									<Typography className={classes.mobiTitle}>
 										<span
 											className={classNames({
 												[classes.pinkSpan]: true,
 												[classes.boldSpan]: true
 											})}
 										>
-											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
+											{refunded_by.full_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>refunded&nbsp;</span>
 										<span className={classes.totalRevenue}>
 											{dollars(total_in_cents)}
 										</span>
-										<br/>
+										&nbsp;
 										<span>
+											to&nbsp;
+											<span
+												className={classNames({
+													[classes.pinkSpan]: true,
+													[classes.boldSpan]: true
+												})}
+											>
+												{profile.first_name}&nbsp;{profile.last_name}
+												&nbsp;
+											</span>
 											&nbsp;(
 											<Link to={orderPath}>
 												<span className={classes.pinkSpan}>
@@ -1169,45 +1183,42 @@ class FanHistoryActivityCard extends Component {
 								</div>
 								<Collapse in={expanded}>
 									<div className={classes.mobiCard}>
-										<FanActivityMobileRow>
-											<Typography className={classes.greySubtitleCap}>
-												Items refunded
-											</Typography>
-											<Typography className={classes.greySubtitleCap}>
-												Reason
-											</Typography>
-										</FanActivityMobileRow>
-										<FanActivityMobileRow>
-											<div className={classes.darkGreySubtitle}>
-												{refund_items.map((item, index) => {
-													return (
-														<Typography
-															key={index}
-															className={classes.darkGreySubtitle}
+										<Typography className={classes.greySubtitleCap}>
+											Items refunded
+										</Typography>
+										<div className={classes.darkGreySubtitle}>
+											{refund_items.map((item, index) => {
+												return (
+													<Typography
+														key={index}
+														className={classes.darkGreySubtitle}
+													>
+														{item.item_type} | ${order_number} |
+														<span
+															className={classNames({
+																[classes.totalRevenue]: true,
+																[classes.boldSpan]: true
+															})}
 														>
-															{item.item_type} | ${order_number} |
-															<span
-																className={classNames({
-																	[classes.totalRevenue]: true,
-																	[classes.boldSpan]: true
-																})}
-															>
-																{dollars(item.amount)}
-															</span>
-															<br/>
-															<span
-																className={classes.totalRevenue}
-															>{`Per Ticket Fee - ${dollars(
-																	item.amount / item.quantity
-																)}`}</span>
-														</Typography>
-													);
-												})}
-											</div>
-											<Typography className={classes.darkGreySubtitle}>
-												{reason === null ? "-" : reason}
-											</Typography>
-										</FanActivityMobileRow>
+															{dollars(item.amount)}
+														</span>
+														<br/>
+														<span
+															className={classes.totalRevenue}
+														>{`Per Ticket Fee - ${dollars(
+																item.amount / item.quantity
+															)}`}</span>
+													</Typography>
+												);
+											})}
+										</div>
+										<br/>
+										<Typography className={classes.greySubtitleCap}>
+											Reason
+										</Typography>
+										<Typography className={classes.darkGreySubtitle}>
+											{reason === null ? "-" : reason}
+										</Typography>
 									</div>
 								</Collapse>
 							</div>
