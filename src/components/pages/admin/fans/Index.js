@@ -8,6 +8,7 @@ import Bigneon from "../../../../helpers/bigneon";
 import PageHeading from "../../../elements/PageHeading";
 import layout from "../../../../stores/layout";
 import FanRow from "./FanRow";
+import FanRowMobile from "./FanRowMobile";
 import Card from "../../../elements/Card";
 import { fontFamilyDemiBold, primaryHex } from "../../../../config/theme";
 import user from "../../../../stores/user";
@@ -31,9 +32,9 @@ const styles = theme => ({
 		paddingRight: theme.spacing.unit * 8
 	},
 	mobiContent: {
-		padding: theme.spacing.unit * 2,
-		paddingLeft: theme.spacing.unit * 2,
-		paddingRight: theme.spacing.unit * 2
+		paddingLeft: theme.spacing.unit,
+		paddingRight: theme.spacing.unit,
+		maxWidth: "95vw"
 	},
 	spacer: {
 		marginTop: theme.spacing.unit * 4
@@ -43,7 +44,7 @@ const styles = theme => ({
 		fontSize: theme.typography.fontSize * 0.95
 	},
 	itemText: {
-		lineHeight: 0.5
+		lineHeight: 1.1
 	},
 	nameProfileImage: {
 		display: "flex",
@@ -72,8 +73,6 @@ const styles = theme => ({
 	}
 });
 
-const organization_tz = user.currentOrganizationId;
-
 class FanList extends Component {
 	constructor(props) {
 		super(props);
@@ -99,6 +98,8 @@ class FanList extends Component {
 
 	exportCSV() {
 		const organization_id = user.currentOrganizationId;
+		const organization_tz = user.currentOrgTimezone;
+
 		if (!organization_id) {
 			return null;
 		}
@@ -208,6 +209,7 @@ class FanList extends Component {
 	}
 
 	renderUsers() {
+		const organization_tz = user.currentOrgTimezone;
 		const { users, paging, isLoading } = this.state;
 		const { classes } = this.props;
 
@@ -312,7 +314,6 @@ class FanList extends Component {
 	renderUsersMobile() {
 		const { users, paging, isLoading } = this.state;
 		const { classes } = this.props;
-
 		if (users === null) {
 			return <Loader/>;
 		}
@@ -338,7 +339,7 @@ class FanList extends Component {
 						} = user;
 						return (
 							<Link to={`/admin/fans/${user_id}`} key={user_id}>
-								<FanRow shaded={!(index % 2)}>
+								<FanRowMobile shaded={!(index % 2)}>
 									<div className={classes.nameProfileImage}>
 										{thumb_profile_pic_url ? (
 											<div
@@ -365,7 +366,7 @@ class FanList extends Component {
 									</div>
 
 									<Typography className={classes.itemText}>{email}</Typography>
-								</FanRow>
+								</FanRowMobile>
 							</Link>
 						);
 					})}

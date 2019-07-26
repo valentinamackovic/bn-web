@@ -8,7 +8,11 @@ import {
 	Divider
 } from "@material-ui/core";
 import Card from "../../../elements/Card";
-import { fontFamilyDemiBold, secondaryHex } from "../../../../config/theme";
+import {
+	fontFamilyDemiBold,
+	secondaryHex,
+	primaryHex
+} from "../../../../config/theme";
 import FanActivityCardRow from "./FanActivityCardRow";
 import FanActivityTransferRow from "./FanActivityTransferRow";
 import FanActivityMobileRow from "./FanActivityMobileRow";
@@ -36,7 +40,7 @@ const styles = theme => ({
 		paddingBottom: theme.spacing.unit
 	},
 	mobileActivityHeader: {
-		marginBottom: theme.spacing.unit * 2,
+		// marginBottom: theme.spacing.unit * 2,
 		paddingTop: theme.spacing.unit * 2,
 		paddingRight: theme.spacing.unit * 2,
 		paddingLeft: theme.spacing.unit * 2
@@ -50,7 +54,8 @@ const styles = theme => ({
 	mobileHeaderBottomRow: {
 		display: "flex",
 		flexDirection: "row",
-		marginTop: theme.spacing.unit * 2,
+		marginTop: theme.spacing.unit,
+		marginBottom: theme.spacing.unit * 2,
 		justifyContent: "space-between",
 		alignItems: "flex-end"
 	},
@@ -97,13 +102,23 @@ const styles = theme => ({
 		marginLeft: 15,
 		marginRight: 15
 	},
-	bold: {
-		fontFamily: fontFamilyDemiBold
+	boldBlack: {
+		fontFamily: fontFamilyDemiBold,
+		color: "#000"
+	},
+	mobiSmallGreyText: {
+		fontSize: theme.typography.fontSize * 0.65,
+		color: "#9DA3B4",
+		lineHeight: "11px"
 	},
 	showHideRow: {
 		display: "flex",
 		flexDirection: "row",
 		cursor: "pointer"
+	},
+	mobiFullWidthCTA: {
+		marginTop: theme.spacing.unit,
+		width: "100%"
 	},
 	showHideIcon: {
 		paddingLeft: theme.spacing.unit,
@@ -112,7 +127,8 @@ const styles = theme => ({
 	halfFlex: {
 		display: "flex",
 		flexDirection: "row",
-		justifyContent: "flex-start"
+		justifyContent: "flex-start",
+		alignItems: "flex-start"
 	},
 	halfFlexItem: {
 		display: "flex",
@@ -122,6 +138,9 @@ const styles = theme => ({
 	upperRow: {
 		display: "flex",
 		flexDirection: "row"
+	},
+	mobiTitle: {
+		wordBreak: "break-all"
 	}
 });
 
@@ -302,6 +321,8 @@ class FanHistoryActivityCard extends Component {
 															</span>
 														</Typography>
 													);
+												} else {
+													return <Typography key={index}>-</Typography>;
 												}
 											})}
 											<Typography className={classes.darkGreySubtitle}>
@@ -817,12 +838,24 @@ class FanHistoryActivityCard extends Component {
 			ticket_number,
 			ticket_numbers,
 			redeemed_by,
-			redeemed_for
+			refunded_by,
+			redeemed_for,
+			events,
+			initiated_by,
+			cancelled_by,
+			accepted_by
 		} = this.props.item;
 
-		const { name } = this.props.event;
+		const { name, venue } = this.props.event;
 
-		const { onExpandChange, expanded, profile, classes, event } = this.props;
+		const {
+			onExpandChange,
+			expanded,
+			profile,
+			classes,
+			event,
+			eventStart
+		} = this.props;
 
 		let activityCard = null;
 
@@ -843,7 +876,16 @@ class FanHistoryActivityCard extends Component {
 										src={servedImage("/icons/money-circle-active.svg")}
 									/>
 									<Typography>
-										<span className={classes.boldSpan}>Purchased</span>
+										<span
+											className={classNames({
+												[classes.pinkSpan]: true,
+												[classes.boldSpan]: true
+											})}
+										>
+											{profile.first_name}&nbsp;{profile.last_name}
+										</span>
+										&nbsp;
+										<span className={classes.boldSpan}>purchased</span>
 										&nbsp;
 										<span>
 											{ticket_quantity} tickets to&nbsp;
@@ -895,16 +937,67 @@ class FanHistoryActivityCard extends Component {
 									)}
 								</div>
 								<Collapse in={expanded}>
+									<div>
+										<Typography className={classes.greySubtitleCap}>
+											Event
+										</Typography>
+										<Typography>
+											<span className={classes.boldBlack}>{name}</span>
+											<br/>
+											<span className={classes.mobiSmallGreyText}>
+												{venue.address}
+												<br/>
+												{eventStart}
+											</span>
+										</Typography>
+									</div>
 									<FanActivityMobileRow>
 										<Typography className={classes.greySubtitleCap}>
-											Qty
+											Code
 										</Typography>
 										<Typography className={classes.greySubtitleCap}>
-											Order Value
+											qty
+										</Typography>
+										<Typography className={classes.greySubtitleCap}>
+											total
 										</Typography>
 										<div/>
 									</FanActivityMobileRow>
 									<FanActivityMobileRow>
+										{events.map((item, index) => {
+											if (item.code_discount_in_cents !== null) {
+												return (
+													<Typography
+														key={index}
+														className={classes.darkGreySubtitle}
+													>
+														<span className={classes.boldSpan}>
+															{item.code}
+														</span>
+														<span
+															className={classNames({
+																[classes.greySubtitle]: true,
+																[classes.boldSpan]: true
+															})}
+														>
+															{}
+															{` / ${dollars(item.code_discount_in_cents)}`}
+														</span>
+														<br/>
+														<span
+															className={classNames({
+																[classes.greySubtitle]: true,
+																[classes.boldSpan]: true
+															})}
+														>
+															{item.code_type}
+														</span>
+													</Typography>
+												);
+											} else {
+												return <Typography key={index}>-</Typography>;
+											}
+										})}
 										<Typography className={classes.darkGreySubtitle}>
 											{ticket_quantity}
 										</Typography>
@@ -913,12 +1006,16 @@ class FanHistoryActivityCard extends Component {
 												{dollars(total_in_cents)}
 											</span>
 										</Typography>
-										<Link to={`/orders/${order_id}`}>
-											<Button variant="secondary" size="small">
-												<span className={classes.smallTextCap}>View order</span>
-											</Button>
-										</Link>
 									</FanActivityMobileRow>
+									<Link to={orderPath}>
+										<Button
+											className={classes.mobiFullWidthCTA}
+											variant="secondary"
+											size="small"
+										>
+											<span className={classes.smallTextCap}>View order</span>
+										</Button>
+									</Link>
 								</Collapse>
 							</div>
 						</div>
@@ -1022,21 +1119,31 @@ class FanHistoryActivityCard extends Component {
 										className={classes.mobiIcon}
 										src={servedImage("/icons/refund-active.svg")}
 									/>
-									<Typography>
+									<Typography className={classes.mobiTitle}>
 										<span
 											className={classNames({
 												[classes.pinkSpan]: true,
 												[classes.boldSpan]: true
 											})}
 										>
-											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
+											{refunded_by.full_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>refunded&nbsp;</span>
 										<span className={classes.totalRevenue}>
 											{dollars(total_in_cents)}
 										</span>
-										<br/>
+										&nbsp;
 										<span>
+											to&nbsp;
+											<span
+												className={classNames({
+													[classes.pinkSpan]: true,
+													[classes.boldSpan]: true
+												})}
+											>
+												{profile.first_name}&nbsp;{profile.last_name}
+												&nbsp;
+											</span>
 											&nbsp;(
 											<Link to={orderPath}>
 												<span className={classes.pinkSpan}>
@@ -1085,45 +1192,42 @@ class FanHistoryActivityCard extends Component {
 								</div>
 								<Collapse in={expanded}>
 									<div className={classes.mobiCard}>
-										<FanActivityMobileRow>
-											<Typography className={classes.greySubtitleCap}>
-												Items refunded
-											</Typography>
-											<Typography className={classes.greySubtitleCap}>
-												Reason
-											</Typography>
-										</FanActivityMobileRow>
-										<FanActivityMobileRow>
-											<div className={classes.darkGreySubtitle}>
-												{refund_items.map((item, index) => {
-													return (
-														<Typography
-															key={index}
-															className={classes.darkGreySubtitle}
+										<Typography className={classes.greySubtitleCap}>
+											Items refunded
+										</Typography>
+										<div className={classes.darkGreySubtitle}>
+											{refund_items.map((item, index) => {
+												return (
+													<Typography
+														key={index}
+														className={classes.darkGreySubtitle}
+													>
+														{item.item_type} | ${order_number} |
+														<span
+															className={classNames({
+																[classes.totalRevenue]: true,
+																[classes.boldSpan]: true
+															})}
 														>
-															{item.item_type} | ${order_number} |
-															<span
-																className={classNames({
-																	[classes.totalRevenue]: true,
-																	[classes.boldSpan]: true
-																})}
-															>
-																{dollars(item.amount)}
-															</span>
-															<br/>
-															<span
-																className={classes.totalRevenue}
-															>{`Per Ticket Fee - ${dollars(
-																	item.amount / item.quantity
-																)}`}</span>
-														</Typography>
-													);
-												})}
-											</div>
-											<Typography className={classes.darkGreySubtitle}>
-												{reason === null ? "-" : reason}
-											</Typography>
-										</FanActivityMobileRow>
+															{dollars(item.amount)}
+														</span>
+														<br/>
+														<span
+															className={classes.totalRevenue}
+														>{`Per Ticket Fee - ${dollars(
+																item.amount / item.quantity
+															)}`}</span>
+													</Typography>
+												);
+											})}
+										</div>
+										<br/>
+										<Typography className={classes.greySubtitleCap}>
+											Reason
+										</Typography>
+										<Typography className={classes.darkGreySubtitle}>
+											{reason === null ? "-" : reason}
+										</Typography>
 									</div>
 								</Collapse>
 							</div>
@@ -1300,12 +1404,73 @@ class FanHistoryActivityCard extends Component {
 												{ticket_numbers.map((item, index) => {
 													return item;
 												})}
+												&nbsp; (
+												<Link to={orderPath}>
+													<span className={classes.pinkSpan}>
+														Order #{order_number}
+													</span>
+												</Link>
+												)
 											</Typography>
 										</div>
+										<br/>
+										<div>
+											<Typography className={classes.greySubtitleCap}>
+												Initiated by
+											</Typography>
+											<Typography className={classes.greySubtitle}>
+												<span className={classes.pinkSpan}>
+													{initiated_by !== null ? initiated_by.full_name : "-"}
+												</span>
+												<br/>
+												<span className={classes.mobiSmallGreyText}>
+													{occurredAt}
+												</span>
+											</Typography>
+										</div>
+										<br/>
+										<div className={classes.halfFlex}>
+											<div className={classes.halfFlexItem}>
+												<Typography className={classes.greySubtitleCap}>
+													Transfer Address:
+												</Typography>
+												<Typography className={classes.darkGreySubtitle}>
+													{destination_addresses}
+												</Typography>
+											</div>
+											<div className={classes.halfFlexItem}>
+												<Typography className={classes.greySubtitleCap}>
+													{status === "Cancelled"
+														? "Cancelled by"
+														: "Accepted by"}
+												</Typography>
+												<Typography className={classes.darkGreySubtitle}>
+													{status === "Cancelled" ? (
+														<span className={classes.pinkSpan}>
+															{cancelled_by.full_name} <br/>
+															<span className={classes.greySubtitle}>
+																{occurredAt}
+															</span>
+														</span>
+													) : accepted_by !== null ? (
+														<span className={classes.pinkSpan}>
+															{accepted_by.full_name} <br/>
+															<span className={classes.mobiSmallGreyText}>
+																{occurredAt}
+															</span>
+														</span>
+													) : (
+														"-"
+													)}
+												</Typography>
+											</div>
+										</div>
+										<br/>
 										<div>
 											{status === "Pending" ? (
 												<Button
 													variant="warning"
+													className={classes.mobiFullWidthCTA}
 													size="small"
 													onClick={() =>
 														this.onOpenCancelTransferDialog(transfer_key)
