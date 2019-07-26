@@ -116,7 +116,7 @@ const styles = theme => ({
 		flexDirection: "row",
 		cursor: "pointer"
 	},
-	mobiViewOrderCTA: {
+	mobiFullWidthCTA: {
 		marginTop: theme.spacing.unit,
 		width: "100%"
 	},
@@ -127,7 +127,8 @@ const styles = theme => ({
 	halfFlex: {
 		display: "flex",
 		flexDirection: "row",
-		justifyContent: "flex-start"
+		justifyContent: "flex-start",
+		alignItems: "flex-start"
 	},
 	halfFlexItem: {
 		display: "flex",
@@ -839,7 +840,10 @@ class FanHistoryActivityCard extends Component {
 			redeemed_by,
 			refunded_by,
 			redeemed_for,
-			events
+			events,
+			initiated_by,
+			cancelled_by,
+			accepted_by
 		} = this.props.item;
 
 		const { name, venue } = this.props.event;
@@ -1000,7 +1004,7 @@ class FanHistoryActivityCard extends Component {
 									</FanActivityMobileRow>
 									<Link to={`/orders/${order_id}`}>
 										<Button
-											className={classes.mobiViewOrderCTA}
+											className={classes.mobiFullWidthCTA}
 											variant="secondary"
 											size="small"
 										>
@@ -1395,12 +1399,73 @@ class FanHistoryActivityCard extends Component {
 												{ticket_numbers.map((item, index) => {
 													return item;
 												})}
+												&nbsp; (
+												<Link to={orderPath}>
+													<span className={classes.pinkSpan}>
+														Order #{order_number}
+													</span>
+												</Link>
+												)
 											</Typography>
 										</div>
+										<br/>
+										<div>
+											<Typography className={classes.greySubtitleCap}>
+												Initiated by
+											</Typography>
+											<Typography className={classes.greySubtitle}>
+												<span className={classes.pinkSpan}>
+													{initiated_by !== null ? initiated_by.full_name : "-"}
+												</span>
+												<br/>
+												<span className={classes.mobiSmallGreyText}>
+													{occurredAt}
+												</span>
+											</Typography>
+										</div>
+										<br/>
+										<div className={classes.halfFlex}>
+											<div className={classes.halfFlexItem}>
+												<Typography className={classes.greySubtitleCap}>
+													Transfer Address:
+												</Typography>
+												<Typography className={classes.darkGreySubtitle}>
+													{destination_addresses}
+												</Typography>
+											</div>
+											<div className={classes.halfFlexItem}>
+												<Typography className={classes.greySubtitleCap}>
+													{status === "Cancelled"
+														? "Cancelled by"
+														: "Accepted by"}
+												</Typography>
+												<Typography className={classes.darkGreySubtitle}>
+													{status === "Cancelled" ? (
+														<span className={classes.pinkSpan}>
+															{cancelled_by.full_name} <br/>
+															<span className={classes.greySubtitle}>
+																{occurredAt}
+															</span>
+														</span>
+													) : accepted_by !== null ? (
+														<span className={classes.pinkSpan}>
+															{accepted_by.full_name} <br/>
+															<span className={classes.mobiSmallGreyText}>
+																{occurredAt}
+															</span>
+														</span>
+													) : (
+														"-"
+													)}
+												</Typography>
+											</div>
+										</div>
+										<br/>
 										<div>
 											{status === "Pending" ? (
 												<Button
 													variant="warning"
+													className={classes.mobiFullWidthCTA}
 													size="small"
 													onClick={() =>
 														this.onOpenCancelTransferDialog(transfer_key)
