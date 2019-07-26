@@ -8,7 +8,11 @@ import {
 	Divider
 } from "@material-ui/core";
 import Card from "../../../elements/Card";
-import { fontFamilyDemiBold, secondaryHex } from "../../../../config/theme";
+import {
+	fontFamilyDemiBold,
+	secondaryHex,
+	primaryHex
+} from "../../../../config/theme";
 import FanActivityCardRow from "./FanActivityCardRow";
 import FanActivityTransferRow from "./FanActivityTransferRow";
 import FanActivityMobileRow from "./FanActivityMobileRow";
@@ -36,7 +40,7 @@ const styles = theme => ({
 		paddingBottom: theme.spacing.unit
 	},
 	mobileActivityHeader: {
-		marginBottom: theme.spacing.unit * 2,
+		// marginBottom: theme.spacing.unit * 2,
 		paddingTop: theme.spacing.unit * 2,
 		paddingRight: theme.spacing.unit * 2,
 		paddingLeft: theme.spacing.unit * 2
@@ -50,7 +54,8 @@ const styles = theme => ({
 	mobileHeaderBottomRow: {
 		display: "flex",
 		flexDirection: "row",
-		marginTop: theme.spacing.unit * 2,
+		marginTop: theme.spacing.unit,
+		marginBottom: theme.spacing.unit * 2,
 		justifyContent: "space-between",
 		alignItems: "flex-end"
 	},
@@ -97,13 +102,23 @@ const styles = theme => ({
 		marginLeft: 15,
 		marginRight: 15
 	},
-	bold: {
-		fontFamily: fontFamilyDemiBold
+	boldBlack: {
+		fontFamily: fontFamilyDemiBold,
+		color: "#000"
+	},
+	mobiSmallGreyText: {
+		fontSize: theme.typography.fontSize * 0.65,
+		color: "#9DA3B4",
+		lineHeight: "11px"
 	},
 	showHideRow: {
 		display: "flex",
 		flexDirection: "row",
 		cursor: "pointer"
+	},
+	mobiViewOrderCTA: {
+		marginTop: theme.spacing.unit,
+		width: "100%"
 	},
 	showHideIcon: {
 		paddingLeft: theme.spacing.unit,
@@ -302,6 +317,8 @@ class FanHistoryActivityCard extends Component {
 															</span>
 														</Typography>
 													);
+												} else {
+													return <Typography>-</Typography>;
 												}
 											})}
 											<Typography className={classes.darkGreySubtitle}>
@@ -817,12 +834,20 @@ class FanHistoryActivityCard extends Component {
 			ticket_number,
 			ticket_numbers,
 			redeemed_by,
-			redeemed_for
+			redeemed_for,
+			events
 		} = this.props.item;
 
-		const { name } = this.props.event;
+		const { name, venue } = this.props.event;
 
-		const { onExpandChange, expanded, profile, classes, event } = this.props;
+		const {
+			onExpandChange,
+			expanded,
+			profile,
+			classes,
+			event,
+			eventStart
+		} = this.props;
 
 		let activityCard = null;
 
@@ -843,7 +868,11 @@ class FanHistoryActivityCard extends Component {
 										src={servedImage("/icons/money-circle-active.svg")}
 									/>
 									<Typography>
-										<span className={classes.boldSpan}>Purchased</span>
+										<span className={classes.boldSpan}>
+											{profile.first_name}&nbsp;{profile.last_name}
+										</span>
+										&nbsp;
+										<span className={classes.boldSpan}>purchased</span>
 										&nbsp;
 										<span>
 											{ticket_quantity} tickets to&nbsp;
@@ -895,16 +924,67 @@ class FanHistoryActivityCard extends Component {
 									)}
 								</div>
 								<Collapse in={expanded}>
+									<div>
+										<Typography className={classes.greySubtitleCap}>
+											Event
+										</Typography>
+										<Typography>
+											<span className={classes.boldBlack}>{name}</span>
+											<br/>
+											<span className={classes.mobiSmallGreyText}>
+												{venue.address}
+												<br/>
+												{eventStart}
+											</span>
+										</Typography>
+									</div>
 									<FanActivityMobileRow>
 										<Typography className={classes.greySubtitleCap}>
-											Qty
+											Code
 										</Typography>
 										<Typography className={classes.greySubtitleCap}>
-											Order Value
+											qty
+										</Typography>
+										<Typography className={classes.greySubtitleCap}>
+											total
 										</Typography>
 										<div/>
 									</FanActivityMobileRow>
 									<FanActivityMobileRow>
+										{events.map((item, index) => {
+											if (item.code_discount_in_cents !== null) {
+												return (
+													<Typography
+														key={index}
+														className={classes.darkGreySubtitle}
+													>
+														<span className={classes.boldSpan}>
+															{item.code}
+														</span>
+														<span
+															className={classNames({
+																[classes.greySubtitle]: true,
+																[classes.boldSpan]: true
+															})}
+														>
+															{}
+															{` / ${dollars(item.code_discount_in_cents)}`}
+														</span>
+														<br/>
+														<span
+															className={classNames({
+																[classes.greySubtitle]: true,
+																[classes.boldSpan]: true
+															})}
+														>
+															{item.code_type}
+														</span>
+													</Typography>
+												);
+											} else {
+												return <Typography>-</Typography>;
+											}
+										})}
 										<Typography className={classes.darkGreySubtitle}>
 											{ticket_quantity}
 										</Typography>
@@ -913,12 +993,16 @@ class FanHistoryActivityCard extends Component {
 												{dollars(total_in_cents)}
 											</span>
 										</Typography>
-										<Link to={`/orders/${order_id}`}>
-											<Button variant="secondary" size="small">
-												<span className={classes.smallTextCap}>View order</span>
-											</Button>
-										</Link>
 									</FanActivityMobileRow>
+									<Link to={`/orders/${order_id}`}>
+										<Button
+											className={classes.mobiViewOrderCTA}
+											variant="secondary"
+											size="small"
+										>
+											<span className={classes.smallTextCap}>View order</span>
+										</Button>
+									</Link>
 								</Collapse>
 							</div>
 						</div>

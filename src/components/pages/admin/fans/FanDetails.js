@@ -13,6 +13,7 @@ import moment from "moment-timezone";
 import servedImage from "../../../../helpers/imagePathHelper";
 import FanHistoryEventCard from "./FanHistoryEventCard";
 import StyledLink from "../../../elements/StyledLink";
+import FanHistoryActivityCard from "./FanHistoryActivityCard";
 
 const imageSize = 100;
 
@@ -250,8 +251,9 @@ class Fan extends Component {
 			return (
 				<FanHistoryEventCard
 					onExpandChange={() => this.onExpandChange(index)}
-					expanded={expanded}
+					// expanded={expanded}
 					key={index}
+					expanded={true}
 					eventStart={item.eventStart}
 					profile={profile}
 					{...item}
