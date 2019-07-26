@@ -57,8 +57,7 @@ const Header = ({
 }) => {
 	const { first_name, last_name, id: userId } = user;
 
-	const orderTotalInCents =
-		total_in_cents - fees_in_cents + total_refunded_in_cents;
+	const orderTotalInCents = total_in_cents - fees_in_cents;
 
 	return (
 		<div>
