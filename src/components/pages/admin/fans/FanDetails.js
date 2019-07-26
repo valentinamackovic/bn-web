@@ -251,9 +251,8 @@ class Fan extends Component {
 			return (
 				<FanHistoryEventCard
 					onExpandChange={() => this.onExpandChange(index)}
-					// expanded={expanded}
+					expanded={expanded}
 					key={index}
-					expanded={true}
 					eventStart={item.eventStart}
 					profile={profile}
 					{...item}

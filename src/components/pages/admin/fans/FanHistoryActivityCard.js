@@ -876,7 +876,12 @@ class FanHistoryActivityCard extends Component {
 										src={servedImage("/icons/money-circle-active.svg")}
 									/>
 									<Typography>
-										<span className={classes.boldSpan}>
+										<span
+											className={classNames({
+												[classes.pinkSpan]: true,
+												[classes.boldSpan]: true
+											})}
+										>
 											{profile.first_name}&nbsp;{profile.last_name}
 										</span>
 										&nbsp;
@@ -1002,7 +1007,7 @@ class FanHistoryActivityCard extends Component {
 											</span>
 										</Typography>
 									</FanActivityMobileRow>
-									<Link to={`/orders/${order_id}`}>
+									<Link to={orderPath}>
 										<Button
 											className={classes.mobiFullWidthCTA}
 											variant="secondary"
