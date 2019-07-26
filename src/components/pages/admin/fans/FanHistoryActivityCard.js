@@ -1202,7 +1202,7 @@ class FanHistoryActivityCard extends Component {
 														key={index}
 														className={classes.darkGreySubtitle}
 													>
-														{item.item_type} | ${order_number} |
+														{item.item_type} | {order_number} |
 														<span
 															className={classNames({
 																[classes.totalRevenue]: true,
