@@ -368,7 +368,21 @@ class FanList extends Component {
 		}
 
 		if (users.length === 0) {
-			return <Typography>No fans currently.</Typography>;
+			return (
+				<Card>
+					<div className={classes.mobiContent}>
+						<div className={classes.searchHolder}>
+							<div className={classes.mobiSearchStyle}>
+								<SearchBox
+									placeholder="Search name or email"
+									onSearch={this.onSearch}
+								/>
+							</div>
+						</div>
+						<Typography>No fans currently.</Typography>
+					</div>
+				</Card>
+			);
 		}
 
 		return (
