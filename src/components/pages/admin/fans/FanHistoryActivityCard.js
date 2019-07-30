@@ -197,9 +197,10 @@ class FanHistoryActivityCard extends Component {
 			event
 		} = this.props;
 
-		const orderPath = `/admin/events/${
-			event.id
-		}/dashboard/orders/manage/${order_id}`;
+		// const orderPath = `/admin/events/${
+		// 	event.id
+		// }/dashboard/orders/manage/${order_id}`;
+		const orderPath = `/orders/${order_id}`;
 		let activityCard = null;
 
 		switch (type) {
@@ -859,9 +860,10 @@ class FanHistoryActivityCard extends Component {
 
 		let activityCard = null;
 
-		const orderPath = `/admin/events/${
-			event.id
-		}/dashboard/orders/manage/${order_id}`;
+		// const orderPath = `/admin/events/${
+		// 	event.id
+		// }/dashboard/orders/manage/${order_id}`;
+		const orderPath = `/orders/${order_id}`;
 
 		switch (type) {
 			case "Purchase":
