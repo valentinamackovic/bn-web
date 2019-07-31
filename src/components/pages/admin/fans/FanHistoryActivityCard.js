@@ -805,6 +805,7 @@ class FanHistoryActivityCard extends Component {
 													"-"
 												)}
 											</Typography>
+
 											<div/>
 										</FanActivityTransferRow>
 									</div>
