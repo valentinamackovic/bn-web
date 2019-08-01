@@ -95,7 +95,7 @@ class EventSummary extends Component {
 	renderRevenueShare() {
 		const { eventId, classes } = this.props;
 		const eventSales = summaryReport.dataByPrice[eventId];
-
+		const eventFees = summaryReport.feesData[eventId];
 		if (eventSales === false) {
 			//Query failed
 			return null;
@@ -109,6 +109,8 @@ class EventSummary extends Component {
 			return <Typography>No event summary available.</Typography>;
 		}
 		const { totalOnlineClientFeesInCents } = eventSales.totals;
+
+		let totalOnlineClientFeesInCentsWithOrderFees = 0;
 
 		return (
 			<div>
@@ -176,15 +178,26 @@ class EventSummary extends Component {
 					);
 				})}
 
+				{eventFees.map((fee, feeIndex) => {
+					const rowName = "Order Fees";
+					totalOnlineClientFeesInCentsWithOrderFees =
+						totalOnlineClientFeesInCents + fee;
+					return (
+						<EventSummaryRow key={feeIndex} ticketTypeRow>
+							{[rowName, "-", dollars(fee), "-", " ", " ", dollars(fee)]}
+						</EventSummaryRow>
+					);
+				})}
+
 				<EventSummaryRow ticketTypeRow total>
 					{[
 						"Total revenue share",
 						" ",
-						dollars(totalOnlineClientFeesInCents),
+						dollars(totalOnlineClientFeesInCentsWithOrderFees),
 						" ",
 						" ",
 						" ",
-						dollars(totalOnlineClientFeesInCents)
+						dollars(totalOnlineClientFeesInCentsWithOrderFees)
 					]}
 				</EventSummaryRow>
 			</div>
