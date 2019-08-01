@@ -789,20 +789,19 @@ class FanHistoryActivityCard extends Component {
 											<Typography className={classes.darkGreySubtitle}>
 												{status === "Cancelled" ? (
 													<span className={classes.pinkSpan}>
-														{cancelled_by.full_name} <br/>
-														<span className={classes.greySubtitle}>
-															{occurredAt}
-														</span>
-													</span>
-												) : accepted_by !== null ? (
-													<span className={classes.pinkSpan}>
-														{accepted_by.full_name} <br/>
+														{!cancelled_by ? "-" : cancelled_by.full_name}{" "}
+														<br/>
 														<span className={classes.greySubtitle}>
 															{occurredAt}
 														</span>
 													</span>
 												) : (
-													"-"
+													<span className={classes.pinkSpan}>
+														{!accepted_by ? "-" : accepted_by.full_name} <br/>
+														<span className={classes.greySubtitle}>
+															{occurredAt}
+														</span>
+													</span>
 												)}
 											</Typography>
 
@@ -1453,20 +1452,20 @@ class FanHistoryActivityCard extends Component {
 												<Typography className={classes.darkGreySubtitle}>
 													{status === "Cancelled" ? (
 														<span className={classes.pinkSpan}>
-															{cancelled_by.full_name} <br/>
+															{!cancelled_by ? "-" : cancelled_by.full_name}{" "}
+															<br/>
 															<span className={classes.greySubtitle}>
 																{occurredAt}
 															</span>
 														</span>
-													) : accepted_by !== null ? (
+													) : (
 														<span className={classes.pinkSpan}>
-															{accepted_by.full_name} <br/>
+															{!accepted_by ? "-" : accepted_by.full_name}{" "}
+															<br/>
 															<span className={classes.mobiSmallGreyText}>
 																{occurredAt}
 															</span>
 														</span>
-													) : (
-														"-"
 													)}
 												</Typography>
 											</div>
