@@ -824,6 +824,17 @@ class FanHistoryActivityCard extends Component {
 
 	renderActivityMobile(type) {
 		const {
+			onExpandChange,
+			expanded,
+			profile,
+			classes,
+			event,
+			eventStart,
+			item,
+			showDivider
+		} = this.props;
+
+		const {
 			ticket_quantity,
 			order_number,
 			status,
@@ -846,18 +857,9 @@ class FanHistoryActivityCard extends Component {
 			initiated_by,
 			cancelled_by,
 			accepted_by
-		} = this.props.item;
+		} = item;
 
-		const { name, venue } = this.props.event;
-
-		const {
-			onExpandChange,
-			expanded,
-			profile,
-			classes,
-			event,
-			eventStart
-		} = this.props;
+		const { name, venue } = event;
 
 		let activityCard = null;
 
@@ -869,8 +871,8 @@ class FanHistoryActivityCard extends Component {
 		switch (type) {
 			case "Purchase":
 				activityCard = (
-					<div className={classes.root}>
-						<Divider/>
+					<div className={showDivider ? classes.root : null}>
+						{showDivider ? <Divider/> : null}
 						<div className={classes.mobileActivityHeader}>
 							<div>
 								<div className={classes.mobileHeaderTopRow}>
@@ -1027,8 +1029,8 @@ class FanHistoryActivityCard extends Component {
 				break;
 			case "CheckIn":
 				activityCard = (
-					<div className={classes.root}>
-						<Divider/>
+					<div className={showDivider ? classes.root : null}>
+						{showDivider ? <Divider/> : null}
 						<div className={classes.mobileActivityHeader}>
 							<div>
 								<div className={classes.mobileHeaderTopRow}>
@@ -1113,8 +1115,8 @@ class FanHistoryActivityCard extends Component {
 				break;
 			case "Refund":
 				activityCard = (
-					<div className={classes.root}>
-						<Divider/>
+					<div className={showDivider ? classes.root : null}>
+						{showDivider ? <Divider/> : null}
 						<div className={classes.mobileActivityHeader}>
 							<div>
 								<div className={classes.mobileHeaderTopRow}>
@@ -1240,8 +1242,8 @@ class FanHistoryActivityCard extends Component {
 				break;
 			case "Note":
 				activityCard = (
-					<div className={classes.root}>
-						<Divider/>
+					<div className={showDivider ? classes.root : null}>
+						{showDivider ? <Divider/> : null}
 						<div className={classes.mobileActivityHeader}>
 							<div>
 								<div className={classes.mobileHeaderTopRow}>
@@ -1318,8 +1320,8 @@ class FanHistoryActivityCard extends Component {
 				break;
 			case "Transfer":
 				activityCard = (
-					<div className={classes.root}>
-						<Divider/>
+					<div className={showDivider ? classes.root : null}>
+						{showDivider ? <Divider/> : null}
 						<div className={classes.mobileActivityHeader}>
 							<div>
 								<div className={classes.mobileHeaderTopRow}>
@@ -1346,7 +1348,8 @@ class FanHistoryActivityCard extends Component {
 												[classes.boldSpan]: true
 											})}
 										>
-											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
+											{profile.first_name}&nbsp;{profile.last_name}
+											&nbsp;
 										</span>
 										<span className={classes.boldSpan}>
 											{"transferred (" + status + ") "}
@@ -1522,6 +1525,10 @@ class FanHistoryActivityCard extends Component {
 	}
 }
 
+FanHistoryActivityCard.defaultProps = {
+	showDivider: true
+};
+
 FanHistoryActivityCard.propTypes = {
 	item: PropTypes.object,
 	event: PropTypes.object,
@@ -1531,7 +1538,8 @@ FanHistoryActivityCard.propTypes = {
 	venue: PropTypes.string,
 	onExpandChange: PropTypes.func.isRequired,
 	expanded: PropTypes.bool.isRequired,
-	event_history: PropTypes.array
+	event_history: PropTypes.array,
+	showDivider: PropTypes.bool
 };
 
 export default withStyles(styles)(FanHistoryActivityCard);
