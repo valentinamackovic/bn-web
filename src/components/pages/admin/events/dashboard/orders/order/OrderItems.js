@@ -358,10 +358,16 @@ class OrderItems extends Component {
 
 		let code = "";
 		let codeType = "";
+		let qty = 0;
+
 		items.forEach(item => {
 			if (item.code) {
 				code = item.code;
 				codeType = item.code_type;
+			}
+
+			if (item.ticket_instance_id) {
+				qty += 1;
 			}
 		});
 
@@ -406,8 +412,6 @@ class OrderItems extends Component {
 			);
 
 		const venueDisplayName = `${venue.name}, ${venue.address}, ${venue.city}`;
-
-		const qty = items.length;
 
 		return (
 			<React.Fragment>
