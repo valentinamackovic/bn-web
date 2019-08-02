@@ -57,7 +57,10 @@ class EventSummary extends Component {
 	exportCSV() {
 		const { eventId } = this.props;
 		downloadCSV(
-			summaryReport.csv(summaryReport.dataByPrice[eventId]),
+			summaryReport.csv(
+				summaryReport.dataByPrice[eventId],
+				summaryReport.feesData[eventId]
+			),
 			"event-summary-report"
 		);
 	}
