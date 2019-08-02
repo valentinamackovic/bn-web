@@ -215,7 +215,7 @@ class Fan extends Component {
 
 					const activityItems = item.activity_items.map(activityItem => {
 						const occurredAt = this.displayOrderDate(
-							activityItem.occurredAt,
+							activityItem.occurred_at,
 							item.event.venue.timezone
 						);
 

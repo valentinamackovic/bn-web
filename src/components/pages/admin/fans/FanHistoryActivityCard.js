@@ -202,7 +202,6 @@ class FanHistoryActivityCard extends Component {
 		// }/dashboard/orders/manage/${order_id}`;
 		const orderPath = `/orders/${order_id}`;
 		let activityCard = null;
-
 		switch (type) {
 			case "Purchase":
 				activityCard = (
@@ -373,7 +372,7 @@ class FanHistoryActivityCard extends Component {
 												[classes.boldSpan]: true
 											})}
 										>
-											{redeemed_by.full_name}&nbsp;
+											{redeemed_for.full_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>checked-in&nbsp;</span>
 										<span>to {name} (1 Ticket)</span>
@@ -425,7 +424,7 @@ class FanHistoryActivityCard extends Component {
 											</Link>
 											) scanned by&nbsp;
 											<span className={classes.pinkSpan}>
-												{redeemed_for.full_name}&nbsp;
+												{redeemed_by.full_name}&nbsp;
 											</span>
 											on&nbsp;
 											<span className={classes.greySubtitle}>{occurredAt}</span>
@@ -788,20 +787,25 @@ class FanHistoryActivityCard extends Component {
 											</Typography>
 											<Typography className={classes.darkGreySubtitle}>
 												{status === "Cancelled" ? (
+													cancelled_by ? (
+														<span className={classes.pinkSpan}>
+															{cancelled_by.full_name} <br/>
+															<span className={classes.greySubtitle}>
+																{occurredAt}
+															</span>
+														</span>
+													) : (
+														"-"
+													)
+												) : accepted_by ? (
 													<span className={classes.pinkSpan}>
-														{!cancelled_by ? "-" : cancelled_by.full_name}{" "}
-														<br/>
+														{accepted_by.full_name} <br/>
 														<span className={classes.greySubtitle}>
 															{occurredAt}
 														</span>
 													</span>
 												) : (
-													<span className={classes.pinkSpan}>
-														{!accepted_by ? "-" : accepted_by.full_name} <br/>
-														<span className={classes.greySubtitle}>
-															{occurredAt}
-														</span>
-													</span>
+													"-"
 												)}
 											</Typography>
 
@@ -1044,7 +1048,7 @@ class FanHistoryActivityCard extends Component {
 												[classes.boldSpan]: true
 											})}
 										>
-											{redeemed_by.full_name}&nbsp;
+											{redeemed_for.full_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>checked-in&nbsp;</span>
 										to {name} (1 Ticket)
@@ -1100,7 +1104,7 @@ class FanHistoryActivityCard extends Component {
 											</Link>
 											) scanned by&nbsp;
 											<span className={classes.pinkSpan}>
-												{redeemed_for.full_name}&nbsp;
+												{redeemed_by.full_name}&nbsp;
 											</span>
 											on&nbsp;
 											<span className={classes.greySubtitle}>{occurredAt}</span>
@@ -1451,21 +1455,25 @@ class FanHistoryActivityCard extends Component {
 												</Typography>
 												<Typography className={classes.darkGreySubtitle}>
 													{status === "Cancelled" ? (
+														cancelled_by ? (
+															<span className={classes.pinkSpan}>
+																{cancelled_by.full_name} <br/>
+																<span className={classes.greySubtitle}>
+																	{occurredAt}
+																</span>
+															</span>
+														) : (
+															"-"
+														)
+													) : accepted_by ? (
 														<span className={classes.pinkSpan}>
-															{!cancelled_by ? "-" : cancelled_by.full_name}{" "}
-															<br/>
+															{accepted_by.full_name} <br/>
 															<span className={classes.greySubtitle}>
 																{occurredAt}
 															</span>
 														</span>
 													) : (
-														<span className={classes.pinkSpan}>
-															{!accepted_by ? "-" : accepted_by.full_name}{" "}
-															<br/>
-															<span className={classes.mobiSmallGreyText}>
-																{occurredAt}
-															</span>
-														</span>
+														"-"
 													)}
 												</Typography>
 											</div>
