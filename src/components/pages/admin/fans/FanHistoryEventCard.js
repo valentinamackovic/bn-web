@@ -100,6 +100,7 @@ class FanHistoryEventCard extends Component {
 					profile={this.props.profile}
 					onExpandChange={() => this.onExpandChange(index)}
 					expanded={expanded}
+					userId={this.props.userId}
 					key={index}
 					item={item}
 					eventStart={eventStart}
