@@ -8,11 +8,7 @@ import {
 	Divider
 } from "@material-ui/core";
 import Card from "../../../elements/Card";
-import {
-	fontFamilyDemiBold,
-	secondaryHex,
-	primaryHex
-} from "../../../../config/theme";
+import { fontFamilyDemiBold, secondaryHex } from "../../../../config/theme";
 import FanActivityCardRow from "./FanActivityCardRow";
 import FanActivityTransferRow from "./FanActivityTransferRow";
 import FanActivityMobileRow from "./FanActivityMobileRow";
@@ -40,7 +36,6 @@ const styles = theme => ({
 		paddingBottom: theme.spacing.unit
 	},
 	mobileActivityHeader: {
-		// marginBottom: theme.spacing.unit * 2,
 		paddingTop: theme.spacing.unit * 2,
 		paddingRight: theme.spacing.unit * 2,
 		paddingLeft: theme.spacing.unit * 2
@@ -147,7 +142,6 @@ const styles = theme => ({
 class FanHistoryActivityCard extends Component {
 	constructor(props) {
 		super(props);
-
 		this.state = {
 			cancelTransferKey: null
 		};
@@ -193,8 +187,8 @@ class FanHistoryActivityCard extends Component {
 			expanded,
 			profile,
 			classes,
-			eventStart,
-			event
+			userId,
+			eventStart
 		} = this.props;
 
 		// const orderPath = `/admin/events/${
@@ -236,38 +230,19 @@ class FanHistoryActivityCard extends Component {
 										</Link>
 										) &nbsp;
 									</Typography>
-
-									{!expanded ? (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Show Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/down-gray.svg")}
-											/>
-										</div>
-									) : (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Hide Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/up-gray.svg")}
-											/>
-										</div>
-									)}
+									<div onClick={onExpandChange} className={classes.showHideRow}>
+										<Typography className={classes.showHide}>
+											<span className={classes.greySubtitle}>
+												{!expanded ? "Show Details" : "Hide Details"}
+											</span>
+										</Typography>
+										<img
+											className={classes.showHideIcon}
+											src={servedImage(
+												`/icons/${expanded ? "up" : "down"}-gray.svg`
+											)}
+										/>
+									</div>
 								</FanActivityCardRow>
 								<Collapse in={expanded}>
 									<div className={classes.card}>
@@ -359,79 +334,131 @@ class FanHistoryActivityCard extends Component {
 				activityCard = (
 					<div className={classes.root}>
 						<Card variant={"subCard"} className={classes.card}>
-							<div>
-								<FanActivityCardRow>
-									<img src={servedImage("/icons/calendar-active.svg")}/>
-									<Typography className={classes.greySubtitle}>
-										{occurredAt}
-									</Typography>
-									<Typography>
-										<span
-											className={classNames({
-												[classes.pinkSpan]: true,
-												[classes.boldSpan]: true
-											})}
-										>
-											{redeemed_for.full_name}&nbsp;
-										</span>
-										<span className={classes.boldSpan}>checked-in&nbsp;</span>
-										<span>to {name} (1 Ticket)</span>
-									</Typography>
-
-									{!expanded ? (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Show Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/down-gray.svg")}
-											/>
-										</div>
-									) : (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Hide Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/up-gray.svg")}
-											/>
-										</div>
-									)}
-								</FanActivityCardRow>
-								<Collapse in={expanded}>
-									<div className={classes.card}>
-										<Typography className={classes.greySubtitleCap}>
-											Checked-in tickets
+							{redeemed_by.id === userId ? (
+								<div>
+									<FanActivityCardRow>
+										<img src={servedImage("/icons/calendar-active.svg")}/>
+										<Typography className={classes.greySubtitle}>
+											{occurredAt}
 										</Typography>
-										<Typography className={classes.darkGreySubtitle}>
-											{"#" + ticket_number + " ( "}
-											<Link to={orderPath}>
-												<span className={classes.pinkSpan}>
-													Order #{order_number}&nbsp;
-												</span>
-											</Link>
-											) scanned by&nbsp;
-											<span className={classes.pinkSpan}>
+										<Typography>
+											<span
+												className={classNames({
+													[classes.pinkSpan]: true,
+													[classes.boldSpan]: true
+												})}
+											>
 												{redeemed_by.full_name}&nbsp;
 											</span>
-											on&nbsp;
-											<span className={classes.greySubtitle}>{occurredAt}</span>
+											<span className={classes.boldSpan}>scanned&nbsp;</span>
+											<span
+												className={classNames({
+													[classes.pinkSpan]: true,
+													[classes.boldSpan]: true
+												})}
+											>
+												{redeemed_for.full_name}&nbsp;
+											</span>
+											<span>in to {name} (1 Ticket)</span>
 										</Typography>
-									</div>
-								</Collapse>
-							</div>
+										<div
+											onClick={onExpandChange}
+											className={classes.showHideRow}
+										>
+											<Typography className={classes.showHide}>
+												<span className={classes.greySubtitle}>
+													{!expanded ? "Show Details" : "Hide Details"}
+												</span>
+											</Typography>
+											<img
+												className={classes.showHideIcon}
+												src={servedImage(
+													`/icons/${expanded ? "up" : "down"}-gray.svg`
+												)}
+											/>
+										</div>
+									</FanActivityCardRow>
+									<Collapse in={expanded}>
+										<div className={classes.card}>
+											<Typography className={classes.greySubtitleCap}>
+												Checked-in tickets
+											</Typography>
+											<Typography className={classes.darkGreySubtitle}>
+												# {ticket_number} (
+												<Link to={orderPath}>
+													<span className={classes.pinkSpan}>
+														Order #{order_number}&nbsp;
+													</span>
+												</Link>
+												) on&nbsp;
+												<span className={classes.greySubtitle}>
+													{occurredAt}
+												</span>
+											</Typography>
+										</div>
+									</Collapse>
+								</div>
+							) : (
+								<div>
+									<FanActivityCardRow>
+										<img src={servedImage("/icons/calendar-active.svg")}/>
+										<Typography className={classes.greySubtitle}>
+											{occurredAt}
+										</Typography>
+										<Typography>
+											<span
+												className={classNames({
+													[classes.pinkSpan]: true,
+													[classes.boldSpan]: true
+												})}
+											>
+												{redeemed_for.full_name}&nbsp;
+											</span>
+											<span className={classes.boldSpan}>checked-in&nbsp;</span>
+											<span>to {name} (1 Ticket)</span>
+										</Typography>
+										<div
+											onClick={onExpandChange}
+											className={classes.showHideRow}
+										>
+											<Typography className={classes.showHide}>
+												<span className={classes.greySubtitle}>
+													{!expanded ? "Show Details" : "Hide Details"}
+												</span>
+											</Typography>
+											<img
+												className={classes.showHideIcon}
+												src={servedImage(
+													`/icons/${expanded ? "up" : "down"}-gray.svg`
+												)}
+											/>
+										</div>
+									</FanActivityCardRow>
+									<Collapse in={expanded}>
+										<div className={classes.card}>
+											<Typography className={classes.greySubtitleCap}>
+												Checked-in tickets
+											</Typography>
+											<Typography className={classes.darkGreySubtitle}>
+												# {ticket_number} (
+												<Link to={orderPath}>
+													<span className={classes.pinkSpan}>
+														Order #{order_number}&nbsp;
+													</span>
+												</Link>
+												) scanned by&nbsp;
+												<span className={classes.pinkSpan}>
+													{redeemed_by.full_name}&nbsp;
+												</span>
+												on&nbsp;
+												<span className={classes.greySubtitle}>
+													{occurredAt}
+												</span>
+											</Typography>
+										</div>
+									</Collapse>
+								</div>
+							)}
 						</Card>
 					</div>
 				);
@@ -479,38 +506,19 @@ class FanHistoryActivityCard extends Component {
 											)
 										</span>
 									</Typography>
-
-									{!expanded ? (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Show Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/down-gray.svg")}
-											/>
-										</div>
-									) : (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Hide Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/up-gray.svg")}
-											/>
-										</div>
-									)}
+									<div onClick={onExpandChange} className={classes.showHideRow}>
+										<Typography className={classes.showHide}>
+											<span className={classes.greySubtitle}>
+												{!expanded ? "Show Details" : "Hide Details"}
+											</span>
+										</Typography>
+										<img
+											className={classes.showHideIcon}
+											src={servedImage(
+												`/icons/${expanded ? "up" : "down"}-gray.svg`
+											)}
+										/>
+									</div>
 								</FanActivityCardRow>
 								<Collapse in={expanded}>
 									<div className={classes.card}>
@@ -605,38 +613,19 @@ class FanHistoryActivityCard extends Component {
 										&nbsp;
 										<span className={classes.boldSpan}>{name}</span>
 									</Typography>
-
-									{!expanded ? (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Show Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/down-gray.svg")}
-											/>
-										</div>
-									) : (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Hide Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/up-gray.svg")}
-											/>
-										</div>
-									)}
+									<div onClick={onExpandChange} className={classes.showHideRow}>
+										<Typography className={classes.showHide}>
+											<span className={classes.greySubtitle}>
+												{!expanded ? "Show Details" : "Hide Details"}
+											</span>
+										</Typography>
+										<img
+											className={classes.showHideIcon}
+											src={servedImage(
+												`/icons/${expanded ? "up" : "down"}-gray.svg`
+											)}
+										/>
+									</div>
 								</FanActivityCardRow>
 								<Collapse in={expanded}>
 									<div className={classes.card}>
@@ -685,49 +674,30 @@ class FanHistoryActivityCard extends Component {
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>
-											{"transferred (" + status + ") "}
+											transferred ({status})&nbsp;
 										</span>
 										{ticket_ids.length > 1 ? (
-											<span>{ticket_ids.length + " tickets to "}</span>
+											<span>{ticket_ids.length} tickets to </span>
 										) : (
-											<span>{ticket_ids.length + " ticket to "}</span>
+											<span>{ticket_ids.length} ticket to </span>
 										)}
 										<span className={classes.boldSpan}>
 											{destination_addresses}
 										</span>
 									</Typography>
-
-									{!expanded ? (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Show Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/down-gray.svg")}
-											/>
-										</div>
-									) : (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Hide Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/up-gray.svg")}
-											/>
-										</div>
-									)}
+									<div onClick={onExpandChange} className={classes.showHideRow}>
+										<Typography className={classes.showHide}>
+											<span className={classes.greySubtitle}>
+												{!expanded ? "Show Details" : "Hide Details"}
+											</span>
+										</Typography>
+										<img
+											className={classes.showHideIcon}
+											src={servedImage(
+												`/icons/${expanded ? "up" : "down"}-gray.svg`
+											)}
+										/>
+									</div>
 								</FanActivityCardRow>
 								<Collapse in={expanded}>
 									<div className={classes.card}>
@@ -832,6 +802,7 @@ class FanHistoryActivityCard extends Component {
 			profile,
 			classes,
 			event,
+			userId,
 			eventStart,
 			item,
 			showDivider
@@ -912,37 +883,19 @@ class FanHistoryActivityCard extends Component {
 									<Typography className={classes.greySubtitle}>
 										{occurredAt}
 									</Typography>
-									{!expanded ? (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Show Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/down-gray.svg")}
-											/>
-										</div>
-									) : (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Hide Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/up-gray.svg")}
-											/>
-										</div>
-									)}
+									<div onClick={onExpandChange} className={classes.showHideRow}>
+										<Typography className={classes.showHide}>
+											<span className={classes.greySubtitle}>
+												{!expanded ? "Show Details" : "Hide Details"}
+											</span>
+										</Typography>
+										<img
+											className={classes.showHideIcon}
+											src={servedImage(
+												`/icons/${expanded ? "up" : "down"}-gray.svg`
+											)}
+										/>
+									</div>
 								</div>
 								<Collapse in={expanded}>
 									<div>
@@ -1035,83 +988,141 @@ class FanHistoryActivityCard extends Component {
 					<div className={showDivider ? classes.root : null}>
 						{showDivider ? <Divider/> : null}
 						<div className={classes.mobileActivityHeader}>
-							<div>
-								<div className={classes.mobileHeaderTopRow}>
-									<img
-										className={classes.mobiIcon}
-										src={servedImage("/icons/calendar-active.svg")}
-									/>
-									<Typography>
-										<span
-											className={classNames({
-												[classes.pinkSpan]: true,
-												[classes.boldSpan]: true
-											})}
-										>
-											{redeemed_for.full_name}&nbsp;
-										</span>
-										<span className={classes.boldSpan}>checked-in&nbsp;</span>
-										to {name} (1 Ticket)
-									</Typography>
-								</div>
-								<div className={classes.mobileHeaderBottomRow}>
-									<Typography className={classes.greySubtitle}>
-										{occurredAt}
-									</Typography>
-									{!expanded ? (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Show Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/down-gray.svg")}
-											/>
-										</div>
-									) : (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Hide Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/up-gray.svg")}
-											/>
-										</div>
-									)}
-								</div>
-								<Collapse in={expanded}>
-									<div className={classes.mobiCard}>
-										<Typography className={classes.greySubtitleCap}>
-											Checked-in tickets
-										</Typography>
-										<Typography className={classes.darkGreySubtitle}>
-											#{ticket_number} (
-											<Link to={orderPath}>
-												<span className={classes.pinkSpan}>
-													Order #{order_number}&nbsp;
-												</span>
-											</Link>
-											) scanned by&nbsp;
-											<span className={classes.pinkSpan}>
+							{redeemed_by.id === userId ? (
+								<div>
+									<div className={classes.mobileHeaderTopRow}>
+										<img
+											className={classes.mobiIcon}
+											src={servedImage("/icons/calendar-active.svg")}
+										/>
+										<Typography>
+											<span
+												className={classNames({
+													[classes.pinkSpan]: true,
+													[classes.boldSpan]: true
+												})}
+											>
 												{redeemed_by.full_name}&nbsp;
 											</span>
-											on&nbsp;
-											<span className={classes.greySubtitle}>{occurredAt}</span>
+											<span className={classes.boldSpan}>scanned&nbsp;</span>
+											<span
+												className={classNames({
+													[classes.pinkSpan]: true,
+													[classes.boldSpan]: true
+												})}
+											>
+												{redeemed_for.full_name}&nbsp;
+											</span>
+											in to {name} (1 Ticket)
 										</Typography>
 									</div>
-								</Collapse>
-							</div>
+									<div className={classes.mobileHeaderBottomRow}>
+										<Typography className={classes.greySubtitle}>
+											{occurredAt}
+										</Typography>
+										<div
+											onClick={onExpandChange}
+											className={classes.showHideRow}
+										>
+											<Typography className={classes.showHide}>
+												<span className={classes.greySubtitle}>
+													{!expanded ? "Show Details" : "Hide Details"}
+												</span>
+											</Typography>
+											<img
+												className={classes.showHideIcon}
+												src={servedImage(
+													`/icons/${expanded ? "up" : "down"}-gray.svg`
+												)}
+											/>
+										</div>
+									</div>
+									<Collapse in={expanded}>
+										<div className={classes.mobiCard}>
+											<Typography className={classes.greySubtitleCap}>
+												Checked-in tickets
+											</Typography>
+											<Typography className={classes.darkGreySubtitle}>
+												#{ticket_number} (
+												<Link to={orderPath}>
+													<span className={classes.pinkSpan}>
+														Order #{order_number}&nbsp;
+													</span>
+												</Link>
+												) on&nbsp;
+												<span className={classes.greySubtitle}>
+													{occurredAt}
+												</span>
+											</Typography>
+										</div>
+									</Collapse>
+								</div>
+							) : (
+								<div>
+									<div className={classes.mobileHeaderTopRow}>
+										<img
+											className={classes.mobiIcon}
+											src={servedImage("/icons/calendar-active.svg")}
+										/>
+										<Typography>
+											<span
+												className={classNames({
+													[classes.pinkSpan]: true,
+													[classes.boldSpan]: true
+												})}
+											>
+												{redeemed_for.full_name}&nbsp;
+											</span>
+											<span className={classes.boldSpan}>checked-in&nbsp;</span>
+											to {name} (1 Ticket)
+										</Typography>
+									</div>
+									<div className={classes.mobileHeaderBottomRow}>
+										<Typography className={classes.greySubtitle}>
+											{occurredAt}
+										</Typography>
+										<div
+											onClick={onExpandChange}
+											className={classes.showHideRow}
+										>
+											<Typography className={classes.showHide}>
+												<span className={classes.greySubtitle}>
+													{!expanded ? "Show Details" : "Hide Details"}
+												</span>
+											</Typography>
+											<img
+												className={classes.showHideIcon}
+												src={servedImage(
+													`/icons/${expanded ? "up" : "down"}-gray.svg`
+												)}
+											/>
+										</div>
+									</div>
+									<Collapse in={expanded}>
+										<div className={classes.mobiCard}>
+											<Typography className={classes.greySubtitleCap}>
+												Checked-in tickets
+											</Typography>
+											<Typography className={classes.darkGreySubtitle}>
+												#{ticket_number} (
+												<Link to={orderPath}>
+													<span className={classes.pinkSpan}>
+														Order #{order_number}&nbsp;
+													</span>
+												</Link>
+												) scanned by&nbsp;
+												<span className={classes.pinkSpan}>
+													{redeemed_by.full_name}&nbsp;
+												</span>
+												on&nbsp;
+												<span className={classes.greySubtitle}>
+													{occurredAt}
+												</span>
+											</Typography>
+										</div>
+									</Collapse>
+								</div>
+							)}
 						</div>
 					</div>
 				);
@@ -1166,37 +1177,19 @@ class FanHistoryActivityCard extends Component {
 									<Typography className={classes.greySubtitle}>
 										{occurredAt}
 									</Typography>
-									{!expanded ? (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Show Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/down-gray.svg")}
-											/>
-										</div>
-									) : (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Hide Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/up-gray.svg")}
-											/>
-										</div>
-									)}
+									<div onClick={onExpandChange} className={classes.showHideRow}>
+										<Typography className={classes.showHide}>
+											<span className={classes.greySubtitle}>
+												{!expanded ? "Show Details" : "Hide Details"}
+											</span>
+										</Typography>
+										<img
+											className={classes.showHideIcon}
+											src={servedImage(
+												`/icons/${expanded ? "up" : "down"}-gray.svg`
+											)}
+										/>
+									</div>
 								</div>
 								<Collapse in={expanded}>
 									<div className={classes.mobiCard}>
@@ -1274,37 +1267,19 @@ class FanHistoryActivityCard extends Component {
 									<Typography className={classes.greySubtitle}>
 										{occurredAt}
 									</Typography>
-									{!expanded ? (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Show Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/down-gray.svg")}
-											/>
-										</div>
-									) : (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Hide Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/up-gray.svg")}
-											/>
-										</div>
-									)}
+									<div onClick={onExpandChange} className={classes.showHideRow}>
+										<Typography className={classes.showHide}>
+											<span className={classes.greySubtitle}>
+												{!expanded ? "Show Details" : "Hide Details"}
+											</span>
+										</Typography>
+										<img
+											className={classes.showHideIcon}
+											src={servedImage(
+												`/icons/${expanded ? "up" : "down"}-gray.svg`
+											)}
+										/>
+									</div>
 								</div>
 								<Collapse in={expanded}>
 									<div className={classes.mobiCard}>
@@ -1355,12 +1330,12 @@ class FanHistoryActivityCard extends Component {
 											&nbsp;
 										</span>
 										<span className={classes.boldSpan}>
-											{"transferred (" + status + ") "}
+											transferred ({status})&nbsp;
 										</span>
 										{ticket_ids.length > 1 ? (
-											<span>{ticket_ids.length + " tickets to "}</span>
+											<span>{ticket_ids.length} tickets to </span>
 										) : (
-											<span>{ticket_ids.length + " ticket to "}</span>
+											<span>{ticket_ids.length} ticket to </span>
 										)}
 										<span className={classes.boldSpan}>
 											{destination_addresses}
@@ -1371,37 +1346,19 @@ class FanHistoryActivityCard extends Component {
 									<Typography className={classes.greySubtitle}>
 										{occurredAt}
 									</Typography>
-									{!expanded ? (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Show Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/down-gray.svg")}
-											/>
-										</div>
-									) : (
-										<div
-											onClick={onExpandChange}
-											className={classes.showHideRow}
-										>
-											<Typography className={classes.showHide}>
-												<span className={classes.greySubtitle}>
-													Hide Details
-												</span>
-											</Typography>
-											<img
-												className={classes.showHideIcon}
-												src={servedImage("/icons/up-gray.svg")}
-											/>
-										</div>
-									)}
+									<div onClick={onExpandChange} className={classes.showHideRow}>
+										<Typography className={classes.showHide}>
+											<span className={classes.greySubtitle}>
+												{!expanded ? "Show Details" : "Hide Details"}
+											</span>
+										</Typography>
+										<img
+											className={classes.showHideIcon}
+											src={servedImage(
+												`/icons/${expanded ? "up" : "down"}-gray.svg`
+											)}
+										/>
+									</div>
 								</div>
 								<Collapse in={expanded}>
 									<div className={classes.mobiCard}>

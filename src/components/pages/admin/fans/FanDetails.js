@@ -254,6 +254,7 @@ class Fan extends Component {
 					key={index}
 					eventStart={item.eventStart}
 					profile={profile}
+					userId={this.userId}
 					{...item}
 				/>
 			);
