@@ -674,12 +674,12 @@ class FanHistoryActivityCard extends Component {
 											{profile.first_name}&nbsp;{profile.last_name}&nbsp;
 										</span>
 										<span className={classes.boldSpan}>
-											{"transferred (" + status + ") "}
+											transferred ({status})&nbsp;
 										</span>
 										{ticket_ids.length > 1 ? (
-											<span>{ticket_ids.length + " tickets to "}</span>
+											<span>{ticket_ids.length} tickets to </span>
 										) : (
-											<span>{ticket_ids.length + " ticket to "}</span>
+											<span>{ticket_ids.length} ticket to </span>
 										)}
 										<span className={classes.boldSpan}>
 											{destination_addresses}
@@ -1330,12 +1330,12 @@ class FanHistoryActivityCard extends Component {
 											&nbsp;
 										</span>
 										<span className={classes.boldSpan}>
-											{"transferred (" + status + ") "}
+											transferred ({status})&nbsp;
 										</span>
 										{ticket_ids.length > 1 ? (
-											<span>{ticket_ids.length + " tickets to "}</span>
+											<span>{ticket_ids.length} tickets to </span>
 										) : (
-											<span>{ticket_ids.length + " ticket to "}</span>
+											<span>{ticket_ids.length} ticket to </span>
 										)}
 										<span className={classes.boldSpan}>
 											{destination_addresses}
