@@ -550,6 +550,11 @@ class OrderItems extends Component {
 									</Typography>
 									<Typography className={classes.mobileValueText}>
 										{code || "-"}
+										{discountInCents ? (
+											<span className={classes.discountValueText}>
+												&nbsp;/&nbsp;{dollars(discountInCents * -1, true)}
+											</span>
+										) : null}
 									</Typography>
 									<Typography className={classes.mobileSubText}>
 										{codeType}
