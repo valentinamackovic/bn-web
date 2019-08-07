@@ -573,19 +573,19 @@ class EventTickets extends Component {
 
 	componentDidMount() {}
 
-	addTicketOnClick = () => {
+	addTicketOnClick() {
 		eventUpdateStore.addTicketType();
 		this.handleScrollToElement();
-	};
+	}
 
-	handleScrollToElement = () => {
+	handleScrollToElement() {
 		const scrollPos =
 			this.addTicketScrollRef.current.offsetTop -
 			this.addTicketScrollRef.current.clientHeight / 2;
 		if (this.addTicketScrollRef.current) {
 			window.scrollTo(0, scrollPos);
 		}
-	};
+	}
 
 	updateTicketType(index, details) {
 		eventUpdateStore.updateTicketType(index, details);
@@ -711,7 +711,7 @@ class EventTickets extends Component {
 
 				<div
 					className={classes.addTicketType}
-					onClick={() => this.addTicketOnClick()}
+					onClick={this.addTicketOnClick.bind(this)}
 				>
 					<img
 						className={classes.addIcon}
