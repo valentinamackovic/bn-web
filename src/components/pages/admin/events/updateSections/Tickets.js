@@ -579,10 +579,10 @@ class EventTickets extends Component {
 	}
 
 	handleScrollToElement() {
-		const scrollPos =
-			this.addTicketScrollRef.current.offsetTop -
-			this.addTicketScrollRef.current.clientHeight / 2;
 		if (this.addTicketScrollRef.current) {
+			const scrollPos =
+				this.addTicketScrollRef.current.offsetTop -
+				this.addTicketScrollRef.current.clientHeight / 2;
 			window.scrollTo(0, scrollPos);
 		}
 	}
