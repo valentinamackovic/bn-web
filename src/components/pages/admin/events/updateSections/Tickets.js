@@ -566,7 +566,8 @@ class EventTickets extends Component {
 		this.state = {
 			deleteIndex: false,
 			areYouSureDeleteTicketDialogOpen: false,
-			ticketTypeHeight: 0
+			ticketTypeHeight: 0,
+			shouldFocus: false
 		};
 		this.addTicketScrollRef = React.createRef();
 	}
@@ -584,6 +585,7 @@ class EventTickets extends Component {
 				this.addTicketScrollRef.current.offsetTop -
 				this.addTicketScrollRef.current.clientHeight / 2;
 			window.scrollTo(0, scrollPos);
+			this.setState({ shouldFocus: true });
 		}
 	}
 
@@ -666,6 +668,7 @@ class EventTickets extends Component {
 			eventStartDate,
 			onChangeDate
 		} = this.props;
+		const { shouldFocus } = this.state;
 		const { ticketTypes, ticketTypeActiveIndex } = eventUpdateStore;
 		return (
 			<div>
@@ -696,6 +699,7 @@ class EventTickets extends Component {
 									deleteTicketType={() => this.openDeleteDialog(index)}
 									active={active}
 									index={index}
+									autoFocus={shouldFocus}
 									validateFields={validateFields}
 									errors={ticketTypeErrors}
 									ticketTimesDirty={ticketTimesDirty}
