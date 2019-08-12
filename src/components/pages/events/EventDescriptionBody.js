@@ -8,6 +8,7 @@ import nl2br from "../../../helpers/nl2br";
 import { textColorPrimary } from "../../../config/theme";
 import ArtistSummary from "../../elements/event/ArtistSummary";
 import { Link } from "react-router-dom";
+import LinkifyReact from "linkifyjs/react";
 
 const styles = theme => ({
 	root: {
@@ -44,7 +45,7 @@ const EventDescriptionBody = props => {
 			) : null}
 			{children ? (
 				<Typography className={classes.eventDetailText}>
-					{nl2br(children)}
+					<LinkifyReact>{nl2br(children)}</LinkifyReact>
 				</Typography>
 			) : null}
 
