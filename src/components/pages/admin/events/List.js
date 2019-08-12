@@ -173,7 +173,9 @@ class EventsList extends Component {
 					},
 					{
 						text: "Cancel event",
-						disabled: !user.hasScope("event:write") || cancelled_at,
+						disabled:
+							!user.hasScope("event:write") ||
+							(cancelled_at && id === this.eventMenuSelected),
 						onClick: () =>
 							this.setState({
 								deleteCancelEventId: this.eventMenuSelected,
