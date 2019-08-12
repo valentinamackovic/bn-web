@@ -66,37 +66,25 @@ class DeleteCancelEventDialog extends React.Component {
 
 		this.setState({ isSubmitting: true });
 
-		if (isDelete) {
-			Bigneon()
-				.events.delete({ id })
-				.then(response => {
-					this.setState({ isSubmitting: false }, () => onClose());
-				})
-				.catch(error => {
-					console.error(error);
-					this.setState({ isSubmitting: false });
+		const deleteOrCancelCall = isDelete
+			? Bigneon().events.delete({ id })
+			: Bigneon().events.cancel({ id });
 
-					notifications.showFromErrorResponse({
-						defaultMessage: "Deleting event failed.",
-						error
-					});
-				});
-		} else {
-			Bigneon()
-				.events.cancel({ id })
-				.then(response => {
-					this.setState({ isSubmitting: false }, () => onClose());
-				})
-				.catch(error => {
-					console.error(error);
-					this.setState({ isSubmitting: false });
+		deleteOrCancelCall
+			.then(response => {
+				this.setState({ isSubmitting: false }, () => onClose());
+			})
+			.catch(error => {
+				console.error(error);
+				this.setState({ isSubmitting: false });
 
-					notifications.showFromErrorResponse({
-						defaultMessage: "Cancel event failed.",
-						error
-					});
+				notifications.showFromErrorResponse({
+					defaultMessage: isDelete
+						? "Deleting event failed."
+						: "Cancelling event failed",
+					error
 				});
-		}
+			});
 	}
 
 	render() {
