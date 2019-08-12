@@ -67,10 +67,10 @@ class DeleteCancelEventDialog extends React.Component {
 		this.setState({ isSubmitting: true });
 
 		const deleteOrCancelCall = isDelete
-			? Bigneon().events.delete({ id })
-			: Bigneon().events.cancel({ id });
+			? Bigneon().events.delete
+			: Bigneon().events.cancel;
 
-		deleteOrCancelCall
+		deleteOrCancelCall({ id })
 			.then(response => {
 				this.setState({ isSubmitting: false }, () => onClose());
 			})
