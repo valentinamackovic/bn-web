@@ -27,7 +27,6 @@ import EventSummaryCard from "./EventSummaryCard";
 import user from "../../../../stores/user";
 import Card from "../../../elements/Card";
 import Loader from "../../../elements/loaders/Loader";
-import DeleteEventDialog from "./DeleteEventDialog";
 
 const styles = theme => ({
 	paper: {
