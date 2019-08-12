@@ -20,7 +20,7 @@ import moment from "moment";
 import notifications from "../../../../stores/notifications";
 import Button from "../../../elements/Button";
 import StyledLink from "../../../elements/StyledLink";
-import CancelEventDialog from "./CancelEventDialog";
+import DeleteCancelEventDialog from "./DeleteCancelEventDialog";
 import Bigneon from "../../../../helpers/bigneon";
 import PageHeading from "../../../elements/PageHeading";
 import EventSummaryCard from "./EventSummaryCard";
@@ -61,8 +61,8 @@ class EventsList extends Component {
 
 		this.state = {
 			events: null,
-			cancelEventId: null,
-			deleteEventId: null,
+			isDelete: false,
+			deleteCancelEventId: null,
 			optionsAnchorEl: null,
 			upcomingOrPast: this.props.match.params.upcomingOrPast || "upcoming"
 		};
@@ -176,14 +176,20 @@ class EventsList extends Component {
 						text: "Cancel event",
 						disabled: !user.hasScope("event:write"),
 						onClick: () =>
-							this.setState({ cancelEventId: this.eventMenuSelected }),
+							this.setState({
+								deleteCancelEventId: this.eventMenuSelected,
+								isDelete: false
+							}),
 						MenuOptionIcon: CancelIcon
 					},
 					{
 						text: "Delete event",
 						disabled: !user.hasScope("event:write"),
 						onClick: () =>
-							this.setState({ deleteEventId: this.eventMenuSelected }),
+							this.setState({
+								deleteCancelEventId: this.eventMenuSelected,
+								isDelete: true
+							}),
 						MenuOptionIcon: CancelIcon
 					}
 				];
@@ -271,21 +277,19 @@ class EventsList extends Component {
 	}
 
 	render() {
-		const { cancelEventId, deleteEventId, upcomingOrPast } = this.state;
+		const { deleteCancelEventId, upcomingOrPast, isDelete } = this.state;
 		const { classes } = this.props;
 
 		return (
 			<div>
-				<CancelEventDialog
-					id={cancelEventId}
+				<DeleteCancelEventDialog
+					id={deleteCancelEventId}
+					isDelete={isDelete}
 					onClose={() =>
-						this.setState({ cancelEventId: null }, this.updateEvents.bind(this))
-					}
-				/>
-				<DeleteEventDialog
-					id={deleteEventId}
-					onClose={() =>
-						this.setState({ deleteEventId: null }, this.updateEvents.bind(this))
+						this.setState(
+							{ deleteCancelEventId: null, isDelete: false },
+							this.updateEvents.bind(this)
+						)
 					}
 				/>
 				<Grid container spacing={0} alignItems="center">
