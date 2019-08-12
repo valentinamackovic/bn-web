@@ -27,6 +27,7 @@ import EventSummaryCard from "./EventSummaryCard";
 import user from "../../../../stores/user";
 import Card from "../../../elements/Card";
 import Loader from "../../../elements/loaders/Loader";
+import DeleteEventDialog from "./DeleteEventDialog";
 
 const styles = theme => ({
 	paper: {
@@ -61,6 +62,7 @@ class EventsList extends Component {
 		this.state = {
 			events: null,
 			cancelEventId: null,
+			deleteEventId: null,
 			optionsAnchorEl: null,
 			upcomingOrPast: this.props.match.params.upcomingOrPast || "upcoming"
 		};
@@ -176,6 +178,13 @@ class EventsList extends Component {
 						onClick: () =>
 							this.setState({ cancelEventId: this.eventMenuSelected }),
 						MenuOptionIcon: CancelIcon
+					},
+					{
+						text: "Delete event",
+						disabled: !user.hasScope("event:write"),
+						onClick: () =>
+							this.setState({ deleteEventId: this.eventMenuSelected }),
+						MenuOptionIcon: CancelIcon
 					}
 				];
 
@@ -262,7 +271,7 @@ class EventsList extends Component {
 	}
 
 	render() {
-		const { cancelEventId, upcomingOrPast } = this.state;
+		const { cancelEventId, deleteEventId, upcomingOrPast } = this.state;
 		const { classes } = this.props;
 
 		return (
@@ -273,7 +282,12 @@ class EventsList extends Component {
 						this.setState({ cancelEventId: null }, this.updateEvents.bind(this))
 					}
 				/>
-
+				<DeleteEventDialog
+					id={deleteEventId}
+					onClose={() =>
+						this.setState({ deleteEventId: null }, this.updateEvents.bind(this))
+					}
+				/>
 				<Grid container spacing={0} alignItems="center">
 					<Grid item xs={6} sm={6} lg={6}>
 						<PageHeading iconUrl="/icons/events-multi.svg">

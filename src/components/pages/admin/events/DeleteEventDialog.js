@@ -10,7 +10,7 @@ import Bigneon from "../../../../helpers/bigneon";
 
 const styles = {};
 
-class CancelEventDialog extends React.Component {
+class DeleteEventDialog extends React.Component {
 	constructor(props) {
 		super(props);
 
@@ -61,7 +61,7 @@ class CancelEventDialog extends React.Component {
 		this.setState({ isSubmitting: true });
 
 		Bigneon()
-			.events.cancel({ id })
+			.events.delete({ id })
 			.then(response => {
 				this.setState({ isSubmitting: false }, () => onClose());
 			})
@@ -70,7 +70,7 @@ class CancelEventDialog extends React.Component {
 				this.setState({ isSubmitting: false });
 
 				notifications.showFromErrorResponse({
-					defaultMessage: "Cancelling event details failed.",
+					defaultMessage: "Deleting event failed.",
 					variant: "error"
 				});
 			});
@@ -81,10 +81,12 @@ class CancelEventDialog extends React.Component {
 		const { name, isSubmitting } = this.state;
 
 		return (
-			<Dialog open={!!id} onClose={onClose} title={"Cancel event"}>
+			<Dialog open={!!id} onClose={onClose} title={"Delete event"}>
 				<form noValidate autoComplete="off" onSubmit={this.onSubmit.bind(this)}>
 					<div>
-						<Typography>Are you sure you want to cancel this event?</Typography>
+						<Typography>
+							Are you sure you want to permanently delete this event?
+						</Typography>
 						{name ? <Typography>{name}</Typography> : null}
 					</div>
 					<div>
@@ -97,7 +99,7 @@ class CancelEventDialog extends React.Component {
 							Keep event
 						</Button>
 						<Button disabled={isSubmitting} type="submit" variant="warning">
-							{isSubmitting ? "Cancelling..." : "Cancel event"}
+							{isSubmitting ? "Deleting..." : "Delete event"}
 						</Button>
 					</div>
 				</form>
@@ -106,9 +108,9 @@ class CancelEventDialog extends React.Component {
 	}
 }
 
-CancelEventDialog.propTypes = {
+DeleteEventDialog.propTypes = {
 	id: PropTypes.string,
 	onClose: PropTypes.func.isRequired
 };
 
-export default withStyles(styles)(CancelEventDialog);
+export default withStyles(styles)(DeleteEventDialog);
