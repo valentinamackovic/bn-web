@@ -62,6 +62,7 @@ class EventsList extends Component {
 			events: null,
 			isDelete: false,
 			deleteCancelEventId: null,
+			eventMenuSelected: null,
 			optionsAnchorEl: null,
 			upcomingOrPast: this.props.match.params.upcomingOrPast || "upcoming"
 		};
@@ -134,7 +135,12 @@ class EventsList extends Component {
 	}
 
 	renderEvents() {
-		const { events, expandedCardId, upcomingOrPast } = this.state;
+		const {
+			events,
+			expandedCardId,
+			upcomingOrPast,
+			eventMenuSelected
+		} = this.state;
 		const eventEnded = upcomingOrPast === "past";
 
 		const { optionsAnchorEl } = this.state;
@@ -147,12 +153,13 @@ class EventsList extends Component {
 			return events.map(eventData => {
 				const { venue, ...event } = eventData;
 				const { id, name, promo_image_url, cancelled_at } = event;
+
 				const eventOptions = [
 					{
 						text: "Dashboard",
 						onClick: () =>
 							this.props.history.push(
-								`/admin/events/${this.eventMenuSelected}/dashboard`
+								`/admin/events/${eventMenuSelected}/dashboard`
 							),
 						MenuOptionIcon: DashboardIcon
 					},
@@ -161,24 +168,24 @@ class EventsList extends Component {
 						disabled: eventEnded || !user.hasScope("event:write"),
 						onClick: () =>
 							this.props.history.push(
-								`/admin/events/${this.eventMenuSelected}/edit`
+								`/admin/events/${eventMenuSelected}/edit`
 							),
 						MenuOptionIcon: EditIcon
 					},
 					{
 						text: "View event",
 						onClick: () =>
-							this.props.history.push(`/events/${this.eventMenuSelected}`),
+							this.props.history.push(`/events/${eventMenuSelected}`),
 						MenuOptionIcon: ViewIcon
 					},
 					{
 						text: "Cancel event",
 						disabled:
 							!user.hasScope("event:write") ||
-							(cancelled_at && id === this.eventMenuSelected),
+							(cancelled_at && id === eventMenuSelected),
 						onClick: () =>
 							this.setState({
-								deleteCancelEventId: this.eventMenuSelected,
+								deleteCancelEventId: eventMenuSelected,
 								isDelete: false
 							}),
 						MenuOptionIcon: CancelIcon
@@ -188,7 +195,7 @@ class EventsList extends Component {
 						disabled: !user.hasScope("event:write"),
 						onClick: () =>
 							this.setState({
-								deleteCancelEventId: this.eventMenuSelected,
+								deleteCancelEventId: eventMenuSelected,
 								isDelete: true
 							}),
 						MenuOptionIcon: CancelIcon
@@ -199,7 +206,7 @@ class EventsList extends Component {
 					<div>
 						<IconButton
 							onClick={e => {
-								this.eventMenuSelected = id;
+								this.setState({ eventMenuSelected: id });
 								this.handleMenuClick(e);
 							}}
 						>
