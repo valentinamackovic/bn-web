@@ -134,6 +134,20 @@ class EventsList extends Component {
 		this.setState({ expandedCardId });
 	}
 
+	get cancelMenuItemDisabled() {
+		const { events, eventMenuSelected } = this.state;
+
+		const selectedEvent = events.find(e => e.id === eventMenuSelected);
+
+		if (selectedEvent) {
+			if (selectedEvent.cancelled_at) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
 	renderEvents() {
 		const {
 			events,
@@ -181,8 +195,7 @@ class EventsList extends Component {
 					{
 						text: "Cancel event",
 						disabled:
-							!user.hasScope("event:write") ||
-							(cancelled_at && id === eventMenuSelected),
+							!user.hasScope("event:write") || this.cancelMenuItemDisabled,
 						onClick: () =>
 							this.setState({
 								deleteCancelEventId: eventMenuSelected,
