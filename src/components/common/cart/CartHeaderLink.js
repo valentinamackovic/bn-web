@@ -28,8 +28,10 @@ const styles = theme => ({
 });
 
 const CartHeaderLink = observer(({ classes }) => {
-	const { ticketCount, formattedExpiryTime, latestEventId } = cart;
-	const eventIdInItems = [...new Set(cart.items.map(item => item.event_id))];
+	const { ticketCount, formattedExpiryTime, latestEventId, items = [] } = cart;
+	const eventIdInItems = [...new Set(items.map(item => item.event_id))].filter(
+		item => !!item
+	);
 
 	const returnEventId = eventIdInItems.length
 		? eventIdInItems[0]
