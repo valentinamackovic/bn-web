@@ -231,13 +231,6 @@ class ViewEvent extends Component {
 			return { ctaText: "Cancelled", enabled: false };
 		}
 		switch (event.override_status) {
-			case "PurchaseTickets":
-				if (hasAvailableTickets === false && !event.is_external) {
-					return { ctaText: "No available tickets", enabled: false };
-				} else {
-					return { ctaText: "Purchase Tickets", enabled: true };
-				}
-
 			case "SoldOut":
 				return {
 					ctaText: "Sold Out",
@@ -265,6 +258,12 @@ class ViewEvent extends Component {
 				return { ctaText: "Off-Sale", enabled: false };
 			case "Ended":
 				return { ctaText: "Sale Ended", enabled: false };
+			case "PurchaseTickets":
+				if (hasAvailableTickets === false && !event.is_external) {
+					return { ctaText: "No available tickets", enabled: false };
+				} else {
+					return { ctaText: "Purchase Tickets", enabled: true };
+				}
 			default:
 				if (hasAvailableTickets === false && !event.is_external) {
 					return { ctaText: "No available tickets", enabled: false };
