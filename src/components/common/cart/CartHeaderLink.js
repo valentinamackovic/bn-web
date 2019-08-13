@@ -29,23 +29,26 @@ const styles = theme => ({
 
 const CartHeaderLink = observer(({ classes }) => {
 	const { ticketCount, formattedExpiryTime, latestEventId } = cart;
+	const eventIdInItems = [...new Set(cart.items.map(item => item.event_id))];
+
+	const returnEventId = eventIdInItems.length
+		? eventIdInItems[0]
+		: latestEventId;
 	if (ticketCount < 1) {
 		return null;
 	}
 
 	//Only if we have an event id can we link to the right checkout page
-	const LinkContainer = latestEventId
+	const LinkContainer = returnEventId
 		? props => <Link {...props}/>
 		: props => <div {...props}/>;
 
 	return (
-		<LinkContainer to={`/events/${latestEventId}/tickets/confirmation`}>
+		<LinkContainer to={`/events/${returnEventId}/tickets/confirmation`}>
 			<Button className={classes.menuButton}>
 				<ShoppingCartIcon className={classes.rightIcon}/>
 				{ticketCount}
-
 				<span className={classes.spacer}/>
-
 				<TimerIcon className={classes.rightIcon}/>
 				<span className={classes.expiryTimeSpan}>{formattedExpiryTime}</span>
 			</Button>
