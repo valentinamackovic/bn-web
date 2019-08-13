@@ -74,9 +74,11 @@ const CustomAppBar = observer(props => {
 					</Link>
 				</div>
 
-				<Hidden smDown>
-					<SearchToolBarInput history={history}/>
-				</Hidden>
+				{!layout.showStudioLogo ? (
+					<Hidden smDown>
+						<SearchToolBarInput history={history}/>
+					</Hidden>
+				) : null}
 
 				<span className={classes.rightMenuOptions}>
 					<Hidden smDown>
