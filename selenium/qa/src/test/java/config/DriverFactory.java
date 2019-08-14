@@ -5,10 +5,12 @@ public class DriverFactory {
 	private static String browser;
 
 	public static DriverManager getDriverManager(String config, String environment) {
-		
+		System.setProperty("webdriver.chrome.driver","/home/simple-task/programs/drivers/linux/chromedriver");
+		System.setProperty("webdriver.gecko.driver", "/home/simple-task/programs/drivers/linux/geckodriver");
 		DriverManager manager = null;
 		try {
 			browser = System.getProperty("browser");
+			browser = "ch";
 			BrowsersEnum browserEnum = BrowsersEnum.getEnumForCode(browser);
 
 			switch (browserEnum) {
