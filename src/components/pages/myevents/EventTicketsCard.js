@@ -131,7 +131,8 @@ const styles = theme => ({
 	},
 	downloadAppLinkText: {
 		color: secondaryHex,
-		font: "inherit"
+		font: "inherit",
+		cursor: "pointer"
 	}
 });
 
@@ -429,7 +430,8 @@ class EventTicketsCard extends Component {
 			expanded,
 			onTicketSelect,
 			onShowTransferQR,
-			onExpand
+			onExpand,
+			onShowSMSLinkDialog
 		} = this.props;
 		const { checkedTicketsIds } = this.state;
 
@@ -515,13 +517,23 @@ class EventTicketsCard extends Component {
 					<Typography className={classes.downloadAppText}>
 						To transfer your ticket{tickets.length === 1 ? "" : "s"} please
 						download the{" "}
-						<a
-							target={"_blank"}
-							href={Settings().genericAppDownloadLink}
-							className={classes.downloadAppLinkText}
-						>
-							Big&nbsp;Neon&nbsp;app.
-						</a>
+						<Hidden smDown>
+							<span
+								className={classes.downloadAppLinkText}
+								onClick={onShowSMSLinkDialog}
+							>
+								Big&nbsp;Neon&nbsp;app.
+							</span>
+						</Hidden>
+						<Hidden mdUp>
+							<a
+								target={"_blank"}
+								href={Settings().genericAppDownloadLink}
+								className={classes.downloadAppLinkText}
+							>
+								Big&nbsp;Neon&nbsp;app.
+							</a>{" "}
+						</Hidden>
 					</Typography>
 
 					<div className={classes.closeButtonRow}>
@@ -550,7 +562,8 @@ EventTicketsCard.propTypes = {
 	onShowTransferQR: PropTypes.func.isRequired,
 	onCancelTransfer: PropTypes.func.isRequired,
 	history: PropTypes.object.isRequired,
-	showActions: PropTypes.bool.isRequired
+	showActions: PropTypes.bool.isRequired,
+	onShowSMSLinkDialog: PropTypes.func.isRequired
 };
 
 export default withStyles(styles)(EventTicketsCard);
