@@ -93,7 +93,7 @@ public class MailinatorInboxPage extends BasePage {
 		goToMail(mailSubjectValue);
 		boolean retVal = isCorrectMail(numberOfTickets, eventName);
 		if(retVal) {
-			waitVisibilityAndClick(trashBin);
+			deleteMail();
 		}
 		return retVal;
 		

@@ -90,20 +90,9 @@ public class MyEventsPage extends BasePage {
 				By.xpath("//body//main//div[div[div[div[p[text()='" + eventName + "']]]]]")));
 
 		for (WebElement event : events) {
-//			EventComponent component = clickOnViewMyTicketOfEvent(event);
-//			try {
-//				boolean retVal = component.isTicketNumberPresent(ticketNumber);
-//				retVal = retVal && component.isOrderNumberPresent(orderNumber);
-//				if (retVal) {
-//					return retVal;
-//				}
-//			} catch (NoSuchElementException e) {
-//				continue;
-//			}
 			if (isTicketInEvent(event, ticketNumber, orderNumber)) {
 				return true;
 			}
-
 		}
 		return false;
 	}

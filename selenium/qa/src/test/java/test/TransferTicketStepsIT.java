@@ -16,7 +16,7 @@ import utils.MsgConstants;
 
 public class TransferTicketStepsIT extends BaseSteps {
 
-//	@Test(dataProvider = "ticket_transfer_to_new_user_data", priority = 10)
+	@Test(dataProvider = "ticket_transfer_to_new_user_data", priority = 10)
 	public void transferTicketToNewUserSteps(User sender, User receiver) {
 		LoginPage login = new LoginPage(driver);
 		maximizeWindow();
