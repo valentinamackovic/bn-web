@@ -43,6 +43,7 @@ public class TicketTransferPage extends BasePage {
 	}
 	
 	public boolean checkIfCorrectUser(User user) {
+		waitForTime(2000);
 		return isExplicitlyWaitVisible(By.xpath("//main//p[contains(text(),'" + user.getEmailAddress() + "')]"));
 	}
 

@@ -50,6 +50,8 @@ public class TransferTicketStepsIT extends BaseSteps {
 		Assert.assertTrue(ticketTransferPage.checkIfCorrectUser(receiver), "Wrong user registerd");
 
 		ticketTransferPage.clickOnLetsDoIt();
+		Assert.assertFalse(ticketTransferPage.isNotificationDisplayedWithMessage(MsgConstants.TICKET_TRANSFER_RECEIVING_TICKETS_FAILED,4),
+				"Ticket claiming process failed");
 		signUpPage.getHeader().clickOnMyEventsInProfileDropDown();
 		myEventsPage.isAtPage();
 
