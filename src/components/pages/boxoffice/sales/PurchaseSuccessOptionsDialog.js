@@ -59,29 +59,40 @@ class PurchaseSuccessOptionsDialog extends React.Component {
 		}
 	}
 
-	async sendRedeemLink(orderId, emailOrCellphoneNumber) {
+	// async sendRedeemLink(orderId, emailOrCellphoneNumber) {
+	// 	return new Promise(function(resolve, reject) {
+	// 		Bigneon()
+	// 			.orders.sendPublicRedeemLink({
+	// 				id: orderId,
+	// 				email_or_phone: emailOrCellphoneNumber
+	// 			})
+	// 			.then(response => {
+	// 				resolve({ result: response });
+	// 			})
+	// 			.catch(error => {
+	// 				resolve({ error });
+	// 			});
+	// 	});
+	// }
+
+	async sendBoxOfficeInstructions(orderId, phoneNumber) {
 		return new Promise(function(resolve, reject) {
 			Bigneon()
-				.orders.sendPublicRedeemLink({
+				.orders.sendBoxOfficeInstructions({
 					id: orderId,
-					email_or_phone: emailOrCellphoneNumber
+					phone: phoneNumber
 				})
 				.then(response => {
 					resolve({ result: response });
 				})
-				.catch(error => {
-					resolve({ error });
-				});
+				.catch(error => resolve({ error }));
 		});
 	}
 
 	async onSendSMS(emailOrCellphoneNumber) {
-		if (
-			!validPhone(emailOrCellphoneNumber) &&
-			!validEmail(emailOrCellphoneNumber)
-		) {
+		if (!validPhone(emailOrCellphoneNumber)) {
 			return notifications.show({
-				message: "Invalid mobile number or email.",
+				message: "Invalid mobile number.",
 				variant: "warning"
 			});
 		}
@@ -91,7 +102,10 @@ class PurchaseSuccessOptionsDialog extends React.Component {
 		const { currentOrderDetails } = this.props;
 		const { id } = currentOrderDetails;
 
-		const response = await this.sendRedeemLink(id, emailOrCellphoneNumber);
+		const response = await this.sendBoxOfficeInstructions(
+			id,
+			emailOrCellphoneNumber
+		);
 
 		if (response.error) {
 			notifications.showFromErrorResponse({
@@ -231,14 +245,14 @@ class PurchaseSuccessOptionsDialog extends React.Component {
 					</Typography>
 
 					<Typography className={classes.smsLabel}>
-						Send ticket via SMS
+						Send check in instructions via SMS
 					</Typography>
 					<InputWithButton
 						value={defaultPhone}
 						style={buttonStyle}
 						iconUrl={"/icons/cellphone-gray.svg"}
 						name={"cellNumber"}
-						placeholder="Enter cellphone number or email"
+						placeholder="Enter cellphone number"
 						buttonText={isSendingSMS ? "Sending..." : "Send"}
 						onSubmit={this.onSendSMS.bind(this)}
 						disabled={isSendingSMS}
