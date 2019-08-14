@@ -58,6 +58,47 @@ public class AbstractBase {
 		return explicitWait(15, ExpectedConditions.visibilityOf(element));
 	}
 
+	public boolean isExplicitlyWaitVisible(WebElement element) {
+		return isExplicitlyWaitVisible(15, element);
+	}
+
+	public boolean isExplicitlyWaitVisible(int timeForSeconds, WebElement element) {
+		boolean retVal = false;
+		try {
+			explicitWait(timeForSeconds, ExpectedConditions.visibilityOf(element));
+			retVal = true;
+		} catch (Exception e) {
+			retVal = false;
+		}
+		return retVal;
+	}
+
+	public boolean isExplicitlyInvisible(WebElement element) {
+		return isExplicitlyInvisible(15, element);
+	}
+
+	public boolean isExplicitlyInvisible(int waitForSeconds, WebElement element) {
+		boolean retVal = false;
+		try {
+			explicitWait(waitForSeconds, ExpectedConditions.invisibilityOf(element));
+			retVal = true;
+		} catch (Exception e) {
+			retVal = false;
+		}
+		return retVal;
+	}
+
+	public boolean isExplicitlyWaitVisible(By byElement) {
+		boolean retVal = false;
+		try {
+			explicitWait(15, ExpectedConditions.visibilityOfElementLocated(byElement));
+			retVal = true;
+		} catch (Exception e) {
+			retVal = false;
+		}
+		return retVal;
+	}
+
 	public <T, V> T explicitWaitForClickable(WebElement element) {
 		return explicitWait(15, ExpectedConditions.elementToBeClickable(element));
 	}
@@ -66,6 +107,15 @@ public class AbstractBase {
 		explicitWait(15, ExpectedConditions.and(ExpectedConditions.visibilityOf(element),
 				ExpectedConditions.elementToBeClickable(element)));
 		element.click();
+	}
+
+	public void waitVisibilityAndSendKeysSlow(WebElement element, String value) {
+		explicitWaitForVisiblity(element);
+		explicitWaitForClickable(element);
+		for (int i = 0; i < value.length(); i++) {
+			element.sendKeys(Character.toString(value.charAt(i)));
+			waitForTime(100);
+		}
 	}
 
 	public void waitVisibilityAndSendKeys(WebElement element, String value) {

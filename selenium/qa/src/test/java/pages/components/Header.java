@@ -1,12 +1,10 @@
 package pages.components;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import pages.BaseComponent;
@@ -34,9 +32,11 @@ public class Header extends BaseComponent {
 	@FindBy(xpath = "//body//header//div[span[@aria-owns='menu-appbar']//span[contains(text(),'Current organization')]]")
 	private WebElement currentOrganizationDropDown;
 
+	@FindBy(xpath = "//header//span/a[contains(@href,'tickets/confirmation')]|//header//span/div[contains(@to,'tickets/confirmation')]")
+	public WebElement shoppingBasket;
+
 	public Header(WebDriver driver) {
 		super(driver);
-		PageFactory.initElements(driver, this);
 	}
 
 	public void searchEvents(String event) {
@@ -74,7 +74,7 @@ public class Header extends BaseComponent {
 
 	public boolean checkLogedInFirstNameInHeader(String firstName) {
 		String xpath = "/html/body/div[1]/div/header//h3[contains(text(),'" + firstName + "')]";
-		WebElement name = explicitWait(5, 200, ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
+		explicitWait(5, 200, ExpectedConditions.visibilityOfElementLocated(By.xpath(xpath)));
 		return true;
 	}
 
@@ -101,10 +101,18 @@ public class Header extends BaseComponent {
 			}
 		}
 
-		WebElement element = explicitWait(15, ExpectedConditions.visibilityOfElementLocated(By.xpath("//body//div[@id='menu-appbar']")));
+		WebElement element = explicitWait(15,
+				ExpectedConditions.visibilityOfElementLocated(By.xpath("//body//div[@id='menu-appbar']")));
 		element.click();
 
 		return retVal;
+	}
+
+	public void clickOnShoppingBasket() {
+		boolean isVisible = isExplicitlyWaitVisible(shoppingBasket);
+		if (isVisible) {
+			waitVisibilityAndClick(shoppingBasket);
+		}
 	}
 
 }
