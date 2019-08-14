@@ -430,7 +430,12 @@ class OrderItems extends Component {
 					order={order}
 					type={showRefundType}
 					selectedRefundOrderItem={selectedRefundOrderItem}
-					onSuccess={() => this.setState({ selectedRefundOrderItem: {} })}
+					onSuccess={() =>
+						this.setState(
+							{ selectedRefundOrderItem: {} },
+							this.setRefundAmount.bind(this)
+						)
+					}
 				/>
 
 				{/*DESKTOP*/}
