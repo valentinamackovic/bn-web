@@ -16,6 +16,8 @@ import Card from "../../elements/Card";
 import StyledLink from "../../elements/StyledLink";
 import changeUrlParam from "../../../helpers/changeUrlParam";
 import getUrlParam from "../../../helpers/getUrlParam";
+import user from "../../../stores/user";
+import getScreenWidth from "../../../helpers/getScreenWidth";
 
 const styles = theme => ({
 	menuContainer: {
@@ -95,6 +97,11 @@ class MyEvents extends Component {
 			showActions = true;
 		} else if (type === "past") {
 			groups = tickets.pastGroups;
+		}
+
+		//Hide for everyone not super or on mobile
+		if (!user.isSuper || getScreenWidth() < 500) {
+			showActions = false;
 		}
 
 		if (groups === null || groups === undefined) {
