@@ -163,28 +163,24 @@ class CheckoutSelection extends Component {
 	//Determine the amount to auto add to cart based on increment, limit per person and available tickets
 	getAutoAddQuantity(ticketType) {
 		const { increment, limit_per_person, available } = ticketType;
-
-		//If limit_per_person is set don't allow auto selecting more than the user is allowed to buy
-		if (limit_per_person && AUTO_SELECT_TICKET_AMOUNT > limit_per_person) {
-			return limit_per_person;
-		}
-
-		//Will display `Sold out` before it reaches here, but just in case
-		if (available < limit_per_person) {
-			return 0;
-		}
-
-		//Should first display `Sold out`.
-		if (available < increment) {
-			return 0;
-		}
+		let quantity = AUTO_SELECT_TICKET_AMOUNT;
 
 		//If the default auto select amount is NOT divisible by the increment amount, rather auto select the first increment
 		if (AUTO_SELECT_TICKET_AMOUNT % increment != 0) {
-			return increment;
+			quantity = increment;
 		}
 
-		return AUTO_SELECT_TICKET_AMOUNT;
+		//If limit_per_person is set don't allow auto selecting more than the user is allowed to buy
+		if (limit_per_person && quantity > limit_per_person) {
+			quantity = limit_per_person;
+		}
+
+		//Will first display `Sold out` for this rule anyways.
+		if (available < increment) {
+			quantity = 0;
+		}
+
+		return quantity;
 	}
 
 	setTicketSelectionFromExistingCart(items) {
@@ -466,12 +462,13 @@ class CheckoutSelection extends Component {
 						key={id}
 						name={name}
 						description={description}
-						available={ticketsAvailable}
+						ticketsAvailable={ticketsAvailable}
 						price_in_cents={price_in_cents}
 						error={errors[id]}
 						amount={ticketSelection[id] ? ticketSelection[id].quantity : 0}
 						increment={increment}
 						limitPerPerson={limitPerPerson}
+						available={available}
 						discount_in_cents={discount_in_cents}
 						discount_as_percentage={discount_as_percentage}
 						redemption_code={redemption_code}
