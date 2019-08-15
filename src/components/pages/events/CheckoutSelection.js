@@ -174,7 +174,7 @@ class CheckoutSelection extends Component {
 			return 0;
 		}
 
-		//If there are less available than the increment they need to buy in
+		//Should first display `Sold out`.
 		if (available < increment) {
 			return 0;
 		}

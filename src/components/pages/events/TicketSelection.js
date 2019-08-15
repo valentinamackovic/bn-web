@@ -134,6 +134,12 @@ class TicketSelection extends Component {
 			priceDisplay = `${dollars(calculatedPriceInCents, true)}`;
 		}
 
+		//They can't select more than is available (This will be fixed in the API soon hopefully)
+		if (available < increment) {
+			status = "SoldOut";
+			priceActive = false;
+		}
+
 		let unavailableLabel = null;
 		switch (status) {
 			case "SoldOut":
