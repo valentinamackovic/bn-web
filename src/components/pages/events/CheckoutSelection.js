@@ -160,6 +160,33 @@ class CheckoutSelection extends Component {
 		}
 	}
 
+	//Determine the amount to auto add to cart based on increment, limit per person and available tickets
+	getAutoAddQuantity(ticketType) {
+		const { increment, limit_per_person, available } = ticketType;
+
+		//If limit_per_person is set don't allow auto selecting more than the user is allowed to buy
+		if (limit_per_person && AUTO_SELECT_TICKET_AMOUNT > limit_per_person) {
+			return limit_per_person;
+		}
+
+		//Will display `Sold out` before it reaches here, but just in case
+		if (available < limit_per_person) {
+			return 0;
+		}
+
+		//If there are less available than the increment they need to buy in
+		if (available < increment) {
+			return 0;
+		}
+
+		//If the default auto select amount is NOT divisible by the increment amount, rather auto select the first increment
+		if (AUTO_SELECT_TICKET_AMOUNT % increment != 0) {
+			return increment;
+		}
+
+		return AUTO_SELECT_TICKET_AMOUNT;
+	}
+
 	setTicketSelectionFromExistingCart(items) {
 		const ticketSelection = {};
 		const { id } = this.props.match.params;
@@ -184,7 +211,7 @@ class CheckoutSelection extends Component {
 
 				if (!ticketSelection[type_id]) {
 					ticketSelection[type_id] = {
-						quantity: AUTO_SELECT_TICKET_AMOUNT
+						quantity: this.getAutoAddQuantity(ticket_types[0])
 					};
 				}
 
@@ -206,10 +233,11 @@ class CheckoutSelection extends Component {
 								}
 								const type_id = types[i].id;
 
+								//Auto add a ticket after refreshing the event tickets
 								if (!ticketSelection[type_id]) {
 									if (types.length === 1) {
 										ticketSelection[type_id] = {
-											quantity: AUTO_SELECT_TICKET_AMOUNT
+											quantity: this.getAutoAddQuantity(types[i])
 										};
 									}
 								}
