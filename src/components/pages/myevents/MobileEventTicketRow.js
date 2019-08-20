@@ -20,15 +20,15 @@ const styles = theme => {
 		},
 		heading: {
 			textTransform: "uppercase",
-			fontSize: theme.typography.fontSize * 0.9
+			fontSize: 12
 		},
 		itemText: {
-			fontSize: theme.typography.fontSize * 0.9
+			fontSize: 12
 		}
 	};
 };
 
-const EventTicketRow = props => {
+const MobileEventTicketRow = props => {
 	const { item, children, classes } = props;
 
 	const columnStyles = [
@@ -37,11 +37,11 @@ const EventTicketRow = props => {
 			textAlign: "center"
 		},
 		{
-			flex: 2,
+			flex: 3,
 			textAlign: "left"
 		},
 		{
-			flex: 2,
+			flex: 3,
 			textAlign: "left"
 		},
 		{
@@ -89,10 +89,10 @@ const EventTicketRow = props => {
 	return <div className={classes.root}>{columns}</div>;
 };
 
-EventTicketRow.propTypes = {
+MobileEventTicketRow.propTypes = {
 	classes: PropTypes.object.isRequired,
 	children: PropTypes.array.isRequired,
 	item: PropTypes.bool
 };
 
-export default withStyles(styles)(EventTicketRow);
+export default withStyles(styles)(MobileEventTicketRow);

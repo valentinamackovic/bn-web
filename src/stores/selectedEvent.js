@@ -334,10 +334,7 @@ class SelectedEvent {
 		}
 		let hasTickets = false;
 		this.ticket_types.map(({ ticket_pricing, end_date }) => {
-			const price = "";
-			if (moment.utc().isAfter(moment.utc(end_date))) {
-				hasTickets = false;
-			} else if (ticket_pricing) {
+			if (ticket_pricing && moment.utc().isBefore(moment.utc(end_date))) {
 				hasTickets = true;
 			}
 		});
