@@ -3,7 +3,6 @@ package pages;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import utils.Constants;
@@ -25,7 +24,6 @@ public class ResetPasswordPage extends BasePage {
 
 	public ResetPasswordPage(WebDriver driver) {
 		super(driver);
-		PageFactory.initElements(driver, this);
 	}
 
 	@Override
@@ -39,6 +37,7 @@ public class ResetPasswordPage extends BasePage {
 	}
 
 	public void fillForm(String password, String confirmPassword) {
+		waitForTime(1500);
 		explicitWait(10, 200, ExpectedConditions.visibilityOf(newPasswordField));
 		newPasswordField.sendKeys(password);
 		confirmPasswordField.sendKeys(confirmPassword);

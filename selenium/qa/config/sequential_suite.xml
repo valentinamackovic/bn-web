@@ -7,6 +7,10 @@
     <classes>
       <class name="test.ForgotPasswordStepsIT"/>
       <class name="test.CreateOrganizationStepsIT"/>
+      <class name="test.CreateEventStepsIT"/>
+      <class name="test.PurchaseStepsIT"/>
+      <class name="test.PurchaseWithTicketChangeStepsIT"/>
+      <class name="test.TransferTicketStepsIT"/>
     </classes>
   </test>
   <test name="Firefox">
@@ -15,6 +19,10 @@
     <classes>
       <class name="test.ForgotPasswordStepsIT"/>
       <class name="test.CreateOrganizationStepsIT"/>
+      <class name="test.CreateEventStepsIT"/>
+      <class name="test.PurchaseStepsIT"/> 
+      <class name="test.PurchaseWithTicketChangeStepsIT"/>
+      <class name="test.TransferTicketStepsIT"/>
     </classes>
-  </test> 
-</suite>
+  </test>  
+ </suite>

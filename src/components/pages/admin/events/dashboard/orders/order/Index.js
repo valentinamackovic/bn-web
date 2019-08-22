@@ -104,14 +104,14 @@ class SingleOrder extends Component {
 				const platform = is_box_office ? "Box office" : data.platform || "";
 
 				let fees_in_cents = 0;
-				items.forEach(({ item_type, unit_price_in_cents }) => {
+				items.forEach(({ item_type, unit_price_in_cents, quantity }) => {
 					//Only include fee type items
 					if (
 						["CreditCardFees", "PerUnitFees", "CreditCardFees"].indexOf(
 							item_type
 						) > -1
 					) {
-						fees_in_cents += unit_price_in_cents;
+						fees_in_cents += unit_price_in_cents * quantity;
 					}
 				});
 
@@ -158,10 +158,13 @@ class SingleOrder extends Component {
 				const { data } = response.data;
 
 				const orderHistory = data.map(item => {
-					const occurredAt = moment
-						.utc(item.occurredAt)
-						.tz(timezone)
-						.format("llll");
+					const { occurred_at } = item;
+					const occurredAt = occurred_at
+						? moment
+							.utc(occurred_at)
+							.tz(timezone)
+							.format("llll")
+						: "-";
 
 					return { ...item, occurredAt };
 				});
