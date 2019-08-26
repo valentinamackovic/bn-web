@@ -117,6 +117,8 @@ class ReportsDate extends Component {
 			changeUrlParam("start_utc", start_utc);
 			changeUrlParam("end_utc", end_utc);
 
+			this.setState({ errors: {} });
+
 			callBack({
 				startDate: startOfStartDate,
 				endDate: endOfEndDate,

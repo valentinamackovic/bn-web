@@ -7,12 +7,17 @@ import moment from "moment-timezone";
  * @params {group, timezone}
  * @returns {updatedMomentObjects}
  */
-export const updateTimezonesInObjects = (group, timezone, maintainLocalTime = false) => {
+export const updateTimezonesInObjects = (
+	group,
+	timezone,
+	maintainLocalTime = false
+) => {
+	const updatedMomentObjects = {};
+
 	if (!timezone) {
-		return {};
+		return updatedMomentObjects;
 	}
 
-	const updatedMomentObjects = {};
 	Object.keys(group).forEach(key => {
 		const value = group[key];
 		if (value instanceof moment) {
