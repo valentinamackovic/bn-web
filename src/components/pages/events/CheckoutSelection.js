@@ -191,7 +191,7 @@ class CheckoutSelection extends Component {
 				if (ticket_type_id) {
 					ticketSelection[ticket_type_id] = {
 						quantity: ticketSelection[ticket_type_id]
-							? ticketSelection[ticket_type_id] + quantity
+							? ticketSelection[ticket_type_id].quantity + quantity
 							: quantity,
 						redemption_code: redemption_code
 					};
