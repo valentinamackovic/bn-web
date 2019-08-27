@@ -664,8 +664,8 @@ class EventDashboardContainer extends Component {
 							) : null}
 
 							{!event.is_external &&
-							event.extra_data_admin &&
-							event.extra_data_admin.preview_facebook_enabled ? (
+							event.extra_admin_data &&
+							event.extra_admin_data.preview_facebook_enabled ? (
 									<Typography className={classes.menuText}>
 										{this.renderMarketingMenu()}
 										<StyledLink
