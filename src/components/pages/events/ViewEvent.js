@@ -541,15 +541,16 @@ class ViewEvent extends Component {
 									iconUrl={"/icons/event-detail-black.svg"}
 								>
 									<Typography className={classes.eventDetailText}>
-										{showAllAdditionalInfo ? (
-											<LinkifyReact options={options}>
-												{additional_info}
-											</LinkifyReact>
-										) : (
-											nl2br(
-												ellipsis(additional_info, ADDITIONAL_INFO_CHAR_LIMIT)
-											)
-										)}
+										{showAllAdditionalInfo ||
+										additional_info.length <= ADDITIONAL_INFO_CHAR_LIMIT ? (
+												<LinkifyReact options={options}>
+													{additional_info}
+												</LinkifyReact>
+											) : (
+												nl2br(
+													ellipsis(additional_info, ADDITIONAL_INFO_CHAR_LIMIT)
+												)
+											)}
 
 										{additional_info &&
 										additional_info.length > ADDITIONAL_INFO_CHAR_LIMIT ? (
