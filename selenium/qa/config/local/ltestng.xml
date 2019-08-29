@@ -13,6 +13,7 @@
       <class name="test.PurchaseWithTicketChangeStepsIT"/>
       <!-- <class name="test.TransferTicketStepsIT"/> -->
       <class name="test.CancelEventStepsIT"/>
+      <class name="test.CreateEventWithAdditionalOptionsStepsIT"/>
     </classes>
   </test>
 </suite>
