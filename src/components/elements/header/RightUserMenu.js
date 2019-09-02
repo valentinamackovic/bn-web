@@ -17,6 +17,7 @@ import { toolBarHeight } from "../../../config/theme";
 import Button from "../Button";
 import servedImage from "../../../helpers/imagePathHelper";
 import layout from "../../../stores/layout";
+import optimizedImageUrl from "../../../helpers/optimizedImageUrl";
 
 const styles = theme => ({
 	root: {
@@ -179,7 +180,11 @@ class RightHeaderMenu extends React.Component {
 			>
 				<Avatar
 					alt={firstName}
-					src={profilePicUrl || "/images/profile-pic-placeholder.png"}
+					src={
+						profilePicUrl
+							? optimizedImageUrl(profilePicUrl)
+							: "/images/profile-pic-placeholder.png"
+					}
 					className={classes.avatar}
 					style={{ padding: profilePicUrl ? 0 : 10 }}
 				/>
