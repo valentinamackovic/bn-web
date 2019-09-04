@@ -10,7 +10,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-import pages.components.Header;
 import utils.MsgConstants;
 import utils.SeleniumUtils;
 
@@ -28,12 +27,12 @@ public class TicketsPage extends BasePage {
 	@FindBy(xpath = "//body//div[@role='dialog' and @aria-labelledby='dialog-title']//div/h1[contains(text(),'Login to your Big Neon account')]")
 	private WebElement loginDialogTitle;
 
-	public List<WebElement> addTicketTypes() {
+	private List<WebElement> addTicketTypes() {
 		return explicitWait(15, ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(
 				"//div/p[contains(text(),'Select tickets')]/following-sibling::div//div[./p[contains(text(),'+')]]")));
 	}
 
-	public List<WebElement> removeTicketTypes() {
+	private List<WebElement> removeTicketTypes() {
 		return explicitWait(15, ExpectedConditions.presenceOfAllElementsLocatedBy(By.xpath(
 				"//div/p[contains(text(),'Select tickets')]/following-sibling::div//div[./p[contains(text(),'-')]]")));
 	}
@@ -52,30 +51,16 @@ public class TicketsPage extends BasePage {
 		return explicitWait(15, ExpectedConditions.urlMatches("tickets$"));
 	}
 
-	public void ticketsPageStepsWithLogin(String mail, String password, int numberOfTickets) {
+	public void selectTicketNumberAndClickOnContinue(int numberOfTickets) {
 		addNumberOfTickets(numberOfTickets);
 		clickOnContinue();
-		clickOnAlreadyHaveAnAccount();
-		login(mail, password);
-		waitForTime(1500);
-		if (checkIfMoreEventsAreBeingPurchased()) {
-			Header header = new Header(driver);
-			header.clickOnShoppingBasket();
-		}
-	}
-
-	public void ticketsPageStepsWithOutLogin(int numberOfTickets) {
-		addNumberOfTickets(numberOfTickets);
-		clickOnContinue();
-		waitForTime(1000);
-
 	}
 
 	public String getUrlPath() throws URISyntaxException {
 		return SeleniumUtils.getUrlPath(driver);
 	}
 
-	public void addNumberOfTickets(int number) {
+	private void addNumberOfTickets(int number) {
 		for (int k = 0; k < number; k++) {
 			addTicketForLastType();
 		}
@@ -89,6 +74,8 @@ public class TicketsPage extends BasePage {
 		Integer currentQuantity = Integer.parseInt(text);
 		if (currentQuantity <= number && (currentQuantity - 1) > 0) {
 			number = currentQuantity - 1;
+		} else if (currentQuantity.equals(1)) {
+			number = 0;
 		}
 		for (int k = 0; k < number; k++) {
 			removeTicketForLastType();
@@ -104,7 +91,7 @@ public class TicketsPage extends BasePage {
 		}
 	}
 
-	public void addTicketForLastType() {
+	private void addTicketForLastType() {
 		if (verifyDifferentTicketTypesAreDisplayed()) {
 			List<WebElement> list = addTicketTypes();
 			incrementTicketNumber(list.get(list.size() - 1));
@@ -113,7 +100,7 @@ public class TicketsPage extends BasePage {
 		}
 	}
 
-	public boolean verifyDifferentTicketTypesAreDisplayed() {
+	private boolean verifyDifferentTicketTypesAreDisplayed() {
 		List<WebElement> list = addTicketTypes();
 		if (list.size() == 0) {
 			return false;
@@ -122,7 +109,7 @@ public class TicketsPage extends BasePage {
 		}
 	}
 
-	public void incrementTicketNumber(WebElement element) {
+	private void incrementTicketNumber(WebElement element) {
 		waitVisibilityAndClick(element);
 	}
 
@@ -145,14 +132,7 @@ public class TicketsPage extends BasePage {
 		loginPage.loginWithoutNavigate(username, password);
 	}
 
-	private boolean checkIfMoreEventsAreBeingPurchased() {
-		boolean retVal = isExplicitlyWaitVisible(5, message);
-		if (retVal) {
-			String msg = message.getText();
-			if (msg != null && !msg.isEmpty() && msg.contains(MsgConstants.MORE_THAN_ONE_EVENT_PURCHASE_ERROR)) {
-				retVal = true;
-			}
-		}
-		return retVal;
+	public boolean checkIfMoreEventsAreBeingPurchased() {
+		return isNotificationDisplayedWithMessage(MsgConstants.MORE_THAN_ONE_EVENT_PURCHASE_ERROR, 4);
 	}
 }

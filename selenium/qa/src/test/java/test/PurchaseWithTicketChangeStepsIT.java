@@ -8,53 +8,44 @@ import model.CreditCard;
 import model.Event;
 import model.Purchase;
 import model.User;
-import pages.EventsPage;
 import pages.LoginPage;
-import pages.TicketsConfirmationPage;
-import pages.TicketsPage;
-import pages.TicketsSuccesPage;
-import pages.components.Header;
 import pages.mailinator.MailinatorHomePage;
-import pages.mailinator.MailinatorInboxPage;
+import pages.mailinator.inbox.MailinatorInboxPage;
+import test.facade.EventStepsFacade;
+import test.facade.LoginStepsFacade;
 import utils.ProjectUtils;
 
 public class PurchaseWithTicketChangeStepsIT extends BaseSteps {
 
-	@Test(dataProvider = "purchase_data", priority = 8)
+	@Test(dataProvider = "purchase_data", priority = 8, retryAnalyzer = utils.RetryAnalizer.class)
 	private void purchaseStepsWithTicketChange(User user, Purchase purchase) throws Exception {
-		LoginPage loginPage = new LoginPage(driver);
+		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
+		EventStepsFacade eventFacade = new EventStepsFacade(driver);
+		
 		maximizeWindow();
-		loginPage.login(user);
-		Header header = new Header(driver);
 
-		header.searchEvents(purchase.getEvent().getArtistName());
-		EventsPage eventsPage = new EventsPage(driver);
-		eventsPage.eventsPageSteps(purchase.getEvent());
-
-		TicketsPage ticketsPage = new TicketsPage(driver);
-		ticketsPage.ticketsPageStepsWithOutLogin(purchase.getNumberOfTickets());
-
-		TicketsConfirmationPage confirmationPage = new TicketsConfirmationPage(driver);
-		confirmationPage.isAtConfirmationPage();
-		confirmationPage.clickOnChangeTicketLink();
-
-		ticketsPage.isAtPage();
-		ticketsPage.removeNumberOfTickets(purchase.getRemoveNumberOfTickets());
-		ticketsPage.clickOnContinue();
-
-		confirmationPage.ticketsConfirmationPageSteps(purchase.getCreditCard());
-
-		TicketsSuccesPage successPage = new TicketsSuccesPage(driver);
-		successPage.isAtPage();
-//		successPage.enterPhoneNumber(purchase.getPhoneNumber());
-
-		header.logOut();
+		LoginPage loginPage =loginFacade.givenUserIsLogedIn(user);
+		if(!eventFacade.whenShoppingBasketIsPresentAndClickOnBasket()) {
+			eventFacade.whenSearchingForEvent(purchase);
+			eventFacade.givenThatEventExist(purchase.getEvent(), user);
+			eventFacade.whenUserExecutesEventPagesSteps(purchase.getEvent());
+		}
+		eventFacade.whenUserSelectsNumberOfTicketsAndClicksOnContinue(purchase);
+		eventFacade.thenUserIsAtConfirmationPage();
+		eventFacade.whenUserChangesTicketOptions(purchase);
+		int ticketNumber = eventFacade.thenTicketQuantityIs();
+		eventFacade.whenUserEntersCreditCardDetailsAndClicksOnPurchase(purchase.getCreditCard());
+		
+		//then
+		Assert.assertTrue(eventFacade.thenUserIsAtTicketPurchaseSuccessPage());
+		loginPage.logOut();
 
 		MailinatorHomePage mailinatorHomePage = new MailinatorHomePage(driver);
 		MailinatorInboxPage inboxPage = mailinatorHomePage.goToUserInbox(user.getEmailAddress());
-		int ticketNumbers = purchase.getNumberOfTickets() - purchase.getRemoveNumberOfTickets();
-		boolean retVal = inboxPage.openMailAndCheckValidity("Next Step - Get Your Tickets", ticketNumbers,
+		boolean retVal = inboxPage.openMailAndCheckValidity("Next Step - Get Your Tickets", ticketNumber,
 				purchase.getEvent().getEventName());
+		
+		//then
 		Assert.assertTrue(retVal);
 
 	}

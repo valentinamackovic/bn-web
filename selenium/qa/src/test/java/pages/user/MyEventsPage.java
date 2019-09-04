@@ -1,8 +1,6 @@
 package pages.user;
 
 import java.util.List;
-import java.util.NoSuchElementException;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.NotFoundException;
 import org.openqa.selenium.WebDriver;
@@ -13,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import model.User;
 import pages.BasePage;
 import pages.components.UserSideNavBar;
+import pages.components.dialogs.TransferCancelDialog;
 import pages.components.user.EventComponent;
 import utils.Constants;
 import utils.SeleniumUtils;
@@ -46,7 +45,7 @@ public class MyEventsPage extends BasePage {
 
 	@FindBy(xpath = "//body//div[@role='dialog' and @aria-labelledby='dialog-title']//div//button[span[contains(text(),'Cancel')]]")
 	private WebElement cancelButton;
-
+	
 	public MyEventsPage(WebDriver driver) {
 		super(driver);
 		userSideNavBar = new UserSideNavBar(driver);
@@ -97,17 +96,13 @@ public class MyEventsPage extends BasePage {
 		return false;
 	}
 
-	public WebElement findEventByName(String eventName) {
-		return explicitWait(15, ExpectedConditions.visibilityOfElementLocated(
-				By.xpath("//body//main//div[div[div[div[p[text()='" + eventName + "']]]]]")));
+	private void clickOnEventViewMyTickets(WebElement eventElement) {
+		WebElement viewMyTicketsButton = SeleniumUtils.getChildElementFromParentLocatedBy(eventElement,
+				By.xpath(relativeViewMyTicketsLink), driver);
+		explicitWaitForVisibilityAndClickableWithClick(viewMyTicketsButton);
 	}
-
-	public EventComponent clickOnViewMyTicketOfEvent(WebElement eventParent) {
-		clickOnEventViewMyTickets(eventParent);
-		return getSelectedEvent();
-	}
-
-	public boolean isTicketInEvent(WebElement eventParent, String ticketNumber, String orderNumber) {
+	
+	private boolean isTicketInEvent(WebElement eventParent, String ticketNumber, String orderNumber) {
 		clickOnEventViewMyTickets(eventParent);
 		List<WebElement> list = getSelectedEventsTicketList();
 		for (WebElement openEvent : list) {
@@ -123,16 +118,9 @@ public class MyEventsPage extends BasePage {
 			}
 		}
 		return false;
-
 	}
 
-	private void clickOnEventViewMyTickets(WebElement eventElement) {
-		WebElement viewMyTicketsButton = SeleniumUtils.getChildElementFromParentLocatedBy(eventElement,
-				By.xpath(relativeViewMyTicketsLink), driver);
-		explicitWaitForVisibilityAndClickableWithClick(viewMyTicketsButton);
-	}
-
-	public String getEventName(WebElement event) {
+	private String getEventName(WebElement event) {
 		WebElement eventName = event.findElement(By.xpath(".//div/div/div/div/p[2]"));
 		return eventName.getText();
 	}
@@ -155,18 +143,19 @@ public class MyEventsPage extends BasePage {
 		return null;
 	}
 
-	public WebElement clickOnFirstOneViewMyTicketsButton() {
-		if (!isEventsPresent()) {
-			throw new NotFoundException("Upcoming events not found");
-		}
-		WebElement viewMyTicketsEl = listOfEvents.get(0).findElement(By.xpath(relativeViewMyTicketsLink));
-		explicitWaitForVisibilityAndClickableWithClick(viewMyTicketsEl);
-		return listOfEvents.get(0);
-	}
-
 	public void enterReceiversMail(User receiver) {
 		waitVisibilityAndSendKeys(emailOrPhoneInputField, receiver.getEmailAddress());
 		waitVisibilityAndClick(sendTicketsButton);
+	}
+	
+	public boolean isAtSelectedEventsPage() {
+		return explicitWait(10, ExpectedConditions.urlContains(Constants.getMyEventsBigNeon() + "?event_id"));
+	}
+	
+	public void confirmTransferTicketCancelation() {
+		TransferCancelDialog dialog = new TransferCancelDialog(driver);
+		dialog.clickOnContinueWithTransfer();
+		dialog.clickOnGotItButton();
 	}
 
 	private boolean isEventsPresent() {

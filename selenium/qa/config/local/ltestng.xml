@@ -11,7 +11,10 @@
       <class name="test.CreateEventStepsIT"/>
       <class name="test.PurchaseStepsIT"/>
       <class name="test.PurchaseWithTicketChangeStepsIT"/>
-      <class name="test.TransferTicketStepsIT"/>
+      <!-- <class name="test.TransferTicketStepsIT"/> -->
+      <class name="test.CancelEventStepsIT"/>
+      <class name="test.CreateEventWithAdditionalOptionsStepsIT"/>
+      <class name="test.CreateDraftEventStepsIT"/>
     </classes>
   </test>
 </suite>

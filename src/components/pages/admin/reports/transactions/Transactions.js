@@ -67,8 +67,6 @@ class Transactions extends Component {
 			paging: null,
 			isExportingCSV: false
 		};
-
-		this.currentDateParams = {};
 	}
 
 	componentDidMount() {
@@ -83,14 +81,20 @@ class Transactions extends Component {
 
 		const { eventName, eventId, organizationId } = this.props;
 
+		const { start_utc, end_utc, query = "" } = this.state;
+
+		const queryParams = {
+			organization_id: organizationId,
+			page: 0,
+			limit: UNLIMITED_LINE_LIMIT,
+			query,
+			event_id: eventId,
+			start_utc,
+			end_utc
+		};
+
 		Bigneon()
-			.reports.transactionDetails({
-				organization_id: organizationId,
-				page: 0,
-				limit: UNLIMITED_LINE_LIMIT,
-				query: "",
-				event_id: eventId
-			})
+			.reports.transactionDetails(queryParams)
 			.then(response => {
 				const { data } = response.data;
 				const items = formatItems(data);
@@ -230,64 +234,44 @@ class Transactions extends Component {
 			});
 	}
 
-	onSearch(searchQuery) {
-		const {
-			startDate = null,
-			endDate = null,
-			start_utc = null,
-			end_utc = null
-		} = this.currentDateParams;
+	changePage(page = urlPageParam()) {
+		this.setState({ page }, this.refreshData.bind(this));
+	}
 
-		this.refreshData(
-			{
-				start_utc,
-				end_utc,
-				startDate,
-				endDate
-			},
-			0,
-			LINE_LIMIT_PER_PAGE,
-			searchQuery
+	onSearch(searchQuery) {
+		this.setState({ searchQuery, page: 0 }, this.refreshData.bind(this));
+	}
+
+	updateDateRange({
+		start_utc = null,
+		end_utc = null,
+		startDate = null,
+		endDate = null
+	}) {
+		this.setState(
+			{ startDate, endDate, end_utc, start_utc, page: 0 },
+			this.refreshData.bind(this)
 		);
 	}
 
-	changePage(page = urlPageParam()) {
+	refreshData() {
 		const {
-			startDate = null,
-			endDate = null,
-			start_utc = null,
-			end_utc = null
-		} = this.currentDateParams;
-		this.refreshData({ start_utc, end_utc, startDate, endDate }, page);
-	}
-
-	refreshData(
-		dataParams = {
-			start_utc: null,
-			end_utc: null,
-			startDate: null,
-			endDate: null
-		},
-		page = 0,
-		limit = LINE_LIMIT_PER_PAGE,
-		searchQuery = ""
-	) {
-		const { startDate, endDate, end_utc } = dataParams;
-		let { start_utc } = dataParams;
-		this.currentDateParams = dataParams;
+			startDate,
+			endDate,
+			end_utc,
+			start_utc,
+			searchQuery = "",
+			page = 0
+		} = this.state;
 
 		const { eventId, organizationId, onLoad } = this.props;
-
-		if (searchQuery) {
-			start_utc = null;
-		}
 
 		let queryParams = {
 			organization_id: organizationId,
 			start_utc,
 			end_utc,
 			page,
-			limit,
+			limit: LINE_LIMIT_PER_PAGE,
 			query: searchQuery
 		};
 
@@ -505,7 +489,7 @@ class Transactions extends Component {
 				{currentOrgTimezone ? (
 					<ReportsDate
 						timezone={currentOrgTimezone}
-						onChange={this.refreshData.bind(this)}
+						onChange={this.updateDateRange.bind(this)}
 						defaultStartTimeBeforeNow={{ value: 1, unit: "M" }}
 						salesStart={salesStart}
 						onChangeButton

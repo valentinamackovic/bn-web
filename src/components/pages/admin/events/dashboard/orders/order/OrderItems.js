@@ -212,6 +212,7 @@ class OrderItems extends Component {
 			items.forEach((item, index) => {
 				if (selectedRefundOrderItem && selectedRefundOrderItem[index]) {
 					const { total_price_in_cents } = item;
+					//Subtract discount //TODO
 					refundAmountInCents += total_price_in_cents;
 				}
 			});

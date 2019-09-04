@@ -1,10 +1,15 @@
 package model;
 
-public class TicketType {
+import java.io.Serializable;
+
+public class TicketType implements Serializable{
 	
+	private static final long serialVersionUID = 4807652309876731369L;
 	private String ticketTypeName;
 	private String capacity;
 	private String price;
+	private AdditionalOptionsTicketType additionalOptions;
+	
 		
 	public TicketType(String ticketTypeName, String capacity, String price) {
 		super();
@@ -33,5 +38,14 @@ public class TicketType {
 	public void setPrice(String price) {
 		this.price = price;
 	}
+	public AdditionalOptionsTicketType getAdditionalOptions() {
+		return additionalOptions;
+	}
+	public void setAdditionalOptions(AdditionalOptionsTicketType additionalOptions) {
+		this.additionalOptions = additionalOptions;
+	}
+	
+	
+	
 	
 }

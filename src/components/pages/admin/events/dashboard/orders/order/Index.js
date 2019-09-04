@@ -37,15 +37,18 @@ class SingleOrder extends Component {
 	constructor(props) {
 		super(props);
 
-		this.eventId = this.props.match.params.eventId;
-		this.orderId = this.props.match.params.orderId;
-
-		this.state = {
+		this.defaultState = {
 			eventDetails: null,
 			order: null,
 			orderItems: null,
 			orderHistory: null,
 			showMobileTicketsView: false
+		};
+
+		this.state = {
+			...this.defaultState,
+			eventId: this.props.match.params.eventId,
+			orderId: this.props.match.params.orderId
 		};
 
 		this.refreshOrder = this.loadAll.bind(this);
@@ -56,6 +59,25 @@ class SingleOrder extends Component {
 		this.loadAll();
 	}
 
+	componentDidUpdate(prevProps, prevState, snapshot) {
+		//If the event ID or order ID changes, reload the data
+		const { eventId, orderId } = this.state;
+
+		if (
+			this.props.match.params.eventId !== eventId ||
+			this.props.match.params.orderId !== orderId
+		) {
+			this.setState(
+				{
+					...this.defaultState,
+					orderId: this.props.match.params.orderId,
+					eventId: this.props.match.params.eventId
+				},
+				this.loadAll.bind(this)
+			);
+		}
+	}
+
 	loadAll() {
 		this.loadEventDetails();
 		this.loadOrder();
@@ -64,8 +86,9 @@ class SingleOrder extends Component {
 	}
 
 	loadEventDetails() {
+		const { eventId } = this.state;
 		Bigneon()
-			.events.read({ id: this.eventId })
+			.events.read({ id: eventId })
 			.then(response => {
 				const { data } = response;
 
@@ -90,8 +113,10 @@ class SingleOrder extends Component {
 	}
 
 	loadOrder() {
+		const { orderId } = this.state;
+
 		Bigneon()
-			.orders.read({ id: this.orderId })
+			.orders.read({ id: orderId })
 			.then(response => {
 				const { data } = response;
 				const { date, is_box_office, items, user_id } = data;
@@ -130,8 +155,10 @@ class SingleOrder extends Component {
 	}
 
 	loadOrderItems() {
+		const { orderId } = this.state;
+
 		Bigneon()
-			.orders.details({ id: this.orderId })
+			.orders.details({ id: orderId })
 			.then(response => {
 				const { data } = response;
 
@@ -149,10 +176,11 @@ class SingleOrder extends Component {
 
 	loadOrderHistory() {
 		const { timezone } = this.props;
+		const { orderId } = this.state;
 
 		Bigneon()
 			.orders.activity({
-				id: this.orderId
+				id: orderId
 			})
 			.then(response => {
 				const { data } = response.data;
@@ -194,7 +222,8 @@ class SingleOrder extends Component {
 			orderItems,
 			eventDetails,
 			orderHistory,
-			showMobileTicketsView
+			showMobileTicketsView,
+			eventId
 		} = this.state;
 		const { classes, timezone, organizationId } = this.props;
 
@@ -226,7 +255,7 @@ class SingleOrder extends Component {
 
 		return (
 			<React.Fragment>
-				<BackLink to={`/admin/events/${this.eventId}/dashboard/orders/manage`}>
+				<BackLink to={`/admin/events/${eventId}/dashboard/orders/manage`}>
 					Back to sales
 				</BackLink>
 
@@ -267,7 +296,7 @@ class SingleOrder extends Component {
 
 						<Typography className={classes.heading}>Related orders</Typography>
 						<RelatedOrders
-							eventId={this.eventId}
+							eventId={eventId}
 							organizationId={organizationId}
 							timezone={timezone}
 							user={order.user}

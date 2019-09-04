@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import model.CreditCard;
 import pages.components.CreditCardDetailsFrame;
+import pages.components.user.TicketConfirmationDetails;
 import utils.SeleniumUtils;
 
 public class TicketsConfirmationPage extends BasePage {
@@ -67,16 +68,23 @@ public class TicketsConfirmationPage extends BasePage {
 		driver.switchTo().parentFrame();
 	}
 
-	public void clickOnPurchaseTicketButton() {
+	private void clickOnPurchaseTicketButton() {
 		waitVisibilityAndClick(purchaseTicketButton);
 		waitForTime(400);
 	}
 
-	public void confirmPaymentMethod(String method) {
+	private void confirmPaymentMethod(String method) {
 		if (method.equals("card")) {
 			if (isExplicitlyWaitVisible(5, paymentMethodCard)) {
 				paymentMethodCard.click();
 			}
 		}
+	}
+	
+	public Integer getTicketQuantity() {
+		TicketConfirmationDetails details = new TicketConfirmationDetails(driver);
+		String quantity =  details.getTicketQuantity();
+		Integer intQuantity = Integer.parseInt(quantity);
+		return intQuantity;
 	}
 }

@@ -1,9 +1,12 @@
 package model;
 
+import java.io.Serializable;
+
 import utils.ProjectUtils;
 
-public class User {
+public class User implements Serializable{
 	
+	private static final long serialVersionUID = 8184904779942132639L;
 	private String emailAddress;
 	private String pass;
 	private String passConfirm;
@@ -44,11 +47,8 @@ public class User {
 	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
-		sb.append(this.emailAddress + "; ");
-		sb.append(this.firstName +"; ");
-		sb.append(this.lastName + "; ");
-		sb.append(this.pass + "; ");
-		sb.append(this.passConfirm);
+		String[] fields = {this.emailAddress, this.firstName, this.lastName, this.pass, this.passConfirm};
+		ProjectUtils.appendFields(fields, sb);
 		return sb.toString();
 	}
 	
