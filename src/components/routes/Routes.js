@@ -98,6 +98,9 @@ const AdminEventDashboardExternalAccess = asyncComponent(() =>
 const AdminEventUpdate = asyncComponent(() =>
 	import("../pages/admin/events/EventUpdate")
 );
+const AdminEventUpdate_V2 = asyncComponent(() =>
+	import("../pages/admin/events/update/Index")
+);
 const AdminFanList = asyncComponent(() => import("../pages/admin/fans/Index"));
 const AdminFanDetails = asyncComponent(() =>
 	import("../pages/admin/fans/FanDetails")
@@ -462,6 +465,18 @@ class Routes extends Component {
 									exact
 									path="/admin/events/create"
 									component={AdminEventUpdate}
+									isAuthenticated={isAuthenticated}
+								/>
+								<PrivateRoute
+									exact
+									path="/admin/events/create_V2"
+									component={AdminEventUpdate_V2}
+									isAuthenticated={isAuthenticated}
+								/>
+								<PrivateRoute
+									exact
+									path="/admin/events/:event_id/edit_V2/:step"
+									component={AdminEventUpdate_V2}
 									isAuthenticated={isAuthenticated}
 								/>
 								<PrivateRoute

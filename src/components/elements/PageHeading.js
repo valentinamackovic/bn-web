@@ -28,6 +28,7 @@ const styles = theme => {
 			textTransform: "capitalize",
 			fontFamily: fontFamilyDemiBold,
 			fontSize: theme.typography.fontSize * 2.5,
+			marginTop: 3,
 			[theme.breakpoints.down("md")]: {
 				fontSize: theme.typography.fontSize * 2.2
 			},

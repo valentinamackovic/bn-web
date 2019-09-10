@@ -215,6 +215,18 @@ class EventsList extends Component {
 					}
 				];
 
+				if (user.isSuper) {
+					eventOptions.push({
+						text: "Edit event (development)",
+						disabled: eventEnded || !user.hasScope("event:write"),
+						onClick: () =>
+							this.props.history.push(
+								`/admin/events/${eventMenuSelected}/edit_V2/1`
+							),
+						MenuOptionIcon: EditIcon
+					});
+				}
+
 				const MenuButton = (
 					<div>
 						<IconButton
@@ -331,6 +343,14 @@ class EventsList extends Component {
 					>
 						{user.hasScope("event:write") ? (
 							<div className={classes.actionButtons}>
+								{user.isSuper ? (
+									<div style={{ textAlign: "center", paddingBottom: 10 }}>
+										<StyledLink underlined to={"/admin/events/create_V2"}>
+											New new event
+										</StyledLink>
+									</div>
+								) : null}
+
 								<Link to={"/admin/events/create"}>
 									<Button variant="callToAction">New event</Button>
 								</Link>

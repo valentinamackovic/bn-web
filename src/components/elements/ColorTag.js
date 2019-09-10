@@ -24,6 +24,15 @@ const styles = theme => ({
 		paddingTop: theme.spacing.unit,
 		paddingBottom: theme.spacing.unit / 2
 	},
+	large: {
+		paddingLeft: theme.spacing.unit * 3,
+		paddingRight: theme.spacing.unit * 3,
+		paddingTop: theme.spacing.unit,
+		paddingBottom: 2
+	},
+	rounded: {
+		borderRadius: 20
+	},
 	secondary: {
 		backgroundColor: "#FFE8F7",
 		color: secondaryHex
@@ -47,11 +56,14 @@ const styles = theme => ({
 		whiteSpace: "nowrap",
 		textOverflow: "ellipsis",
 		overflow: "hidden"
+	},
+	largeText: {
+		fontSize: theme.typography.fontSize * 1.2
 	}
 });
 
 const ColorTag = props => {
-	const { classes, children, style, variant, size } = props;
+	const { classes, children, style, variant, size, rounded } = props;
 
 	return (
 		<div
@@ -59,10 +71,18 @@ const ColorTag = props => {
 			className={classNames({
 				[classes.root]: true,
 				[classes[variant]]: true,
-				[classes[size]]: true
+				[classes[size]]: true,
+				[classes.rounded]: rounded
 			})}
 		>
-			<Typography className={classes.text}>{children}</Typography>
+			<Typography
+				className={classNames({
+					[classes.text]: true,
+					[classes.largeText]: size === "large"
+				})}
+			>
+				{children}
+			</Typography>
 		</div>
 	);
 };
@@ -70,7 +90,8 @@ const ColorTag = props => {
 ColorTag.defaultProps = {
 	style: {},
 	variant: "secondary",
-	size: "medium"
+	size: "medium",
+	rounded: false
 };
 
 ColorTag.propTypes = {
@@ -81,7 +102,8 @@ ColorTag.propTypes = {
 		PropTypes.array,
 		PropTypes.string
 	]).isRequired,
-	size: PropTypes.oneOf(["small", "medium"])
+	size: PropTypes.oneOf(["small", "medium", "large"]),
+	rounded: PropTypes.bool
 };
 
 export default withStyles(styles)(ColorTag);
