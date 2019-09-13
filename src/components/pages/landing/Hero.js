@@ -2,8 +2,11 @@ import React from "react";
 import { withStyles, Typography, Hidden } from "@material-ui/core";
 import classnames from "classnames";
 import { fontFamilyBold } from "../../../config/theme";
-import AppButton from "../../elements/AppButton";
 import servedImage from "../../../helpers/imagePathHelper";
+import RightUserMenu from "../../elements/header/RightUserMenu";
+import { observer } from "mobx-react";
+
+import SearchToolBarInput from "../../elements/header/SearchToolBarInput";
 
 const styles = theme => ({
 	root: {
@@ -29,6 +32,15 @@ const styles = theme => ({
 	},
 	text: {
 		color: "#FFFFFF"
+	},
+	toolBar: {
+		paddingRight: "8vw",
+		paddingLeft: "8vw",
+		paddingTop: "5vh",
+		display: "flex",
+		justifyContent: "space-between",
+		alignItems: "center",
+		height: theme.spacing.unit * 10
 	},
 	heading: {
 		fontSize: theme.typography.fontSize * 4,
@@ -68,68 +80,58 @@ const styles = theme => ({
 		[theme.breakpoints.down("xs")]: {
 			width: 300
 		}
+	},
+	logoImage: {
+		maxWidth: 140,
+		maxHeight: 43
 	}
 });
 
-const Hero = ({ classes }) => (
-	<div className={classes.root}>
-		<div className={classes.headingContainer}>
-			<Typography
-				className={classnames({
-					[classes.text]: true,
-					[classes.heading]: true
-				})}
-			>
-				The Future of Ticketing
-			</Typography>
-			<Typography
-				className={classnames({
-					[classes.text]: true,
-					[classes.subheading]: true
-				})}
-			>
-				Download the Big Neon app now to see your favorite live music
-			</Typography>
+const Hero = observer(props => {
+	const { history, classes } = props;
+
+	return (
+		<div className={classes.root}>
+			<div className={classes.toolBar}>
+				<img
+					alt="Header logo"
+					className={classes.logoImage}
+					src={servedImage("/images/logo-white.png")}
+				/>
+				<span className={classes.rightMenuOptions}>
+					<RightUserMenu history={history}/>
+				</span>
+			</div>
+			<div className={classes.headingContainer}>
+				<Typography
+					className={classnames({
+						[classes.text]: true,
+						[classes.heading]: true
+					})}
+				>
+					The Future of Ticketing
+				</Typography>
+
+				<div className={classes.appLinkContainer}>
+					<SearchToolBarInput history={history}/>
+				</div>
+			</div>
 			<div className={classes.appLinkContainer}>
-				<AppButton
-					size="small"
-					variant="ios"
-					color="white"
-					href={process.env.REACT_APP_STORE_IOS}
-					style={{
-						marginRight: 5
-					}}
-				>
-					iOS
-				</AppButton>
-				<AppButton
-					size="small"
-					variant="android"
-					color="white"
-					href={process.env.REACT_APP_STORE_ANDROID}
-					style={{
-						marginLeft: 5
-					}}
-				>
-					Android
-				</AppButton>
+				{/*<Hidden xsDown>*/}
+				{/*	<img*/}
+				{/*		className={classes.featureImage}*/}
+				{/*		src={servedImage("/images/iospreview-chopped.png")}*/}
+				{/*	/>*/}
+				{/*</Hidden>*/}
+				{/*<Hidden smUp>*/}
+				{/*	<img*/}
+				{/*		className={classes.featureImage}*/}
+				{/*		src={servedImage("/images/iospreview-chopped-mobile.png")}*/}
+				{/*	/>*/}
+				{/*</Hidden>*/}
 			</div>
 		</div>
-		<div className={classes.appLinkContainer}>
-			<Hidden xsDown>
-				<img
-					className={classes.featureImage}
-					src={servedImage("/images/iospreview-chopped.png")}
-				/>
-			</Hidden>
-			<Hidden smUp>
-				<img
-					className={classes.featureImage}
-					src={servedImage("/images/iospreview-chopped-mobile.png")}
-				/>
-			</Hidden>
-		</div>
-	</div>
-);
+	);
+});
 
 export default withStyles(styles)(Hero);

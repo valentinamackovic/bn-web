@@ -103,6 +103,7 @@ class Container extends React.Component {
 			showSideMenu,
 			includeContainerPadding,
 			useContainer,
+			isLanding,
 			isBoxOffice
 		} = layout;
 		const { classes, history, children } = this.props;
@@ -144,6 +145,8 @@ class Container extends React.Component {
 						history={history}
 						homeLink={homeLink}
 					/>
+				) : isLanding ? (
+					<div/>
 				) : (
 					<AppBar
 						handleDrawerToggle={this.handleDrawerToggle.bind(this)}
