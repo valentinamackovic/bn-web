@@ -5,8 +5,7 @@ import PropTypes from "prop-types";
 import eventUpdateStore from "../../../../../stores/event-update/eventUpdateStore";
 import Step1 from "./step1/Step1";
 import Step2 from "./step2/Step2";
-import Container from "./container/Container";
-import PageHeading from "../../../../elements/PageHeading";
+import Container from "./step1/components/Container";
 
 class EventUpdateIndex extends Component {
 	constructor(props) {
@@ -70,7 +69,7 @@ class EventUpdateIndex extends Component {
 
 		return (
 			<Provider eventUpdateStore={eventUpdateStore}>
-				<Container title={title} iconUrl={iconUrl}>
+				<Container title={title} iconUrl={iconUrl} step={stepNumber}>
 					{stepNumber === 1 ? <Step1/> : null}
 					{stepNumber === 2 ? <Step2/> : null}
 				</Container>

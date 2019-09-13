@@ -1,0 +1,404 @@
+import React, { Component } from "react";
+import PropTypes from "prop-types";
+import { withStyles } from "@material-ui/core/styles";
+import { inject, observer } from "mobx-react";
+import MenuItem from "@material-ui/core/MenuItem";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import ListItemText from "@material-ui/core/ListItemText";
+import { Hidden } from "@material-ui/core";
+
+import EventUpdate from "../../../../../../../stores/event-update/EventUpdate";
+import AutoCompleteGroup from "../../../../../../common/form/AutoCompleteGroup";
+import Loader from "../../../../../../elements/loaders/Loader";
+import Bigneon from "../../../../../../../helpers/bigneon";
+import notifications from "../../../../../../../stores/notifications";
+import user from "../../../../../../../stores/user";
+import servedImage from "../../../../../../../helpers/imagePathHelper";
+import Button from "../../../../../../elements/Button";
+import Card from "../../../../../../elements/Card";
+import ArtistCard from "./ArtistCard";
+
+const styles = theme => ({
+	root: {},
+	addArtistButtonContainer: {
+		marginTop: 20,
+		maxWidth: 240,
+
+		[theme.breakpoints.down("xs")]: {
+			maxWidth: "100%"
+		}
+	}
+});
+
+class Artists extends Component {
+	constructor(props) {
+		super(props);
+
+		this.state = {
+			availableArtists: null,
+			spotifyAvailableArtists: null,
+			spotifyArtists: {},
+			isSubmitting: false,
+			isSearching: false
+		};
+	}
+
+	componentDidMount() {
+		Bigneon()
+			.artists.index()
+			.then(response => {
+				const { data, paging } = response.data;
+				this.setState({ availableArtists: data });
+
+				setTimeout(() => {
+					this.addNewArtist(this.state.availableArtists[1].id);
+				}, 200);
+			})
+			.catch(error => {
+				console.error(error);
+				notifications.showFromErrorResponse({
+					defaultMessage: "Loading artists failed.",
+					variant: "error"
+				});
+			});
+	}
+
+	addNewArtist(id) {
+		const { spotifyArtists } = this.state;
+
+		if (spotifyArtists.hasOwnProperty(id)) {
+			//Add spotifyArtist
+			this.createNewArtist({ spotify_id: id });
+			return;
+		}
+
+		const { eventUpdateStore } = this.props;
+
+		eventUpdateStore.addArtist(id);
+
+		//TODO move this logic to the EventUpdate store
+		if (eventUpdateStore.artists.length === 1) {
+			const { availableArtists } = this.state;
+			const selectedArtist = availableArtists.find(a => a.id === id);
+			if (selectedArtist && selectedArtist.image_url) {
+				if (!eventUpdateStore.eventDetails.promoImageUrl) {
+					//Assume the promo image is the headliner artist
+					eventUpdateStore.updateEvent({
+						promoImageUrl: selectedArtist.image_url
+					});
+				}
+
+				//If here's no event name yet, assume the event name to be the headlining artist
+				if (!eventUpdateStore.eventDetails.name) {
+					eventUpdateStore.updateEvent({ name: selectedArtist.name });
+				}
+			}
+		}
+	}
+
+	onDelete(index) {
+		const { eventUpdateStore } = this.props;
+
+		const { eventDetails, artists } = eventUpdateStore;
+		const { availableArtists } = this.state;
+		const id = artists[index].id;
+		const selectedArtist = availableArtists.find(a => a.id === id);
+		const currentEventPromoUrl = eventDetails.promoImageUrl || "";
+
+		//TODO move this logic to the EventUpdate store
+		//If the event promo image was set by this artist, remove it
+		if (currentEventPromoUrl === selectedArtist.image_url) {
+			eventUpdateStore.updateEvent({
+				promoImageUrl: ""
+			});
+		}
+
+		eventUpdateStore.removeArtist(index);
+	}
+
+	createNewArtist(nameOrObj) {
+		//TODO make a creatingArtist state var to show it's being done so the user doesn't keep trying
+		const defaultNewArtist = {
+			bio: "",
+			youtube_video_urls: [],
+			organization_id: user.currentOrganizationId
+		};
+		if (typeof nameOrObj === "string") {
+			nameOrObj = {
+				name: nameOrObj
+			};
+		}
+		const artistDetails = {
+			...defaultNewArtist,
+			...nameOrObj
+		}; //TODO remove youtube_video_urls when it's not needed
+
+		Bigneon()
+			.artists.create(artistDetails)
+			.then(response => {
+				const { id } = response.data;
+				//Once inserted we need it in availableArtists right away
+				this.setState(({ availableArtists }) => {
+					availableArtists.push(response.data);
+					return { availableArtists };
+				});
+
+				//Add the
+				this.addNewArtist(id);
+			})
+			.catch(error => {
+				console.error(error);
+				this.setState({ isSubmitting: false });
+
+				notifications.showFromErrorResponse({
+					defaultMessage: "Creating new artist failed.",
+					error
+				});
+
+				this.setState({ isSubmitting: false });
+			});
+	}
+
+	search(searchName) {
+		this.setState({ isSearching: true });
+		clearTimeout(this.debounceSearch);
+		if (!searchName.trim()) {
+			return;
+		}
+
+		this.debounceSearch = setTimeout(async () => {
+			try {
+				let results = await Bigneon().artists.search({
+					q: searchName,
+					spotify: 1
+				});
+				results = results.data.data;
+				const spotifyArtists = {};
+				results
+					.filter(artist => !artist.id && artist.spotify_id)
+					.forEach(artist => {
+						spotifyArtists[artist.spotify_id] = true;
+					});
+				this.setState({
+					isSearching: false,
+					spotifyAvailableArtists: results,
+					spotifyArtists
+				});
+			} catch (e) {
+				this.setState({ isSearching: false });
+				console.error(e);
+			}
+		}, 500);
+	}
+
+	renderSelectOption(props) {
+		const id = props.value;
+		const { spotifyArtists, availableArtists } = this.state;
+
+		let icon;
+		if (spotifyArtists.hasOwnProperty(id)) {
+			icon = (
+				<img
+					alt="Spotify"
+					style={{ width: 20, height: 20 }}
+					src={servedImage("/images/spotify.png")}
+				/>
+			);
+		} else if (availableArtists.find(a => a.id === id)) {
+			icon = (
+				<img
+					alt="Big Neon"
+					style={{ width: 20, height: 20 }}
+					src={servedImage("/images/bn-logo.png")}
+				/>
+			);
+		} else {
+			//Assume it's the create menu item
+			icon = (
+				<img
+					alt="Create"
+					style={{ width: 14, height: 14 }}
+					src={servedImage("/icons/add-active.svg")}
+				/>
+			);
+		}
+
+		return (
+			<MenuItem
+				buttonRef={props.innerRef}
+				selected={props.isFocused}
+				component="div"
+				style={{
+					fontWeight: props.isSelected ? 500 : 400
+				}}
+				{...props.innerProps}
+			>
+				{icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+				<ListItemText inset primary={props.children}/>
+			</MenuItem>
+		);
+	}
+
+	renderAddNewArtist() {
+		//Pass through the currently selected artist if one has been selected
+		const { eventUpdateStore } = this.props;
+
+		const {
+			availableArtists,
+			spotifyAvailableArtists,
+			isSearching
+		} = this.state;
+		if (availableArtists === null) {
+			return <Loader>Loading artists...</Loader>;
+		}
+
+		const artistsObj = {};
+		availableArtists.forEach(artist => {
+			const id = artist.id || artist.spotify_id;
+			artistsObj[id] = artist.name;
+		});
+
+		if (spotifyAvailableArtists) {
+			spotifyAvailableArtists.forEach(artist => {
+				const id = artist.id || artist.spotify_id;
+				artistsObj[id] = artist.name;
+			});
+		}
+
+		const { artists } = eventUpdateStore;
+
+		const isHeadline = artists && artists.length < 1;
+
+		return (
+			<AutoCompleteGroup
+				value={""}
+				items={artistsObj}
+				name={"artists"}
+				label={`Add your ${isHeadline ? "headline act*" : "supporting act"}`}
+				onInputChange={this.search.bind(this)}
+				placeholder={"eg. Childish Gambino"}
+				onChange={artistId => {
+					if (artistId) {
+						this.addNewArtist(artistId);
+						this.setState({ showArtistSelect: false });
+					}
+				}}
+				formatCreateLabel={label =>
+					isSearching
+						? `Searching artists for ${label} - Click here to skip search and create`
+						: `Create a new artist "${label}"`
+				}
+				onCreateOption={this.createNewArtist.bind(this)}
+				renderSelectOption={this.renderSelectOption.bind(this)}
+			/>
+		);
+	}
+
+	renderAddArtistButton() {
+		const { showArtistSelect } = this.state;
+		const { eventUpdateStore, classes } = this.props;
+		const { artists } = eventUpdateStore;
+
+		const label = "Add artist";
+
+		if (artists.length > 0 && !showArtistSelect) {
+			return (
+				<div className={classes.addArtistButtonContainer}>
+					<Button
+						onClick={() => this.setState({ showArtistSelect: true })}
+						variant="additional"
+						style={{ width: "100%" }}
+					>
+						{label}
+					</Button>
+				</div>
+			);
+		}
+
+		return null;
+	}
+
+	render() {
+		const { classes, errors, eventUpdateStore } = this.props;
+		const { availableArtists, showArtistSelect } = this.state;
+		const { artists } = eventUpdateStore;
+
+		return (
+			<div>
+				{artists.map((eventArtist, index) => {
+					const { id, setTime, importance } = eventArtist;
+
+					let name = "Loading..."; // If we haven't loaded all the available artists we won't have this guys name yet
+					let thumb_image_url = "";
+					let socialAccounts = {};
+					if (availableArtists) {
+						const artist = availableArtists.find(artist => artist.id === id);
+
+						if (artist) {
+							name = artist.name;
+							thumb_image_url = artist.thumb_image_url || artist.image_url;
+							const {
+								bandcamp_username,
+								facebook_username,
+								instagram_username,
+								snapchat_username,
+								soundcloud_username,
+								website_url
+							} = artist;
+							socialAccounts = {
+								bandcamp: bandcamp_username,
+								facebook: facebook_username,
+								instagram: instagram_username,
+								snapchat: snapchat_username,
+								soundcloud: soundcloud_username,
+								website: website_url
+							};
+						}
+					}
+
+					return (
+						<Card key={index} variant={"subCard"}>
+							<ArtistCard
+								socialAccounts={socialAccounts}
+								title={name}
+								setTime={setTime}
+								importance={importance}
+								onChangeSetTime={setTime => {
+									eventUpdateStore.changeArtistSetTime(index, setTime);
+								}}
+								onChangeImportance={currentImportance => {
+									eventUpdateStore.changeArtistImportance(
+										index,
+										currentImportance ? 0 : 1
+									);
+								}}
+								imgUrl={
+									thumb_image_url || "/images/profile-pic-placeholder.png"
+								}
+								error={errors ? errors[index] : null}
+								onDelete={() => this.onDelete(index)}
+							/>
+						</Card>
+					);
+				})}
+
+				<div className={classes.paddedContent}>
+					{showArtistSelect || artists.length === 0
+						? this.renderAddNewArtist()
+						: null}
+
+					{this.renderAddArtistButton()}
+				</div>
+			</div>
+		);
+	}
+}
+
+Artists.propTypes = {
+	classes: PropTypes.object.isRequired,
+	eventUpdateStore: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(
+	inject("eventUpdateStore")(observer(Artists))
+);

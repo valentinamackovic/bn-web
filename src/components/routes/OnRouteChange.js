@@ -21,7 +21,6 @@ const removeContainerRoutes = [
 	"/mobile_stripe_token_auth",
 	"/exports"
 ];
-
 const hideBottomMobileCartBar = [
 	"/tickets",
 	"/tickets/confirmation",
