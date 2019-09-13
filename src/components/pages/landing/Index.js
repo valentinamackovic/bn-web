@@ -30,10 +30,14 @@ class Home extends Component {
 	}
 
 	render() {
+		const { history } = this.props;
 		return (
 			<div>
 				<Meta/>
-				<LandingAppBar isAuthenticated={user.isAuthenticated}/>
+				<LandingAppBar
+					isAuthenticated={user.isAuthenticated}
+					history={history}
+				/>
 				<Hero/>
 				<Grid container justify="center">
 					<Grid item xs={11} sm={11} lg={10}>
