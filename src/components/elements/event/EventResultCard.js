@@ -32,14 +32,13 @@ const styles = theme => ({
 	name: {
 		color: "#000000",
 		fontFamily: fontFamilyDemiBold,
-		fontSize: theme.typography.fontSize * 1.2,
-		lineHeight: 1
+		fontSize: theme.typography.fontSize * 1.3,
+		lineHeight: 1.2
 	},
 	detailsContent: {
-		height: 65,
+		height: 105,
 		display: "flex",
-		paddingLeft: theme.spacing.unit * 2,
-		paddingRight: theme.spacing.unit * 2
+		padding: theme.spacing.unit * 2
 	},
 	singleDetail: {
 		flex: 1,
@@ -48,7 +47,7 @@ const styles = theme => ({
 		justifyContent: "center"
 	},
 	label: {
-		fontSize: theme.typography.fontSize * 0.75,
+		fontSize: theme.typography.fontSize,
 		textTransform: "uppercase",
 		color: "#cccfd9"
 	},
@@ -56,7 +55,8 @@ const styles = theme => ({
 		color: secondaryHex
 	},
 	value: {
-		fontSize: theme.typography.fontSize * 0.8
+		fontSize: theme.typography.fontSize,
+		color: "#9DA3B4"
 	},
 	priceTag: {
 		backgroundColor: "#fff4fb",
@@ -99,6 +99,7 @@ const EventResultCard = ({
 	name,
 	promo_image_url,
 	event_start,
+	address,
 	door_time,
 	min_ticket_price,
 	max_ticket_price,
@@ -132,12 +133,13 @@ const EventResultCard = ({
 				<div className={classes.detailsContent}>
 					<div className={classes.singleDetail} style={{ textAlign: "left" }}>
 						<Typography className={classes.value}>
-							{displayEventStartDate}
+							<span className={classes.date}>{displayEventStartDate}</span>{" "}
+							&middot; {displayShowTime}
 						</Typography>
-						<Typography className={classes.value}>{displayShowTime}</Typography>
 						<Typography className={classes.name}>{name}</Typography>
+						<Typography className={classes.value}>@ {address}</Typography>
 					</div>
-					<div className={classes.singleDetail} style={{ textAlign: "right" }}>
+					<div style={{ textAlign: "right" }}>
 						<PriceTag
 							min={min_ticket_price}
 							max={max_ticket_price}

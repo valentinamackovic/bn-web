@@ -17,7 +17,7 @@ const styles = theme => ({
 		backgroundImage: "url(/images/homepage-bg.png)",
 		display: "flex",
 		flexDirection: "column",
-		minHeight: 800,
+		minHeight: 700,
 		[theme.breakpoints.down("sm")]: {
 			flexDirection: "column"
 		}
@@ -71,6 +71,21 @@ const styles = theme => ({
 			justifyContent: "flex-center"
 		}
 	},
+	searchContainer: {
+		borderRadius: "10px",
+		width: "33vw",
+		borderColor: "#fff",
+		borderStyle: "solid",
+		display: "flex",
+		backgroundColor: "#fff",
+		padding: theme.spacing.unit * 2,
+		justifyContent: "flex-start",
+		alignItems: "center",
+		marginTop: 25,
+		[theme.breakpoints.up("sm")]: {
+			justifyContent: "flex-center"
+		}
+	},
 	featureImage: {
 		flex: 0,
 		width: 380,
@@ -89,7 +104,6 @@ const styles = theme => ({
 
 const Hero = observer(props => {
 	const { history, classes } = props;
-
 	return (
 		<div className={classes.root}>
 			<div className={classes.toolBar}>
@@ -99,7 +113,7 @@ const Hero = observer(props => {
 					src={servedImage("/images/logo-white.png")}
 				/>
 				<span className={classes.rightMenuOptions}>
-					<RightUserMenu history={history}/>
+					<RightUserMenu whiteText={true} history={history}/>
 				</span>
 			</div>
 			<div className={classes.headingContainer}>
@@ -112,7 +126,7 @@ const Hero = observer(props => {
 					The Future of Ticketing
 				</Typography>
 
-				<div className={classes.appLinkContainer}>
+				<div className={classes.searchContainer}>
 					<SearchToolBarInput history={history}/>
 				</div>
 			</div>

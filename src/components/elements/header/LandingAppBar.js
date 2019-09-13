@@ -161,13 +161,7 @@ class LandingAppBar extends Component {
 }
 
 LandingAppBar.propTypes = {
-	classes: PropTypes.object.isRequired,
-	ctaButton: PropTypes.element.isRequired,
-	isAuthenticated: PropTypes.oneOf([true, false, null]),
-	name: PropTypes.string.isRequired,
-	venue: PropTypes.object.isRequired,
-	event_start: PropTypes.string.isRequired,
-	door_time: PropTypes.string.isRequired
+	isAuthenticated: PropTypes.oneOf([true, false, null])
 };
 
 export default withStyles(styles)(LandingAppBar);

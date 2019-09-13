@@ -38,7 +38,7 @@ class Home extends Component {
 					isAuthenticated={user.isAuthenticated}
 					history={history}
 				/>
-				<Hero/>
+				<Hero history={history}/>
 				<Grid container justify="center">
 					<Grid item xs={11} sm={11} lg={10}>
 						<Results/>
