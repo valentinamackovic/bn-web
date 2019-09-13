@@ -11,7 +11,7 @@ const styles = theme => ({
 		backgroundSize: "cover",
 		backgroundPosition: "center",
 		backgroundColor: "#19081e",
-		backgroundImage: "url(/images/intro-background-dark.png)",
+		backgroundImage: "url(/images/homepage-bg.png)",
 		display: "flex",
 		flexDirection: "column",
 		minHeight: 800,
