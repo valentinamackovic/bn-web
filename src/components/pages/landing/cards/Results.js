@@ -90,7 +90,8 @@ const Results = observer(props => {
 
 	return (
 		<div className={classes.root}>
-			<ResultsRegionFilter/>
+			{/*<ResultsRegionFilter/>*/}
+			<Typography className={classes.Heading}>Upcoming events</Typography>
 
 			{hasResults === true ? <EventsList events={events}/> : null}
 

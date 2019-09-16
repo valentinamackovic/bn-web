@@ -17,9 +17,10 @@ const styles = theme => ({
 		backgroundImage: "url(/images/homepage-bg.png)",
 		display: "flex",
 		flexDirection: "column",
-		minHeight: 700,
+		minHeight: "60vh",
 		[theme.breakpoints.down("sm")]: {
-			flexDirection: "column"
+			flexDirection: "column",
+			minHeight: "40vh"
 		}
 	},
 	headingContainer: {
@@ -55,6 +56,13 @@ const styles = theme => ({
 		[theme.breakpoints.down("sm")]: {
 			fontSize: theme.typography.fontSize * 1.4
 		}
+	},
+	iconHolder: {
+		display: "flex",
+		width: "150px",
+		justifyContent: "space-between",
+		alignItems: "flex-start",
+		paddingBottom: theme.spacing.unit
 	},
 	availableOn: {
 		fontSize: theme.typography.fontSize * 0.9,
@@ -96,6 +104,9 @@ const styles = theme => ({
 			width: 300
 		}
 	},
+	iconImage: {
+		maxHeight: "21px"
+	},
 	logoImage: {
 		maxWidth: 140,
 		maxHeight: 43
@@ -131,18 +142,35 @@ const Hero = observer(props => {
 				</div>
 			</div>
 			<div className={classes.appLinkContainer}>
-				{/*<Hidden xsDown>*/}
-				{/*	<img*/}
-				{/*		className={classes.featureImage}*/}
-				{/*		src={servedImage("/images/iospreview-chopped.png")}*/}
-				{/*	/>*/}
-				{/*</Hidden>*/}
-				{/*<Hidden smUp>*/}
-				{/*	<img*/}
-				{/*		className={classes.featureImage}*/}
-				{/*		src={servedImage("/images/iospreview-chopped-mobile.png")}*/}
-				{/*	/>*/}
-				{/*</Hidden>*/}
+				<Hidden xsDown>
+					<div className={classes.iconHolder}>
+						<Typography
+							className={classnames({
+								[classes.text]: true
+							})}
+						>
+							Available on:&nbsp;
+						</Typography>
+						<a
+							href="https://play.google.com/store/apps/details?id=com.bigneon.mobile"
+							target="_blank"
+						>
+							<img
+								className={classes.iconImage}
+								src={servedImage("/images/avail-android-logo.svg")}
+							/>
+						</a>
+						<a
+							href="https://apps.apple.com/us/app/big-neon/id1445600728"
+							target="_blank"
+						>
+							<img
+								className={classes.iconImage}
+								src={servedImage("/images/avail-apple.svg")}
+							/>
+						</a>
+					</div>
+				</Hidden>
 			</div>
 		</div>
 	);

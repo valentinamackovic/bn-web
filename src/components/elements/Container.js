@@ -23,6 +23,7 @@ import BoxOfficeAppBar from "./header/BoxOfficeAppBar";
 import Footer from "./footers/FooterOne";
 import CaptureMissingEmail from "../pages/authentication/social/FacebookButton";
 import CaptureMissingEmailDialog from "../pages/authentication/CaptureMissingEmailDialog";
+import LandingFooter from "./footers/LandingFooter";
 
 const drawerWidth = 240;
 
@@ -235,7 +236,7 @@ class Container extends React.Component {
 						<Notification/>
 
 						{layout.showFooter ? (
-							<Footer/>
+							<LandingFooter/>
 						) : (
 							<div className={classes.footerPlaceholder}/>
 						)}
