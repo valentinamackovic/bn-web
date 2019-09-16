@@ -147,7 +147,13 @@ class Container extends React.Component {
 						homeLink={homeLink}
 					/>
 				) : isLanding ? (
-					<div/>
+					<Hidden smUp>
+						<AppBar
+							handleDrawerToggle={this.handleDrawerToggle.bind(this)}
+							history={history}
+							homeLink={homeLink}
+						/>
+					</Hidden>
 				) : (
 					<AppBar
 						handleDrawerToggle={this.handleDrawerToggle.bind(this)}

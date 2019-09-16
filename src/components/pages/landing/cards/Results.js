@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { withStyles, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-
+import { fontFamilyBebas } from "../../../../config/theme";
 import ResultsRegionFilter from "./ResultsRegionFilter";
 import eventResults from "../../../../stores/eventResults";
 import EventResultCard from "../../../elements/event/EventResultCard";
@@ -31,6 +31,21 @@ const styles = theme => ({
 	},
 	noResultText: {
 		marginBottom: theme.spacing.unit * 2
+	},
+	eventHeading: {
+		textAlign: "center",
+		fontSize: theme.typography.fontSize * 1.8,
+		letterSpacing: "4px",
+		fontFamily: fontFamilyBebas,
+		paddingTop: theme.spacing.unit * 4,
+		paddingBottom: theme.spacing.unit * 4,
+
+		[theme.breakpoints.down("sm")]: {
+			paddingTop: theme.spacing.unit * 2,
+			paddingBottom: theme.spacing.unit * 2,
+			fontSize: theme.typography.fontSize * 1.4,
+			letterSpacing: "3px"
+		}
 	}
 });
 
@@ -91,7 +106,7 @@ const Results = observer(props => {
 	return (
 		<div className={classes.root}>
 			{/*<ResultsRegionFilter/>*/}
-			<Typography className={classes.Heading}>Upcoming events</Typography>
+			<Typography className={classes.eventHeading}>Upcoming events</Typography>
 
 			{hasResults === true ? <EventsList events={events}/> : null}
 

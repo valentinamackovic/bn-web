@@ -36,6 +36,8 @@ if (REACT_APP_SUPPORT_URL) {
 
 const privacyPolicyLink = `${rootUrl}/privacy.html`;
 const termsLink = `${rootUrl}/terms.html`;
+const fbLink = `https://www.facebook.com/Big-Neon-572473456442270/`;
+const instaLink = `https://www.instagram.com/big_neon/`;
 
 const styles = theme => ({
 	root: {
@@ -73,15 +75,17 @@ const styles = theme => ({
 			width: "100%",
 			display: "flex",
 			flexDirection: "column",
-			alignItems: "center"
+			alignItems: "flex-start"
 		}
 	},
 	copyrightSpan: {
-		display: "flex",
-		width: "100%",
-		flexDirection: "row",
-		alignItems: "center",
-		justifyContent: "space-between"
+		[theme.breakpoints.down("sm")]: {
+			display: "flex",
+			width: "100%",
+			flexDirection: "row",
+			alignItems: "center",
+			justifyContent: "space-between"
+		}
 	},
 	smLinks: {
 		fontSize: theme.typography.fontSize * 0.9,
@@ -215,6 +219,8 @@ const LandingFooter = props => {
 								>
 									Instagram
 								</a>
+							</Typography>
+							<Typography className={classes.smLinks}>
 								<a
 									className={classes.termsLink}
 									href={privacyPolicyLink}
@@ -230,7 +236,7 @@ const LandingFooter = props => {
 					<div className={classes.copyrightContainer}>
 						<div className={classes.content}>
 							<Typography className={classes.copyright}>
-								<span>
+								<span className={classes.copyrightSpan}>
 									<a
 										className={classes.termsLink}
 										href={privacyPolicyLink}
@@ -252,14 +258,14 @@ const LandingFooter = props => {
 								<Typography className={classes.smLinks}>
 									<a
 										className={classes.termsLink}
-										href={termsLink}
+										href={instaLink}
 										target="_blank"
 									>
 										Instagram
 									</a>
 									<a
 										className={classes.termsLink}
-										href={privacyPolicyLink}
+										href={fbLink}
 										target="_blank"
 									>
 										Facebook

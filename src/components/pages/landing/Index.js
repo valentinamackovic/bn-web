@@ -8,6 +8,7 @@ import Meta from "./Meta";
 import getUrlParam from "../../../helpers/getUrlParam";
 import LandingAppBar from "../../elements/header/LandingAppBar";
 import user from "../../../stores/user";
+import Hidden from "@material-ui/core/es/Hidden/Hidden";
 
 class Home extends Component {
 	constructor(props) {
@@ -34,10 +35,13 @@ class Home extends Component {
 		return (
 			<div>
 				<Meta/>
-				<LandingAppBar
-					isAuthenticated={user.isAuthenticated}
-					history={history}
-				/>
+				<Hidden smDown>
+					<LandingAppBar
+						isAuthenticated={user.isAuthenticated}
+						history={history}
+					/>
+				</Hidden>
+
 				<Hero history={history}/>
 				<Grid container justify="center">
 					<Grid item xs={11} sm={11} lg={10}>

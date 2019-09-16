@@ -47,7 +47,9 @@ const styles = theme => ({
 		fontSize: theme.typography.fontSize * 4,
 		fontFamily: fontFamilyBold,
 		[theme.breakpoints.down("sm")]: {
-			fontSize: theme.typography.fontSize * 2.9
+			fontSize: theme.typography.fontSize * 2.9,
+			paddingLeft: theme.spacing.unit * 3,
+			paddingRight: theme.spacing.unit * 3
 		}
 	},
 	subheading: {
@@ -110,6 +112,11 @@ const styles = theme => ({
 	logoImage: {
 		maxWidth: 140,
 		maxHeight: 43
+	},
+	downloadBtn: {
+		maxWidth: 128,
+		marginTop: theme.spacing.unit * 2,
+		maxHeight: 38
 	}
 });
 
@@ -117,16 +124,18 @@ const Hero = observer(props => {
 	const { history, classes } = props;
 	return (
 		<div className={classes.root}>
-			<div className={classes.toolBar}>
-				<img
-					alt="Header logo"
-					className={classes.logoImage}
-					src={servedImage("/images/logo-white.png")}
-				/>
-				<span className={classes.rightMenuOptions}>
-					<RightUserMenu whiteText={true} history={history}/>
-				</span>
-			</div>
+			<Hidden smDown>
+				<div className={classes.toolBar}>
+					<img
+						alt="Header logo"
+						className={classes.logoImage}
+						src={servedImage("/images/logo-white.png")}
+					/>
+					<span className={classes.rightMenuOptions}>
+						<RightUserMenu whiteText={true} history={history}/>
+					</span>
+				</div>
+			</Hidden>
 			<div className={classes.headingContainer}>
 				<Typography
 					className={classnames({
@@ -136,11 +145,24 @@ const Hero = observer(props => {
 				>
 					The Future of Ticketing
 				</Typography>
-
-				<div className={classes.searchContainer}>
-					<SearchToolBarInput history={history}/>
-				</div>
+				<Hidden smDown>
+					<div className={classes.searchContainer}>
+						<SearchToolBarInput history={history}/>
+					</div>
+				</Hidden>
+				<Hidden smUp>
+					<a
+						href="https://play.google.com/store/apps/details?id=com.bigneon.mobile"
+						target="_blank"
+					>
+						<img
+							className={classes.downloadBtn}
+							src={servedImage("/images/appstore-apple.png")}
+						/>
+					</a>
+				</Hidden>
 			</div>
+
 			<div className={classes.appLinkContainer}>
 				<Hidden xsDown>
 					<div className={classes.iconHolder}>
