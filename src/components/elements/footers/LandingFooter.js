@@ -11,6 +11,7 @@ import AppButton from "../AppButton";
 import servedImage from "../../../helpers/imagePathHelper";
 import Grid from "@material-ui/core/Grid";
 import Results from "../../pages/landing/cards/Results";
+import Hidden from "@material-ui/core/es/Hidden/Hidden";
 
 //TODO change external links
 const rootUrl = "";
@@ -49,13 +50,42 @@ const styles = theme => ({
 		width: "100%",
 		maxWidth: 1200,
 		paddingLeft: theme.spacing.unit * 2,
-		paddingRight: theme.spacing.unit * 2
+		paddingRight: theme.spacing.unit * 2,
+		display: "flex",
+
+		[theme.breakpoints.down("sm")]: {
+			flexDirection: "column",
+			alignItems: "flex-start"
+		},
+		justifyContent: "space-between"
 	},
 	copyrightContainer: {
-		paddingBottom: theme.spacing.unit * 2
+		justifyContent: "center",
+		display: "flex",
+		borderTop: "1px solid #9DA3B4;",
+		paddingBottom: theme.spacing.unit * 3,
+		paddingTop: theme.spacing.unit * 3,
+		alignItems: "center"
 	},
 	copyright: {
-		fontSize: theme.typography.fontSize * 0.7
+		fontSize: theme.typography.fontSize * 0.9,
+		[theme.breakpoints.down("sm")]: {
+			width: "100%",
+			display: "flex",
+			flexDirection: "column",
+			alignItems: "center"
+		}
+	},
+	copyrightSpan: {
+		display: "flex",
+		width: "100%",
+		flexDirection: "row",
+		alignItems: "center",
+		justifyContent: "space-between"
+	},
+	smLinks: {
+		fontSize: theme.typography.fontSize * 0.9,
+		textTransform: "uppercase"
 	},
 	appLinksContainers: {
 		display: "flex",
@@ -72,7 +102,10 @@ const styles = theme => ({
 		paddingBottom: theme.spacing.unit * 2,
 
 		[theme.breakpoints.down("sm")]: {
-			flexDirection: "column"
+			paddingBottom: theme.spacing.unit,
+			paddingTop: theme.spacing.unit * 3,
+			flexDirection: "column",
+			alignItems: "flex-start"
 		}
 	},
 	linkContainer: {
@@ -83,12 +116,15 @@ const styles = theme => ({
 	link: {
 		color: "#3C383F",
 		fontFamily: fontFamilyDemiBold,
-		marginRight: theme.spacing.unit,
-		marginLeft: theme.spacing.unit
+		marginRight: theme.spacing.unit
 	},
-	logoContainer: {
+	containerPadding: {
 		paddingTop: theme.spacing.unit * 3,
-		paddingBottom: theme.spacing.unit
+		paddingBottom: theme.spacing.unit,
+		[theme.breakpoints.down("sm")]: {
+			paddingTop: theme.spacing.unit * 2,
+			paddingBottom: 0
+		}
 	},
 	logo: {
 		height: 50,
@@ -96,12 +132,22 @@ const styles = theme => ({
 	},
 	termsLink: {
 		color: "#3C383F",
-		marginRight: theme.spacing.unit,
-		marginLeft: theme.spacing.unit
+		marginRight: theme.spacing.unit * 3,
+		fontFamily: fontFamilyDemiBold
 	},
 	bottomBorder: {
 		height: 5,
 		backgroundImage: callToActionBackground
+	},
+	smallImage: {
+		maxWidth: 22,
+		maxHeight: 27
+	},
+	appBtnCaption: {
+		fontSize: theme.typography.fontSize * 1.2,
+		lineHeight: "27px",
+		fontFamily: fontFamilyDemiBold,
+		paddingBottom: theme.spacing.unit
 	}
 });
 
@@ -111,59 +157,116 @@ const LandingFooter = props => {
 	return (
 		<div className={classes.root}>
 			<Grid container justify="center">
-				<Grid item xs={11} sm={11} md={6} lg={6}>
-					<div className={classes.logoContainer}>
+				<div className={classes.content}>
+					<div className={classes.containerPadding}>
 						<img
 							alt={"LandingFooter icon"}
-							src={servedImage("/images/bn-logo.png")}
+							src={servedImage("/images/logo.png")}
 							className={classes.logo}
 						/>
-					</div>
 
-					<div className={classes.linksContainer}>
-						{links.map(({ label, href }, index) => (
-							<Typography className={classes.linkContainer} key={index}>
-								<a className={classes.link} href={href} target="_blank">
-									{label}
+						<div className={classes.linksContainer}>
+							{links.map(({ label, href }, index) => (
+								<Typography className={classes.linkContainer} key={index}>
+									<a className={classes.link} href={href} target="_blank">
+										{label}
+									</a>
+								</Typography>
+							))}
+						</div>
+					</div>
+					<div className={classes.containerPadding}>
+						<Typography className={classes.appBtnCaption}>
+							<span>
+								<img
+									className={classes.smallImage}
+									src={servedImage("/images/handemoji.png")}
+									alt="rock hand emoji
+						"
+								/>
+							</span>
+							&nbsp; Get the Bigneon app now:
+						</Typography>
+						<div className={classes.appLinksContainers}>
+							<AppButton
+								variant="ios"
+								color="black"
+								href={process.env.REACT_APP_STORE_IOS}
+							>
+								iOS
+							</AppButton>
+							<span className={classes.appLinkSpacer}/>
+							<AppButton
+								variant="android"
+								color="black"
+								href={process.env.REACT_APP_STORE_ANDROID}
+							>
+								Android
+							</AppButton>
+						</div>
+					</div>
+					<Hidden smUp>
+						<div className={classes.containerPadding}>
+							<Typography className={classes.smLinks}>
+								<a
+									className={classes.termsLink}
+									href={termsLink}
+									target="_blank"
+								>
+									Instagram
+								</a>
+								<a
+									className={classes.termsLink}
+									href={privacyPolicyLink}
+									target="_blank"
+								>
+									Facebook
 								</a>
 							</Typography>
-						))}
-					</div>
-				</Grid>
-				<Grid item xs={11} sm={11} md={6} lg={6}>
-					<div className={classes.appLinksContainers}>
-						<AppButton
-							variant="ios"
-							color="black"
-							href={process.env.REACT_APP_STORE_IOS}
-						>
-							iOS
-						</AppButton>
-						<span className={classes.appLinkSpacer}/>
-						<AppButton
-							variant="android"
-							color="black"
-							href={process.env.REACT_APP_STORE_ANDROID}
-						>
-							Android
-						</AppButton>
-					</div>
-				</Grid>
-				<Grid item xs={11} sm={11} md={11} lg={10}>
+						</div>
+					</Hidden>
+				</div>
+				<Grid item xs={12} sm={12} md={12} lg={12}>
 					<div className={classes.copyrightContainer}>
-						<Typography className={classes.copyright}>
-							Copyright 2019. BigNeon, Inc. All Rights Reserved.
-							<a
-								className={classes.termsLink}
-								href={privacyPolicyLink}
-								target="_blank"
-							>
-								Privacy Policy
-							</a>
-							<a className={classes.termsLink} href={termsLink} target="_blank">
-								Terms of Use
-							</a>
-						</Typography>
+						<div className={classes.content}>
+							<Typography className={classes.copyright}>
+								<span>
+									<a
+										className={classes.termsLink}
+										href={privacyPolicyLink}
+										target="_blank"
+									>
+										Privacy Policy
+									</a>
+									<a
+										className={classes.termsLink}
+										href={termsLink}
+										target="_blank"
+									>
+										Terms of Use
+									</a>
+								</span>
+								Copyright 2019. BigNeon, Inc. All Rights Reserved.
+							</Typography>
+							<Hidden smDown>
+								<Typography className={classes.smLinks}>
+									<a
+										className={classes.termsLink}
+										href={termsLink}
+										target="_blank"
+									>
+										Instagram
+									</a>
+									<a
+										className={classes.termsLink}
+										href={privacyPolicyLink}
+										target="_blank"
+									>
+										Facebook
+									</a>
+								</Typography>
+							</Hidden>
+						</div>
 					</div>
 				</Grid>
 			</Grid>
