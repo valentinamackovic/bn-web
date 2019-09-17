@@ -26,11 +26,10 @@ const links = [
 	//{ label: "FAQ", href: `${rootUrl}/faq` }
 ];
 
-// const { REACT_APP_SUPPORT_URL } = process.env;
-if (Settings().reactAppSupportLink) {
+if (Settings().appSupportLink) {
 	links.push({
 		label: "Support",
-		href: Settings().reactAppSupportLink
+		href: Settings().appSupportLink
 	});
 }
 
@@ -195,7 +194,7 @@ const LandingFooter = props => {
 							<AppButton
 								variant="ios"
 								color="black"
-								href={Settings().reactAppStoreIos}
+								href={Settings().appStoreIos}
 							>
 								iOS
 							</AppButton>
@@ -203,7 +202,7 @@ const LandingFooter = props => {
 							<AppButton
 								variant="android"
 								color="black"
-								href={process.env.REACT_APP_STORE_ANDROID}
+								href={Settings().appStoreAndroid}
 							>
 								Android
 							</AppButton>

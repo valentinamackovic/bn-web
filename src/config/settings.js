@@ -8,7 +8,6 @@ export const settingsFactory = () => {
 		if (webUrl.substring(webUrl.length - 1) == "/") {
 			webUrl = webUrl.substring(0, webUrl.length - 1);
 		}
-		const { REACT_APP_SUPPORT_URL } = process.env;
 
 		settings = {
 			promoImageAspectRatio: 1920 / 1080,
@@ -17,9 +16,9 @@ export const settingsFactory = () => {
 			genericAppDownloadLink: process.env.REACT_APP_DOWNLOAD_APP,
 			facebookLink: process.env.REACT_APP_FACEBOOK_URL,
 			instagramLink: process.env.REACT_APP_INSTAGRAM_URL,
-			reactAppSupportLink: process.env.REACT_APP_SUPPORT_URL,
-			reactAppStoreIos: process.env.REACT_APP_STORE_IOS,
-			reactAppStoreAndroid: process.env.REACT_APP_STORE_ANDROID
+			appSupportLink: process.env.REACT_APP_SUPPORT_URL,
+			appStoreIos: process.env.REACT_APP_STORE_IOS,
+			appStoreAndroid: process.env.REACT_APP_STORE_ANDROID
 			//TODO add all process.env variables here
 		};
 
