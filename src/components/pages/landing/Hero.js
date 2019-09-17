@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { withStyles, Typography, Hidden } from "@material-ui/core";
 import classnames from "classnames";
 import { fontFamilyBold } from "../../../config/theme";
@@ -120,82 +120,101 @@ const styles = theme => ({
 	}
 });
 
-const Hero = observer(props => {
-	const { history, classes } = props;
-	return (
-		<div className={classes.root}>
-			<Hidden smDown>
-				<div className={classes.toolBar}>
-					<img
-						alt="Header logo"
-						className={classes.logoImage}
-						src={servedImage("/images/logo-white.png")}
-					/>
-					<span className={classes.rightMenuOptions}>
-						<RightUserMenu whiteText={true} history={history}/>
-					</span>
-				</div>
-			</Hidden>
-			<div className={classes.headingContainer}>
-				<Typography
-					className={classnames({
-						[classes.text]: true,
-						[classes.heading]: true
-					})}
-				>
-					The Future of Ticketing
-				</Typography>
+class Hero extends Component {
+	constructor(props) {
+		super(props);
+		this.inputRef = React.createRef();
+		this.state = {
+			query: "",
+			isSearching: false
+		};
+	}
+
+	handleSearchClick = () => {
+		this.inputRef.current.focus();
+	};
+
+	render() {
+		const { history, classes } = this.props;
+
+		return (
+			<div className={classes.root}>
 				<Hidden smDown>
-					<div className={classes.searchContainer}>
-						<SearchToolBarInput history={history}/>
+					<div className={classes.toolBar}>
+						<img
+							alt="Header logo"
+							className={classes.logoImage}
+							src={servedImage("/images/logo-white.png")}
+						/>
+						<span className={classes.rightMenuOptions}>
+							<RightUserMenu whiteText={true} history={history}/>
+						</span>
 					</div>
 				</Hidden>
-				<Hidden smUp>
-					<a
-						href="https://play.google.com/store/apps/details?id=com.bigneon.mobile"
-						target="_blank"
+				<div className={classes.headingContainer}>
+					<Typography
+						className={classnames({
+							[classes.text]: true,
+							[classes.heading]: true
+						})}
 					>
-						<img
-							className={classes.downloadBtn}
-							src={servedImage("/images/appstore-apple.png")}
-						/>
-					</a>
-				</Hidden>
-			</div>
-
-			<div className={classes.appLinkContainer}>
-				<Hidden xsDown>
-					<div className={classes.iconHolder}>
-						<Typography
-							className={classnames({
-								[classes.text]: true
-							})}
+						The Future of Ticketing
+					</Typography>
+					<Hidden smDown>
+						<div
+							className={classes.searchContainer}
+							onClick={this.handleSearchClick}
 						>
-							Available on:&nbsp;
-						</Typography>
+							<SearchToolBarInput clickRef={this.inputRef} history={history}/>
+						</div>
+					</Hidden>
+					<Hidden smUp>
 						<a
 							href="https://play.google.com/store/apps/details?id=com.bigneon.mobile"
 							target="_blank"
 						>
 							<img
-								className={classes.iconImage}
-								src={servedImage("/images/avail-android-logo.svg")}
+								className={classes.downloadBtn}
+								src={servedImage("/images/appstore-apple.png")}
 							/>
 						</a>
-						<a
-							href="https://apps.apple.com/us/app/big-neon/id1445600728"
-							target="_blank"
-						>
-							<img
-								className={classes.iconImage}
-								src={servedImage("/images/avail-apple.svg")}
-							/>
-						</a>
-					</div>
-				</Hidden>
+					</Hidden>
+				</div>
+
+				<div className={classes.appLinkContainer}>
+					<Hidden xsDown>
+						<div className={classes.iconHolder}>
+							<Typography
+								className={classnames({
+									[classes.text]: true
+								})}
+							>
+								Available on:&nbsp;
+							</Typography>
+							<a
+								href="https://play.google.com/store/apps/details?id=com.bigneon.mobile"
+								target="_blank"
+							>
+								<img
+									className={classes.iconImage}
+									src={servedImage("/images/avail-android-logo.svg")}
+								/>
+							</a>
+							<a
+								href="https://apps.apple.com/us/app/big-neon/id1445600728"
+								target="_blank"
+							>
+								<img
+									className={classes.iconImage}
+									src={servedImage("/images/avail-apple.svg")}
+								/>
+							</a>
+						</div>
+					</Hidden>
+				</div>
 			</div>
-		</div>
-	);
-});
+		);
+	}
+}
 
 export default withStyles(styles)(Hero);
