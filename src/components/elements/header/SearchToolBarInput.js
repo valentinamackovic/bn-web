@@ -75,10 +75,11 @@ class SearchToolBarInput extends Component {
 		return (
 			<form
 				noValidate
+				ref={this.props.clickRef}
 				autoComplete="off"
 				onSubmit={this.onEventSearch.bind(this)}
 				className={classes.root}
-				onClick={() => this.props.clickRef.current.focus()} //If they click near the input focus the input
+				onClick={() => this.input.focus()} //If they click near the input focus the input
 			>
 				<img
 					alt="Search icon"
@@ -86,7 +87,7 @@ class SearchToolBarInput extends Component {
 					src={servedImage("/icons/search-gray.svg")}
 				/>
 				<input
-					ref={this.props.clickRef}
+					ref={input => (this.input = input)}
 					disabled={isSearching}
 					value={query}
 					onChange={e => this.setState({ query: e.target.value })}

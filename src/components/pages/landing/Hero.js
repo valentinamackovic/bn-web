@@ -131,7 +131,7 @@ class Hero extends Component {
 	}
 
 	handleSearchClick = () => {
-		this.inputRef.current.focus();
+		this.inputRef.current.click();
 	};
 
 	render() {

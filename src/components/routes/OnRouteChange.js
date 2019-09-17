@@ -86,7 +86,6 @@ class OnRouteChange extends Component {
 					window.location.pathname === "/"
 				) {
 					showPadding = false;
-					isLanding = true;
 					return;
 				}
 			});
@@ -121,6 +120,10 @@ class OnRouteChange extends Component {
 					return;
 				}
 			});
+
+			if (window.location.pathname === "/") {
+				isLanding = true;
+			}
 		}
 
 		//Set layout based on above checks
