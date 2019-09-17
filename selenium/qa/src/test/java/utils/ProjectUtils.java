@@ -1,5 +1,9 @@
 package utils;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -11,6 +15,7 @@ public class ProjectUtils {
 	
 	public static final String DATE_FORMAT = "MM/dd/yyyy";
 	public static final String ADMIN_EVENT_DATE_TIME_FORMAT = "EEEE, MMMM d yyyy h:mm a";
+	public static final String RESOURCE_IMAGE_PATH = "src/test/resources/images/";
 	
 	public static Integer generateRandomInt(int size) {
 		Random random = new Random();
@@ -69,5 +74,26 @@ public class ProjectUtils {
 		for(String f : fields) {
 			appendField(f, sb);
 		}
+	}
+	
+	public static String getImageAbsolutePath(String imageName) {
+		File file = new File(RESOURCE_IMAGE_PATH + imageName);
+		if (file.exists()) {
+			return file.getAbsolutePath();
+		} else {
+			return null;
+		}
+	}
+	
+	public static void main(String[] args) {
+		String image = "lorem_ipsum_img_101.jpg";
+			File file  = new File("src/test/resources/images/"+image);
+			if(file.exists()) {
+				String path = file.getAbsolutePath();
+				System.out.println();
+			}
+			
+		
+		System.out.println();
 	}
 }
