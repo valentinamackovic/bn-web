@@ -6,6 +6,7 @@ import model.Venue;
 import pages.admin.venue.AdminVenuePage;
 import pages.admin.venue.CreateVenuePage;
 import pages.components.admin.AdminSideBar;
+import utils.MsgConstants;
 
 public class VenueStepsFacade extends BaseFacadeSteps {
 	
@@ -38,11 +39,14 @@ public class VenueStepsFacade extends BaseFacadeSteps {
 		createVenuePage.enterRegion(venue.getRegion());
 		createVenuePage.enterPhoneNumber(venue.getPhoneNumber());
 		createVenuePage.enterVenueLocation(venue.getLocation());
-		System.out.println();		
 	}
 	
 	public void whenUserClicksOnCreateVenue() {
 		createVenuePage.clickOnCreateButton();
+	}
+	
+	public boolean thenNotificationVenueCreatedShouldBeVissible() {
+		return venuePage.isNotificationDisplayedWithMessage(MsgConstants.VENUE_CREATED_SUCCESS);
 	}
 	
 	public boolean thenUserIsOnVenuesPage() {

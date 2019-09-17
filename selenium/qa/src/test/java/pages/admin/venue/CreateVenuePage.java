@@ -43,7 +43,7 @@ public class CreateVenuePage extends BasePage {
 	@FindBy(xpath = "//body//main//form//div[contains(@class, 'location-search-input')]//input")
 	private WebElement locationAutoSearchField;
 	
-	@FindBy(xpath = "/form//div/button[@type='submit' and span[text()='Create']]")
+	@FindBy(xpath = "//form//div/button[@type='submit' and span[text()='Create']]")
 	private WebElement createButton;
 	
 	public CreateVenuePage(WebDriver driver) {
@@ -62,6 +62,7 @@ public class CreateVenuePage extends BasePage {
 	
 	public void uploadImageUsingFilePath(String imageName) {
 		UploadImageComponent uploadImageComponent = new UploadImageComponent(driver);
+//		uploadImageComponent.uploadImageViaExternalLink(imageName, uploadImageButton);
 		uploadImageComponent.uploadImageFromResources(imageName, uploadImageButton);
 	}
 	

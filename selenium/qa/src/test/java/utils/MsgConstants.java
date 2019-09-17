@@ -12,6 +12,8 @@ public class MsgConstants {
 	public static final String ORGANIZATION_CREATE_DUPLICATE_ERROR = "Duplicate record exists";
 	public static final String ORGANIZATION_CREATE_FAILED = "Create organization failed";
 	public static final String ORGANIZATION_CREATED_SUCCESS = "Organization created";
+	
+	public static final String VENUE_CREATED_SUCCESS = "Venue created";
 		
 	public static final String EVENT_PUBLISHED = "Event published";
 	public static final String EVENT_SAVED_TO_DRAFT = "Draft saved";

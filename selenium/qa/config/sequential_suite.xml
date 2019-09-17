@@ -17,6 +17,7 @@
       <class name="test.EditEventInformationStepsIT"/>
       <class name="test.OrderManagmentSearchForOrdersStepsIT"/>
       <class name="test.PublishEventWithDeleteEventIT"/>
+      <class name="test.VenueStepsIT"/>
     </classes>
   </test>
   <test name="Firefox">
@@ -35,6 +36,7 @@
       <class name="test.EditEventInformationStepsIT"/>
       <class name="test.OrderManagmentSearchForOrdersStepsIT"/>
       <class name="test.PublishEventWithDeleteEventIT"/>
+      <class name="test.VenueStepsIT"/>
     </classes>
   </test>  
  </suite>

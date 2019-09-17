@@ -22,7 +22,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import config.BrowsersEnum;
 import config.DriverFactory;
 
-public class AbstractBase implements Serializable{
+public class AbstractBase implements Serializable {
 
 	public WebDriver driver;
 
@@ -40,24 +40,10 @@ public class AbstractBase implements Serializable{
 		this.driver = driver;
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T, V> T explicitWait(int time, long poolingInterval, Function<? super WebDriver, V> condition)
-			throws TimeoutException {
-		return (T) new WebDriverWait(driver, time, poolingInterval).until(condition);
-	}
-
-	public <T, V> T explicitWait(int time, Function<? super WebDriver, V> condition) throws TimeoutException {
-		return explicitWait(time, 500, condition);
-	}
-
-	public <T, V> T explicitWaitForVisiblity(WebElement element) {
-		return explicitWait(15, ExpectedConditions.visibilityOf(element));
-	}
-	
-	public <T,V> T explicitWaitForVisiblityForAllElements(By by) {
+	public <T, V> T explicitWaitForVisiblityForAllElements(By by) {
 		return explicitWait(15, ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
 	}
- 	
+
 	public void explicitWaitForVisibilityAndClickableWithClick(WebElement element) {
 		explicitWaitForVisiblity(element);
 		explicitWaitForClickable(element);
@@ -78,7 +64,7 @@ public class AbstractBase implements Serializable{
 		}
 		return retVal;
 	}
-	
+
 	public boolean isExplicitConditionTrue(int waitForSeconds, Function<? super WebDriver, Boolean> condition) {
 		boolean retVal = false;
 		try {
@@ -104,7 +90,7 @@ public class AbstractBase implements Serializable{
 		}
 		return retVal;
 	}
-	
+
 	public boolean isExplicitlyWaitVisible(By byElement) {
 		return isExplicitlyWaitVisible(15, byElement);
 	}
@@ -119,17 +105,7 @@ public class AbstractBase implements Serializable{
 		}
 		return retVal;
 	}
-
-	public <T, V> T explicitWaitForClickable(WebElement element) {
-		return explicitWait(15, ExpectedConditions.elementToBeClickable(element));
-	}
-
-	public void waitVisibilityAndClick(WebElement element) {
-		explicitWait(15, ExpectedConditions.and(ExpectedConditions.visibilityOf(element),
-				ExpectedConditions.elementToBeClickable(element)));
-		element.click();
-	}
-
+	
 	public void waitVisibilityAndSendKeysSlow(WebElement element, String value) {
 		explicitWaitForVisiblity(element);
 		explicitWaitForClickable(element);
@@ -144,15 +120,31 @@ public class AbstractBase implements Serializable{
 		explicitWaitForClickable(element);
 		element.sendKeys(value);
 	}
-	
-	public void waitForTime(int timeout, long poolingInterval) {
-		try {
-			new WebDriverWait(driver, timeout, poolingInterval)
-					.until(ExpectedConditions.visibilityOfElementLocated(By.id("noelement")));
-		} catch (Exception e) {
-		}
+
+	public <T, V> T explicitWaitForClickable(WebElement element) {
+		return explicitWait(15, ExpectedConditions.elementToBeClickable(element));
+	}
+
+	public void waitVisibilityAndClick(WebElement element) {
+		explicitWait(15, ExpectedConditions.and(ExpectedConditions.visibilityOf(element),
+				ExpectedConditions.elementToBeClickable(element)));
+		element.click();
+	}
+
+	public <T, V> T explicitWaitForVisiblity(WebElement element) {
+		return explicitWait(15, ExpectedConditions.visibilityOf(element));
+	}
+
+	public <T, V> T explicitWait(int time, Function<? super WebDriver, V> condition) throws TimeoutException {
+		return explicitWait(time, 500, condition);
 	}
 	
+	@SuppressWarnings("unchecked")
+	public <T, V> T explicitWait(int time, long poolingInterval, Function<? super WebDriver, V> condition)
+			throws TimeoutException {
+		return (T) new WebDriverWait(driver, time, poolingInterval).until(condition);
+	}
+
 	public void waitForTime(long mills) {
 		try {
 			Wait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(mills, TimeUnit.MILLISECONDS)
@@ -169,12 +161,21 @@ public class AbstractBase implements Serializable{
 		} catch (Exception e) {
 		}
 	}
+	
+	public boolean isRemote() {
+		if (driver.getClass().equals(RemoteWebDriver.class)) {
+			return true;
+		} else {
+			return false;
+		}
+		
+	}
 
 	public boolean isSafari() {
 		BrowsersEnum browser = DriverFactory.getBrowser();
 		if (BrowsersEnum.REMOTE.equals(browser)) {
 			String b = ((RemoteWebDriver) driver).getCapabilities().getBrowserName();
-			if (b.contains("safari")) {
+			if (b.toLowerCase().contains("safari")) {
 				return true;
 			} else {
 				return false;

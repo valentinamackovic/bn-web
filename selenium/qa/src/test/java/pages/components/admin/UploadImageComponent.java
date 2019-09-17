@@ -2,6 +2,8 @@ package pages.components.admin;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.LocalFileDetector;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
@@ -46,21 +48,30 @@ public class UploadImageComponent extends BaseComponent {
 		waitForTime(1100);
 		explicitWaitForVisibilityAndClickableWithClick(uploadCroppedButton);
 		driver.switchTo().parentFrame();
-		while (!imageUploadIframe.isDisplayed()) {
-			waitForTime(500);
+		waitForTime(1000);
+		while (isExplicitlyWaitVisible(2, imageUploadIframe)) {
+			waitForTime(1000);
+			System.out.println("Iteration: ");
 		}
 	}
-
+	
 	public void uploadImageFromResources(String imageName, WebElement activateUploadButton) {
 		String filePath = ProjectUtils.getImageAbsolutePath(imageName);
 		if (filePath != null && !filePath.isEmpty()) {
+			//this is for setting up LocalFileDetector when doing execution on selenium grid
+			//since passed file path makes no sense on selenium's grid node.
+			if (isRemote()) {
+				((RemoteWebDriver) driver).setFileDetector(new LocalFileDetector());
+			}
 			explicitWaitForVisibilityAndClickableWithClick(activateUploadButton);
 			explicitWait(15,  ExpectedConditions.frameToBeAvailableAndSwitchToIt(imageUploadIframe));
 			explicitWaitForVisibilityAndClickableWithClick(myFilesLink);
 			waitForTime(1000);
-			SeleniumUtils.jsSetStyleAttr(selectFileInputField, "opacity:1", driver);
+			SeleniumUtils.jsSetStyleAttr(selectFileInputField, "opacity: 1", driver);
+			explicitWait(5, ExpectedConditions.attributeContains(selectFileInputField, "style", "opacity: 1"));
 			waitForTime(1000);
 			selectFileInputField.sendKeys(filePath);
+			waitForTime(1500);
 			explicitWaitForVisibilityAndClickableWithClick(uploadCroppedButton);
 			driver.switchTo().parentFrame();
 			waitForTime(1000);

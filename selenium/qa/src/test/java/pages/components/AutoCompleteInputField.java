@@ -19,9 +19,10 @@ public class AutoCompleteInputField extends BaseComponent{
 	public void selectFirstSuggestion(String value) {
 		explicitWaitForVisiblity(inputField);
 		waitForTime(2000);
-		waitVisibilityAndSendKeysSlow(inputField, value);
+		waitVisibilityAndSendKeys(inputField, value);
 		WebElement firstInList = explicitWait(15, ExpectedConditions.visibilityOfElementLocated(By.xpath(
 				"//div[contains(@class,'autocomplete-dropdown-container')]/div[contains(@class,'suggestion-item')]")));
+		waitForTime(1000);
 		explicitWaitForVisibilityAndClickableWithClick(firstInList);
 	}
 
