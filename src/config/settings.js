@@ -15,8 +15,8 @@ export const settingsFactory = () => {
 			webPSupported: null, //Does the browser support next gen image formats
 			webUrl,
 			genericAppDownloadLink: process.env.REACT_APP_DOWNLOAD_APP,
-			facebookLink: process.env.FACEBOOK_URL,
-			instagramLink: process.env.INSTAGRAM_URL,
+			facebookLink: process.env.REACT_APP_FACEBOOK_URL,
+			instagramLink: process.env.REACT_APP_INSTAGRAM_URL,
 			reactAppSupportLink: process.env.REACT_APP_SUPPORT_URL,
 			reactAppStoreIos: process.env.REACT_APP_STORE_IOS,
 			reactAppStoreAndroid: process.env.REACT_APP_STORE_ANDROID
