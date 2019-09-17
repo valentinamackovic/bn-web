@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
-
+import Settings from "../../../config/settings";
 import {
 	callToActionBackground,
 	fontFamilyDemiBold
@@ -26,18 +26,18 @@ const links = [
 	//{ label: "FAQ", href: `${rootUrl}/faq` }
 ];
 
-const { REACT_APP_SUPPORT_URL } = process.env;
-if (REACT_APP_SUPPORT_URL) {
+// const { REACT_APP_SUPPORT_URL } = process.env;
+if (Settings().reactAppSupportLink) {
 	links.push({
 		label: "Support",
-		href: REACT_APP_SUPPORT_URL
+		href: Settings().reactAppSupportLink
 	});
 }
 
 const privacyPolicyLink = `${rootUrl}/privacy.html`;
 const termsLink = `${rootUrl}/terms.html`;
-const fbLink = `https://www.facebook.com/Big-Neon-572473456442270/`;
-const instaLink = `https://www.instagram.com/big_neon/`;
+const fbLink = Settings().facebookLink;
+const instaLink = Settings().instagramLink;
 
 const styles = theme => ({
 	root: {
@@ -157,7 +157,7 @@ const styles = theme => ({
 
 const LandingFooter = props => {
 	const { classes } = props;
-
+	const dateYear = new Date().getFullYear();
 	return (
 		<div className={classes.root}>
 			<Grid container justify="center">
@@ -195,7 +195,7 @@ const LandingFooter = props => {
 							<AppButton
 								variant="ios"
 								color="black"
-								href={process.env.REACT_APP_STORE_IOS}
+								href={Settings().reactAppStoreIos}
 							>
 								iOS
 							</AppButton>
@@ -252,7 +252,7 @@ const LandingFooter = props => {
 										Terms of Use
 									</a>
 								</span>
-								Copyright 2019. BigNeon, Inc. All Rights Reserved.
+								Copyright {dateYear}. BigNeon, Inc. All Rights Reserved.
 							</Typography>
 							<Hidden smDown>
 								<Typography className={classes.smLinks}>
