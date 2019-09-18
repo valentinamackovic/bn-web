@@ -10,6 +10,7 @@ import pages.LoginPage;
 import test.facade.AdminEventStepsFacade;
 import test.facade.LoginStepsFacade;
 import test.facade.OrganizationStepsFacade;
+import utils.DataConstants;
 
 public class PublishEventWithDeleteEventIT extends BaseSteps {
 
@@ -43,7 +44,7 @@ public class PublishEventWithDeleteEventIT extends BaseSteps {
 
 	@DataProvider(name = "create_delete_event_data")
 	public static Object[][] data() {
-		Event event = Event.generatedEvent(1, 4, "TestDeleteSearchEventName", true);
+		Event event = Event.generateEventFromJson(DataConstants.EVENT_DATA_STANARD_KEY,"TestDeleteSearchEventName", true, 1, 4);
 		return new Object[][] { { User.generateSuperUser(), event } };
 	}
 
