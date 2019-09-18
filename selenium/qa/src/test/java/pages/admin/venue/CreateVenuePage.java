@@ -75,6 +75,7 @@ public class CreateVenuePage extends BasePage {
 	}
 
 	public void enterVenueName(String venueName) {
+		waitForTime(500);
 		SeleniumUtils.clearInputField(venueNameField, driver);
 		waitVisibilityAndSendKeys(venueNameField, venueName);
 	}
@@ -124,6 +125,7 @@ public class CreateVenuePage extends BasePage {
 	}
 
 	public void enterPhoneNumber(String phoneNumber) {
+		SeleniumUtils.clearInputField(phoneNumberField, driver);
 		waitVisibilityAndSendKeysSlow(phoneNumberField, phoneNumber);
 	}
 

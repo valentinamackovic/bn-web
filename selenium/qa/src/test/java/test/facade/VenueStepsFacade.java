@@ -67,6 +67,7 @@ public class VenueStepsFacade extends BaseFacadeSteps {
 		String venueName = (String) getData(VENUE_NAME_KEY);
 		String updatedName = ProjectUtils.setSuffixDateOfText(venueName);
 		createVenuePage.enterVenueName(updatedName);
+		createVenuePage.enterPhoneNumber(venue.getPhoneNumber());
 		createVenuePage.enterVenueLocation(venue.getLocation());
 	}
 	
