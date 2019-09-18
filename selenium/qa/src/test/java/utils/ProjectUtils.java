@@ -16,11 +16,12 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.openqa.selenium.WebElement;
 
 public class ProjectUtils {
-	
+
 	public static final String DATE_FORMAT = "MM/dd/yyyy";
+	public static final String CONCATINATED_DATE_FORMAT = "MMddyyyy";
 	public static final String ADMIN_EVENT_DATE_TIME_FORMAT = "EEEE, MMMM d yyyy h:mm a";
 	public static final String RESOURCE_IMAGE_PATH = "src/test/resources/images/";
-	
+
 	public static Integer generateRandomInt(int size) {
 		Random random = new Random();
 		return random.nextInt(size);
@@ -29,7 +30,7 @@ public class ProjectUtils {
 	public static String[] getDatesWithSpecifiedRangeInDays(int spanInDays) {
 		return getDatesWithSpecifiedRangeInDaysWithStartOffset(1, spanInDays);
 	}
-	
+
 	public static String[] getDatesWithSpecifiedRangeInDaysWithStartOffset(int daysOffset, int spanInDays) {
 		LocalDate now = LocalDate.now();
 		LocalDate newDay = now.plusDays(daysOffset);
@@ -40,7 +41,7 @@ public class ProjectUtils {
 		String[] retVal = { firstDate, secondDate };
 		return retVal;
 	}
-	
+
 	public static String[] getAllDatesWithinGivenRangeAndOffset(int daysOffset, int spanInDays) {
 		LocalDate now = LocalDate.now();
 		LocalDate startDate = now.plusDays(daysOffset);
@@ -50,7 +51,7 @@ public class ProjectUtils {
 		List<String> dates = dateRange.toStringList(formater);
 		return dates.toArray(new String[dates.size()]);
 	}
-	
+
 	public static LocalDateTime parseDateTime(String pattern, String dateTime) {
 		String removedOrdinalsDate = dateTime.replaceAll("(?<=\\d)(st|nd|rd|th)", "");
 		DateTimeFormatter formater = DateTimeFormatter.ofPattern(pattern);
@@ -74,29 +75,29 @@ public class ProjectUtils {
 		sb.append(field != null ? field + "; " : "");
 	}
 
-	public static void appendFields(String[] fields , StringBuilder sb) {
-		for(String f : fields) {
+	public static void appendFields(String[] fields, StringBuilder sb) {
+		for (String f : fields) {
 			appendField(f, sb);
 		}
 	}
-		
+
 	public static Object[] createAndFillArrayWithObject(int size, Object original) {
 		Object[] dest = new Object[size];
 		Arrays.fill(dest, original);
 		return dest;
 	}
-	
+
 	public static Object[][] composeData(Object[][] dest, Object[] src, int destinationColumn) {
 		for (int i = 0; i < src.length; i++) {
 			dest[i][destinationColumn] = src[i];
 		}
 		return dest;
 	}
-	
-	public static String getTextForElementAndReplace(WebElement element, String oldChar, String newChar ) {
+
+	public static String getTextForElementAndReplace(WebElement element, String oldChar, String newChar) {
 		String text = element.getText();
 		return text.replace(oldChar, newChar);
-		
+
 	}
 
 	public static String getImageAbsolutePath(String imageName) {
@@ -107,5 +108,26 @@ public class ProjectUtils {
 			return null;
 		}
 	}
-	
+
+	/**
+	 * It follows convention that suffix is last "_" found, that is discarder and
+	 * replaced with current date sequence. If no "_" is found date is appended to given 
+	 * text parametar with "_" between date and text
+	 * 
+	 * @param text
+	 * @return
+	 */
+	public static String setSuffixDateOfText(String text) {
+		int index = text.lastIndexOf("_");
+		String baseName = text;
+		if (index != -1) {
+			baseName = text.substring(0, index);
+		}
+		LocalDate now = LocalDate.now();
+		DateTimeFormatter formater = DateTimeFormatter.ofPattern(CONCATINATED_DATE_FORMAT);
+		String date = now.format(formater);
+		
+		return baseName + "_" + date;
+	}
+
 }

@@ -59,4 +59,15 @@ public class LoginStepsFacade extends BaseFacadeSteps {
 	public void logOut() {
 		loginPage.logOut();
 	}
+
+	@Override
+	protected void setData(String key, Object value) {
+	}
+
+	@Override
+	protected Object getData(String key) {
+		return null;
+	}
+	
+	
 }

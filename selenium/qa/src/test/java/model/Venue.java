@@ -2,18 +2,29 @@ package model;
 
 import java.io.Serializable;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.type.TypeReference;
+
+import utils.DataReader;
 import utils.ProjectUtils;
 
 
-public class Venue implements Serializable {
+public class Venue extends Model implements Serializable {
 
 	private static final long serialVersionUID = 7824190591509663973L;
+	@JsonProperty("name")
 	private String name;
+	@JsonProperty("organization_name")
 	private String organization;
+	@JsonProperty("timezone")
 	private String timezone;
+	@JsonProperty("region")
 	private String region;
+	@JsonProperty("phone_number")
 	private String phoneNumber;
+	@JsonProperty("location")
 	private String location;
+	@JsonProperty("image_name")
 	private String imageName;
 	
 	public String getName() {
@@ -66,8 +77,12 @@ public class Venue implements Serializable {
 		return sb.toString();
 	}
 	
+	public static Venue generateVenueFromJson(String key) {
+		return (Venue) DataReader.getInstance().getObject(key, getTypeReference());
+	}
 	
-	
-	
-
+	public static TypeReference<Venue> getTypeReference(){
+		return new TypeReference<Venue>() {
+		};
+	}
 }

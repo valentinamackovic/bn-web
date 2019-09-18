@@ -200,5 +200,14 @@
 		"remove_ticket_number": 3,
 		"order_note": "some pretty text note",
 		"additional_tendered_amount": 3
+	},
+	"venue_std":{
+		"name":"TAEVenue",
+		"organization_name":"Auto Test12",
+		"timezone":"Africa/Johannesburg",
+		"region":"No Region",
+		"phone_number":"123456789012",
+		"location":"Opera, Douglas Drive, Douglasdale, Johannesburg, South Africa",
+		"image_name":"lorem_ipsum_img_101.jpg"
 	}
 }

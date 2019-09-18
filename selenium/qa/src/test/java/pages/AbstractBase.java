@@ -43,6 +43,10 @@ public class AbstractBase implements Serializable {
 	public <T, V> T explicitWaitForVisiblityForAllElements(By by) {
 		return explicitWait(15, ExpectedConditions.visibilityOfAllElementsLocatedBy(by));
 	}
+	
+	public <T,V> T explicitWaitForVisibilityBy(By by) {
+		return explicitWait(15, ExpectedConditions.visibilityOfElementLocated(by));
+	}
 
 	public void explicitWaitForVisibilityAndClickableWithClick(WebElement element) {
 		explicitWaitForVisiblity(element);
@@ -122,6 +126,11 @@ public class AbstractBase implements Serializable {
 		explicitWaitForVisiblity(element);
 		explicitWaitForClickable(element);
 		element.sendKeys(value);
+	}
+	
+	public void explicitWaitForClicableWithClick(WebElement element) {
+		explicitWaitForClickable(element);
+		element.click();
 	}
 
 	public <T, V> T explicitWaitForClickable(WebElement element) {

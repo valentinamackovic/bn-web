@@ -152,11 +152,11 @@ public class AdminEventStepsFacade extends BaseFacadeSteps {
 		createEventPage.addTicketTypes(event.getTicketTypes());
 	}
 	
-	private void setData(String key, Object value) {
+	protected void setData(String key, Object value) {
 		dataMap.put(key, value);
 	}
 
-	private Object getData(String key) {
+	protected Object getData(String key) {
 		return dataMap.get(key);
 	}
 }
