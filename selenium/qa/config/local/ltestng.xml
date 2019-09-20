@@ -18,6 +18,7 @@
       <class name="test.EditEventInformationStepsIT"/>
       <class name="test.OrderManagmentSearchForOrdersStepsIT"/>
       <class name="test.PublishEventWithDeleteEventIT"/>
+      <class name="test.BoxOfficeSellTicketStepsIT"/>
     </classes>
   </test>
 </suite>
