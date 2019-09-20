@@ -68,27 +68,24 @@ const BigNeonWidget = {};
 		}
 		return priceText;
 	}
+
 	/** End Helper Functions */
 	context.events = false;
 	context.params = getSyncScriptParams();
 
 	context.fetch = function(page) {
 		page = page || 0;
-		xhr(
-			"GET",
-			`${context.params.apiUrl}events?page=${page}&organization_id=${
-				context.params.organizationId
-			}`,
-			null,
-			function(eventsString) {
-				try {
-					context.events = JSON.parse(eventsString);
-					context.render(context.events, true);
-				} catch (e) {
-					console.error(e);
-				}
+		const uri = `${context.params.apiUrl}events?page=${page}&organization_id=${
+			context.params.organizationId
+		}`;
+		xhr("GET", uri, null, function(eventsString) {
+			try {
+				context.events = JSON.parse(eventsString);
+				context.render(context.events, true);
+			} catch (e) {
+				console.error(e);
 			}
-		);
+		});
 	};
 
 	context.render = function(events, firstRender) {
@@ -126,6 +123,7 @@ const BigNeonWidget = {};
 		const parent = document.querySelector(target);
 
 		events.data.forEach(event => {
+			const { event_type } = event;
 			const eventDate = parseLocalizedDateTime(
 				event.localized_times.event_start,
 				event.event_start
