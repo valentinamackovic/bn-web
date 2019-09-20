@@ -135,6 +135,7 @@ const BigNeonWidget = {};
 			const priceText = getPrice(event);
 
 			const row = document.createElement("a");
+			row.className = "bn-event-row";
 			row.setAttribute("href", `${context.params.baseUrl}events/${event.id}`);
 			row.setAttribute("target", "_blank");
 
@@ -172,14 +173,24 @@ const BigNeonWidget = {};
 			eventModuleDateMobile.innerHTML = eventDateFormatted;
 			eventModuleTextContainer.appendChild(eventModuleDateMobile);
 
-			const eventModuleArtists = document.createElement("h2");
-			eventModuleArtists.className = "bn-event-artists";
-			eventModuleArtists.innerText = event.name;
-			eventModuleTextContainer.appendChild(eventModuleArtists);
+			const eventModuleName = document.createElement("h2");
+			eventModuleName.className = "bn-event-name";
+			eventModuleName.innerText = event.name;
+			eventModuleTextContainer.appendChild(eventModuleName);
+
+			const eventModuleVenue = document.createElement("h4");
+			eventModuleVenue.className = "v1 bn-event-venue-name";
+			eventModuleVenue.innerText = event.venue.name;
+			eventModuleTextContainer.appendChild(eventModuleVenue);
 
 			const eventModuleTime = document.createElement("p");
 			eventModuleTime.className = "bn-event-time";
-			eventModuleTime.innerHTML = formatAMPM(doorTime);
+			eventModuleTime.innerHTML = `<span class="v1 bn-key-door-time">Doors </span>${formatAMPM(
+				doorTime
+			)}`;
+			eventModuleTime.innerHTML += ` / <span class="v1 bn-key-show-time">Show </span>${formatAMPM(
+				eventDate
+			)}`;
 			eventModuleTextContainer.appendChild(eventModuleTime);
 
 			const eventModuleButtonContainer = document.createElement("div");
@@ -196,6 +207,11 @@ const BigNeonWidget = {};
 			eventModulePrice.className = "bn-event-price";
 			eventModulePrice.innerText = priceText;
 			eventModuleButtonContainer.appendChild(eventModulePrice);
+
+			const eventModuleCategory = document.createElement("p");
+			eventModuleCategory.className = "v1 bn-event-category";
+			eventModuleCategory.innerText = event_type;
+			eventModuleButtonContainer.appendChild(eventModuleCategory);
 
 			parent.appendChild(row);
 		});
