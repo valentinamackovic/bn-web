@@ -19,6 +19,9 @@ import utils.Constants;
 import utils.SeleniumUtils;
 
 public class Header extends BaseComponent {
+	
+	@FindBy(xpath = "//header")
+	private WebElement header;
 
 	@FindBy(css = "header form input")
 	private WebElement searchEvents;
@@ -62,11 +65,30 @@ public class Header extends BaseComponent {
 		super(driver);
 		profileMenuDropDown = new ProfileMenuDropDown(driver);
 	}
+	
+	public boolean isVisible(int waitTime) {
+		return isExplicitlyWaitVisible(waitTime, header);
+	}
 
 	public void searchEvents(String event) {
-		if (event != null) {
+		if (event == null) {
+			return;
+		}
+		if (isVisible(4)) {
 			waitVisibilityAndSendKeys(searchEvents, event);
 			searchEvents.submit();
+		} else {
+			SearchAndSignInMainPageComponent searchComponent = new SearchAndSignInMainPageComponent(driver);
+			searchComponent.searchForEvents(event);
+		}
+	}
+	
+	public void clickOnSignInButton() {
+		if (isVisible(4)) {
+			explicitWaitForVisibilityAndClickableWithClick(signInButton);
+		} else {
+			SearchAndSignInMainPageComponent searchAndSignIn = new SearchAndSignInMainPageComponent(driver);
+			searchAndSignIn.clickOnSignIn();
 		}
 	}
 
@@ -84,7 +106,12 @@ public class Header extends BaseComponent {
 
 	public void openProfileOptions() {
 		waitForTime(1000);
-		explicitWaitForVisibilityAndClickableWithClick(profileOptions);
+		if (isVisible(3)) {
+			explicitWaitForVisibilityAndClickableWithClick(profileOptions);
+		} else {
+			SearchAndSignInMainPageComponent searchAndSigning = new SearchAndSignInMainPageComponent(driver);
+			searchAndSigning.openProfileOptions();
+		}
 		waitForTime(1000);
 	}
 
@@ -135,8 +162,8 @@ public class Header extends BaseComponent {
 	}
 
 	public boolean clickOnShoppingBasketIfPresent() {
-		boolean isVisible = isExplicitlyWaitVisible(4, shoppingBasket);
-		if (isVisible) {
+		boolean isPresent = isExplicitConditionTrue(4, ExpectedConditions.invisibilityOf(shoppingBasket));
+		if (isPresent) {
 			String innerHtml = shoppingBasket.getAttribute("innerHTML");
 			Document document = Jsoup.parse(innerHtml);
 			Elements paragraphs = document.getElementsByTag("a");

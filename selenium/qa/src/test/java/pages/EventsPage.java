@@ -11,7 +11,7 @@ import utils.SeleniumUtils;
 
 public class EventsPage extends BasePage {
 	
-	@FindBy(xpath = "//main/div/div/div/div[2]/div/div/div[2]")
+	@FindBy(xpath = "//div/p[contains(text(),'Upcoming events')]/following-sibling::div")
 	private WebElement eventListContainer;
 
 	@FindBy(xpath = "//body//main//header")
