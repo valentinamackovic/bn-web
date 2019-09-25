@@ -12,7 +12,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.commons.lang3.SerializationUtils;
 import org.openqa.selenium.WebElement;
 
 public class ProjectUtils {
@@ -81,6 +80,15 @@ public class ProjectUtils {
 		}
 	}
 
+	public static boolean isNumberGreaterThan(Integer number, Integer greaterThan) {
+		if (number != null && greaterThan != null) {
+			if (number.compareTo(greaterThan) > 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public static Object[] createAndFillArrayWithObject(int size, Object original) {
 		Object[] dest = new Object[size];
 		Arrays.fill(dest, original);
