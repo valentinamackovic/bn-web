@@ -16,7 +16,6 @@ import test.facade.AdminEventStepsFacade;
 import test.facade.LoginStepsFacade;
 import test.facade.OrganizationStepsFacade;
 import utils.DataConstants;
-import utils.ProjectUtils;
 
 public class BoxOfficeSellTicketStepsIT extends BaseSteps {
 
@@ -32,6 +31,8 @@ public class BoxOfficeSellTicketStepsIT extends BaseSteps {
 
 		loginStepsFacade.givenUserIsLogedIn(boxOfficeUser);
 		
+		
+		loginStepsFacade.whenUserSelectsMyEventsFromProfileDropDown();
 		boxOfficeFacade.givenUserIsOnBoxOfficePage();
 		boxOfficeFacade.givenBoxOfficeEventIsSelected(purchase.getEvent().getEventName());
 		boxOfficeFacade.thenUserIsAtSellPage();

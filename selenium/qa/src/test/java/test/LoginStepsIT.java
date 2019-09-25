@@ -15,9 +15,10 @@ public class LoginStepsIT extends BaseSteps {
 	public void regularLogin(User user) {
 		maximizeWindow();
 		LoginPage loginPage = new LoginPage(driver);
-		boolean retVal = loginPage.confirmedLogin(user.getEmailAddress(), user.getPass());
+		loginPage.manualNavigateLogin(user);
+		boolean isAtHomePage = loginPage.isOnHomePage();
 		loginPage.logOut();
-		Assert.assertTrue(retVal);
+		Assert.assertTrue(isAtHomePage);
 	}
 
 	@Test(dataProvider = "wrong_user_mail_credentials", priority = 1, retryAnalyzer = utils.RetryAnalizer.class)

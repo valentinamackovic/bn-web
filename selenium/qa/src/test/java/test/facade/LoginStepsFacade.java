@@ -59,6 +59,10 @@ public class LoginStepsFacade extends BaseFacadeSteps {
 	public void logOut() {
 		loginPage.logOut();
 	}
+	
+	public void whenUserSelectsMyEventsFromProfileDropDown() {
+		loginPage.getHeader().clickOnMyEvents();
+	}
 
 	@Override
 	protected void setData(String key, Object value) {
@@ -68,6 +72,4 @@ public class LoginStepsFacade extends BaseFacadeSteps {
 	protected Object getData(String key) {
 		return null;
 	}
-	
-	
 }
