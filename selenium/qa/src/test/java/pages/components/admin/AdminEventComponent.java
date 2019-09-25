@@ -113,7 +113,7 @@ public class AdminEventComponent extends BaseComponent {
 	
 	public void clickOnEvent() {
 		WebElement image = SeleniumUtils.getChildElementFromParentLocatedBy(event, By.xpath(relativeImageXPath), driver);
-		explicitWaitForVisibilityAndClickableWithClick(image);
+		waitVisibilityAndBrowserCheckClick(image);
 	}
 
 	public boolean checkIfDatesMatch(String startDate) {
@@ -128,7 +128,7 @@ public class AdminEventComponent extends BaseComponent {
 	private WebElement openDropDown() {
 		WebElement dropDown = SeleniumUtils.getChildElementFromParentLocatedBy(event, By.xpath(relativeDropDownXpath),
 				driver);
-		explicitWaitForVisibilityAndClickableWithClick(dropDown);
+		waitVisibilityAndBrowserCheckClick(dropDown);
 		return dropDown;
 	}
 

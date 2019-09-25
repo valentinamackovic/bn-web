@@ -60,8 +60,7 @@ public class EventsPage extends BasePage {
 
 	public void clickOnEvent(String eventName) {
 		WebElement event = findEvent(eventName);
-		explicitWait(10, ExpectedConditions.visibilityOf(event));
-		event.click();
+		waitVisibilityAndBrowserCheckClick(event);
 	}
 
 	public void clickOnViewMap() {

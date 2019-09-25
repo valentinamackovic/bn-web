@@ -15,6 +15,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import pages.BaseComponent;
 import pages.user.MyEventsPage;
+import test.BoxOfficeSellTicketStepsIT;
 import utils.Constants;
 import utils.SeleniumUtils;
 
@@ -181,11 +182,18 @@ public class Header extends BaseComponent {
 	}
 
 	public boolean isLoggedOut() {
-		return isExplicitlyWaitVisible(signInButton);
+		boolean isSignInButtonVisible = false;
+		if(isVisible(3)) {
+			isSignInButtonVisible = isExplicitlyWaitVisible(3, signInButton);
+		} else {
+			SearchAndSignInMainPageComponent mainSearch = new SearchAndSignInMainPageComponent(driver);
+			isSignInButtonVisible = mainSearch.isSignInButtonVisible();
+		}
+		return isSignInButtonVisible;
 	}
 
 	public void selectEventFromAdminDropDown(String eventName) {
-		GenericDropDown dropDown = new GenericDropDown(driver, adminEventDropDownButton, adminEventDropDownContainer);
+		GenericDropDown dropDown = new GenericDropDown(driver, boxOfficeEventDropDownButton, adminEventDropDownContainer);
 		dropDown.selectElementFromDropDownNoValueCheck(
 				By.xpath(".//ul//li//div/span[contains(text(),'" + eventName + "')]"));
 		waitForTime(2000);

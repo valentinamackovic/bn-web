@@ -33,5 +33,9 @@ public class SearchAndSignInMainPageComponent extends BaseComponent{
 	public void openProfileOptions() {
 		explicitWaitForVisibilityAndClickableWithClick(profileOptions);
 	}
+	
+	public boolean isSignInButtonVisible() {
+		return isExplicitlyWaitVisible(4, signInButton);
+	}
 
 }
