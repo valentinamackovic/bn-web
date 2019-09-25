@@ -107,6 +107,10 @@ public class CreateVenuePage extends BasePage {
 		return addressComponent.checkIfCoordinatesAreFilled();
 	}
 	
+	private void clickOnEnterAddressManually() {
+		waitVisibilityAndBrowserCheckClick(enterAddressManuallyButton);
+	}
+	
 	public void enterVenueLocation(String location) {
 		SeleniumUtils.clearInputField(locationAutoSearchField, driver);
 		waitForTime(1000);
@@ -114,9 +118,7 @@ public class CreateVenuePage extends BasePage {
 		inputField.selectFirstSuggestion(location);
 	}
 	
-	private void clickOnEnterAddressManually() {
-		explicitWaitForVisibilityAndClickableWithClick(enterAddressManuallyButton);
-	}
+	
 	
 	private ManualAddressEntryComponent getManualAddressComponent() {
 		WebElement container = explicitWaitForVisibilityBy(By.xpath(ManualAddressEntryComponent.containerXpath));
@@ -130,11 +132,11 @@ public class CreateVenuePage extends BasePage {
 	}
 
 	public void clickOnCreateButton() {
-		explicitWaitForVisibilityAndClickableWithClick(createButton);
+		waitVisibilityAndBrowserCheckClick(createButton);
 	}
 
 	public void clickOnUpdateButton() {
-		explicitWaitForVisibilityAndClickableWithClick(updateButton);
+		waitVisibilityAndBrowserCheckClick(updateButton);
 	}
 
 }

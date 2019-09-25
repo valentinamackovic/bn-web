@@ -12,10 +12,10 @@ import utils.ProjectUtils;
 import utils.SeleniumUtils;
 
 public class UploadImageComponent extends BaseComponent {
-	
+
 	@FindBy(xpath = "//body[@id='cloudinary-overlay']//div[@id='cloudinary-navbar']//ul//li[@data-source='local']/span[contains(text(),'My files')]")
 	private WebElement myFilesLink;
-	
+
 	@FindBy(xpath = "//div/a[text()='Select File']/following-sibling::input")
 	private WebElement selectFileInputField;
 
@@ -54,30 +54,31 @@ public class UploadImageComponent extends BaseComponent {
 			System.out.println("Iteration: ");
 		}
 	}
-	
+
 	public void uploadImageFromResources(String imageName, WebElement activateUploadButton) {
 		String filePath = ProjectUtils.getImageAbsolutePath(imageName);
 		if (filePath != null && !filePath.isEmpty()) {
-			//this is for setting up LocalFileDetector when doing execution on selenium grid
-			//since passed file path makes no sense on selenium's grid node.
+			// this is for setting up LocalFileDetector when doing execution on selenium
+			// grid
+			// since passed file path makes no sense on selenium's grid node.
 			if (isRemote()) {
 				((RemoteWebDriver) driver).setFileDetector(new LocalFileDetector());
 			}
 			explicitWaitForVisibilityAndClickableWithClick(activateUploadButton);
-			explicitWait(15,  ExpectedConditions.frameToBeAvailableAndSwitchToIt(imageUploadIframe));
+			explicitWait(15, ExpectedConditions.frameToBeAvailableAndSwitchToIt(imageUploadIframe));
 			explicitWaitForVisibilityAndClickableWithClick(myFilesLink);
 			waitForTime(1000);
 			SeleniumUtils.jsSetStyleAttr(selectFileInputField, "opacity: 1", driver);
 			explicitWait(5, ExpectedConditions.attributeContains(selectFileInputField, "style", "opacity: 1"));
-			waitForTime(1000);
-			selectFileInputField.sendKeys(filePath);
+			waitForTime(3000);
+			waitVisibilityAndSendKeys(selectFileInputField, filePath);
 			waitForTime(1500);
 			explicitWaitForVisibilityAndClickableWithClick(uploadCroppedButton);
 			driver.switchTo().parentFrame();
 			waitForTime(1000);
 			while (isExplicitlyWaitVisible(2, imageUploadIframe)) {
 				waitForTime(1000);
-				System.out.println("Iteration: ");
+
 			}
 		}
 	}

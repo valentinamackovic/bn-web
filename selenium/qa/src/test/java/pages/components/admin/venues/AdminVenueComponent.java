@@ -28,7 +28,7 @@ public class AdminVenueComponent extends BaseComponent {
 	
 	public void clickOnEditButton() {
 		WebElement editButton = findEditButtonElement();
-		explicitWaitForClicableWithClick(editButton);
+		waitVisibilityAndBrowserCheckClick(editButton);
 	}
 	
 	private WebElement getVenueNameElement() {
