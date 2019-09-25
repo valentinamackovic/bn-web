@@ -62,7 +62,8 @@ const structuredEventData = (
 					const { price_in_cents } = ticket_pricing;
 					const startDate = moment
 						.utc(start_date, URL_DATE_FORMAT)
-						.tz(timezone);
+						.tz(timezone)
+						.format();
 
 					offers.push({
 						"@type": "Offer",
@@ -77,8 +78,14 @@ const structuredEventData = (
 		});
 	}
 
-	const startDate = moment.utc(event_start, URL_DATE_FORMAT).tz(timezone);
-	const endDate = moment.utc(event_end, URL_DATE_FORMAT).tz(timezone);
+	const startDate = moment
+		.utc(event_start, URL_DATE_FORMAT)
+		.tz(timezone)
+		.format();
+	const endDate = moment
+		.utc(event_end, URL_DATE_FORMAT)
+		.tz(timezone)
+		.format();
 	const result = {
 		"@context": "https://schema.org",
 		"@type": "Event",
