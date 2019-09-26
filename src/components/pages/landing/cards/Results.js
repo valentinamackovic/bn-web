@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { withStyles, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import { fontFamilyBebas } from "../../../../config/theme";
+import { fontFamilyBebas, fontFamilyDemiBold } from "../../../../config/theme";
 import ResultsRegionFilter from "./ResultsRegionFilter";
 import eventResults from "../../../../stores/eventResults";
 import EventResultCard from "../../../elements/event/EventResultCard";
@@ -36,7 +36,8 @@ const styles = theme => ({
 		textAlign: "center",
 		fontSize: theme.typography.fontSize * 1.8,
 		letterSpacing: "4px",
-		fontFamily: fontFamilyBebas,
+		fontFamily: fontFamilyDemiBold,
+		textTransform: "uppercase",
 		paddingTop: theme.spacing.unit * 4,
 		paddingBottom: theme.spacing.unit * 4,
 
