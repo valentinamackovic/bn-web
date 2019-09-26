@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { Typography, withStyles } from "@material-ui/core";
 import moment from "moment-timezone";
 import { Link } from "react-router-dom";
-
+import classNames from "classnames";
 import Card from "../Card";
 import { fontFamilyDemiBold, secondaryHex } from "../../../config/theme";
 import MaintainAspectRatio from "../MaintainAspectRatio";
@@ -32,8 +32,14 @@ const styles = theme => ({
 	name: {
 		color: "#000000",
 		fontFamily: fontFamilyDemiBold,
-		fontSize: theme.typography.fontSize * 1.3,
-		lineHeight: 1.2
+		fontSize: "36px",
+		lineHeight: "38px"
+	},
+	nameSmall: {
+		color: "#000000",
+		fontFamily: fontFamilyDemiBold,
+		fontSize: "19px",
+		lineHeight: "21px"
 	},
 	detailsContent: {
 		height: 105,
@@ -52,24 +58,27 @@ const styles = theme => ({
 		color: "#cccfd9"
 	},
 	date: {
-		color: secondaryHex
+		color: secondaryHex,
+		fontSize: theme.typography.fontSize,
+		fontWeight: 600,
+		lineHeight: "18px"
 	},
 	value: {
 		fontSize: theme.typography.fontSize,
-		color: "#9DA3B4"
+		color: "#9DA3B4",
+		fontWeight: 500
 	},
 	priceTag: {
 		backgroundColor: "#fff4fb",
-		padding: theme.spacing.unit,
-		paddingTop: theme.spacing.unit + 3,
-		borderRadius: "6px 6px 6px 0px",
+		padding: "6px 6px 4px 6px",
+		borderRadius: "6px 6px 6px 0",
 		marginBottom: theme.spacing.unit
 	},
 	priceTagText: {
 		color: secondaryHex,
-		lineHeight: 0.5,
 		fontFamily: fontFamilyDemiBold,
-		fontSize: theme.typography.fontSize * 0.75
+		lineHeight: "17px",
+		fontSize: 17
 	}
 });
 
@@ -124,6 +133,13 @@ const EventResultCard = ({
 		.tz(venueTimezone)
 		.format("h:mm A");
 
+	const charCount = 12;
+	let useSmallText = false;
+
+	if (name.length > charCount) {
+		useSmallText = true;
+	}
+
 	return (
 		<Link to={`/events/${slug || id}`}>
 			<Card borderLess variant="default">
@@ -136,7 +152,14 @@ const EventResultCard = ({
 							<span className={classes.date}>{displayEventStartDate}</span>{" "}
 							&middot; {displayShowTime}
 						</Typography>
-						<Typography className={classes.name}>{name}</Typography>
+						<Typography
+							className={classNames({
+								[classes.name]: true,
+								[classes.nameSmall]: useSmallText
+							})}
+						>
+							{name}
+						</Typography>
 						<Typography className={classes.value}>@ {address}</Typography>
 					</div>
 					<div style={{ textAlign: "right" }}>

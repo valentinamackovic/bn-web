@@ -17,7 +17,7 @@ const styles = theme => ({
 		backgroundImage: "url(/images/homepage-bg.png)",
 		display: "flex",
 		flexDirection: "column",
-		minHeight: "60vh",
+		minHeight: 480,
 		[theme.breakpoints.down("sm")]: {
 			flexDirection: "column",
 			minHeight: "40vh"
