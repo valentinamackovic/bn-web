@@ -30,6 +30,7 @@ const styles = theme => ({
 		flexDirection: "column"
 	},
 	name: {
+		marginTop: theme.spacing.unit,
 		color: "#000000",
 		fontFamily: fontFamilyDemiBold,
 		fontSize: "36px",
@@ -42,9 +43,12 @@ const styles = theme => ({
 		lineHeight: "21px"
 	},
 	detailsContent: {
-		height: 105,
+		// height: 105,
 		display: "flex",
-		padding: theme.spacing.unit * 2
+		paddingLeft: theme.spacing.unit * 2,
+		paddingRight: theme.spacing.unit * 2,
+		paddingTop: theme.spacing.unit * 2,
+		paddingBottom: theme.spacing.unit
 	},
 	singleDetail: {
 		flex: 1,
@@ -67,6 +71,12 @@ const styles = theme => ({
 		fontSize: theme.typography.fontSize,
 		color: "#9DA3B4",
 		fontWeight: 500
+	},
+	addressHolder: {
+		paddingLeft: theme.spacing.unit * 2,
+		paddingRight: theme.spacing.unit * 2,
+		paddingTop: 0,
+		paddingBottom: theme.spacing.unit * 2
 	},
 	priceTag: {
 		backgroundColor: "#fff4fb",
@@ -133,7 +143,7 @@ const EventResultCard = ({
 		.tz(venueTimezone)
 		.format("h:mm A");
 
-	const charCount = 12;
+	const charCount = 15;
 	let useSmallText = false;
 
 	if (name.length > charCount) {
@@ -160,7 +170,6 @@ const EventResultCard = ({
 						>
 							{name}
 						</Typography>
-						<Typography className={classes.value}>@ {address}</Typography>
 					</div>
 					<div style={{ textAlign: "right" }}>
 						<PriceTag
@@ -169,6 +178,9 @@ const EventResultCard = ({
 							classes={classes}
 						/>
 					</div>
+				</div>
+				<div className={classes.addressHolder}>
+					<Typography className={classes.value}>@ {address}</Typography>
 				</div>
 			</Card>
 		</Link>
