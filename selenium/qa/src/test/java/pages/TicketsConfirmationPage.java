@@ -55,7 +55,7 @@ public class TicketsConfirmationPage extends BasePage {
 
 	public void clickOnChangeTicketLink() {
 		explicitWaitForVisiblity(changeTicketLink);
-		SeleniumUtils.clickOnLink(changeTicketLink, driver);
+		SeleniumUtils.clickOnElement(changeTicketLink, driver);
 	}
 
 	public void enterCreditCardDetails(String creditNumber, String expDate, String cvc, String zip) {
