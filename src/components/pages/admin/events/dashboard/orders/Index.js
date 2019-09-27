@@ -285,6 +285,9 @@ class OrderList extends Component {
 							columnStyles={columnStyles}
 							ticketTypeList={ticketTypeList}
 							{...order}
+							user={
+								order.on_behalf_of_user ? order.on_behalf_of_user : order.user
+							}
 						/>
 					);
 				})}
