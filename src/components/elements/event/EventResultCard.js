@@ -39,8 +39,7 @@ const styles = theme => ({
 	nameSmall: {
 		color: "#000000",
 		fontFamily: fontFamilyDemiBold,
-		fontSize: "19px",
-		lineHeight: "21px"
+		fontSize: "19px"
 	},
 	detailsContent: {
 		// height: 105,
@@ -143,7 +142,7 @@ const EventResultCard = ({
 		.tz(venueTimezone)
 		.format("h:mm A");
 
-	const charCount = 15;
+	const charCount = 17;
 	let useSmallText = false;
 
 	if (name.length > charCount) {
