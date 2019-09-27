@@ -4,9 +4,10 @@ import classnames from "classnames";
 import { fontFamilyBold } from "../../../config/theme";
 import servedImage from "../../../helpers/imagePathHelper";
 import RightUserMenu from "../../elements/header/RightUserMenu";
-import { observer } from "mobx-react";
-
 import SearchToolBarInput from "../../elements/header/SearchToolBarInput";
+import getPhoneOS from "../../../helpers/getPhoneOS";
+import AppButton from "../../elements/AppButton";
+import Settings from "../../../config/settings";
 
 const styles = theme => ({
 	root: {
@@ -127,8 +128,7 @@ class Hero extends Component {
 		this.state = {
 			query: "",
 			isSearching: false,
-			isIos: false,
-			isAndroid: false
+			phoneOS: getPhoneOS()
 		};
 	}
 
@@ -154,7 +154,7 @@ class Hero extends Component {
 
 	render() {
 		const { history, classes } = this.props;
-		const { isIos, isAndroid } = this.state;
+		const { phoneOS } = this.state;
 
 		return (
 			<div className={classes.root}>
@@ -188,7 +188,7 @@ class Hero extends Component {
 						</div>
 					</Hidden>
 					<Hidden smUp>
-						{isIos ? (
+						{phoneOS === "ios" ? (
 							<a
 								href="https://apps.apple.com/us/app/big-neon/id1445600728"
 								target="_blank"
@@ -198,7 +198,7 @@ class Hero extends Component {
 									src={servedImage("/images/appstore-apple.png")}
 								/>
 							</a>
-						) : isAndroid ? (
+						) : phoneOS === "android" ? (
 							<a
 								href="https://play.google.com/store/apps/details?id=com.bigneon.mobile"
 								target="_blank"
