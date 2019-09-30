@@ -9,17 +9,26 @@ import getUrlParam from "../../../helpers/getUrlParam";
 import LandingAppBar from "../../elements/header/LandingAppBar";
 import user from "../../../stores/user";
 import Hidden from "@material-ui/core/es/Hidden/Hidden";
+import { Pagination, urlPageParam } from "../../elements/pagination";
+import { observer } from "mobx-react";
+import Loader from "../../elements/loaders/Loader";
 
+@observer
 class Home extends Component {
 	constructor(props) {
 		super(props);
+		this.state = {
+			query: getUrlParam("search") || "",
+			page: urlPageParam()
+		};
 	}
 
 	componentDidMount() {
-		const query = getUrlParam("search") || "";
+		const { query, page } = this.state;
 
 		eventResults.refreshResults(
-			{ query },
+			{ query, page },
+
 			() => {},
 			message => {
 				notifications.show({
@@ -28,6 +37,12 @@ class Home extends Component {
 				});
 			}
 		);
+	}
+
+	changePage(page = urlPageParam()) {
+		const { query } = this.state;
+
+		eventResults.refreshResults({ query, page }, function() {}, function() {});
 	}
 
 	render() {
@@ -45,7 +60,20 @@ class Home extends Component {
 				<Hero history={history}/>
 				<Grid container justify="center">
 					<Grid item xs={11} sm={11} lg={10}>
-						<Results/>
+						{eventResults.isLoading ? (
+							<Loader>Finding events...</Loader>
+						) : (
+							<Results/>
+						)}
+						{eventResults.paging ? (
+							<Pagination
+								isLoading={eventResults.isLoading}
+								paging={eventResults.paging}
+								onChange={this.changePage.bind(this)}
+							/>
+						) : (
+							<div/>
+						)}
 					</Grid>
 					<div style={{ marginBottom: 40 }}/>
 				</Grid>
