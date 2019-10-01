@@ -4,9 +4,10 @@ import classnames from "classnames";
 import { fontFamilyBold } from "../../../config/theme";
 import servedImage from "../../../helpers/imagePathHelper";
 import RightUserMenu from "../../elements/header/RightUserMenu";
-import { observer } from "mobx-react";
-
 import SearchToolBarInput from "../../elements/header/SearchToolBarInput";
+import getPhoneOS from "../../../helpers/getPhoneOS";
+import AppButton from "../../elements/AppButton";
+import Settings from "../../../config/settings";
 
 const styles = theme => ({
 	root: {
@@ -17,10 +18,10 @@ const styles = theme => ({
 		backgroundImage: "url(/images/homepage-bg.png)",
 		display: "flex",
 		flexDirection: "column",
-		minHeight: "60vh",
+		minHeight: 480,
 		[theme.breakpoints.down("sm")]: {
 			flexDirection: "column",
-			minHeight: "40vh"
+			minHeight: 350
 		}
 	},
 	headingContainer: {
@@ -126,7 +127,8 @@ class Hero extends Component {
 		this.inputRef = React.createRef();
 		this.state = {
 			query: "",
-			isSearching: false
+			isSearching: false,
+			phoneOS: getPhoneOS()
 		};
 	}
 
@@ -134,8 +136,25 @@ class Hero extends Component {
 		this.inputRef.current.click();
 	};
 
+	componentWillMount() {
+		this.getMobileOperatingSystem();
+	}
+
+	getMobileOperatingSystem() {
+		const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+
+		if (/android/i.test(userAgent)) {
+			this.setState({ isAndroid: true });
+		}
+
+		if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+			this.setState({ isIos: true });
+		}
+	}
+
 	render() {
 		const { history, classes } = this.props;
+		const { phoneOS } = this.state;
 
 		return (
 			<div className={classes.root}>
@@ -169,15 +188,29 @@ class Hero extends Component {
 						</div>
 					</Hidden>
 					<Hidden smUp>
-						<a
-							href="https://play.google.com/store/apps/details?id=com.bigneon.mobile"
-							target="_blank"
-						>
-							<img
-								className={classes.downloadBtn}
-								src={servedImage("/images/appstore-apple.png")}
-							/>
-						</a>
+						{phoneOS === "ios" ? (
+							<a
+								href="https://apps.apple.com/us/app/big-neon/id1445600728"
+								target="_blank"
+							>
+								<img
+									className={classes.downloadBtn}
+									src={servedImage("/images/appstore-apple.png")}
+								/>
+							</a>
+						) : phoneOS === "android" ? (
+							<a
+								href="https://play.google.com/store/apps/details?id=com.bigneon.mobile"
+								target="_blank"
+							>
+								<img
+									className={classes.downloadBtn}
+									src={servedImage("/images/appstore-google-play.png")}
+								/>
+							</a>
+						) : (
+							<div/>
+						)}
 					</Hidden>
 				</div>
 
