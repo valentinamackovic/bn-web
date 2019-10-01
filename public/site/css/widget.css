@@ -33,7 +33,7 @@ a.bn-event-row,a.bn-event-row:visited, a.bn-event-row:hover {
 }
 
 .bn-event-image img {
-	width: 300px;
+	max-width: 300px;
 	height: 150px;
 }
 
