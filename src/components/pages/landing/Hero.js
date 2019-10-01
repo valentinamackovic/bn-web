@@ -18,7 +18,7 @@ const styles = theme => ({
 		backgroundImage: "url(/images/homepage-bg.png)",
 		display: "flex",
 		flexDirection: "column",
-		minHeight: 480,
+		minHeight: 550,
 		[theme.breakpoints.down("sm")]: {
 			flexDirection: "column",
 			minHeight: 350
@@ -158,18 +158,18 @@ class Hero extends Component {
 
 		return (
 			<div className={classes.root}>
-				<Hidden smDown>
-					<div className={classes.toolBar}>
-						<img
-							alt="Header logo"
-							className={classes.logoImage}
-							src={servedImage("/images/logo-white.png")}
-						/>
-						<span className={classes.rightMenuOptions}>
-							<RightUserMenu whiteText={true} history={history}/>
-						</span>
-					</div>
-				</Hidden>
+				{/*<Hidden smDown>*/}
+				{/*	<div className={classes.toolBar}>*/}
+				{/*		<img*/}
+				{/*			alt="Header logo"*/}
+				{/*			className={classes.logoImage}*/}
+				{/*			src={servedImage("/images/logo-white.png")}*/}
+				{/*		/>*/}
+				{/*		<span className={classes.rightMenuOptions}>*/}
+				{/*			<RightUserMenu whiteText={true} history={history}/>*/}
+				{/*		</span>*/}
+				{/*	</div>*/}
+				{/*</Hidden>*/}
 				<div className={classes.headingContainer}>
 					<Typography
 						className={classnames({
@@ -177,7 +177,7 @@ class Hero extends Component {
 							[classes.heading]: true
 						})}
 					>
-						The Future of Ticketing
+						Live Music Lives Here
 					</Typography>
 					<Hidden smDown>
 						<div

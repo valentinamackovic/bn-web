@@ -8,6 +8,7 @@ import eventResults from "../../../../stores/eventResults";
 import EventResultCard from "../../../elements/event/EventResultCard";
 import Button from "../../../elements/Button";
 import servedImage from "../../../../helpers/imagePathHelper";
+import HoldRow from "../../admin/events/dashboard/holds/children/ChildRow";
 
 const styles = theme => ({
 	root: {
