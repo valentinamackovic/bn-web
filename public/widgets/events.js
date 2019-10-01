@@ -68,27 +68,133 @@ const BigNeonWidget = {};
 		}
 		return priceText;
 	}
+
+	function optimizeCloudinary(url, quality = "low", size = "f_auto") {
+		if (!url || typeof url !== "string") {
+			return url;
+		}
+
+		//Only manipulate urls served from cloudinary and ones that have not already been manipulated
+		if (
+			url.indexOf("res.cloudinary.com") === -1 ||
+			url.indexOf("/q_auto:") > -1
+		) {
+			return url;
+		}
+
+		const insertAfterString = "/image/upload/";
+		const index = url.indexOf(insertAfterString);
+		if (index === -1) {
+			return url;
+		}
+
+		const qualityParams = `${size}/q_auto:${quality}/`;
+		const indexToInsert = index + insertAfterString.length;
+
+		return [
+			url.slice(0, indexToInsert),
+			qualityParams,
+			url.slice(indexToInsert)
+		].join("");
+	}
+
 	/** End Helper Functions */
+	const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
+	const MONTHS = [
+		"Jan",
+		"Feb",
+		"Mar",
+		"Apr",
+		"May",
+		"Jun",
+		"Jul",
+		"Aug",
+		"Sep",
+		"Oct",
+		"Nov",
+		"Dec"
+	];
+	const TEMPLATES = {
+		_date: (tag, dateClass, eventDate) => {
+			const weekday = `<span class="${dateClass}-weekday">${
+				DAYS[eventDate.getDay()]
+			}</span>`;
+			const month = `<span class="${dateClass}-month">${
+				MONTHS[eventDate.getMonth()]
+			}</span>`;
+			const day = `<span class="${dateClass}-day">${eventDate.getDate()}</span>`;
+			const year = `<span class="${dateClass}-year">${eventDate.getFullYear()}</span>`;
+
+			return `<${tag} class="${dateClass}">${weekday} ${month} ${day} ${year}</${tag}>`;
+		},
+		_image: (imageUrl, eventName) => {
+			if (imageUrl) {
+				const src = optimizeCloudinary(imageUrl);
+				return `<img src="${src}" alt="${eventName || "Big Neon Event"}"/>`;
+			}
+			return "";
+		},
+		//Left column
+		dateAndImageContainer: function(eventDate, imageUrl, eventName) {
+			const date = TEMPLATES._date("h3", "bn-event-date", eventDate);
+			const image = TEMPLATES._image(imageUrl, eventName);
+			return `<div class="bn-event-image">${date}${image}</div>`;
+		},
+		_time: (time, className, prefix) => {
+			return `<span class="v1 ${className}">${prefix} </span>${formatAMPM(
+				time
+			)}`;
+		},
+		//Middle column
+		nameAndDescriptionContainer: (
+			eventDate,
+			eventName,
+			venueName,
+			doortime
+		) => {
+			const mobileEventDate = TEMPLATES._date(
+				"h3",
+				"bn-event-date-mobile",
+				eventDate
+			);
+			const eventNameDiv = `<h2 class="bn-event-name">${eventName}</h2>`;
+			const venueNameDiv = `<h4 class="v1 bn-event-venue-name">${venueName}</h4>`;
+			const times = `<p class="bn-event-time">${TEMPLATES._time(
+				doortime,
+				"bn-key-door-time",
+				"Doors"
+			)} / ${TEMPLATES._time(eventDate, "bn-key-show-time", "Show")}</p>`;
+			return `<div class="bn-event-text">${mobileEventDate}${eventNameDiv}${venueNameDiv}${times}</div>`;
+		},
+		//Right column
+		purchaseContainer: (eventId, priceValue, categoryValue) => {
+			const button = `<button class="bn-buy-button bn-buy-button-module" id="bigneon-buy-button-${eventId}">Tickets</button>`;
+			const price = `<p class="bn-event-price">${priceValue}</p>`;
+			const category = `<p class="v1 bn-event-category">${categoryValue}</p>`;
+			return `<div class="bn-event-button">${button}${price}${category}</div>`;
+		},
+
+		eventContainer: eventHtml =>
+			`<div class="bn-event-container">${eventHtml}</div>`,
+		eventRow: (eventUrl, rowHtml) =>
+			`<a class="bn-event-row" href="${eventUrl}" target="_blank">${rowHtml}</a>`
+	};
 	context.events = false;
 	context.params = getSyncScriptParams();
 
 	context.fetch = function(page) {
 		page = page || 0;
-		xhr(
-			"GET",
-			`${context.params.apiUrl}events?page=${page}&organization_id=${
-				context.params.organizationId
-			}`,
-			null,
-			function(eventsString) {
-				try {
-					context.events = JSON.parse(eventsString);
-					context.render(context.events, true);
-				} catch (e) {
-					console.error(e);
-				}
+		const uri = `${context.params.apiUrl}events?page=${page}&organization_id=${
+			context.params.organizationId
+		}`;
+		xhr("GET", uri, null, function(eventsString) {
+			try {
+				context.events = JSON.parse(eventsString);
+				context.render(context.events, true);
+			} catch (e) {
+				console.error(e);
 			}
-		);
+		});
 	};
 
 	context.render = function(events, firstRender) {
@@ -104,21 +210,6 @@ const BigNeonWidget = {};
 		if (!events) {
 			events = context.events;
 		}
-		const days = ["Sun", "Mon", "Tue", "Wed", "Thur", "Fri", "Sat"];
-		const months = [
-			"Jan",
-			"Feb",
-			"Mar",
-			"Apr",
-			"May",
-			"Jun",
-			"Jul",
-			"Aug",
-			"Sep",
-			"Oct",
-			"Nov",
-			"Dec"
-		];
 
 		let target = context.params.target;
 		const regexp = /^[^a-zA-Z]/;
@@ -126,6 +217,7 @@ const BigNeonWidget = {};
 		const parent = document.querySelector(target);
 
 		events.data.forEach(event => {
+			const { id, promo_image_url, name, slug, event_type } = event;
 			const eventDate = parseLocalizedDateTime(
 				event.localized_times.event_start,
 				event.event_start
@@ -135,71 +227,24 @@ const BigNeonWidget = {};
 				event.door_time || event.event_start
 			);
 			const priceText = getPrice(event);
-
-			const row = document.createElement("a");
-			row.setAttribute("href", `${context.params.baseUrl}events/${event.id}`);
-			row.setAttribute("target", "_blank");
-
-			const eventModuleContainer = document.createElement("div");
-			eventModuleContainer.className = "bn-event-container";
-			row.appendChild(eventModuleContainer);
-
-			const eventModuleImageContainer = document.createElement("div");
-			eventModuleImageContainer.className = "bn-event-image";
-			eventModuleContainer.appendChild(eventModuleImageContainer);
-
-			const eventModuleDate = document.createElement("h3");
-			eventModuleDate.className = "bn-event-date";
-			const eventDateFormatted = `<span class="bn-event-date-weekday">${
-				days[eventDate.getDay()]
-			}</span> <span class="bn-event-date-month">${
-				months[eventDate.getMonth()]
-			}</span> <span class="bn-event-date-day">${eventDate.getDate()}</span> <span class="bn-event-date-year">${eventDate.getFullYear()}</span>`;
-			eventModuleDate.innerHTML = eventDateFormatted;
-			eventModuleImageContainer.appendChild(eventModuleDate);
-
-			if (event.promo_image_url) {
-				const eventModuleImage = document.createElement("img");
-				eventModuleImage.setAttribute("src", event.promo_image_url);
-				eventModuleImage.setAttribute("alt", "event");
-				eventModuleImageContainer.appendChild(eventModuleImage);
-			}
-
-			const eventModuleTextContainer = document.createElement("div");
-			eventModuleTextContainer.className = "bn-event-text";
-			eventModuleContainer.append(eventModuleTextContainer);
-
-			const eventModuleDateMobile = document.createElement("h3");
-			eventModuleDateMobile.className = "bn-event-date-mobile";
-			eventModuleDateMobile.innerHTML = eventDateFormatted;
-			eventModuleTextContainer.appendChild(eventModuleDateMobile);
-
-			const eventModuleArtists = document.createElement("h2");
-			eventModuleArtists.className = "bn-event-artists";
-			eventModuleArtists.innerText = event.name;
-			eventModuleTextContainer.appendChild(eventModuleArtists);
-
-			const eventModuleTime = document.createElement("p");
-			eventModuleTime.className = "bn-event-time";
-			eventModuleTime.innerHTML = formatAMPM(doorTime);
-			eventModuleTextContainer.appendChild(eventModuleTime);
-
-			const eventModuleButtonContainer = document.createElement("div");
-			eventModuleButtonContainer.className = "bn-event-button";
-			eventModuleContainer.appendChild(eventModuleButtonContainer);
-
-			const eventModuleButton = document.createElement("button");
-			eventModuleButton.className = "bn-buy-button bn-buy-button-module";
-			eventModuleButton.id = `bigneon-buy-button-${event.id}`;
-			eventModuleButton.innerText = "Tickets";
-			eventModuleButtonContainer.appendChild(eventModuleButton);
-
-			const eventModulePrice = document.createElement("p");
-			eventModulePrice.className = "bn-event-price";
-			eventModulePrice.innerText = priceText;
-			eventModuleButtonContainer.appendChild(eventModulePrice);
-
-			parent.appendChild(row);
+			let eventHtml = TEMPLATES.dateAndImageContainer(
+				eventDate,
+				promo_image_url,
+				name
+			);
+			eventHtml += TEMPLATES.nameAndDescriptionContainer(
+				eventDate,
+				name,
+				event.venue.name,
+				doorTime
+			);
+			eventHtml += TEMPLATES.purchaseContainer(id, priceText, event_type);
+			const eventContainer = TEMPLATES.eventContainer(eventHtml);
+			const row = TEMPLATES.eventRow(
+				`${context.params.baseUrl}events/${slug}`,
+				eventContainer
+			);
+			parent.insertAdjacentHTML("beforeend", row);
 		});
 	};
 	context.fetch();
