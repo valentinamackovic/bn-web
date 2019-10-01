@@ -118,7 +118,7 @@ public class AbstractBase implements Serializable {
 			explicitWaitForVisibilityAndClickableWithClick(element);
 		}
 	}
-	
+
 	public void waitVisibilityAndSendKeysSlow(WebElement element, String value) {
 		if (value == null) {
 			return;
