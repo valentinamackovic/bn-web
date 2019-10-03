@@ -5,7 +5,7 @@ import eventResults from "../../../stores/eventResults";
 import changeUrlParam from "../../../helpers/changeUrlParam";
 import notifications from "../../../stores/notifications";
 import servedImage from "../../../helpers/imagePathHelper";
-import Hidden from "@material-ui/core/es/Hidden/Hidden";
+import { Hidden } from "@material-ui/core";
 
 const styles = {
 	root: {
