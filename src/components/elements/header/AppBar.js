@@ -105,11 +105,11 @@ class CustomAppBar extends Component {
 						</Link>
 					</div>
 
-					{!layout.showStudioLogo ? (
-						<Hidden smDown>
-							<SearchToolBarInput history={history}/>
-						</Hidden>
-					) : null}
+					{/*{!layout.showStudioLogo ? (*/}
+					{/*	<Hidden smDown>*/}
+					{/*		<SearchToolBarInput history={history}/>*/}
+					{/*	</Hidden>*/}
+					{/*) : null}*/}
 
 					{!layout.showStudioLogo ? (
 						<Hidden smUp>
