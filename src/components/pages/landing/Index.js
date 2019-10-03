@@ -58,21 +58,16 @@ class Home extends Component {
 				</Hidden>
 
 				<Hero history={history}/>
-				<Grid container justify="center">
+				<Grid
+					container
+					justify="center"
+					style={{ maxWidth: 1400, margin: "0 auto" }}
+				>
 					<Grid item xs={11} sm={11} lg={10}>
 						{eventResults.isLoading ? (
 							<Loader>Finding events...</Loader>
 						) : (
 							<Results/>
-						)}
-						{eventResults.paging ? (
-							<Pagination
-								isLoading={eventResults.isLoading}
-								paging={eventResults.paging}
-								onChange={this.changePage.bind(this)}
-							/>
-						) : (
-							<div/>
 						)}
 					</Grid>
 					<div style={{ marginBottom: 40 }}/>
