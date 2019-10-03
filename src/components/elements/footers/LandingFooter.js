@@ -2,6 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
+import Hidden from "@material-ui/core/Hidden";
+import Grid from "@material-ui/core/Grid";
+
 import Settings from "../../../config/settings";
 import {
 	callToActionBackground,
@@ -9,9 +12,7 @@ import {
 } from "../../../config/theme";
 import AppButton from "../AppButton";
 import servedImage from "../../../helpers/imagePathHelper";
-import Grid from "@material-ui/core/Grid";
 import Results from "../../pages/landing/cards/Results";
-import Hidden from "@material-ui/core/es/Hidden/Hidden";
 
 //TODO change external links
 const rootUrl = "";
