@@ -69,15 +69,6 @@ class Home extends Component {
 						) : (
 							<Results/>
 						)}
-						{eventResults.paging ? (
-							<Pagination
-								isLoading={eventResults.isLoading}
-								paging={eventResults.paging}
-								onChange={this.changePage.bind(this)}
-							/>
-						) : (
-							<div/>
-						)}
 					</Grid>
 					<div style={{ marginBottom: 40 }}/>
 				</Grid>

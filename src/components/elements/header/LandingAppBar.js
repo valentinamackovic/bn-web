@@ -23,6 +23,7 @@ import BoxOfficeLink from "./BoxOfficeLink";
 import CurrentOrganizationMenu from "./CurrentOrganizationMenu";
 import CartHeaderLink from "../../common/cart/CartHeaderLink";
 import RightUserMenu from "./RightUserMenu";
+import servedImage from "../../../helpers/imagePathHelper";
 
 const eventImageHeight = 45;
 

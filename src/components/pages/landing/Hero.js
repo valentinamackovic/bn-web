@@ -18,7 +18,7 @@ const styles = theme => ({
 		backgroundImage: "url(/images/homepage-bg.png)",
 		display: "flex",
 		flexDirection: "column",
-		minHeight: 550,
+		minHeight: 510,
 		[theme.breakpoints.down("sm")]: {
 			flexDirection: "column",
 			minHeight: 350
@@ -35,6 +35,9 @@ const styles = theme => ({
 	text: {
 		color: "#FFFFFF"
 	},
+	shText: {
+		color: "#9DA3B4"
+	},
 	toolBar: {
 		paddingRight: "8vw",
 		paddingLeft: "8vw",
@@ -47,6 +50,7 @@ const styles = theme => ({
 	heading: {
 		fontSize: theme.typography.fontSize * 4,
 		fontFamily: fontFamilyBold,
+		marginTop: theme.spacing.unit * 4,
 		[theme.breakpoints.down("sm")]: {
 			fontSize: theme.typography.fontSize * 2.9,
 			paddingLeft: theme.spacing.unit * 3,
@@ -54,7 +58,7 @@ const styles = theme => ({
 		}
 	},
 	subheading: {
-		fontSize: theme.typography.fontSize * 1.6,
+		fontSize: 21,
 		lineSpace: 1,
 		[theme.breakpoints.down("sm")]: {
 			fontSize: theme.typography.fontSize * 1.4
@@ -71,23 +75,23 @@ const styles = theme => ({
 		fontSize: theme.typography.fontSize * 0.9,
 		marginRight: theme.spacing.unit
 	},
-	appLinkContainer: {
-		// borderStyle: "solid",
-		// borderColor: "red",
+	appLinksContainer: {
 		display: "flex",
 		justifyContent: "center",
 		alignItems: "center",
-		marginTop: 25,
+		margin: "25px 0 0 0",
+
 		[theme.breakpoints.up("sm")]: {
 			justifyContent: "flex-center"
 		}
 	},
 	searchContainer: {
 		borderRadius: "10px",
-		width: "33vw",
 		borderColor: "#fff",
 		borderStyle: "solid",
+		width: 790,
 		display: "flex",
+		// height: 67,
 		backgroundColor: "#fff",
 		padding: theme.spacing.unit * 2,
 		justifyContent: "flex-start",
@@ -117,6 +121,7 @@ const styles = theme => ({
 	downloadBtn: {
 		maxWidth: 128,
 		marginTop: theme.spacing.unit * 2,
+		marginLeft: theme.spacing.unit * 2,
 		maxHeight: 38
 	}
 });
@@ -179,6 +184,15 @@ class Hero extends Component {
 					>
 						Live Music Lives Here
 					</Typography>
+					<Typography
+						className={classnames({
+							[classes.shText]: true,
+
+							[classes.subHeading]: true
+						})}
+					>
+						We got your tickets, you enjoy the show
+					</Typography>
 					<Hidden smDown>
 						<div
 							className={classes.searchContainer}
@@ -212,34 +226,18 @@ class Hero extends Component {
 							<div/>
 						)}
 					</Hidden>
-				</div>
-
-				<div className={classes.appLinkContainer}>
 					<Hidden xsDown>
-						<div className={classes.iconHolder}>
-							<Typography
-								className={classnames({
-									[classes.text]: true
-								})}
-							>
-								Available on:&nbsp;
-							</Typography>
-							<a
-								href="https://play.google.com/store/apps/details?id=com.bigneon.mobile"
-								target="_blank"
-							>
+						<div className={classes.appLinksContainer}>
+							<a href={Settings().appStoreIos} target="_blank">
 								<img
-									className={classes.iconImage}
-									src={servedImage("/images/avail-android-logo.svg")}
+									className={classes.downloadBtn}
+									src={servedImage("/images/appstore-apple.png")}
 								/>
 							</a>
-							<a
-								href="https://apps.apple.com/us/app/big-neon/id1445600728"
-								target="_blank"
-							>
+							<a href={Settings().appStoreAndroid} target="_blank">
 								<img
-									className={classes.iconImage}
-									src={servedImage("/images/avail-apple.svg")}
+									className={classes.downloadBtn}
+									src={servedImage("/images/appstore-google-play.png")}
 								/>
 							</a>
 						</div>

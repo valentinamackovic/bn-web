@@ -18,6 +18,7 @@ import CurrentOrganizationMenu from "./CurrentOrganizationMenu";
 import BoxOfficeLink from "./BoxOfficeLink";
 import AppBarLogo from "./AppBarLogo";
 import layout from "../../../stores/layout";
+import servedImage from "../../../helpers/imagePathHelper";
 
 const styles = theme => {
 	return {
@@ -79,6 +80,15 @@ const CustomAppBar = observer(props => {
 						<SearchToolBarInput history={history}/>
 					</Hidden>
 				) : null}
+
+				<Hidden smUp>
+					<img
+						alt="Search icon"
+						className={classes.icon}
+						src={servedImage("/icons/search-gray.svg")}
+						onClick={this.showMobiSearch}
+					/>
+				</Hidden>
 
 				<span className={classes.rightMenuOptions}>
 					<Hidden smDown>
