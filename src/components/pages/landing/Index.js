@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 import Grid from "@material-ui/core/Grid";
+import Hidden from "@material-ui/core/Hidden";
+import { observer } from "mobx-react";
+
 import Results from "./cards/Results";
 import Hero from "./Hero";
 import eventResults from "../../../stores/eventResults";
@@ -8,9 +11,7 @@ import Meta from "./Meta";
 import getUrlParam from "../../../helpers/getUrlParam";
 import LandingAppBar from "../../elements/header/LandingAppBar";
 import user from "../../../stores/user";
-import Hidden from "@material-ui/core/es/Hidden/Hidden";
 import { Pagination, urlPageParam } from "../../elements/pagination";
-import { observer } from "mobx-react";
 import Loader from "../../elements/loaders/Loader";
 
 @observer
