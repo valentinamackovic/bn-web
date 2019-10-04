@@ -20,12 +20,7 @@ import layout from "../../../stores/layout";
 import optimizedImageUrl from "../../../helpers/optimizedImageUrl";
 import Settings from "../../../config/settings";
 
-let supportLink = "";
-let showLink = false;
-if (Settings().appSupportLink) {
-	showLink = true;
-	supportLink = Settings().appSupportLink;
-}
+const supportLink = Settings().appSupportLink;
 
 const styles = theme => ({
 	root: {
@@ -243,7 +238,7 @@ class RightHeaderMenu extends React.Component {
 
 		return (
 			<span className={classes.menuButton}>
-				{showLink ? (
+				{supportLink ? (
 					<a className={classes.menuLink} href={supportLink} target="_blank">
 						Support
 					</a>
