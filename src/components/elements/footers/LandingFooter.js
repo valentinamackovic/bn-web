@@ -50,7 +50,7 @@ const styles = theme => ({
 	},
 	content: {
 		width: "100%",
-		maxWidth: 1200,
+		maxWidth: 1400,
 		paddingLeft: theme.spacing.unit * 2,
 		paddingRight: theme.spacing.unit * 2,
 		display: "flex",
@@ -64,7 +64,7 @@ const styles = theme => ({
 	copyrightContainer: {
 		justifyContent: "center",
 		display: "flex",
-		borderTop: "1px solid #9DA3B4;",
+		borderTop: "1px solid #E8EAEE;",
 		paddingBottom: theme.spacing.unit * 3,
 		paddingTop: theme.spacing.unit * 3,
 		alignItems: "center"
@@ -131,6 +131,17 @@ const styles = theme => ({
 			paddingBottom: 0
 		}
 	},
+	linkLogoContainer: {
+		paddingTop: theme.spacing.unit * 3,
+		paddingBottom: theme.spacing.unit,
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "flex-start",
+		[theme.breakpoints.down("sm")]: {
+			paddingTop: theme.spacing.unit * 2,
+			paddingBottom: 0
+		}
+	},
 	logo: {
 		height: 50,
 		width: "auto"
@@ -169,7 +180,7 @@ const LandingFooter = props => {
 		<div className={classes.root}>
 			<Grid container justify="center">
 				<div className={classes.content}>
-					<div className={classes.containerPadding}>
+					<div className={classes.linkLogoContainer}>
 						<img
 							alt={"LandingFooter icon"}
 							src={servedImage("/images/logo.png")}

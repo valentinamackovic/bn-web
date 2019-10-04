@@ -62,7 +62,7 @@ class Home extends Component {
 				<Grid
 					container
 					justify="center"
-					style={{ maxWidth: 1400, margin: "0 auto" }}
+					style={{ maxWidth: 1600, margin: "0 auto" }}
 				>
 					<Grid item xs={11} sm={11} lg={10}>
 						{eventResults.isLoading ? (

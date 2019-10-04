@@ -69,7 +69,7 @@ const styles = theme => {
 			backgroundRepeat: "no-repeat",
 			borderColor: secondaryHex,
 			borderRadius: 3,
-
+			fontSize: 18,
 			boxSizing: "border-box",
 			// height: 52,
 			width: 268,
