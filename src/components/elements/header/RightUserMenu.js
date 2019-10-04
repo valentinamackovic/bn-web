@@ -18,6 +18,9 @@ import Button from "../Button";
 import servedImage from "../../../helpers/imagePathHelper";
 import layout from "../../../stores/layout";
 import optimizedImageUrl from "../../../helpers/optimizedImageUrl";
+import Settings from "../../../config/settings";
+
+const supportLink = Settings().appSupportLink;
 
 const styles = theme => ({
 	root: {
@@ -48,7 +51,12 @@ const styles = theme => ({
 	},
 	menuLink: {
 		outline: "none",
-		marginLeft: theme.spacing.unit * 2
+		textDecoration: "none",
+		color: "#3C383F",
+		marginLeft: theme.spacing.unit * 2,
+		"&:visited": {
+			color: "#3C383F"
+		}
 	},
 	onlyShowOnMobileLink: {
 		[theme.breakpoints.up("md")]: {
@@ -230,6 +238,13 @@ class RightHeaderMenu extends React.Component {
 
 		return (
 			<span className={classes.menuButton}>
+				{supportLink ? (
+					<a className={classes.menuLink} href={supportLink} target="_blank">
+						Support
+					</a>
+				) : (
+					<div/>
+				)}
 				<Link to="/login" className={classes.menuLink}>
 					<Hidden mdUp>
 						<Button variant="plainWhite" size={"small"}>

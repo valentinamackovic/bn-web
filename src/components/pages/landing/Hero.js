@@ -18,7 +18,7 @@ const styles = theme => ({
 		backgroundImage: "url(/images/homepage-bg.png)",
 		display: "flex",
 		flexDirection: "column",
-		minHeight: 510,
+		minHeight: 590,
 		[theme.breakpoints.down("sm")]: {
 			flexDirection: "column",
 			minHeight: 350
@@ -48,7 +48,7 @@ const styles = theme => ({
 		height: theme.spacing.unit * 10
 	},
 	heading: {
-		fontSize: theme.typography.fontSize * 4,
+		fontSize: 72,
 		fontFamily: fontFamilyBold,
 		marginTop: theme.spacing.unit * 4,
 		[theme.breakpoints.down("sm")]: {
@@ -57,7 +57,7 @@ const styles = theme => ({
 			paddingRight: theme.spacing.unit * 3
 		}
 	},
-	subheading: {
+	subHeading: {
 		fontSize: 21,
 		lineSpace: 1,
 		[theme.breakpoints.down("sm")]: {
@@ -91,12 +91,13 @@ const styles = theme => ({
 		borderStyle: "solid",
 		width: 790,
 		display: "flex",
-		// height: 67,
+		height: 67,
 		backgroundColor: "#fff",
 		padding: theme.spacing.unit * 2,
 		justifyContent: "flex-start",
 		alignItems: "center",
 		marginTop: 25,
+		boxShadow: "10px 10px 40px 0 rgba(13,10,43,0.50)",
 		[theme.breakpoints.up("sm")]: {
 			justifyContent: "flex-center"
 		}
@@ -187,7 +188,6 @@ class Hero extends Component {
 					<Typography
 						className={classnames({
 							[classes.shText]: true,
-
 							[classes.subHeading]: true
 						})}
 					>
@@ -203,20 +203,14 @@ class Hero extends Component {
 					</Hidden>
 					<Hidden smUp>
 						{phoneOS === "ios" ? (
-							<a
-								href="https://apps.apple.com/us/app/big-neon/id1445600728"
-								target="_blank"
-							>
+							<a href={Settings().appStoreIos} target="_blank">
 								<img
 									className={classes.downloadBtn}
 									src={servedImage("/images/appstore-apple.png")}
 								/>
 							</a>
 						) : phoneOS === "android" ? (
-							<a
-								href="https://play.google.com/store/apps/details?id=com.bigneon.mobile"
-								target="_blank"
-							>
+							<a href={Settings().appStoreAndroid} target="_blank">
 								<img
 									className={classes.downloadBtn}
 									src={servedImage("/images/appstore-google-play.png")}

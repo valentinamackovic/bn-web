@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="61px" height="61px" viewBox="0 0 61 61" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: sketchtool 58 (101010) - https://sketch.com -->
+    <title>A06B1500-C9D9-4B13-8706-44DC2ECA6144</title>
+    <desc>Created with sketchtool.</desc>
+    <defs>
+        <filter x="-9.9%" y="-117.2%" width="122.4%" height="364.2%" filterUnits="objectBoundingBox" id="filter-1">
+            <feOffset dx="0" dy="2" in="SourceAlpha" result="shadowOffsetOuter1"></feOffset>
+            <feGaussianBlur stdDeviation="11.5" in="shadowOffsetOuter1" result="shadowBlurOuter1"></feGaussianBlur>
+            <feColorMatrix values="0 0 0 0 0.68285779   0 0 0 0 0.391784452   0 0 0 0 0.673682237  0 0 0 0.800480769 0" type="matrix" in="shadowBlurOuter1" result="shadowMatrixOuter1"></feColorMatrix>
+            <feMerge>
+                <feMergeNode in="shadowMatrixOuter1"></feMergeNode>
+                <feMergeNode in="SourceGraphic"></feMergeNode>
+            </feMerge>
+        </filter>
+    </defs>
+    <g id="Homepage" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="Home-Full" transform="translate(-572.000000, -341.000000)" fill="#FF22B2" fill-rule="nonzero">
+            <g id="Group-2" transform="translate(565.000000, 180.000000)">
+                <g id="search" filter="url(#filter-1)" transform="translate(0.000000, 157.000000)">
+                    <g id="icons/magnifying-glass" transform="translate(26.000000, 21.000000)">
+                        <g id="Shape">
+                            <path d="M21.8799058,20.7496075 L17.2566719,16.1263736 C18.4026688,14.7291994 19.0934066,12.9395604 19.0934066,10.989011 C19.0934066,6.51491366 15.4631083,2.88461538 10.989011,2.88461538 C6.51098901,2.88461538 2.88461538,6.51491366 2.88461538,10.989011 C2.88461538,15.4631083 6.51098901,19.0934066 10.989011,19.0934066 C12.9395604,19.0934066 14.7252747,18.4065934 16.122449,17.2605965 L20.7456829,21.8799058 C21.0596546,22.1938776 21.5659341,22.1938776 21.8799058,21.8799058 C22.1938776,21.5698587 22.1938776,21.0596546 21.8799058,20.7496075 Z M10.9890111,17.4803769 C7.40580856,17.4803769 4.4937206,14.568289 4.4937206,10.9890111 C4.4937206,7.40973319 7.40580856,4.4937206 10.9890111,4.4937206 C14.5682891,4.4937206 17.4843017,7.40973319 17.4843017,10.9890111 C17.4843017,14.568289 14.5682891,17.4803769 10.9890111,17.4803769 Z"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

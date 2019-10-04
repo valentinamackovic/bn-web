@@ -101,7 +101,11 @@ const styles = theme => ({
 		)})`
 	},
 	hoverCard: {
-		boxShadow: "5px 5px 5px 0 rgba(0,0,0,0.15)"
+		"&:hover": {
+			boxShadow: "5px 5px 5px 0 rgba(0,0,0,0.15)"
+		},
+		boxShadow: "none",
+		transition: "box-shadow .25s ease-in"
 	}
 });
 
@@ -140,7 +144,9 @@ class EventResultCard extends Component {
 			name,
 			promo_image_url,
 			event_start,
-			address,
+			venueName,
+			city,
+			state,
 			door_time,
 			min_ticket_price,
 			max_ticket_price,
@@ -215,7 +221,9 @@ class EventResultCard extends Component {
 						</div>
 					</div>
 					<div className={classes.addressHolder}>
-						<Typography className={classes.value}>@ {address}</Typography>
+						<Typography className={classes.value}>
+							@ {name}, {city}, {state}
+						</Typography>
 					</div>
 				</Card>
 			</Link>
