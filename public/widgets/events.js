@@ -2,8 +2,9 @@ const BigNeonWidget = {};
 (function(context) {
 	/** Helper Functions */
 	function getSyncScriptParams() {
-		const scripts = document.getElementsByTagName("script");
-		const lastScript = scripts[scripts.length - 1];
+		const lastScript = [...document.getElementsByTagName("script")].filter(
+			script => script.getAttribute("data-organization-id")
+		)[0];
 		return {
 			organizationId: lastScript.getAttribute("data-organization-id"),
 			target: lastScript.getAttribute("data-target"),
@@ -141,7 +142,7 @@ const BigNeonWidget = {};
 			return `<div class="bn-event-image">${date}${image}</div>`;
 		},
 		_time: (time, className, prefix) => {
-			return `<span class="v1 ${className}">${prefix} </span>${formatAMPM(
+			return `<span class="bn-time-prefix ${className}">${prefix} </span>${formatAMPM(
 				time
 			)}`;
 		},
@@ -157,20 +158,23 @@ const BigNeonWidget = {};
 				"bn-event-date-mobile",
 				eventDate
 			);
-			const eventNameDiv = `<h2 class="bn-event-name">${eventName}</h2>`;
-			const venueNameDiv = `<h4 class="v1 bn-event-venue-name">${venueName}</h4>`;
-			const times = `<p class="bn-event-time">${TEMPLATES._time(
+			const eventNameDiv = `<h2 class="bn-event-name bn-event-artists">${eventName}</h2>`;
+			const venueNameDiv = `<h4 class="bn-v1 bn-event-venue-name">${venueName}</h4>`;
+			const times = `<p class="bn-v1 bn-event-time">${TEMPLATES._time(
 				doortime,
 				"bn-key-door-time",
 				"Doors"
 			)} / ${TEMPLATES._time(eventDate, "bn-key-show-time", "Show")}</p>`;
-			return `<div class="bn-event-text">${mobileEventDate}${eventNameDiv}${venueNameDiv}${times}</div>`;
+			const oldTimes = `<p class="bn-event-time bn-v0">${formatAMPM(
+				doortime
+			)}</p>`;
+			return `<div class="bn-event-text">${mobileEventDate}${eventNameDiv}${venueNameDiv}${times}${oldTimes}</div>`;
 		},
 		//Right column
 		purchaseContainer: (eventId, priceValue, categoryValue) => {
 			const button = `<button class="bn-buy-button bn-buy-button-module" id="bigneon-buy-button-${eventId}">Tickets</button>`;
 			const price = `<p class="bn-event-price">${priceValue}</p>`;
-			const category = `<p class="v1 bn-event-category">${categoryValue}</p>`;
+			const category = `<p class="bn-v1 bn-event-category">${categoryValue}</p>`;
 			return `<div class="bn-event-button">${button}${price}${category}</div>`;
 		},
 
@@ -198,14 +202,18 @@ const BigNeonWidget = {};
 	};
 
 	context.render = function(events, firstRender) {
-		if (firstRender && context.params.style) {
+		if (firstRender) {
 			const head = document.head || document.getElementsByTagName("head")[0],
 				style = document.createElement("style");
 			style.type = "text/css";
-			style.appendChild(
-				document.createTextNode(window.atob(context.params.style))
-			);
 			head.appendChild(style);
+			//v1 changes
+			style.appendChild(document.createTextNode(".bn-v1 {display: none;}"));
+			if (context.params.style) {
+				style.appendChild(
+					document.createTextNode(window.atob(context.params.style))
+				);
+			}
 		}
 		if (!events) {
 			events = context.events;

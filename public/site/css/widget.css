@@ -153,3 +153,11 @@ a.bn-event-row,a.bn-event-row:visited, a.bn-event-row:hover {
 .bn-event-category {
 	color: #ededed;
 }
+
+.bn-v1.bn-event-venue-name, .bn-v1.bn-event-time, .bn-v1.bn-event-category {
+	display: block;
+}
+
+.bn-v0.bn-event-time {
+	display: none;
+}
