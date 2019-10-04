@@ -42,8 +42,7 @@ const styles = theme => {
 			height: 42,
 			width: 134,
 			border: " 1px solid #979797",
-			borderRadius: 3,
-			boxShadow: "0 1px 3.5px 1px rgba(112, 124, 237, 0.47)"
+			borderRadius: 3
 		},
 		default: {
 			background: `linear-gradient(45deg, #FFF 10%, #FFF 90%)`,

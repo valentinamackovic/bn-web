@@ -18,6 +18,14 @@ import Button from "../Button";
 import servedImage from "../../../helpers/imagePathHelper";
 import layout from "../../../stores/layout";
 import optimizedImageUrl from "../../../helpers/optimizedImageUrl";
+import Settings from "../../../config/settings";
+
+let supportLink = "";
+let showLink = false;
+if (Settings().appSupportLink) {
+	showLink = true;
+	supportLink = Settings().appSupportLink;
+}
 
 const styles = theme => ({
 	root: {
@@ -230,6 +238,13 @@ class RightHeaderMenu extends React.Component {
 
 		return (
 			<span className={classes.menuButton}>
+				{showLink ? (
+					<Link className={classes.menuLink} to={supportLink}>
+						Support
+					</Link>
+				) : (
+					<div/>
+				)}
 				<Link to="/login" className={classes.menuLink}>
 					<Hidden mdUp>
 						<Button variant="plainWhite" size={"small"}>
