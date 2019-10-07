@@ -206,7 +206,7 @@ class EventResultCard extends Component {
 					</div>
 					<div className={classes.addressHolder}>
 						<Typography className={classes.value}>
-							@ {name}, {city}, {state}
+							@ {venueName}, {city}, {state}
 						</Typography>
 					</div>
 				</Card>
