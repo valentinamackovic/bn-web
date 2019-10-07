@@ -9,7 +9,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Hidden from "@material-ui/core/Hidden";
 import MenuIcon from "@material-ui/icons/Menu";
-import { Slide } from "@material-ui/core";
+import Slide from "@material-ui/core/Slide";
 
 import { secondaryHex, toolBarHeight } from "../../../config/theme";
 import RightUserMenu from "./RightUserMenu";
