@@ -37,13 +37,8 @@ const styles = theme => ({
 		marginTop: theme.spacing.unit,
 		color: "#000000",
 		fontFamily: fontFamilyDemiBold,
-		fontSize: "36px",
-		lineHeight: "38px"
-	},
-	nameSmall: {
-		color: "#000000",
-		fontFamily: fontFamilyDemiBold,
-		fontSize: "19px"
+		fontSize: 21,
+		lineHeight: "21px"
 	},
 	detailsContent: {
 		// height: 105,
@@ -102,10 +97,11 @@ const styles = theme => ({
 	},
 	hoverCard: {
 		"&:hover": {
-			boxShadow: "5px 5px 5px 0 rgba(0,0,0,0.15)"
+			boxShadow: "5px 5px 5px 0 rgba(0,0,0,0.15)",
+			transition: "box-shadow .3s ease-out"
 		},
 		boxShadow: "none",
-		transition: "box-shadow .25s ease-in"
+		transition: "box-shadow .3s ease-in"
 	}
 });
 
@@ -169,13 +165,6 @@ class EventResultCard extends Component {
 			.tz(newVenueTimezone)
 			.format("h:mm A");
 
-		const charCount = 17;
-		let useSmallText = false;
-
-		if (name.length > charCount) {
-			useSmallText = true;
-		}
-
 		return (
 			<Link
 				onMouseEnter={e => this.setState({ hoverId: id })}
@@ -205,8 +194,7 @@ class EventResultCard extends Component {
 							</Typography>
 							<Typography
 								className={classNames({
-									[classes.name]: true,
-									[classes.nameSmall]: useSmallText
+									[classes.name]: true
 								})}
 							>
 								{name}

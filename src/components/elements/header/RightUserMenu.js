@@ -238,13 +238,15 @@ class RightHeaderMenu extends React.Component {
 
 		return (
 			<span className={classes.menuButton}>
-				{supportLink ? (
-					<a className={classes.menuLink} href={supportLink} target="_blank">
-						Support
-					</a>
-				) : (
-					<div/>
-				)}
+				<Hidden smDown>
+					{supportLink ? (
+						<a className={classes.menuLink} href={supportLink} target="_blank">
+							Support
+						</a>
+					) : (
+						<div/>
+					)}
+				</Hidden>
 				<Link to="/login" className={classes.menuLink}>
 					<Hidden mdUp>
 						<Button variant="plainWhite" size={"small"}>
