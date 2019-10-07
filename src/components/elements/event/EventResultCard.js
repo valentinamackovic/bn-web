@@ -12,7 +12,7 @@ import Settings from "../../../config/settings";
 import getPhoneOS from "../../../helpers/getPhoneOS";
 import HoldRow from "../../pages/admin/events/dashboard/holds/children/ChildRow";
 
-let promoImgUrl = "";
+const promoImgUrl = "";
 const styles = theme => ({
 	card: {
 		maxWidth: 400,
@@ -88,13 +88,6 @@ const styles = theme => ({
 		lineHeight: "17px",
 		fontSize: 17
 	},
-	bgStyle: {
-		backgroundImage: `linear-gradient(to top, #000000, rgba(0, 0, 0, 0)), url(${optimizedImageUrl(
-			promoImgUrl,
-			"low",
-			{ w: 430 }
-		)})`
-	},
 	hoverCard: {
 		"&:hover": {
 			boxShadow: "5px 5px 5px 0 rgba(0,0,0,0.15)",
@@ -154,8 +147,13 @@ class EventResultCard extends Component {
 		} = this.props;
 		const { hoverId } = this.state;
 
+		const style = {};
 		if (promo_image_url) {
-			promoImgUrl = promo_image_url;
+			style.backgroundImage = `linear-gradient(to top, #000000, rgba(0, 0, 0, 0)), url(${optimizedImageUrl(
+				promo_image_url,
+				"low",
+				{ w: 430 }
+			)})`;
 		}
 
 		const newVenueTimezone = venueTimezone || "America/Los_Angeles";
@@ -183,12 +181,7 @@ class EventResultCard extends Component {
 					variant="default"
 				>
 					<MaintainAspectRatio aspectRatio={Settings().promoImageAspectRatio}>
-						<div
-							className={classNames({
-								[classes.media]: true,
-								[classes.bgStyle]: promo_image_url
-							})}
-						/>
+						<div className={classes.media} style={style}/>
 					</MaintainAspectRatio>
 					<div className={classes.detailsContent}>
 						<div className={classes.singleDetail} style={{ textAlign: "left" }}>
