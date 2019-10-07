@@ -102,6 +102,9 @@ const styles = theme => ({
 		},
 		boxShadow: "none",
 		transition: "box-shadow .3s ease-in"
+	},
+	noHover: {
+		transition: "box-shadow .3s ease-out"
 	}
 });
 
@@ -173,6 +176,7 @@ class EventResultCard extends Component {
 			>
 				<Card
 					className={classNames({
+						[classes.noHover]: true,
 						[classes.hoverCard]: hoverId === id
 					})}
 					borderLess
