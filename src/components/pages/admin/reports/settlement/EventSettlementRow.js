@@ -55,7 +55,17 @@ const styles = theme => {
 };
 
 const EventSettlementRow = props => {
-	const { heading, headingNoRadius, subHeading, gray, children, classes, total, totalNoRadius, ...rest } = props;
+	const {
+		heading,
+		headingNoRadius,
+		subHeading,
+		gray,
+		children,
+		classes,
+		total,
+		totalNoRadius,
+		...rest
+	} = props;
 
 	const columnStyles = [
 		{ flex: 2, textAlign: "left" },
