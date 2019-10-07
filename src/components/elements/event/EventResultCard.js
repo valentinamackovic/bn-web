@@ -12,7 +12,6 @@ import Settings from "../../../config/settings";
 import getPhoneOS from "../../../helpers/getPhoneOS";
 import HoldRow from "../../pages/admin/events/dashboard/holds/children/ChildRow";
 
-const promoImgUrl = "";
 const styles = theme => ({
 	card: {
 		maxWidth: 400,
