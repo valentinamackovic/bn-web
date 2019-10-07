@@ -1,13 +1,17 @@
 package pages.admin.orders;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import pages.BasePage;
+import pages.components.admin.orders.manage.OrderHistoryActivityItem;
 import pages.components.admin.orders.manage.tickets.OrderDetails;
 import pages.components.admin.orders.manage.tickets.TicketRow;
 import utils.Constants;
@@ -53,7 +57,6 @@ public class SelectedOrderPage extends BasePage {
 		if (retVal)
 			orderDetails = null;
 		return retVal;
-		
 	}
 	
 	public void clickOnRefundButton() {
@@ -66,6 +69,36 @@ public class SelectedOrderPage extends BasePage {
 	
 	public OrderDetails getOrderDetails() {
 		return this.orderDetails;
+	}
+	
+	public OrderHistoryActivityItem getHistoryActivityItem(Predicate<OrderHistoryActivityItem> predicate) {
+		List<WebElement> historyItems = findOrderHistoryRows();
+		Optional<OrderHistoryActivityItem> activityItem = historyItems.stream()
+				.map(e->new OrderHistoryActivityItem(driver, e))
+				.filter(predicate).findFirst();
+		return activityItem.isPresent() ? activityItem.get() : null;
+	}
+	
+	public Integer getNumberOfHistoryItemRows() {
+		List<WebElement> rows = findOrderHistoryRows();
+		return rows != null ? rows.size() : 0;
+	}
+	
+	public Integer getNumberOfAllCollapsedRows() {
+		List<WebElement> rows = findAllRowsThatAreCollapsed();
+		return rows != null ? rows.size() : 0;
+	}
+	
+	private List<WebElement> findOrderHistoryRows() {
+		List<WebElement> rows = explicitWaitForVisiblityForAllElements(
+				By.xpath("//main//p[contains(text(),'Order history')]/following-sibling::div[not(@class)]"));
+		return rows;
+	}
+	
+	private List<WebElement> findAllRowsThatAreCollapsed() {
+		List<WebElement> rows = explicitWaitForVisiblityForAllElements(
+				By.xpath("//main//p[contains(text(),'Order history')]/following-sibling::div[not(@class)]//p[span[contains(text(),'Show Details')]]"));
+		return rows;
 	}
 
 }

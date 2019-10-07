@@ -1,5 +1,7 @@
 package test;
 
+import java.util.List;
+
 import org.testng.Assert;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -7,6 +9,7 @@ import org.testng.annotations.Test;
 import model.CreditCard;
 import model.Event;
 import model.Purchase;
+import model.TicketType;
 import model.User;
 import pages.EventsPage;
 import pages.components.admin.AdminEventComponent;
@@ -24,8 +27,9 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 
 	private static final String EVENT_NAME = "TestSearchOrdersEventName";
 	private static final Integer START_DAY_OFFSET = 1;
-	private static final Integer DAYS_RANGE = 2;
+	private static final Integer DAYS_RANGE = 4;
 	private static final Integer PURCHASE_QUANTITY = 1;
+	private String ticketTypeName = "VIP";
 	private Purchase purchase;
 
 	@Test(dataProvider = "guest_page_search_data", priority = 13, 
@@ -67,7 +71,7 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 	}
 
 	@Test(dataProvider = "manage_orders_page_search_data", priority = 14, retryAnalyzer = utils.RetryAnalizer.class)
-	public void bmanageOrdersPageSearchTest(User orgAdmin, User customer, User customerTwo, Event event)
+	public void bmanageOrdersPageSearchTest(User orgAdmin, User customer, User customerOne, Event event, Purchase purchase)
 			throws Exception {
 
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
@@ -76,17 +80,8 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 		AdminEventDashboardFacade dashboardFacade = new AdminEventDashboardFacade(driver);
 
 		maximizeWindow();
-		loginFacade.givenAdminUserIsLogedIn(orgAdmin);
-		organizationFacade.givenOrganizationExist(event.getOrganization());
 
-		adminEventFacade.givenUserIsOnAdminEventsPage();
-		AdminEventComponent eventComponent = adminEventFacade.findEventIsOpenedAndHasSoldItem(purchase.getEvent());
-		Assert.assertNotNull(eventComponent, "No Event with name: " + event.getEventName() + " found");
-		eventComponent.clickOnEvent();
-
-		dashboardFacade.thenUserIsOnEventDashboardPage();
-		dashboardFacade.whenUserSelectsManageOrdersFromOrdersDropDown();
-		dashboardFacade.thenUserIsOnOrderManagePage();
+		loginPickOrgNavToManageOrders(loginFacade, adminEventFacade, organizationFacade, dashboardFacade, event, orgAdmin);
 
 		ManageOrderRow orderRow = dashboardFacade.getManageOrdersFirstOrder();
 
@@ -94,8 +89,8 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 
 		boolean retVal = false;
 		retVal = dashboardFacade.whenUserDoesSearchCheckByEmail(customer);
-		retVal &= dashboardFacade.whenUserDoesSearchCheckByFirstname(customerTwo);
-		retVal &= dashboardFacade.whenUserDoesSearchCheckByLastName(customerTwo);
+		retVal &= dashboardFacade.whenUserDoesSearchCheckByFirstname(customerOne);
+		retVal &= dashboardFacade.whenUserDoesSearchCheckByLastName(customerOne);
 		retVal &= dashboardFacade.whenUserDoesSearchCheckByOrderNumber(orderNumber);
 		retVal &= dashboardFacade.whenUserChecksOrderQuantityForSpecificUser(customer, PURCHASE_QUANTITY);
 
@@ -106,24 +101,15 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 	}
 	
 	@Test(dataProvider = "manage_orders_page_search_data", priority = 14)
-	public void cmanageOrdersSearchAndRefundTickets(User orgAdmin, User customer, User customerTwo, Event event) throws Exception {
+	public void cmanageOrdersSearchAndRefundTickets(User orgAdmin, User customer, User customerOne, Event event, Purchase purchase) throws Exception {
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
 		AdminEventStepsFacade adminEventFacade = new AdminEventStepsFacade(driver);
 		OrganizationStepsFacade organizationFacade = new OrganizationStepsFacade(driver);
 		AdminEventDashboardFacade dashboardFacade = new AdminEventDashboardFacade(driver);
 
 		maximizeWindow();
-		loginFacade.givenAdminUserIsLogedIn(orgAdmin);
-		organizationFacade.givenOrganizationExist(event.getOrganization());
 
-		adminEventFacade.givenUserIsOnAdminEventsPage();
-		AdminEventComponent eventComponent = adminEventFacade.findEventIsOpenedAndHasSoldItem(purchase.getEvent());
-		Assert.assertNotNull(eventComponent, "No Event with name: " + event.getEventName() + " found");
-		eventComponent.clickOnEvent();
-
-		dashboardFacade.thenUserIsOnEventDashboardPage();
-		dashboardFacade.whenUserSelectsManageOrdersFromOrdersDropDown();
-		dashboardFacade.thenUserIsOnOrderManagePage();
+		loginPickOrgNavToManageOrders(loginFacade, adminEventFacade, organizationFacade, dashboardFacade, event, orgAdmin);
 
 		ManageOrderRow orderRow = dashboardFacade.getManageOrdersFirstOrder();
 
@@ -131,40 +117,106 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 
 		boolean retVal = false;
 		retVal = dashboardFacade.whenUserDoesSearchCheckByEmail(customer);
-		retVal &= dashboardFacade.whenUserDoesSearchCheckByFirstname(customerTwo);
-		retVal &= dashboardFacade.whenUserDoesSearchCheckByLastName(customerTwo);
+		retVal &= dashboardFacade.whenUserDoesSearchCheckByFirstname(customerOne);
+		retVal &= dashboardFacade.whenUserDoesSearchCheckByLastName(customerOne);
 		retVal &= dashboardFacade.whenUserDoesSearchCheckByOrderNumber(orderNumber);
 		retVal &= dashboardFacade.whenUserChecksOrderQuantityForSpecificUser(customer, PURCHASE_QUANTITY);
 		
 		Assert.assertTrue(retVal);
 		
-		dashboardFacade.whenUserClicksOnOrderLinkOfGivenUser(customer);
+		dashboardFacade.whenUserClicksOnOrderLinkOfGivenUser(customerOne);
 		boolean isExpanded = dashboardFacade.whenUserExpandOrderDetailsAndCheckIfExpanded();
 		Assert.assertTrue(isExpanded);
 		dashboardFacade.whenUserSelectsTicketForRefundAndClicksOnRefundButton();
 		dashboardFacade.thenRefundDialogShouldBeVisible();
-		dashboardFacade.whenUserSelectRefundReasonAndClicksOnConfirmButton(RefundReason.OTHER);
+		dashboardFacade.whenUserSelectRefundReasonAndClicksOnConfirmButton(RefundReason.UNABLE_TO_ATTEND);
 		dashboardFacade.thenRefundDialogShouldBeVisible();
 		dashboardFacade.whenUserClicksOnGotItButtonOnRefundSuccessDialog();
 		
 		adminEventFacade.givenUserIsOnAdminEventsPage();
-		AdminEventComponent eComponent = adminEventFacade.findEventIsOpenedAndHasSoldItem(event);
-		eComponent.cancelEvent();
+//		AdminEventComponent eComponent = adminEventFacade.findEventIsOpenedAndHasSoldItem(event);
+//		eComponent.cancelEvent();
 		
 		loginFacade.logOut();
 
 	}
+	
+	@Test(dataProvider = "manage_orders_page_search_data", priority = 14)
+	public void dmanageOrdersOrderHistoryActivity(User orgAdmin, User customer, User customerOne, Event event, Purchase purchase) throws Exception {
+		
+		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
+		AdminEventStepsFacade adminEventFacade = new AdminEventStepsFacade(driver);
+		OrganizationStepsFacade organizationFacade = new OrganizationStepsFacade(driver);
+		AdminEventDashboardFacade dashboardFacade = new AdminEventDashboardFacade(driver);
+
+	    maximizeWindow();
+
+	    loginPickOrgNavToManageOrders(loginFacade, adminEventFacade, organizationFacade, dashboardFacade, event, orgAdmin);
+	    
+		dashboardFacade.whenUserClicksOnOrderLinkOfGivenUser(customerOne);
+		//find a way to put this args in data
+		boolean isThereCorrectNumberInOrderHistory = dashboardFacade.thenThereShouldBeItemsInOrderHistory(2);
+		Assert.assertTrue(isThereCorrectNumberInOrderHistory);
+		boolean isTherePurchasedHistoryItem =  dashboardFacade.thenThereShouldBePurchasedHistoryItem(customerOne, purchase);
+		Assert.assertTrue(isTherePurchasedHistoryItem);
+		boolean isEveryRowCollapsed = dashboardFacade.thenAllItemsShouldBeClosed();
+		Assert.assertTrue(isEveryRowCollapsed);
+		
+		loginFacade.logOut();
+	}
+	
+	@Test(dataProvider = "manage_orders_page_search_data", priority = 14)
+	public void emanageOrdersActivityItems(User orgAdmin, User customer, User customerOne, Event event, Purchase purchase) throws Exception {
+		
+		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
+		AdminEventStepsFacade adminEventFacade = new AdminEventStepsFacade(driver);
+		OrganizationStepsFacade organizationFacade = new OrganizationStepsFacade(driver);
+		AdminEventDashboardFacade dashboardFacade = new AdminEventDashboardFacade(driver);
+
+	    maximizeWindow();
+
+	    boolean isInitialStepsComplete = loginPickOrgNavToManageOrders(loginFacade, adminEventFacade, 
+	    		organizationFacade, dashboardFacade, event, orgAdmin);
+	    Assert.assertTrue(isInitialStepsComplete);
+		dashboardFacade.whenUserClicksOnOrderLinkOfGivenUser(customerOne);
+		
+		boolean isTherePurchasedHistoryItem =  dashboardFacade.thenThereShouldBePurchasedHistoryItemWithNumberOfPurchases(customerOne, purchase, 3);
+		Assert.assertTrue(isTherePurchasedHistoryItem);
+		TicketType ticketType = event.getTicketTypes().stream().filter(tt->tt.getTicketTypeName().equals(ticketTypeName)).findFirst().get();
+		boolean isDataValid = dashboardFacade.whenUserExpandsActivityItemAndChecksValidityOfData(purchase, 3, ticketType);
+		
+		boolean isRefundDataValid = dashboardFacade.whenUserExpandsRefundedHistoryItemAndChecksData(purchase, 1, ticketType);
+		Assert.assertTrue(isDataValid && isRefundDataValid);
+		loginFacade.logOut();
+		
+	}
+
+
+	private boolean loginPickOrgNavToManageOrders(LoginStepsFacade loginFacade,
+			AdminEventStepsFacade adminEventFacade,
+			OrganizationStepsFacade organizationStepsFacade, 
+			AdminEventDashboardFacade dashboardFacade, Event event, User user) throws Exception {
+		loginFacade.givenAdminUserIsLogedIn(user);
+		organizationStepsFacade.givenOrganizationExist(event.getOrganization());
+		adminEventFacade.givenUserIsOnAdminEventsPage();
+		AdminEventComponent eventComponent = adminEventFacade.findEventIsOpenedAndHasSoldItem(event);
+		Assert.assertNotNull(eventComponent, "No Event with name: " + event.getEventName() + " found");
+		eventComponent.clickOnEvent();
+		dashboardFacade.givenUserIsOnManageOrdersPage();
+		return true;
+	}
 
 	@DataProvider(name = "manage_orders_page_search_data")
 	public static Object[][] dataProvider() {
-		Event event = preparePurchase().getEvent();
+		Purchase purchase = preparePurchase();
+		Event event = purchase.getEvent();
 		User orgAdminUser = User.generateUserFromJson(DataConstants.ORGANIZATION_ADMIN_USER_KEY);
 		User customer = User.generateUserFromJson(DataConstants.USER_STANDARD_KEY);
 		
 		User one = User.generateUser(DataConstants.DISTINCT_USER_ONE_FIRST_NAME,
 				DataConstants.DISTINCT_USER_ONE_LAST_NAME);
 		
-		return new Object[][] { { orgAdminUser, customer, one, event } };
+		return new Object[][] { { orgAdminUser, customer, one, event, purchase } };
 	}
 
 	@Test(dataProvider = "purchase_data", priority = 13)
@@ -181,8 +233,10 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 		eventsFacade.whenUserExecutesEventPagesStepsWithoutMapView(purchase.getEvent());
 
 		Assert.assertTrue(eventsFacade.thenUserIsAtTicketsPage());
-
-		eventsFacade.whenUserSelectsNumberOfTicketsAndClicksOnContinue(purchase);
+		List<TicketType> types = purchase.getEvent().getTicketTypes();
+		TicketType ticketType = purchase.getEvent().getTicketTypes().get(types.size() -1);
+		ticketTypeName = ticketType.getTicketTypeName();
+		eventsFacade.whenUserSelectsNumberOfTicketsAndClicksOnContinue(purchase, ticketType);
 		eventsFacade.whenUserLogsInOnTicketsPage(user);
 		eventsFacade.thenUserIsAtConfirmationPage();
 		eventsFacade.whenUserEntersCreditCardDetailsAndClicksOnPurchase(purchase.getCreditCard());
@@ -195,21 +249,26 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 
 	@DataProvider(name = "purchase_data")
 	public static Object[][] data() {
+		Purchase purchase = preparePurchase();
+		
 		Purchase purchaseOne = preparePurchase();
 
 		User one = User.generateUser(DataConstants.DISTINCT_USER_ONE_FIRST_NAME,
 				DataConstants.DISTINCT_USER_ONE_LAST_NAME);
 		User two = User.generateUser(DataConstants.DISTINCT_USER_TWO_FIRST_NAME,
 				DataConstants.DISTINCT_USER_TWO_LAST_NAME);
+		purchaseOne.setNumberOfTickets(3);
+		
+		// User one = User.generateUserFromJson(DataConstants.DISTINCT_USER_ONE_KEY);
+		// User two = User.generateUserFromJson(DataConstants.DISTINCT_USER_TWO_KEY);
 		User three = User.generateUserFromJson(DataConstants.USER_STANDARD_KEY);
-		return new Object[][] { { one, purchaseOne }, { two, purchaseOne }, { three, purchaseOne } };
+		return new Object[][] { { one, purchaseOne }, { two, purchase }, { three, purchase } };
 	}
 
 	private static Purchase preparePurchase() {
 		Purchase purchase = Purchase.generatePurchaseFromJson(DataConstants.REGULAR_USER_PURCHASE_KEY);
 		purchase.setCreditCard(CreditCard.generateCreditCard());
 		purchase.setNumberOfTickets(PURCHASE_QUANTITY);
-		purchase.setNumberOfTickets(1);
 		purchase.setEvent(Event.generateEventFromJson(DataConstants.EVENT_DATA_STANARD_KEY,
 				EVENT_NAME, false, START_DAY_OFFSET, DAYS_RANGE));
 		return purchase;
