@@ -18,6 +18,7 @@ import SummaryAudit from "./eventSummaryAudit/SummaryAudit";
 import EventPromoCodesReport from "./eventPromoCode/EventPromoCode.js";
 import user from "../../../../stores/user";
 import servedImage from "../../../../helpers/imagePathHelper";
+import BoxOfficeSalesSummary from "./boxOfficeSalesSummary/BoxOfficeSalesSummary";
 
 const styles = theme => ({
 	root: {
@@ -64,6 +65,10 @@ const reportTypes = {
 	promo_codes: {
 		label: "Event promo codes report",
 		ReportComponent: EventPromoCodesReport
+	},
+	box_office_sales_summary: {
+		label: "Box office sales summary",
+		ReportComponent: BoxOfficeSalesSummary
 	}
 };
 
