@@ -59,5 +59,8 @@ public class Constants {
 	public static String getAdminEventCreate() {
 		return getAdminEvents() + "/create";
 	}
-
+	
+	public static String getAdminFans() {
+		return getBaseUrlBigNeon() + "admin/fans";
+	}	
 }
