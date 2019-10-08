@@ -6,14 +6,11 @@ import notifications from "../../../../../stores/notifications";
 import Divider from "../../../../common/Divider";
 import Button from "../../../../elements/Button";
 import downloadCSV from "../../../../../helpers/downloadCSV";
-import {
-	fontFamilyBold,
-	fontFamilyDemiBold,
-	secondaryHex
-} from "../../../../../config/theme";
+import { fontFamilyDemiBold } from "../../../../../config/theme";
 import Loader from "../../../../elements/loaders/Loader";
 import Bigneon from "../../../../../helpers/bigneon";
 import GrandTotalTable from "./GrandTotalTable";
+import OperatorTable from "./OperatorTable";
 
 const styles = theme => ({
 	root: {},
@@ -26,23 +23,16 @@ const styles = theme => ({
 		minHeight: 60,
 		alignItems: "center"
 	},
-	multiEventContainer: {
-		marginBottom: theme.spacing.unit * 8
+	subheading: {
+		marginBottom: theme.spacing.unit
 	},
-	multiEventHeader: {
-		display: "flex",
-		justifyContent: "space-between"
-	},
-	multiEventTitle: {
-		fontSize: theme.typography.fontSize * 1.4,
+	boldText: {
 		fontFamily: fontFamilyDemiBold
 	},
-	eventNumber: {
-		color: secondaryHex
-	},
-	subheading: {
+	tableHeading: {
+		marginBottom: theme.spacing.unit,
 		fontFamily: fontFamilyDemiBold,
-		marginBottom: theme.spacing.unit
+		fontSize: 20
 	}
 });
 
@@ -98,14 +88,34 @@ class BoxOfficeSalesSummary extends Component {
 			return <Loader/>;
 		}
 
-		return <GrandTotalTable payments={payments}/>;
+		return (
+			<React.Fragment>
+				<Typography className={classes.tableHeading}>Grand total</Typography>
+				<GrandTotalTable payments={payments}/>
+			</React.Fragment>
+		);
 	}
 
 	renderOperators() {
 		const { classes } = this.props;
 		const { operators } = this.state;
 
-		return <div>TODO operators</div>;
+		if (!operators) {
+			return null;
+		}
+
+		return (
+			<React.Fragment>
+				{operators.map(operator => (
+					<React.Fragment key={operator.operator_id}>
+						<Typography className={classes.tableHeading}>
+							Operator: {operator.operator_name}
+						</Typography>
+						<OperatorTable {...operator}/>
+					</React.Fragment>
+				))}
+			</React.Fragment>
+		);
 	}
 
 	render() {
@@ -145,6 +155,10 @@ class BoxOfficeSalesSummary extends Component {
 						</Button>
 					</div>
 				</div>
+				<Typography className={classes.subheading}>
+					Report run: <span className={classes.boldText}>TODO</span> to{" "}
+					<span className={classes.boldText}>TODO</span>
+				</Typography>
 				<Divider style={{ marginBottom: 40 }}/>
 				{this.renderGrandTotal()}
 				{this.renderOperators()}

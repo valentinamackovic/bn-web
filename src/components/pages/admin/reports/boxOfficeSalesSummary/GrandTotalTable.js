@@ -8,7 +8,7 @@ import { dollars } from "../../../../../helpers/money";
 const styles = theme => {
 	return {
 		root: {
-			marginBottom: 40
+			marginBottom: 60
 		}
 	};
 };

@@ -44,6 +44,12 @@ const styles = theme => {
 		},
 		text: {
 			fontSize: theme.typography.fontSize
+		},
+		subTotal1: {
+			backgroundColor: "#a6becd"
+		},
+		subTotal2: {
+			backgroundColor: "#97a3c5"
 		}
 	};
 };
@@ -53,6 +59,8 @@ const TableRow = props => {
 		columnStyles,
 		heading,
 		subHeading,
+		subTotal1,
+		subTotal2,
 		gray,
 		children,
 		classes,
@@ -60,25 +68,12 @@ const TableRow = props => {
 		...rest
 	} = props;
 
-	// const columnStyles = [
-	// 	{ flex: 3, textAlign: "left" },
-	// 	{ flex: 2, textAlign: "left" },
-	// 	{ flex: 2, textAlign: "left" },
-	// 	{ flex: 2, textAlign: "left" },
-	// 	{ flex: 2, textAlign: "left" },
-	// 	{ flex: 2, textAlign: "left" },
-	// 	{ flex: 2, textAlign: "left" },
-	// 	{ flex: 2, textAlign: "left" },
-	// 	{ flex: 2, textAlign: "left" },
-	// 	{ flex: 2, textAlign: "left" }
-	// ];
-
 	const columns = children.map((text, index) => {
 		return (
 			<Typography
 				noWrap
 				className={classNames({
-					[classes.headingText]: heading,
+					[classes.headingText]: heading || subTotal1 || subTotal2,
 					[classes.subHeading]: subHeading,
 					[classes.text]: !heading,
 					[classes.totalText]: total
@@ -98,7 +93,9 @@ const TableRow = props => {
 				[classes.gray]: gray,
 				[classes.total]: total,
 				[classes.heading]: heading,
-				[classes.subHeading]: subHeading
+				[classes.subHeading]: subHeading,
+				[classes.subTotal1]: subTotal1,
+				[classes.subTotal2]: subTotal2
 			})}
 			{...rest}
 		>
@@ -113,6 +110,8 @@ TableRow.propTypes = {
 	children: PropTypes.array.isRequired,
 	gray: PropTypes.bool,
 	total: PropTypes.bool,
+	subTotal1: PropTypes.bool,
+	subTotal2: PropTypes.bool,
 	heading: PropTypes.bool,
 	subHeading: PropTypes.bool
 };
