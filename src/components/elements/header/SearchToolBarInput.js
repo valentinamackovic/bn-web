@@ -28,6 +28,11 @@ const styles = {
 		height: 61,
 		width: 61,
 		marginLeft: -24
+	},
+
+	closeIcon: {
+		marginRight: 8,
+		marginLeft: -24
 	}
 };
 
@@ -110,7 +115,7 @@ class SearchToolBarInput extends Component {
 				<Hidden smUp>
 					<img
 						alt="Search icon"
-						className={classes.icon}
+						className={classes.closeIcon}
 						src={servedImage("/icons/delete-gray.svg")}
 						onClick={this.props.onCloseClick}
 					/>
