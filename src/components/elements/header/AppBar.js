@@ -54,6 +54,9 @@ const styles = theme => {
 			display: "flex",
 			justifyContent: "space-between",
 			...toolBarHeight
+		},
+		icon: {
+			marginRight: 4
 		}
 	};
 };
