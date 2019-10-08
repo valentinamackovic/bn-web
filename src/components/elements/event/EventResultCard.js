@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { Typography, withStyles } from "@material-ui/core";
+import PropTypes from "prop-types";
 import moment from "moment-timezone";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
@@ -37,7 +37,23 @@ const styles = theme => ({
 		color: "#000000",
 		fontFamily: fontFamilyDemiBold,
 		fontSize: 21,
-		lineHeight: "21px"
+		lineHeight: "21px",
+		textAlign: "left",
+		lineClamp: 2,
+		display: "-webkit-box",
+		WebkitLineClamp: 3,
+		WebkitBoxOrient: "vertical",
+		overflow: "hidden",
+		textOverflow: "ellipsis"
+	},
+	abbr: {
+		textDecoration: "none",
+		marginTop: theme.spacing.unit,
+		color: "#000000",
+		fontFamily: fontFamilyDemiBold,
+		fontSize: 21,
+		lineHeight: "21px",
+		borderBottom: "none"
 	},
 	detailsContent: {
 		// height: 105,
@@ -193,7 +209,9 @@ class EventResultCard extends Component {
 									[classes.name]: true
 								})}
 							>
-								{name}
+								<abbr className={classes.abbr} title={name}>
+									{name}
+								</abbr>
 							</Typography>
 						</div>
 						<div style={{ textAlign: "right" }}>
