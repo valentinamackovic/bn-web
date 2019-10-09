@@ -9,6 +9,8 @@ import model.Event;
 import model.Purchase;
 import model.User;
 import pages.EventsPage;
+import pages.components.admin.orders.manage.ActivityItem;
+import pages.components.admin.orders.manage.ActivityItem.ExpandedContent;
 import test.facade.AdminFanManagementFacade;
 import test.facade.EventStepsFacade;
 import test.facade.LoginStepsFacade;
@@ -24,12 +26,12 @@ public class FanManagementStepsIT extends BaseSteps {
 	
 	
 	@Test(dataProvider = "fan_profile_data", dependsOnMethods = {"predifinedDataUserPurchasesTickets"},
-			priority = 20, retryAnalyzer = utils.RetryAnalizer.class )
-	public void aviewFanProfileAndEventsFiltering(User fan, User orgAdmin, Purchase purchase) {
+			priority = 22, retryAnalyzer = utils.RetryAnalizer.class )
+	public void viewFanProfileAndEventsFiltering(User fan, User orgAdmin, Purchase purchase) {
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
 		AdminFanManagementFacade fanManagementFacade = new AdminFanManagementFacade(driver);
 		maximizeWindow();
-		loginAndNavigationSteps(loginFacade, fanManagementFacade, fan, orgAdmin);
+		loginAndNavigationToFanProfilePage(loginFacade, fanManagementFacade, fan, orgAdmin);
 		
 		boolean isFanInfoValid = fanManagementFacade.whenUserChecksValidityOfFanInformation(fan);
 		Assert.assertTrue(isFanInfoValid, "Fan information on fan profile page is not valid for fan: " + fan.getEmailAddress());
@@ -42,14 +44,13 @@ public class FanManagementStepsIT extends BaseSteps {
 		Assert.assertTrue(checkIfEventsAreDifferent, "Events in upcoming and past list are not different");
 		loginFacade.logOut();
 	}
-	
-	
-	@Test(dataProvider = "fan_profile_data", priority = 20, retryAnalyzer = utils.RetryAnalizer.class)
-	public void bfanProfileEventSummaryCardContainsData(User fan, User orgAdmin, Purchase purchase) {
+		
+	@Test(dataProvider = "fan_profile_data", priority = 23, retryAnalyzer = utils.RetryAnalizer.class)
+	public void fanProfileEventSummaryCardsContainData(User fan, User orgAdmin, Purchase purchase) {
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
 		AdminFanManagementFacade fanManagementFacade = new AdminFanManagementFacade(driver);
 		maximizeWindow();
-		loginAndNavigationSteps(loginFacade, fanManagementFacade, fan, orgAdmin);
+		loginAndNavigationToFanProfilePage(loginFacade, fanManagementFacade, fan, orgAdmin);
 		
 		boolean isSummaryCardDataPresent = fanManagementFacade.thenEventSummaryDataShouldBePresentAndActivitiesCollapsed();
 		Assert.assertTrue(isSummaryCardDataPresent);
@@ -57,9 +58,19 @@ public class FanManagementStepsIT extends BaseSteps {
 		loginFacade.logOut();
 	}
 	
+	@Test(dataProvider = "fan_profile_data", priority = 24, retryAnalyzer = utils.RetryAnalizer.class)
+	public void fanProfilePurchasedActivityItems(User fan, User orgAdmin, Purchase purchase) {
+		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
+		AdminFanManagementFacade fanManagementFacade = new AdminFanManagementFacade(driver);
+		maximizeWindow();
+		loginAndNavigationToFanProfilePage(loginFacade, fanManagementFacade, fan, orgAdmin);
+		ActivityItem item = fanManagementFacade.whenUserClicksOnShowDetailsOfSelectedSummaryCard(purchase.getEvent());
+		ExpandedContent expandedContent = item.getExpandedContent();
+		boolean isDataVisible = expandedContent.isDataVisible();
+		Assert.assertTrue(isDataVisible, "Not all data in expanded purchased activity item is visible");
+	}
 	
-	
-	private void loginAndNavigationSteps(LoginStepsFacade loginFacade, AdminFanManagementFacade fanManagementFacade, User fan, User orgAdmin) {
+	private void loginAndNavigationToFanProfilePage(LoginStepsFacade loginFacade, AdminFanManagementFacade fanManagementFacade, User fan, User orgAdmin) {
 		loginFacade.givenAdminUserIsLogedIn(orgAdmin);
 		fanManagementFacade.givenUserIsOnFansPage();
 		fanManagementFacade.whenUserSelectsFanFormList(fan);
@@ -74,24 +85,27 @@ public class FanManagementStepsIT extends BaseSteps {
 		return new Object[][] {{fan, orgAdmin, purchase}};
 	}
 	
-//	@Test(dataProvider = "purchase_data", priority = 13)
-	public void predifinedDataUserPurchasesTickets(User fan, Purchase purchase) throws Exception {
+	@Test(dataProvider = "purchase_data", priority = 22)
+	public void predifinedDataUserPurchasesTickets(User fan, Purchase purchas) throws Exception {
 		maximizeWindow();
 		EventStepsFacade eventsFacade = new EventStepsFacade(driver);
 
 		// given
 		eventsFacade.givenUserIsOnEventPage();
 
-		EventsPage eventsPage = eventsFacade.givenThatEventExist(purchase.getEvent(), fan);
+		EventsPage eventsPage = eventsFacade.givenThatEventExist(purchas.getEvent(), fan);
+		if (this.purchase == null ) {
+			this.purchase = purchase;
+		}
 		// when
-		eventsFacade.whenUserExecutesEventPagesStepsWithoutMapView(purchase.getEvent());
+		eventsFacade.whenUserExecutesEventPagesStepsWithoutMapView(purchas.getEvent());
 
 		Assert.assertTrue(eventsFacade.thenUserIsAtTicketsPage());
 
-		eventsFacade.whenUserSelectsNumberOfTicketsAndClicksOnContinue(purchase);
+		eventsFacade.whenUserSelectsNumberOfTicketsAndClicksOnContinue(purchas);
 		eventsFacade.whenUserLogsInOnTicketsPage(fan);
 		eventsFacade.thenUserIsAtConfirmationPage();
-		eventsFacade.whenUserEntersCreditCardDetailsAndClicksOnPurchase(purchase.getCreditCard());
+		eventsFacade.whenUserEntersCreditCardDetailsAndClicksOnPurchase(purchas.getCreditCard());
 
 		// then
 		eventsFacade.thenUserIsAtTicketPurchaseSuccessPage();

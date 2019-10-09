@@ -2,6 +2,7 @@ package pages.admin.fans;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -58,6 +59,15 @@ public class AdminFanProfilePage extends BasePage {
 	public String getFanEmail() {
 		explicitWaitForVisiblity(emailElement);
 		return emailElement.getText();
+	}
+	
+	public FanProfileEventSummaryComponent findSummaryComponent(Predicate<FanProfileEventSummaryComponent> predicate, int eventListLimit) {
+		List<WebElement> listOfEvents = findEvents(eventListLimit);
+		Optional<FanProfileEventSummaryComponent> optionalSummaryCard = listOfEvents.stream()
+				.map(el->new FanProfileEventSummaryComponent(driver, el))
+				.filter(predicate)
+				.findFirst();
+		return optionalSummaryCard.isPresent()?optionalSummaryCard.get():null;
 	}
 
 	public List<FanProfileEventDataHolder> getEventsData(int eventListLimit) {

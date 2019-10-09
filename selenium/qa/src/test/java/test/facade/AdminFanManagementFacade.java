@@ -8,6 +8,7 @@ import java.util.function.Predicate;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import model.Event;
 import model.User;
 import pages.admin.fans.AdminFanProfilePage;
 import pages.admin.fans.AdminFanProfilePage.FanProfileEventDataHolder;
@@ -15,6 +16,7 @@ import pages.admin.fans.AdminFansListPage;
 import pages.admin.fans.AdminFansListPage.FanRowComponent;
 import pages.components.admin.AdminSideBar;
 import pages.components.admin.fans.manage.FanProfileEventSummaryComponent;
+import pages.components.admin.orders.manage.ActivityItem;
 
 public class AdminFanManagementFacade extends BaseFacadeSteps {
 
@@ -69,16 +71,6 @@ public class AdminFanManagementFacade extends BaseFacadeSteps {
 		return isOnPastEventsPage;
 	}
 
-	public boolean thenEventSummaryDataShouldBePresentAndActivitiesCollapsed() {
-		AdminFanProfilePage profilePage = (AdminFanProfilePage) getData(FAN_PROFILE_PAGE_KEY);
-		List<WebElement> listOfEvents = profilePage.findEvents(FAN_PROFILE_EVENT_LIST_LIMIT_LG);
-		return listOfEvents
-				.stream()
-				.map(el -> new FanProfileEventSummaryComponent(driver, el))
-				.allMatch(summary -> !summary.getEventName().isEmpty() && !summary.getVenueInfo().isEmpty()
-						&& (summary.getEventDateAndTime() != null) && (summary.getShowDetailsButtonElement() != null));
-	}
-
 	public boolean thenUserComparesUpcomingAndPastEventLists() {
 		AdminFanProfilePage profilePage = (AdminFanProfilePage) getData(FAN_PROFILE_PAGE_KEY);
 
@@ -94,7 +86,32 @@ public class AdminFanManagementFacade extends BaseFacadeSteps {
 			return !pastEvents.containsAll(upcomingEvents);
 		}
 	}
-
+	
+	public boolean thenEventSummaryDataShouldBePresentAndActivitiesCollapsed() {
+		AdminFanProfilePage profilePage = (AdminFanProfilePage) getData(FAN_PROFILE_PAGE_KEY);
+		List<WebElement> listOfEvents = profilePage.findEvents(FAN_PROFILE_EVENT_LIST_LIMIT_LG);
+		return listOfEvents
+				.stream()
+				.map(el -> new FanProfileEventSummaryComponent(driver, el))
+				.allMatch(summary -> !summary.getEventName().isEmpty() && !summary.getVenueInfo().isEmpty()
+						&& (summary.getEventDateAndTime() != null) && (summary.getShowDetailsButtonElement() != null));
+	}
+	
+	public ActivityItem whenUserClicksOnShowDetailsOfSelectedSummaryCard(Event event) {
+		AdminFanProfilePage profilePage = (AdminFanProfilePage) getData(FAN_PROFILE_PAGE_KEY);
+		FanProfileEventSummaryComponent summaryCard = profilePage
+				.findSummaryComponent(comp->comp.getEventName().contains(event.getEventName()),FAN_PROFILE_EVENT_LIST_LIMIT);
+		if (summaryCard != null) {
+			summaryCard.clickOnShowDetailsButton();
+			ActivityItem activityItem = summaryCard.getActivityItem(aitem->aitem.isPruchased());
+			if(activityItem != null) {
+				activityItem.clickOnShowDetailsLink();
+				return activityItem;
+			}
+		} 
+		return null;
+	}
+			
 	public boolean thenUserShoudBeOnFanProfilePage() {
 		AdminFanProfilePage profilePage = (AdminFanProfilePage) getData(FAN_PROFILE_PAGE_KEY);
 		return profilePage.isAtPage();
