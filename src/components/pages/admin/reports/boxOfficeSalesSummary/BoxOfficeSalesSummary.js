@@ -69,7 +69,7 @@ class BoxOfficeSalesSummary extends Component {
 	) {
 		const { startDate, endDate, start_utc, end_utc } = dataParams;
 
-		const { organizationId, onLoad } = this.props;
+		const { organizationId, onLoad, organizationTimezone } = this.props;
 
 		const queryParams = { organization_id: organizationId, start_utc, end_utc };
 
@@ -78,14 +78,24 @@ class BoxOfficeSalesSummary extends Component {
 			.then(response => {
 				const { payments, operators } = response.data;
 
+				//Set event dates to org timezone and format
+				operators.forEach(({ events }) => {
+					events.forEach(event => {
+						event.event_date = moment
+							.utc(event.event_date)
+							.tz(organizationTimezone)
+							.format("MM/DD/YYYY H:mm A");
+					});
+				});
+
 				const displayFormat = "MMM DD, YYYY";
 				const startDateDisplay = moment
 					.utc(startDate)
-					.tz(user.currentOrgTimezone)
+					.tz(organizationTimezone)
 					.format(displayFormat);
 				const endDateDisplay = moment
 					.utc(endDate)
-					.tz(user.currentOrgTimezone)
+					.tz(organizationTimezone)
 					.format(displayFormat);
 
 				this.setState(
