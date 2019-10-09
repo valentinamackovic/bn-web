@@ -86,6 +86,16 @@ public class SeleniumUtils {
 		((JavascriptExecutor) driver).executeScript(jsScript, element);
 	}
 
+	public static void jsSetValueAttr(WebElement inputElement, String value, WebDriver driver) {
+		String jsScript = "arguments[0].setAttribute('value', '" + value + "')";
+		((JavascriptExecutor) driver).executeScript(jsScript, inputElement);
+	}
+	
+	public static void jsSetStyleAttr(WebElement inputElement, String value, WebDriver driver) {
+		String jsScript = "arguments[0].setAttribute('style','" + value + "')";
+		((JavascriptExecutor)driver).executeScript(jsScript, inputElement);
+	}
+
 	public static String getTextOfElemenyLocatedBy(By by, WebDriver driver) {
 		WebElement element = new WebDriverWait(driver, 15).until(ExpectedConditions.visibilityOfElementLocated(by));
 		String text = element.getText();

@@ -10,7 +10,7 @@ import utils.DataConstants;
 import utils.DataReader;
 import utils.ProjectUtils;
 
-public class User extends TestModel implements Serializable {
+public class User extends Model implements Serializable {
 
 	private static final long serialVersionUID = 8184904779942132639L;
 	@JsonProperty("email_address")
