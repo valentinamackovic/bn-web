@@ -13,6 +13,8 @@ import OperatorTable from "./OperatorTable";
 import ReportsDate from "../ReportDate";
 import moment from "moment-timezone";
 import user from "../../../../../stores/user";
+import TableRow from "./TableRow";
+import { dollars } from "../../../../../helpers/money";
 
 const styles = theme => ({
 	root: {},
@@ -55,8 +57,104 @@ class BoxOfficeSalesSummary extends Component {
 	}
 
 	exportCSV() {
+		const {
+			startDateDisplay,
+			endDateDisplay,
+			payments,
+			operators
+		} = this.state;
+
+		const reportRunDisplay = moment(event.event_date).format(
+			"MMM DD, YYY at H:mm A"
+		);
+
 		//TODO get rows
-		downloadCSV([], "box-office-sales-summary");
+		const csvRows = [];
+
+		csvRows.push(["Box office sales summary report"]);
+		csvRows.push([`Report run ${reportRunDisplay}`]);
+		csvRows.push([
+			`Transactions from ${startDateDisplay} to ${endDateDisplay}`
+		]);
+
+		csvRows.push([""]);
+		csvRows.push(["Grand total"]);
+
+		let totalInCents = 0;
+		payments.forEach(payment => {
+			const { payment_type, total_sales_in_cents } = payment;
+			totalInCents = totalInCents + total_sales_in_cents;
+			csvRows.push([payment_type, dollars(total_sales_in_cents)]);
+		});
+
+		csvRows.push(["Grand total box office sales", dollars(totalInCents)]);
+		csvRows.push([""]);
+
+		operators.forEach(operator => {
+			const { operator_name, events, payments } = operator;
+			csvRows.push([`Operator name: ${operator_name}`]);
+
+			csvRows.push([
+				"Event name",
+				"Date",
+				"Face value",
+				"Rev share",
+				"Box office sold",
+				"Total value"
+			]);
+
+			let totalTicketSales = 0;
+			let totalInCents = 0;
+
+			events.forEach(event => {
+				const {
+					event_name,
+					event_date,
+					face_value_in_cents,
+					number_of_tickets,
+					revenue_share_value_in_cents,
+					total_sales_in_cents
+				} = event;
+
+				totalTicketSales = totalTicketSales + number_of_tickets;
+				totalInCents = totalInCents + total_sales_in_cents;
+
+				csvRows.push([
+					event_name,
+					event_date,
+					dollars(face_value_in_cents),
+					dollars(revenue_share_value_in_cents),
+					number_of_tickets,
+					dollars(total_sales_in_cents)
+				]);
+			});
+
+			csvRows.push([""]);
+
+			payments.forEach(payment => {
+				const { payment_type, quantity, total_sales_in_cents } = payment;
+
+				csvRows.push([
+					payment_type,
+					"",
+					"",
+					"",
+					quantity,
+					dollars(total_sales_in_cents)
+				]);
+			});
+
+			csvRows.push([
+				"Operator total",
+				"",
+				"",
+				"",
+				totalTicketSales,
+				dollars(totalInCents)
+			]);
+		});
+
+		downloadCSV(csvRows, "box-office-sales-summary");
 	}
 
 	refreshData(
@@ -154,7 +252,13 @@ class BoxOfficeSalesSummary extends Component {
 
 	render() {
 		const { classes, printVersion, organizationTimezone } = this.props;
-		const { startDateDisplay, endDateDisplay } = this.state;
+		const {
+			startDateDisplay,
+			endDateDisplay,
+			operators,
+			payments
+		} = this.state;
+		const isLoaded = operators && payments;
 
 		if (printVersion) {
 			return (
@@ -173,13 +277,15 @@ class BoxOfficeSalesSummary extends Component {
 					</Typography>
 					<span style={{ flex: 1 }}/>
 					<div>
-						<Button
-							iconUrl="/icons/csv-active.svg"
-							variant="text"
-							onClick={() => this.exportCSV()}
-						>
-							Export CSV
-						</Button>
+						{isLoaded ? (
+							<Button
+								iconUrl="/icons/csv-active.svg"
+								variant="text"
+								onClick={() => this.exportCSV()}
+							>
+								Export CSV
+							</Button>
+						) : null}
 						<Button
 							href={`/exports/reports/?type=box_office_sales_summary`} //TODO add date range here
 							target={"_blank"}
@@ -192,7 +298,7 @@ class BoxOfficeSalesSummary extends Component {
 				</div>
 				{startDateDisplay && endDateDisplay ? (
 					<Typography className={classes.subheading}>
-						Report run:{" "}
+						Transactions from{" "}
 						<span className={classes.boldText}>{startDateDisplay}</span> to{" "}
 						<span className={classes.boldText}>{endDateDisplay}</span>
 					</Typography>
