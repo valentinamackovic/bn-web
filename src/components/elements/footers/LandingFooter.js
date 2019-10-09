@@ -229,18 +229,14 @@ const LandingFooter = props => {
 							<Typography className={classes.smLinks}>
 								<a
 									className={classes.termsLink}
-									href={termsLink}
+									href={instaLink}
 									target="_blank"
 								>
 									Instagram
 								</a>
 							</Typography>
 							<Typography className={classes.smLinks}>
-								<a
-									className={classes.termsLink}
-									href={privacyPolicyLink}
-									target="_blank"
-								>
+								<a className={classes.termsLink} href={fbLink} target="_blank">
 									Facebook
 								</a>
 							</Typography>
