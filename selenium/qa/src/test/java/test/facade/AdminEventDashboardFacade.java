@@ -14,15 +14,17 @@ import model.Purchase;
 import model.TicketType;
 import model.User;
 import pages.admin.events.DashboardEventPage;
-import pages.admin.orders.OrdersManageAdminPage;
-import pages.admin.orders.SelectedOrderPage;
+import pages.admin.orders.manage.OrdersManageAdminPage;
+import pages.admin.orders.manage.SelectedOrderPage;
 import pages.components.admin.orders.manage.ManageOrderRow;
-import pages.components.admin.orders.manage.OrderHistoryActivityItem;
-import pages.components.admin.orders.manage.OrderHistoryActivityItem.ExpandedContent;
-import pages.components.admin.orders.manage.OrderHistoryActivityItem.RefundedExpandedContent;
+import pages.components.admin.orders.manage.ActivityItem;
+import pages.components.admin.orders.manage.ActivityItem.ExpandedContent;
+import pages.components.admin.orders.manage.ActivityItem.NoteExpandedContent;
+import pages.components.admin.orders.manage.ActivityItem.RefundedExpandedContent;
 import pages.components.admin.orders.manage.tickets.TicketRow;
 import pages.components.dialogs.IssueRefundDialog;
 import pages.components.dialogs.IssueRefundDialog.RefundReason;
+import utils.MsgConstants;
 import utils.ProjectUtils;
 
 public class AdminEventDashboardFacade extends BaseFacadeSteps {
@@ -147,7 +149,7 @@ public class AdminEventDashboardFacade extends BaseFacadeSteps {
 	public boolean thenThereShouldBePurchasedHistoryItem(User user, Purchase purchase) {
 		SelectedOrderPage selectedOrderPage = (SelectedOrderPage) getData(SELECTED_ORDER_PAGE_KEY);
 		String userName = user.getFirstName() + " " + user.getLastName();
-		OrderHistoryActivityItem activityItem = selectedOrderPage.getHistoryActivityItem(
+		ActivityItem activityItem = selectedOrderPage.getHistoryActivityItem(
 				aitem->aitem.isPruchased() && 
 				aitem.getUserName().contains(userName) && 
 				aitem.getEventName().contains(purchase.getEvent().getEventName()));
@@ -159,7 +161,7 @@ public class AdminEventDashboardFacade extends BaseFacadeSteps {
 			Purchase purchase, int numberOfPurchases) {
 		SelectedOrderPage selectedOrderPage = (SelectedOrderPage) getData(SELECTED_ORDER_PAGE_KEY);
 		String userName = user.getFirstName() + " " + user.getLastName();
-		OrderHistoryActivityItem activityItem = selectedOrderPage.getHistoryActivityItem(
+		ActivityItem activityItem = selectedOrderPage.getHistoryActivityItem(
 				aitem->aitem.isPruchased() && 
 				aitem.getUserName().contains(userName) && 
 				aitem.getNumberOfPurchases().equals(numberOfPurchases) &&
@@ -170,7 +172,7 @@ public class AdminEventDashboardFacade extends BaseFacadeSteps {
 	public boolean whenUserExpandsActivityItemAndChecksValidityOfData(Purchase purchase, Integer quantity, TicketType ticketType) {
 		SelectedOrderPage selectedOrderPage = (SelectedOrderPage) getData(SELECTED_ORDER_PAGE_KEY);
 		Event event = purchase.getEvent();
-		OrderHistoryActivityItem activityItem = selectedOrderPage.getHistoryActivityItem(
+		ActivityItem activityItem = selectedOrderPage.getHistoryActivityItem(
 				aitem->aitem.isPruchased() && 
 				aitem.getEventName().contains(event.getEventName()));
 		if (activityItem != null) {
@@ -182,14 +184,14 @@ public class AdminEventDashboardFacade extends BaseFacadeSteps {
 					
 			BigDecimal totalMoney  = new BigDecimal(quantity.intValue() * Integer.parseInt(ticketType.getPrice()));
 			
-			ExpandedContent content = activityItem.getExpandedContent();
+			ExpandedContent expandedContent = activityItem.getExpandedContent();
 			LocalDateTime itemDate = ProjectUtils.parseDateTime(
-						ProjectUtils.MANAGE_ORDER_HISTORY_ITEM_DATE_FORMAT, content.getEventDateAndTime());
+						ProjectUtils.MANAGE_ORDER_HISTORY_ITEM_DATE_FORMAT, expandedContent.getEventDateAndTime());
 			boolean retVal = true;
 			retVal = retVal && eventStartDateTime.equals(itemDate);
-			retVal = retVal && location.equals(content.getVenueLocation());
-			retVal = retVal && quantity.equals(content.getQuantity());
-			retVal = retVal && totalMoney.equals(content.getTotalMoneyAmount());
+			retVal = retVal && location.equals(expandedContent.getVenueLocation());
+			retVal = retVal && quantity.equals(expandedContent.getQuantity());
+			retVal = retVal && totalMoney.equals(expandedContent.getTotalMoneyAmount());
 			return retVal;
 		} else {
 			return false;
@@ -200,7 +202,7 @@ public class AdminEventDashboardFacade extends BaseFacadeSteps {
 		SelectedOrderPage selectedOrderPage = (SelectedOrderPage) getData(SELECTED_ORDER_PAGE_KEY);
 		String refunderName = refunder.getFirstName() + " " + refunder.getLastName();
 		String refundeeName = refundee.getFirstName() + " " + refundee.getLastName();
-		OrderHistoryActivityItem activityItem = selectedOrderPage.getHistoryActivityItem(
+		ActivityItem activityItem = selectedOrderPage.getHistoryActivityItem(
 				aitem->aitem.isRefunded() &&
 				aitem.getUserName().contains(refunderName) &&
 				aitem.getRefundeeName().contains(refundeeName));
@@ -209,7 +211,7 @@ public class AdminEventDashboardFacade extends BaseFacadeSteps {
 	
 	public boolean whenUserExpandsRefundedHistoryItemAndChecksData(Purchase purchase, Integer quantity, TicketType ticketType) {
 		SelectedOrderPage selectedOrderPage = (SelectedOrderPage) getData(SELECTED_ORDER_PAGE_KEY);
-		OrderHistoryActivityItem activityItem = selectedOrderPage.getHistoryActivityItem(
+		ActivityItem activityItem = selectedOrderPage.getHistoryActivityItem(
 				aitem->aitem.isRefunded());
 		if (activityItem != null) {
 			activityItem.clickOnShowDetailsLink();
@@ -223,6 +225,33 @@ public class AdminEventDashboardFacade extends BaseFacadeSteps {
 		} else {
 			return false;
 		}
+	}
+	
+	public void whenUserAddsANote(String note) {
+		SelectedOrderPage selectedOrderPage = (SelectedOrderPage) getData(SELECTED_ORDER_PAGE_KEY);
+		selectedOrderPage.enterNote(note);
+		selectedOrderPage.clickOnAddNoteButton();
+	}
+	
+	public boolean thenNotificationNoteAddedShouldBeVisible() {
+		SelectedOrderPage selectedOrderPage = (SelectedOrderPage) getData(SELECTED_ORDER_PAGE_KEY);
+		return selectedOrderPage.isNotificationDisplayedWithMessage(MsgConstants.ORDER_MANANGE_ACTIVITY_ITEM_NOTE_ADDED, 5);
+	}
+	
+	public boolean thenUserShouldSeeNoteActivityItem(String note, User user) {
+		SelectedOrderPage selectedOrderPage = (SelectedOrderPage) getData(SELECTED_ORDER_PAGE_KEY);
+		selectedOrderPage.refreshPage();
+		String userName =  user.getFirstName() + " " + user.getLastName();
+		ActivityItem activityItem = selectedOrderPage.getHistoryActivityItem(
+				aitem-> aitem.isNoteItem() && aitem.isUserNameEqualTo(userName));
+		if (activityItem == null) {
+			return false;
+		} else {
+			activityItem.clickOnShowDetailsLink();
+			NoteExpandedContent noteContent = activityItem.getNoteExpandedContent();
+			String noteText = noteContent.getNoteText();
+			return note.equalsIgnoreCase(noteText);
+		}	
 	}
 
 	public void thenUserIsOnEventDashboardPage() {

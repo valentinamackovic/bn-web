@@ -20,7 +20,7 @@ import utils.DataConstants;
 public class BoxOfficeSellTicketStepsIT extends BaseSteps {
 
 	@Test(dataProvider = "box_office_sell_ticket_cash_payment", dependsOnMethods = {"prepareEventDataForBoxOfficeOrg"},
-			priority = 16, retryAnalyzer = utils.RetryAnalizer.class)
+			priority = 20, retryAnalyzer = utils.RetryAnalizer.class)
 	public void boxOfficeSellTicketCashPayment(User boxOfficeUser, Purchase purchase, User receiverOfTickets) {
 		int ticketNumAdd = purchase.getNumberOfTickets();
 		int ticketNumRemove = purchase.getRemoveNumberOfTickets();
@@ -56,7 +56,7 @@ public class BoxOfficeSellTicketStepsIT extends BaseSteps {
 		Assert.assertTrue(isCorrectAmountInMail);
 	}
 
-	@Test(dataProvider = "prepare_event_for_box_office_cash_payment_data", priority = 16)
+	@Test(dataProvider = "prepare_event_for_box_office_cash_payment_data", priority = 20)
 	public void prepareEventDataForBoxOfficeOrg(Event event, User superuser) throws Exception {
 		maximizeWindow();
 		LoginStepsFacade loginStepsFacade = new LoginStepsFacade(driver);

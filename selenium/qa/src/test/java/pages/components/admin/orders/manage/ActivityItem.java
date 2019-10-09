@@ -7,10 +7,9 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import pages.BaseComponent;
-import utils.ProjectUtils;
 import utils.SeleniumUtils;
 
-public class OrderHistoryActivityItem extends BaseComponent {
+public class ActivityItem extends BaseComponent {
 	
 	public WebElement container;
 	
@@ -32,18 +31,24 @@ public class OrderHistoryActivityItem extends BaseComponent {
 	
 	private String relativeEventNameXpath = relativeRowContentXpath + "/p/span[3]/span";
 	
-	public OrderHistoryActivityItem(WebDriver driver, WebElement container) {
+	public ActivityItem(WebDriver driver, WebElement container) {
 		super(driver);
 		this.container = container;
+	}
+	
+	public boolean isUserNameEqualTo(String userName) {
+		String elementUserName = getUserName();
+		boolean retVal =  elementUserName.equals(userName);
+		return retVal;
 	}
 	
 	public String getUserName() {
 		WebElement element = SeleniumUtils.getChildElementFromParentLocatedBy(container, 
 				By.xpath(relativeUserNameXpath), driver);
 		String userName = element.getText();
-		return userName;
+		return userName.trim();
 	}
-	
+		
 	public String getRefundeeName() {
 		WebElement element = SeleniumUtils.getChildElementFromParentLocatedBy(container, By.xpath(relativeRefundedRefundeeXpath), driver);
 		String text = element.getText();
@@ -87,6 +92,12 @@ public class OrderHistoryActivityItem extends BaseComponent {
 		return content;
 	}
 	
+	public NoteExpandedContent getNoteExpandedContent() {
+		WebElement noteContent = getExpandedElement();
+		NoteExpandedContent content = new NoteExpandedContent(driver, noteContent);
+		return content;
+	}
+	
 	private WebElement getExpandedElement() {
 		WebElement expandedContentContainer = SeleniumUtils.getChildElementFromParentLocatedBy(container, 
 				By.xpath(relativeExpandedContentXpath), driver);
@@ -111,6 +122,15 @@ public class OrderHistoryActivityItem extends BaseComponent {
 		}
 	}
 	
+	public boolean isNoteItem() {
+		String text = getStatusElement().getText();
+		if (text.contains("added a note")) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
 	private WebElement getStatusElement() {
 		WebElement element = SeleniumUtils.getChildElementFromParentLocatedBy(container, 
 				By.xpath(relativeStatusXpath), driver);
@@ -121,6 +141,27 @@ public class OrderHistoryActivityItem extends BaseComponent {
 		WebElement element = SeleniumUtils.getChildElementFromParentLocatedBy(container, By.xpath(relativeRowContentXpath), driver);
 		String content = element.getText();
 		return content;
+	}
+	
+	public class NoteExpandedContent extends BaseComponent {
+		
+		private WebElement container;
+		
+		private String relativeNoteTextXpath = ".//div/p[contains(text(),'Note:')]/following-sibling::p/span";
+
+		public NoteExpandedContent(WebDriver driver, WebElement container) {
+			super(driver);
+			this.container = container;
+		}
+		
+		public String getNoteText() {
+			return getNoteElement().getText();
+		}
+		
+		private WebElement getNoteElement() {
+			return SeleniumUtils.getChildElementFromParentLocatedBy(container, By.xpath(relativeNoteTextXpath), driver);
+		}
+		
 	}
 	
 	public class RefundedExpandedContent extends BaseComponent {

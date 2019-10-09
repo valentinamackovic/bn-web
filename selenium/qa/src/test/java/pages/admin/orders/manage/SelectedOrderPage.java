@@ -1,4 +1,4 @@
-package pages.admin.orders;
+package pages.admin.orders.manage;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,7 +11,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import pages.BasePage;
-import pages.components.admin.orders.manage.OrderHistoryActivityItem;
+import pages.components.admin.orders.manage.ActivityItem;
 import pages.components.admin.orders.manage.tickets.OrderDetails;
 import pages.components.admin.orders.manage.tickets.TicketRow;
 import utils.Constants;
@@ -30,7 +30,13 @@ public class SelectedOrderPage extends BasePage {
 	
 	@FindBy(xpath = "//button[@type='button' and span[contains(text(),'Refund')]]")
 	private WebElement refundButton;
+	
+	@FindBy(xpath = "//main//textarea[@name='note']")
+	private WebElement textArea;
 
+	@FindBy(xpath = "//main//button[not(@disabled='') and @type='button' and span[contains(text(),'Add')]]")
+	private WebElement addNoteButton;
+	
 	public SelectedOrderPage(WebDriver driver, String orderId) {
 		super(driver);
 		this.orderId = orderId;
@@ -44,6 +50,10 @@ public class SelectedOrderPage extends BasePage {
 	public boolean isAtPage() {
 		return explicitWait(15,
 				ExpectedConditions.urlMatches(Constants.getAdminEvents() + "/*.*/dashboard/orders/manage/" + orderId));
+	}
+	
+	public void refreshPage() {
+		driver.navigate().refresh();
 	}
 	
 	public void expandOrderDetails() {
@@ -71,12 +81,22 @@ public class SelectedOrderPage extends BasePage {
 		return this.orderDetails;
 	}
 	
-	public OrderHistoryActivityItem getHistoryActivityItem(Predicate<OrderHistoryActivityItem> predicate) {
+	public ActivityItem getHistoryActivityItem(Predicate<ActivityItem> predicate) {
 		List<WebElement> historyItems = findOrderHistoryRows();
-		Optional<OrderHistoryActivityItem> activityItem = historyItems.stream()
-				.map(e->new OrderHistoryActivityItem(driver, e))
+		Optional<ActivityItem> activityItem = historyItems.stream()
+				.map(e->new ActivityItem(driver, e))
 				.filter(predicate).findFirst();
 		return activityItem.isPresent() ? activityItem.get() : null;
+	}
+	
+	public void enterNote(String note) {
+		waitVisibilityAndSendKeys(textArea, note);
+		waitForTime(1000);
+	}
+	
+	public void clickOnAddNoteButton() {
+		waitVisibilityAndBrowserCheckClick(addNoteButton);
+		waitForTime(3000);
 	}
 	
 	public Integer getNumberOfHistoryItemRows() {

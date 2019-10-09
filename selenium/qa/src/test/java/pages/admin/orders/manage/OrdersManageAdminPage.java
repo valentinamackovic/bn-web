@@ -1,4 +1,4 @@
-package pages.admin.orders;
+package pages.admin.orders.manage;
 
 import java.util.function.Function;
 
