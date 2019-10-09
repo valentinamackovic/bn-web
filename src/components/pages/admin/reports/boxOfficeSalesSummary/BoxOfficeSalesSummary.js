@@ -52,10 +52,6 @@ class BoxOfficeSalesSummary extends Component {
 		};
 	}
 
-	componentDidMount() {
-		//this.refreshData();
-	}
-
 	exportCSV() {
 		const {
 			startDateDisplay,
@@ -68,7 +64,6 @@ class BoxOfficeSalesSummary extends Component {
 			"MMM DD, YYY at H:mm A"
 		);
 
-		//TODO get rows
 		const csvRows = [];
 
 		csvRows.push(["Box office sales summary report"]);
