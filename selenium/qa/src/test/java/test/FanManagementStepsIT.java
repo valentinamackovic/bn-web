@@ -95,7 +95,7 @@ public class FanManagementStepsIT extends BaseSteps {
 
 		EventsPage eventsPage = eventsFacade.givenThatEventExist(purchas.getEvent(), fan);
 		if (this.purchase == null ) {
-			this.purchase = purchase;
+			this.purchase = purchas;
 		}
 		// when
 		eventsFacade.whenUserExecutesEventPagesStepsWithoutMapView(purchas.getEvent());
