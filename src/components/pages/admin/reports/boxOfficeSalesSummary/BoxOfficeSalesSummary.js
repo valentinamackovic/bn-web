@@ -69,7 +69,9 @@ class BoxOfficeSalesSummary extends Component {
 			.then(response => {
 				const { payments, operators } = response.data;
 
-				this.setState({ payments, operators });
+				this.setState({ payments, operators }, () => {
+					onLoad ? onLoad() : null;
+				});
 			})
 			.catch(error => {
 				console.error(error);
