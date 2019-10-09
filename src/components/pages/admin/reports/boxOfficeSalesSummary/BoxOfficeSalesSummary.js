@@ -3,7 +3,6 @@ import { Typography, withStyles } from "@material-ui/core";
 import PropTypes from "prop-types";
 
 import notifications from "../../../../../stores/notifications";
-import Divider from "../../../../common/Divider";
 import Button from "../../../../elements/Button";
 import downloadCSV from "../../../../../helpers/downloadCSV";
 import { fontFamilyDemiBold } from "../../../../../config/theme";
@@ -11,6 +10,9 @@ import Loader from "../../../../elements/loaders/Loader";
 import Bigneon from "../../../../../helpers/bigneon";
 import GrandTotalTable from "./GrandTotalTable";
 import OperatorTable from "./OperatorTable";
+import ReportsDate from "../ReportDate";
+import moment from "moment-timezone";
+import user from "../../../../../stores/user";
 
 const styles = theme => ({
 	root: {},
@@ -42,12 +44,14 @@ class BoxOfficeSalesSummary extends Component {
 
 		this.state = {
 			payments: null,
-			operators: null
+			operators: null,
+			startDateDisplay: null,
+			endDateDisplay: null
 		};
 	}
 
 	componentDidMount() {
-		this.refreshData();
+		//this.refreshData();
 	}
 
 	exportCSV() {
@@ -55,23 +59,41 @@ class BoxOfficeSalesSummary extends Component {
 		downloadCSV([], "box-office-sales-summary");
 	}
 
-	refreshData() {
-		//TODO date filter
-		//start_utc
-		//end_utc
+	refreshData(
+		dataParams = {
+			start_utc: null,
+			end_utc: null,
+			startDate: null,
+			endDate: null
+		}
+	) {
+		const { startDate, endDate, start_utc, end_utc } = dataParams;
 
 		const { organizationId, onLoad } = this.props;
 
-		const queryParams = { organization_id: organizationId };
+		const queryParams = { organization_id: organizationId, start_utc, end_utc };
 
 		Bigneon()
 			.reports.boxOfficeSalesSummary(queryParams)
 			.then(response => {
 				const { payments, operators } = response.data;
 
-				this.setState({ payments, operators }, () => {
-					onLoad ? onLoad() : null;
-				});
+				const displayFormat = "MMM DD, YYYY";
+				const startDateDisplay = moment
+					.utc(startDate)
+					.tz(user.currentOrgTimezone)
+					.format(displayFormat);
+				const endDateDisplay = moment
+					.utc(endDate)
+					.tz(user.currentOrgTimezone)
+					.format(displayFormat);
+
+				this.setState(
+					{ payments, operators, startDateDisplay, endDateDisplay },
+					() => {
+						onLoad ? onLoad() : null;
+					}
+				);
 			})
 			.catch(error => {
 				console.error(error);
@@ -121,7 +143,8 @@ class BoxOfficeSalesSummary extends Component {
 	}
 
 	render() {
-		const { classes, printVersion } = this.props;
+		const { classes, printVersion, organizationTimezone } = this.props;
+		const { startDateDisplay, endDateDisplay } = this.state;
 
 		if (printVersion) {
 			return (
@@ -157,11 +180,17 @@ class BoxOfficeSalesSummary extends Component {
 						</Button>
 					</div>
 				</div>
-				<Typography className={classes.subheading}>
-					Report run: <span className={classes.boldText}>TODO</span> to{" "}
-					<span className={classes.boldText}>TODO</span>
-				</Typography>
-				<Divider style={{ marginBottom: 40 }}/>
+				{startDateDisplay && endDateDisplay ? (
+					<Typography className={classes.subheading}>
+						Report run:{" "}
+						<span className={classes.boldText}>{startDateDisplay}</span> to{" "}
+						<span className={classes.boldText}>{endDateDisplay}</span>
+					</Typography>
+				) : null}
+				<ReportsDate
+					timezone={organizationTimezone}
+					onChange={this.refreshData.bind(this)}
+				/>
 				{this.renderGrandTotal()}
 				{this.renderOperators()}
 			</div>
