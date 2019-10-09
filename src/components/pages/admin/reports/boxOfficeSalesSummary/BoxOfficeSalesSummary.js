@@ -52,6 +52,12 @@ class BoxOfficeSalesSummary extends Component {
 		};
 	}
 
+	componentDidMount() {
+		if (this.props.printVersion) {
+			this.refreshData();
+		}
+	}
+
 	exportCSV() {
 		const {
 			startDateDisplay,

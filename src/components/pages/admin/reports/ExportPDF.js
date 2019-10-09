@@ -118,8 +118,9 @@ class ExportPDF extends Component {
 
 	render() {
 		const organizationId = user.currentOrganizationId;
+		const organizationTimezone = user.currentOrgTimezone;
 
-		if (!organizationId) {
+		if (!organizationId || !organizationTimezone) {
 			return <Loader/>;
 		}
 
@@ -178,6 +179,7 @@ class ExportPDF extends Component {
 
 				<ReportComponent
 					organizationId={organizationId}
+					organizationTimezone={organizationTimezone}
 					eventId={event_id}
 					printVersion
 					onLoad={this.onReportLoad}
