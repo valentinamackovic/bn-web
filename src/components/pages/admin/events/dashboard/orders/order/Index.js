@@ -179,9 +179,14 @@ class SingleOrder extends Component {
 		const { orderId } = this.state;
 
 		Bigneon()
-			.orders.activity({
-				id: orderId
-			})
+			.orders.activity(
+				{
+					id: orderId
+				},
+				{},
+				false,
+				{ minTimeout: 120000 }
+			)
 			.then(response => {
 				const { data } = response.data;
 
