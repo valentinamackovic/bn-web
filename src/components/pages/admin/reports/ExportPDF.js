@@ -89,12 +89,18 @@ class ExportPDF extends Component {
 					const { artists, venue, ...event } = response.data;
 					const { event_start } = event;
 
+					const venueTimeZone = venue.timezone;
 					const eventStartDateMoment = moment.utc(event_start);
 					const displayLocalVenueTime = eventStartDateMoment
-						.tz(venue.timezone)
+						.tz(venueTimeZone)
 						.format("dddd, MMMM Do YYYY hh:mm:A");
 
-					this.setState({ event, venue, displayLocalVenueTime });
+					this.setState({
+						event,
+						venue,
+						displayLocalVenueTime,
+						venueTimeZone
+					});
 				})
 				.catch(error => {
 					this.setState({ event: false });
@@ -119,7 +125,7 @@ class ExportPDF extends Component {
 		}
 
 		const { classes } = this.props;
-		const { event, venue, displayLocalVenueTime } = this.state;
+		const { event, venue, displayLocalVenueTime, venueTimeZone } = this.state;
 
 		const event_id = getUrlParam("event_id");
 		const type = getUrlParam("type");
@@ -176,6 +182,7 @@ class ExportPDF extends Component {
 					eventId={event_id}
 					printVersion
 					onLoad={this.onReportLoad}
+					venueTimeZone={venueTimeZone}
 				/>
 			</div>
 		);
