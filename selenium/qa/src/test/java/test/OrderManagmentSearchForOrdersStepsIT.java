@@ -35,6 +35,9 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 	private String ticketTypeName = "VIP";
 	private Purchase purchase;
 
+	/**
+	 * Test for guest search on guest page task task #1769
+	 */
 	@Test(dataProvider = "guest_page_search_data", priority = 13, 
 			 dependsOnMethods = {"userPurchasedTickets"},  retryAnalyzer = utils.RetryAnalizer.class)
 	public void guestPageSearchTest(User superuser, Event event, User one, User two) throws Exception {
@@ -117,10 +120,11 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 		return new Object[][] { { one, purchaseOne }, { two, purchase }, { three, purchase } };
 	}
 	
-	
-	
-
-	@Test(dataProvider = "manage_orders_page_search_data", priority = 14, retryAnalyzer = utils.RetryAnalizer.class)
+	/**
+	 * 
+	 * test for task  ,Automation: Big Neon : Test 23: Box Office: Search for the Sold tickets #1788
+	 */
+	@Test(dataProvider = "manage_orders_page_data", priority = 14, retryAnalyzer = utils.RetryAnalizer.class)
 	public void manageOrdersPageSearchTest(User orgAdmin, User customer, User customerOne, Event event, Purchase purchase)
 			throws Exception {
 
@@ -150,7 +154,10 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 
 	}
 	
-	@Test(dataProvider = "manage_orders_page_search_data", priority = 15, retryAnalyzer = utils.RetryAnalizer.class)
+	/**
+	 *  Automation: Big Neon : Test 24: Box Office: Refund Tickets #1789 
+	 */
+	@Test(dataProvider = "manage_orders_page_data", priority = 15, retryAnalyzer = utils.RetryAnalizer.class)
 	public void manageOrdersSearchAndRefundTickets(User orgAdmin, User customer, User customerOne, Event event, Purchase purchase) throws Exception {
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
 		AdminEventStepsFacade adminEventFacade = new AdminEventStepsFacade(driver);
@@ -189,7 +196,10 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 
 	}
 	
-	@Test(dataProvider = "manage_orders_page_search_data", priority = 16, retryAnalyzer = utils.RetryAnalizer.class)
+	/**
+	 * Automation Big Neon: Test 28: Order Management: Order History/Activity Feed #1833
+	 */
+	@Test(dataProvider = "manage_orders_page_data", priority = 16, retryAnalyzer = utils.RetryAnalizer.class)
 	public void manageOrdersOrderHistoryActivity(User orgAdmin, User customer, User customerOne, Event event, Purchase purchase) throws Exception {
 		
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
@@ -213,10 +223,12 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 	
 		loginFacade.logOut();
 	}
-	
-	
-	
-	@Test(dataProvider = "manage_orders_page_search_data", priority = 17, retryAnalyzer = utils.RetryAnalizer.class)
+		
+	/**
+	 *  Automation BigNeon : Order Management: Test 29: Activity Items/Purchased #1834
+	 *  Automation: Big Neon: Order Management: Test 30: ActivityItems/Refunded #1848
+	 */
+	@Test(dataProvider = "manage_orders_page_data", priority = 17, retryAnalyzer = utils.RetryAnalizer.class)
 	public void manageOrdersActivityItemsPurchasedAndRefundedCheck(User orgAdmin, User customer, User customerOne, Event event, Purchase purchase) throws Exception {
 		
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
@@ -242,7 +254,10 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 		
 	}
 	
-	@Test(dataProvider = "manage_orders_page_search_data", priority = 18, retryAnalyzer = utils.RetryAnalizer.class)
+	/*
+	 * Automation: BigNeon: Order Management: Test 31: ActivityItems/Note #1849
+	 */
+	@Test(dataProvider = "manage_orders_page_data", priority = 18, retryAnalyzer = utils.RetryAnalizer.class)
 	public void manageOrdersAddNoteAndCheckActivityItem(User orgAdmin, User customer, User customerOne, Event event, Purchase purchase) throws Exception {
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
 		AdminEventStepsFacade adminEventFacade = new AdminEventStepsFacade(driver);
@@ -267,10 +282,11 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 			eventComponent.cancelEvent();
 		}
 		loginFacade.logOut();
-	    
-	    
+	    	    
 	}
-
+	/**
+	 *  Automation: Big Neon : Test 27: Order Management: Order Page navigation #1809, used in most tests in this class
+	 */
 	private boolean loginPickOrgNavToManageOrders(LoginStepsFacade loginFacade,
 			AdminEventStepsFacade adminEventFacade,
 			OrganizationStepsFacade organizationStepsFacade, 
@@ -284,10 +300,9 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 		dashboardFacade.givenUserIsOnManageOrdersPage();
 		return true;
 	}
-	
-	
+		
 
-	@DataProvider(name = "manage_orders_page_search_data")
+	@DataProvider(name = "manage_orders_page_data")
 	public static Object[][] dataProvider() {
 		Purchase purchase = preparePurchase();
 		purchase.setOrderNote(NOTE_TEXT);
@@ -298,8 +313,6 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 		
 		return new Object[][] { { orgAdminUser, customer, one, event, purchase } };
 	}
-	
-	
 	
 
 	private static Purchase preparePurchase() {
