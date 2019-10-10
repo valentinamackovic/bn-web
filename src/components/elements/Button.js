@@ -37,6 +37,13 @@ const styles = theme => {
 			background: secondaryHex,
 			color: "#FFF"
 		},
+		plainWhite: {
+			boxSizing: " border-box",
+			height: 42,
+			width: 134,
+			border: " 1px solid #979797",
+			borderRadius: 3
+		},
 		default: {
 			background: `linear-gradient(45deg, #FFF 10%, #FFF 90%)`,
 			color: textColorPrimary,
@@ -54,6 +61,19 @@ const styles = theme => {
 			boxShadow: "none",
 			backgroundRepeat: "no-repeat",
 			borderColor: "#FFFFFF"
+		},
+		pinkBorder: {
+			background: "transparent",
+			color: secondaryHex,
+			boxShadow: "none",
+			backgroundRepeat: "no-repeat",
+			borderColor: secondaryHex,
+			borderRadius: 3,
+			fontSize: 18,
+			boxSizing: "border-box",
+			// height: 52,
+			width: 268,
+			border: "1px solid #FF22B2"
 		},
 		warning: {
 			background: `linear-gradient(45deg, ${warningHex} 10%, ${warningHex} 90%)`,
@@ -184,6 +204,8 @@ CustomButton.propTypes = {
 		"warning",
 		"text",
 		"additional",
+		"plainWhite",
+		"pinkBorder",
 		"whiteCTA"
 	]),
 	size: PropTypes.oneOf(["small", "medium", "mediumLarge", "large"]),

@@ -5,18 +5,34 @@ import eventResults from "../../../stores/eventResults";
 import changeUrlParam from "../../../helpers/changeUrlParam";
 import notifications from "../../../stores/notifications";
 import servedImage from "../../../helpers/imagePathHelper";
+import { Hidden } from "@material-ui/core";
 
 const styles = {
 	root: {
-		display: "flex"
+		display: "flex",
+		justifyContent: "space-between",
+		width: "100%"
+	},
+	noClose: {
+		display: "flex",
+		alignItems: "center"
 	},
 	input: {
 		border: "none",
-		fontSize: 14,
+		fontSize: 19,
+		color: "#9DA3B4",
 		outline: "none"
 	},
 	icon: {
-		marginRight: 12
+		marginRight: -8,
+		height: 61,
+		width: 61,
+		marginLeft: -24
+	},
+
+	closeIcon: {
+		marginRight: 8,
+		marginLeft: -24
 	}
 };
 
@@ -81,19 +97,29 @@ class SearchToolBarInput extends Component {
 				className={classes.root}
 				onClick={() => this.input.focus()} //If they click near the input focus the input
 			>
-				<img
-					alt="Search icon"
-					className={classes.icon}
-					src={servedImage("/icons/search-gray.svg")}
-				/>
-				<input
-					ref={input => (this.input = input)}
-					disabled={isSearching}
-					value={query}
-					onChange={e => this.setState({ query: e.target.value })}
-					className={classes.input}
-					placeholder="Search events"
-				/>
+				<div className={classes.noClose}>
+					<img
+						alt="Search icon"
+						className={classes.icon}
+						src={servedImage("/icons/search-pink.svg")}
+					/>
+					<input
+						ref={input => (this.input = input)}
+						disabled={isSearching}
+						value={query}
+						onChange={e => this.setState({ query: e.target.value })}
+						className={classes.input}
+						placeholder="Search Events"
+					/>
+				</div>
+				<Hidden smUp>
+					<img
+						alt="Search icon"
+						className={classes.closeIcon}
+						src={servedImage("/icons/delete-gray.svg")}
+						onClick={this.props.onCloseClick}
+					/>
+				</Hidden>
 			</form>
 		);
 	}

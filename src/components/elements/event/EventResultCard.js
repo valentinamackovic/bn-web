@@ -1,18 +1,21 @@
-import React from "react";
-import PropTypes from "prop-types";
+import React, { Component } from "react";
 import { Typography, withStyles } from "@material-ui/core";
+import PropTypes from "prop-types";
 import moment from "moment-timezone";
 import { Link } from "react-router-dom";
-
+import classNames from "classnames";
 import Card from "../Card";
 import { fontFamilyDemiBold, secondaryHex } from "../../../config/theme";
 import MaintainAspectRatio from "../MaintainAspectRatio";
 import optimizedImageUrl from "../../../helpers/optimizedImageUrl";
 import Settings from "../../../config/settings";
+import getPhoneOS from "../../../helpers/getPhoneOS";
+import HoldRow from "../../pages/admin/events/dashboard/holds/children/ChildRow";
 
 const styles = theme => ({
 	card: {
-		maxWidth: 400
+		maxWidth: 400,
+		boxShadow: "0 2px 7.5px 1px rgba(112, 124, 237, 0.07)"
 	},
 	media: {
 		height: "100%",
@@ -30,15 +33,35 @@ const styles = theme => ({
 		flexDirection: "column"
 	},
 	name: {
+		marginTop: theme.spacing.unit,
 		color: "#000000",
 		fontFamily: fontFamilyDemiBold,
-		fontSize: theme.typography.fontSize * 1.3,
-		lineHeight: 1.2
+		fontSize: 21,
+		lineHeight: "21px",
+		textAlign: "left",
+		lineClamp: 2,
+		display: "-webkit-box",
+		WebkitLineClamp: 3,
+		WebkitBoxOrient: "vertical",
+		overflow: "hidden",
+		textOverflow: "ellipsis"
+	},
+	abbr: {
+		textDecoration: "none",
+		marginTop: theme.spacing.unit,
+		color: "#000000",
+		fontFamily: fontFamilyDemiBold,
+		fontSize: 21,
+		lineHeight: "21px",
+		borderBottom: "none"
 	},
 	detailsContent: {
-		height: 105,
+		// height: 105,
 		display: "flex",
-		padding: theme.spacing.unit * 2
+		paddingLeft: theme.spacing.unit * 2,
+		paddingRight: theme.spacing.unit * 2,
+		paddingTop: theme.spacing.unit * 2,
+		paddingBottom: theme.spacing.unit
 	},
 	singleDetail: {
 		flex: 1,
@@ -52,24 +75,44 @@ const styles = theme => ({
 		color: "#cccfd9"
 	},
 	date: {
-		color: secondaryHex
+		color: secondaryHex,
+		fontSize: theme.typography.fontSize,
+		fontWeight: 600,
+		lineHeight: "18px"
 	},
 	value: {
 		fontSize: theme.typography.fontSize,
-		color: "#9DA3B4"
+		color: "#9DA3B4",
+		fontWeight: 500
+	},
+	addressHolder: {
+		paddingLeft: theme.spacing.unit * 2,
+		paddingRight: theme.spacing.unit * 2,
+		paddingTop: 0,
+		paddingBottom: theme.spacing.unit * 2
 	},
 	priceTag: {
 		backgroundColor: "#fff4fb",
-		padding: theme.spacing.unit,
-		paddingTop: theme.spacing.unit + 3,
-		borderRadius: "6px 6px 6px 0px",
+		padding: "6px 6px 4px 6px",
+		borderRadius: "6px 6px 6px 0",
 		marginBottom: theme.spacing.unit
 	},
 	priceTagText: {
 		color: secondaryHex,
-		lineHeight: 0.5,
 		fontFamily: fontFamilyDemiBold,
-		fontSize: theme.typography.fontSize * 0.75
+		lineHeight: "17px",
+		fontSize: 17
+	},
+	hoverCard: {
+		"&:hover": {
+			boxShadow: "5px 5px 5px 0 rgba(0,0,0,0.15)",
+			transition: "box-shadow .3s ease-out"
+		},
+		boxShadow: "none",
+		transition: "box-shadow .3s ease-in"
+	},
+	noHover: {
+		transition: "box-shadow .3s ease-out"
 	}
 });
 
@@ -93,64 +136,102 @@ const PriceTag = ({ classes, min, max }) => {
 	);
 };
 
-const EventResultCard = ({
-	classes,
-	id,
-	name,
-	promo_image_url,
-	event_start,
-	address,
-	door_time,
-	min_ticket_price,
-	max_ticket_price,
-	venueTimezone,
-	slug
-}) => {
-	const style = {};
-	if (promo_image_url) {
-		style.backgroundImage = `linear-gradient(to top, #000000, rgba(0, 0, 0, 0)), url(${optimizedImageUrl(
-			promo_image_url,
-			"low",
-			{ w: 430 }
-		)})`;
+class EventResultCard extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			hoverId: null
+		};
 	}
-	venueTimezone = venueTimezone || "America/Los_Angeles";
-	const eventStartDateMoment = moment.utc(event_start);
 
-	const displayEventStartDate = eventStartDateMoment
-		.tz(venueTimezone)
-		.format("ddd, MMM Do");
-	const displayShowTime = moment(eventStartDateMoment)
-		.tz(venueTimezone)
-		.format("h:mm A");
+	render() {
+		const {
+			classes,
+			id,
+			name,
+			promo_image_url,
+			event_start,
+			venueName,
+			city,
+			state,
+			door_time,
+			min_ticket_price,
+			max_ticket_price,
+			venueTimezone,
+			slug
+		} = this.props;
+		const { hoverId } = this.state;
 
-	return (
-		<Link to={`/events/${slug || id}`}>
-			<Card borderLess variant="default">
-				<MaintainAspectRatio aspectRatio={Settings().promoImageAspectRatio}>
-					<div className={classes.media} style={style}/>
-				</MaintainAspectRatio>
-				<div className={classes.detailsContent}>
-					<div className={classes.singleDetail} style={{ textAlign: "left" }}>
+		const style = {};
+		if (promo_image_url) {
+			style.backgroundImage = `linear-gradient(to top, #000000, rgba(0, 0, 0, 0)), url(${optimizedImageUrl(
+				promo_image_url,
+				"low",
+				{ w: 430 }
+			)})`;
+		}
+
+		const newVenueTimezone = venueTimezone || "America/Los_Angeles";
+		const eventStartDateMoment = moment.utc(event_start);
+
+		const displayEventStartDate = eventStartDateMoment
+			.tz(newVenueTimezone)
+			.format("ddd, MMM Do");
+		const displayShowTime = moment(eventStartDateMoment)
+			.tz(newVenueTimezone)
+			.format("h:mm A");
+
+		return (
+			<Link
+				onMouseEnter={e => this.setState({ hoverId: id })}
+				onMouseLeave={e => this.setState({ hoverId: null })}
+				to={`/events/${slug || id}`}
+			>
+				<Card
+					className={classNames({
+						[classes.noHover]: true,
+						[classes.hoverCard]: hoverId === id
+					})}
+					borderLess
+					variant="default"
+				>
+					<MaintainAspectRatio aspectRatio={Settings().promoImageAspectRatio}>
+						<div className={classes.media} style={style}/>
+					</MaintainAspectRatio>
+					<div className={classes.detailsContent}>
+						<div className={classes.singleDetail} style={{ textAlign: "left" }}>
+							<Typography className={classes.value}>
+								<span className={classes.date}>{displayEventStartDate}</span>{" "}
+								&middot; {displayShowTime}
+							</Typography>
+							<Typography
+								className={classNames({
+									[classes.name]: true
+								})}
+							>
+								<abbr className={classes.abbr} title={name}>
+									{name}
+								</abbr>
+							</Typography>
+						</div>
+						<div style={{ textAlign: "right" }}>
+							<PriceTag
+								min={min_ticket_price}
+								max={max_ticket_price}
+								classes={classes}
+							/>
+						</div>
+					</div>
+					<div className={classes.addressHolder}>
 						<Typography className={classes.value}>
-							<span className={classes.date}>{displayEventStartDate}</span>{" "}
-							&middot; {displayShowTime}
+							@ {venueName}, {city}, {state}
 						</Typography>
-						<Typography className={classes.name}>{name}</Typography>
-						<Typography className={classes.value}>@ {address}</Typography>
 					</div>
-					<div style={{ textAlign: "right" }}>
-						<PriceTag
-							min={min_ticket_price}
-							max={max_ticket_price}
-							classes={classes}
-						/>
-					</div>
-				</div>
-			</Card>
-		</Link>
-	);
-};
+				</Card>
+			</Link>
+		);
+	}
+}
 
 EventResultCard.propTypes = {
 	id: PropTypes.string.isRequired,

@@ -23,6 +23,7 @@ import BoxOfficeLink from "./BoxOfficeLink";
 import CurrentOrganizationMenu from "./CurrentOrganizationMenu";
 import CartHeaderLink from "../../common/cart/CartHeaderLink";
 import RightUserMenu from "./RightUserMenu";
+import servedImage from "../../../helpers/imagePathHelper";
 
 const eventImageHeight = 45;
 
@@ -41,7 +42,8 @@ const styles = theme => {
 			justifyContent: "space-between",
 			alignItems: "center",
 
-			width: "100%"
+			width: "100%",
+			maxWidth: 1400
 		},
 		rightMenuOptions: {
 			alignItems: "center",
@@ -57,6 +59,21 @@ const styles = theme => {
 			// borderStyle: "solid",
 			// borderColor: "blue",
 			// borderWidth: 0.5
+		},
+		searchContainer: {
+			border: "1.2px solid #9DA3B433",
+			borderRadius: "10px",
+			width: 410,
+			height: 43,
+			display: "flex",
+			backgroundColor: "#fff",
+			padding: theme.spacing.unit * 2,
+			justifyContent: "flex-start",
+			alignItems: "center",
+			// marginTop: 25,
+			[theme.breakpoints.up("sm")]: {
+				justifyContent: "flex-center"
+			}
 		},
 		mobileHeaderImage: {
 			height: eventImageHeight,
@@ -130,32 +147,32 @@ class LandingAppBar extends Component {
 		const { show, displayTime } = this.state;
 
 		return (
-			<Slide direction="down" in={show}>
-				<AppBar>
-					<Toolbar className={classes.toolBar}>
-						<div className={classes.barContent}>
-							<Link to={"/"}>
-								<AppBarLogo/>
-							</Link>
+			<AppBar>
+				<Toolbar className={classes.toolBar}>
+					<div className={classes.barContent}>
+						<Link to={"/"}>
+							<AppBarLogo/>
+						</Link>
 
-							{!layout.showStudioLogo ? (
-								<Hidden smDown>
+						<Hidden smDown>
+							<Slide direction="down" in={show}>
+								<div className={classes.searchContainer}>
 									<SearchToolBarInput history={history}/>
-								</Hidden>
-							) : null}
+								</div>
+							</Slide>
+						</Hidden>
 
-							<span className={classes.rightMenuOptions}>
-								<Hidden smDown>
-									<BoxOfficeLink/>
-									<CurrentOrganizationMenu/>
-									<CartHeaderLink/>
-								</Hidden>
-								<RightUserMenu history={history}/>
-							</span>
-						</div>
-					</Toolbar>
-				</AppBar>
-			</Slide>
+						<span className={classes.rightMenuOptions}>
+							<Hidden smDown>
+								<BoxOfficeLink/>
+								<CurrentOrganizationMenu/>
+								<CartHeaderLink/>
+							</Hidden>
+							<RightUserMenu history={history}/>
+						</span>
+					</div>
+				</Toolbar>
+			</AppBar>
 		);
 	}
 }
