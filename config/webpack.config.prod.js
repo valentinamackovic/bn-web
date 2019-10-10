@@ -343,7 +343,7 @@ module.exports = {
 		new WriteFilePlugin({
 			path: `${paths.appBuild}/_headers`,
 			content: process.env.NETLIFY_BASIC_AUTH
-				? `/*\nBasic-Auth: ${process.env.NETLIFY_BASIC_AUTH}`
+				? `/*\n  Basic-Auth: ${process.env.NETLIFY_BASIC_AUTH}`
 				: ""
 		}),
 		new CopyWebpackPlugin([
