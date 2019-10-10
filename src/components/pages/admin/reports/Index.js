@@ -92,7 +92,9 @@ class Reports extends Component {
 				{hasOrgEventSettlementReport ? (
 					<Typography className={classes.menuText}>
 						<StyledLink
-							underlined={report === "settlement-list"}
+							underlined={
+								report === "settlement-list" || report === "settlement"
+							}
 							to={`/admin/reports/settlement-list`}
 						>
 							Settlement reports
@@ -150,6 +152,7 @@ class Reports extends Component {
 					<SettlementReport
 						history={this.props.history}
 						organizationId={currentOrganizationId}
+						organizationTimezone={currentOrgTimezone}
 					/>
 				);
 			default:

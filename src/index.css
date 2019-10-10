@@ -44,3 +44,10 @@ input[type="number"]::-webkit-outer-spin-button {
 
 	margin: 0;
 }
+
+.eventCard {
+	transition: box-shadow 0.5s ease;
+}
+.eventCard:hover {
+	box-shadow: 5px 5px 5px 0 rgba(0,0,0,0.15);
+}

@@ -150,7 +150,7 @@ class ViewEvent extends Component {
 	}
 
 	componentDidMount() {
-		layout.toggleBelowFooterPadding(true);
+		// layout.toggleBelowFooterPadding(true);
 
 		if (
 			this.props.match &&
@@ -184,7 +184,7 @@ class ViewEvent extends Component {
 	}
 
 	componentWillUnmount() {
-		layout.toggleBelowFooterPadding(false);
+		// layout.toggleBelowFooterPadding(false);
 	}
 
 	// toggleUserInterest() {
@@ -261,14 +261,14 @@ class ViewEvent extends Component {
 				return { ctaText: "Sale Ended", enabled: false };
 			case "PurchaseTickets":
 			default:
-				if (hasAvailableTickets === false && !event.is_external) {
-					return { ctaText: "No available tickets", enabled: false };
-				} else {
-					return {
-						ctaText: "Purchase Tickets",
-						enabled: true
-					};
-				}
+				// if (hasAvailableTickets === false && !event.is_external) {
+				// 	return { ctaText: "No available tickets", enabled: false };
+				// } else {
+				return {
+					ctaText: "Purchase Tickets",
+					enabled: true
+				};
+			//}
 		}
 	}
 

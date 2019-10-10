@@ -21,7 +21,7 @@ public class CurrentOrganizationDropDown extends BaseComponent {
 	public void selectOrganizationByName(String organizationName) {
 		WebElement organization = findOrganizationByName(organizationName);
 		explicitWaitForVisiblity(organization);
-		waitForTime(2, 1000);
+		waitForTime(2000);
 		organization.click();
 	}
 

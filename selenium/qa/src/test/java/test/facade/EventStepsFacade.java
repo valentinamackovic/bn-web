@@ -31,7 +31,8 @@ public class EventStepsFacade extends BaseFacadeSteps {
 		this.succesPage = new TicketsSuccesPage(driver);
 		this.loginPage = new LoginPage(driver);
 	}
-
+	
+	
 	public EventsPage givenThatEventExist(Event event,User user) throws Exception {
 		if (!eventsPage.isEventPresent(event.getEventName())) {
 			boolean isLoggedIn = false;
@@ -99,6 +100,11 @@ public class EventStepsFacade extends BaseFacadeSteps {
 		whenUserClicksOnPurchaseTicketLink();
 	}
 	
+	public void whenUserExecutesEventPagesStepsWithoutMapView(Event event) throws Exception {
+		whenUserClicksOnEvent(event);
+		whenUserClicksOnPurchaseTicketLink();
+	}
+	
 	public boolean whenShoppingBasketIsPresentAndClickOnBasket() {
 		return eventsPage.getHeader().clickOnShoppingBasketIfPresent();
 	}
@@ -147,5 +153,16 @@ public class EventStepsFacade extends BaseFacadeSteps {
 	public void whenUserEntersPhoneNumberAndClicksSend(String phoneNumber) {
 		this.succesPage.enterPhoneNumberAndClickSend(phoneNumber);
 	}
+
+	@Override
+	protected void setData(String key, Object value) {
+	}
+
+	@Override
+	protected Object getData(String key) {
+		return null;
+	}
+	
+	
 
 }

@@ -4,20 +4,20 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import moment from "moment-timezone";
 import { observer } from "mobx-react";
+import IconButton from "@material-ui/core/IconButton";
 
-import Button from "../../../../elements/Button";
 import Card from "../../../../elements/Card";
-import user from "../../../../../stores/user";
 import Bigneon from "../../../../../helpers/bigneon";
 import notifications from "../../../../../stores/notifications";
 import Loader from "../../../../elements/loaders/Loader";
 import reportDateRangeHeading from "../../../../../helpers/reportDateRangeHeading";
 import { fontFamilyDemiBold } from "../../../../../config/theme";
+import Bn from "bn-api-node";
 
 const styles = theme => ({
 	root: {},
 	cardInnerContainer: {
-		padding: theme.spacing.unit * 2,
+		padding: theme.spacing.unit * 3,
 		display: "flex",
 		justifyContent: "space-between",
 		alignItems: "center"
@@ -30,6 +30,8 @@ const styles = theme => ({
 
 const Spacer = () => <div style={{ marginTop: 20 }}/>;
 
+const statusEnums = Bn.Enums.SETTLEMENT_STATUS;
+
 @observer
 class SettlementReportList extends Component {
 	constructor(props) {
@@ -40,19 +42,25 @@ class SettlementReportList extends Component {
 		};
 	}
 
-	 componentDidMount() {
+	componentDidMount() {
 		const { organizationId, organizationTimezone } = this.props;
 		const dateFormat = "dddd, MMMM Do YYYY z";
 
-		Bigneon().organizations.settlements.index({ organization_id: organizationId })
+		Bigneon()
+			.organizations.settlements.index({ organization_id: organizationId })
 			.then(response => {
 				const { data, paging } = response.data; //TODO pagination
 				const reports = [];
 
 				data.forEach(({ created_at, start_time, end_time, ...rest }) => {
-					const displayDateRange = reportDateRangeHeading(moment.utc(start_time).tz(organizationTimezone), moment.utc(end_time).tz(organizationTimezone));
+					const displayDateRange = reportDateRangeHeading(
+						moment.utc(start_time).tz(organizationTimezone),
+						moment.utc(end_time).tz(organizationTimezone)
+					);
 
-					const createdAtMoment =  moment.utc(created_at).tz(organizationTimezone);
+					const createdAtMoment = moment
+						.utc(created_at)
+						.tz(organizationTimezone);
 
 					reports.push({
 						...rest,
@@ -79,25 +87,9 @@ class SettlementReportList extends Component {
 					defaultMessage: "Loading settlement reports failed."
 				});
 			});
-	 }
-
-	renderProcessSettlementCard() {
-		const { classes } = this.props;
-
-		if (user.isAdmin) {
-			return (
-				<Card variant={"block"}>
-					<div className={classes.cardInnerContainer}>
-						<Link to={"/admin/reports/settlement"}>
-							<Button variant="callToAction">Process settlement</Button>
-						</Link>
-					</div>
-				</Card>
-			);
-		}
 	}
 
-	renderList() {
+	render() {
 		const { reports } = this.state;
 		if (reports === null) {
 			return <Loader>Loading settlement reports...</Loader>;
@@ -105,38 +97,41 @@ class SettlementReportList extends Component {
 
 		const { classes } = this.props;
 
-		return reports.map(report => {
-			const { id, displayCreatedAt, displayDateRange  } = report;
-
-			return (
-				<div key={id}>
-					<Link to={`/admin/reports/settlement?id=${id}`}>
-						<Card variant={"block"}>
-							<div className={classes.cardInnerContainer}>
-								<div>
-									<Typography className={classes.createdDateText}>{displayCreatedAt}</Typography>
-									<Typography>Events ending {displayDateRange}</Typography>
-								</div>
-								<div>
-									{/*icon icon icon*/}
-								</div>
-							</div>
-						</Card>
-					</Link>
-					<Spacer/>
-				</div>
-			);
-		});
-
-	}
-
-	render() {
 		return (
 			<div>
-				{this.renderProcessSettlementCard()}
+				{reports.map(report => {
+					const {
+						id,
+						displayCreatedAt,
+						displayDateRange,
+						only_finished_events,
+						status
+					} = report;
 
-				<Spacer/>
-				{this.renderList()}
+					return (
+						<div key={id}>
+							<Link to={`/admin/reports/settlement?id=${id}`}>
+								<Card variant={"block"}>
+									<div className={classes.cardInnerContainer}>
+										<div>
+											<Typography className={classes.createdDateText}>
+												{displayCreatedAt} ({statusEnums[status]})
+											</Typography>
+											<Typography>
+												{only_finished_events ? "Events ended" : "Tickets sold"}{" "}
+												{displayDateRange}
+											</Typography>
+										</div>
+										<div>
+											<img src={"/icons/chart-gray.svg"}/>
+										</div>
+									</div>
+								</Card>
+							</Link>
+							<Spacer/>
+						</div>
+					);
+				})}
 			</div>
 		);
 	}

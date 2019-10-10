@@ -9,7 +9,7 @@ import Warning from "@material-ui/icons/Warning";
 import MenuItem from "@material-ui/core/MenuItem";
 import Menu from "@material-ui/core/Menu";
 import Hidden from "@material-ui/core/Hidden";
-
+import classnames from "classnames";
 import user from "../../../stores/user";
 import NotificationList from "../../common/NotificationList";
 import { primaryHex } from "../../../config/theme";
@@ -18,6 +18,9 @@ import Button from "../Button";
 import servedImage from "../../../helpers/imagePathHelper";
 import layout from "../../../stores/layout";
 import optimizedImageUrl from "../../../helpers/optimizedImageUrl";
+import Settings from "../../../config/settings";
+
+const supportLink = Settings().appSupportLink;
 
 const styles = theme => ({
 	root: {
@@ -48,12 +51,20 @@ const styles = theme => ({
 	},
 	menuLink: {
 		outline: "none",
-		marginLeft: theme.spacing.unit * 2
+		textDecoration: "none",
+		color: "#3C383F",
+		marginLeft: theme.spacing.unit * 2,
+		"&:visited": {
+			color: "#3C383F"
+		}
 	},
 	onlyShowOnMobileLink: {
 		[theme.breakpoints.up("md")]: {
 			display: "none"
 		}
+	},
+	whiteText: {
+		color: "#fff"
 	}
 });
 
@@ -112,7 +123,6 @@ class RightHeaderMenu extends React.Component {
 		const { classes } = this.props;
 		const { anchorEl } = this.state;
 		const open = Boolean(anchorEl);
-
 		return (
 			<Menu
 				id="menu-appbar"
@@ -168,7 +178,7 @@ class RightHeaderMenu extends React.Component {
 	}
 
 	renderAuthenticated() {
-		const { classes } = this.props;
+		const { classes, whiteText } = this.props;
 		const { firstName, lastName, profilePicUrl } = user;
 
 		return (
@@ -191,11 +201,22 @@ class RightHeaderMenu extends React.Component {
 
 				<Hidden smDown implementation="css">
 					<div className={classes.nameDiv}>
-						<Typography style={{}} variant="caption">
+						<Typography
+							className={classnames({
+								[classes.whiteText]: whiteText
+							})}
+							style={{}}
+							variant="caption"
+						>
 							Welcome back
 						</Typography>
 
-						<Typography variant="subheading">
+						<Typography
+							className={classnames({
+								[classes.whiteText]: whiteText
+							})}
+							variant="subheading"
+						>
 							{firstName}
 							&nbsp;
 							{lastName}
@@ -217,14 +238,23 @@ class RightHeaderMenu extends React.Component {
 
 		return (
 			<span className={classes.menuButton}>
+				<Hidden smDown>
+					{supportLink ? (
+						<a className={classes.menuLink} href={supportLink} target="_blank">
+							Support
+						</a>
+					) : (
+						<div/>
+					)}
+				</Hidden>
 				<Link to="/login" className={classes.menuLink}>
 					<Hidden mdUp>
-						<Button variant="secondary" size={"small"}>
+						<Button variant="plainWhite" size={"small"}>
 							Sign In
 						</Button>
 					</Hidden>
 					<Hidden smDown>
-						<Button variant="secondary">Sign In</Button>
+						<Button variant="plainWhite">Sign In</Button>
 					</Hidden>
 				</Link>
 			</span>

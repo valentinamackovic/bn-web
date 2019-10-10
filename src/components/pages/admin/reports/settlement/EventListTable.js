@@ -1,9 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import TotalsRow from "./TotalsRow";
-import { dollars } from "../../../../../helpers/money";
 import { Typography, withStyles } from "@material-ui/core";
-import { fontFamilyDemiBold, secondaryHex } from "../../../../../config/theme";
+import { fontFamilyDemiBold } from "../../../../../config/theme";
 
 const styles = theme => ({
 	root: {},
@@ -15,10 +14,7 @@ const styles = theme => ({
 });
 
 const EventListTable = props => {
-	const {
-		classes,
-		eventDetails
-	} = props;
+	const { classes, eventList, onlyFinishedEvents, displayDateRange } = props;
 
 	const columnStyles = [
 		{ flex: 1, textAlign: "left" },
@@ -30,39 +26,45 @@ const EventListTable = props => {
 	return (
 		<div>
 			<Typography className={classes.heading}>
-				Grand totals
+				{onlyFinishedEvents ? "Events ended" : "Sales occurring"} from{" "}
+				{displayDateRange}
 			</Typography>
 
-			<TotalsRow
-				columnStyles={columnStyles}
-				heading
-			>
-				{[ "Event start Date/Time", "Event End Date/Time", "Venue", "Event Name" ]}
+			<TotalsRow columnStyles={columnStyles} heading>
+				{[
+					"Event start Date/Time",
+					"Event End Date/Time",
+					"Venue",
+					"Event Name"
+				]}
 			</TotalsRow>
 
-			{Object.keys(eventDetails).map((event_id, index) => {
-				const { displayEndDate, displayStartDate, eventName, venueName } = eventDetails[event_id];
-				const even = index % 2 === 0;
+			{eventList
+				? eventList.map((event, index) => {
+					const { id, displayEndTime, displayStartTime, venue, name } = event;
+					const even = index % 2 === 0;
 
-				return (
-					<TotalsRow
-						key={event_id}
-						gray={even}
-						darkGray={!even}
-						columnStyles={columnStyles}
-					>
-						{[ displayStartDate, displayEndDate, venueName, eventName ]}
-					</TotalsRow>
-				);
-			})}
-
+					return (
+						<TotalsRow
+							key={id}
+							gray={even}
+							darkGray={!even}
+							columnStyles={columnStyles}
+						>
+							{[displayStartTime, displayEndTime, venue.name, name]}
+						</TotalsRow>
+					);
+				  })
+				: null}
 		</div>
 	);
 };
 
 EventListTable.propTypes = {
 	classes: PropTypes.object.isRequired,
-	eventDetails: PropTypes.object
+	eventList: PropTypes.array.isRequired,
+	onlyFinishedEvents: PropTypes.bool.isRequired,
+	displayDateRange: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(EventListTable);

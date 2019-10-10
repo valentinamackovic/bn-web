@@ -30,6 +30,27 @@
 			"test": true
 		}
 	],
+	"distinct_user_one":{
+		"email_address": "jean-luc.picard@mailinator.com",
+		"password": "test1111",
+		"confirm_password": "test1111",
+		"first_name": "jean-luc",
+		"last_name": "picard"
+	},
+	"distinct_user_two":{
+		"email_address": "ben.sisko@mailinator.com",
+		"password": "test1111",
+		"confirm_password": "test1111",
+		"first_name": "ben",
+		"last_name": "sisko"
+	},
+	"distinct_user_three":{
+		"email_address": "james.kirk@mailinator.com",
+		"password": "test1111",
+		"confirm_password": "test1111",
+		"first_name": "james",
+		"last_name": "kirk"
+	},
 	"super_user_std": {
 		"email_address": "superuser@test.com",
 		"password": "password"
@@ -42,6 +63,15 @@
 		"first_name": "neotestbox",
 		"last_name": "officeuser"
 	},
+	"_comment_for_organization_admin_user":"this user is tied to organization Auto Test12",
+	"organization_admin_user": {
+		"email_address": "orgadmneouser@mailinator.com",
+		"password": "test1111",
+		"confirm_password": "test1111",
+		"first_name": "orgadmin",
+		"last_name": "neouser"
+	},
+	
 	"user_data_std": {
 		"email_address": "bluetestneouser@mailinator.com",
 		"password": "test1111",
@@ -200,5 +230,14 @@
 		"remove_ticket_number": 3,
 		"order_note": "some pretty text note",
 		"additional_tendered_amount": 3
+	},
+	"venue_std":{
+		"name":"TAEVenue",
+		"organization_name":"Auto Test12",
+		"timezone":"Africa/Johannesburg",
+		"region":"No Region",
+		"phone_number":"123456789012",
+		"location":"Opera, Douglas Drive, Douglasdale, Johannesburg, South Africa",
+		"image_name":"lorem_ipsum_img_101.jpg"
 	}
 }
