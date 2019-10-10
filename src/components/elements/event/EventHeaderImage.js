@@ -85,12 +85,18 @@ const EventHeaderImage = props => {
 		cover_image_url,
 		height,
 		name,
+		venue,
 		top_line_info,
+		organization,
 		artists
 	} = props;
 
 	//Adjust these thresholds as needed
-	const eventNameIsLong = name.length > 65;
+	const charCount = 65;
+	const eventNameIsLong = name.length > charCount;
+
+	const headlineArtist = artists.find(artist => artist.importance === 0);
+	const headliner = headlineArtist ? headlineArtist.artist.name : null;
 
 	return (
 		<div className={classes.coverImageContainer} style={{ height }}>
@@ -100,6 +106,7 @@ const EventHeaderImage = props => {
 					[classes.blurryImage]: !!cover_image_url,
 					[classes.noCoverImage]: !cover_image_url
 				})}
+				title={headliner}
 				style={{
 					backgroundImage: cover_image_url
 						? `linear-gradient(to top, #000000, rgba(0, 0, 0, 0)),url(${optimizedImageUrl(
@@ -119,16 +126,30 @@ const EventHeaderImage = props => {
 								{nl2br(top_line_info)}
 							</Typography>
 						) : null}
-						<Typography
-							variant={"display1"}
-							className={classNames({
-								[classes.eventNameText]: true,
-								[classes.eventNameTextLong]: eventNameIsLong
-							})}
-						>
-							{name}
-						</Typography>
-						<Typography className={classes.withArtistsText}>
+						{headliner ? (
+							<Typography
+								variant={"display1"}
+								className={classNames({
+									[classes.eventNameText]: true,
+									[classes.eventNameTextLong]: eventNameIsLong
+								})}
+							>
+								{headliner} Tickets to {organization.name} in {venue.city} - Big
+								Neon
+							</Typography>
+						) : (
+							<Typography
+								variant={"display1"}
+								className={classNames({
+									[classes.eventNameText]: true,
+									[classes.eventNameTextLong]: eventNameIsLong
+								})}
+							>
+								{name} in {venue.city} - Big Neon
+							</Typography>
+						)}
+
+						<Typography variant={"title"} className={classes.withArtistsText}>
 							<SupportingArtistsLabel eventName={name} artists={artists}/>
 						</Typography>
 					</div>

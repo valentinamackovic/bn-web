@@ -166,6 +166,9 @@ const Meta = props => {
 		name,
 		additional_info,
 		promo_image_url,
+		doorTime,
+		showTime,
+		organization,
 		event_start,
 		event_end,
 		ticket_types,
@@ -185,7 +188,31 @@ const Meta = props => {
 	let googleStructuredData;
 	let googleBreadcrumbData;
 	let title = name;
-	const description = `${name} - Find tickets to live events and concerts on Big Neon.`;
+
+	let cutDesc = "";
+	if (additional_info) {
+		cutDesc = additional_info.slice(0, 100);
+	}
+
+	const formattedDate = moment
+		.utc(event_start)
+		.tz(venue.timezone)
+		.format("dddd, MMMM Do YYYY");
+
+	const headlineArtist = artists.find(artist => artist.importance === 0);
+	const headliner = headlineArtist ? headlineArtist.artist.name : null;
+
+	const sameText = `in ${
+		venue.city
+	} - ${formattedDate} - Doors ${doorTime}, Show ${showTime} ${
+		venue.timezone
+	}, ${cutDesc}`;
+
+	const description = headliner
+		? `${name} - ${headliner} Tickets and ${headliner} Concert Tickets to ${
+			organization.name
+		  } ${sameText}`
+		: `${name} - Tickets to ${organization.name} ${sameText}`;
 
 	//If they're at a later stage of the event checkout, adjust title accordingly
 	switch (type) {

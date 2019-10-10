@@ -131,7 +131,11 @@ const styles = theme => {
 const EventDetail = ({ classes, children, iconUrl }) => (
 	<div className={classes.eventDetailsRow}>
 		<div className={classes.iconContainer}>
-			<img className={classes.icon} src={servedImage(iconUrl)}/>
+			<img
+				alt="Event Details Icon"
+				className={classes.icon}
+				src={servedImage(iconUrl)}
+			/>
 		</div>
 
 		<div className={classes.eventDetailContainer}>{children}</div>
@@ -301,6 +305,7 @@ class ViewEvent extends Component {
 						size={"mediumLarge"}
 						className={classes.callToAction}
 						variant={variant}
+						title={ctaText}
 					>
 						{ctaText}
 					</Button>
@@ -457,7 +462,16 @@ class ViewEvent extends Component {
 		return (
 			<div className={classes.root}>
 				<OrgAnalytics trackingKeys={tracking_keys}/>
-				<Meta {...event} venue={venue} artists={artists} type={"eventView"}/>
+				<Meta
+					{...event}
+					venue={venue}
+					artists={artists}
+					additional_info={additional_info}
+					organization={organization}
+					doorTime={displayDoorTime}
+					showTime={displayShowTime}
+					type={"eventView"}
+				/>
 
 				{/*DESKTOP*/}
 				<Hidden smDown>
@@ -471,7 +485,12 @@ class ViewEvent extends Component {
 						/>
 					) : null}
 
-					<EventHeaderImage {...event} artists={artists}/>
+					<EventHeaderImage
+						{...event}
+						artists={artists}
+						organization={organization}
+						venue={venue}
+					/>
 
 					<TwoColumnLayout
 						containerClass={classes.desktopContent}
@@ -492,6 +511,7 @@ class ViewEvent extends Component {
 									position: "relative"
 								}}
 								imageSrc={promo_image_url}
+								artists={artists}
 								onHeightChange={this.onOverlayCardHeightChange.bind(this)}
 							>
 								<div className={classes.desktopCardContent}>
