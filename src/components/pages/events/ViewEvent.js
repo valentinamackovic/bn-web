@@ -17,7 +17,8 @@ import {
 	secondaryHex,
 	textColorPrimary
 } from "../../../config/theme";
-import EventDetailsOverlayCard from "../../elements/event/EventDetailsOverlayCard";
+import EventDetailsOverlayCard
+	from "../../elements/event/EventDetailsOverlayCard";
 import nl2br from "../../../helpers/nl2br";
 import Meta from "./Meta";
 import Loader from "../../elements/loaders/Loader";
@@ -35,7 +36,8 @@ import EventDescriptionBody from "./EventDescriptionBody";
 import addressLineSplit from "../../../helpers/addressLineSplit";
 import layout from "../../../stores/layout";
 import Settings from "../../../config/settings";
-import EventCallToActionAppBar from "../../elements/header/EventCallToActionAppBar";
+import EventCallToActionAppBar
+	from "../../elements/header/EventCallToActionAppBar";
 import user from "../../../stores/user";
 import { insertScript } from "../../../helpers/insertScript";
 import replaceIdWithSlug from "../../../helpers/replaceIdWithSlug";
@@ -172,7 +174,7 @@ class ViewEvent extends Component {
 					});
 				},
 				() => {
-					const { id: selectedEventId, slug } = selectedEvent.event;
+					const { id: selectedEventId, slug, organization_id: organizationId } = selectedEvent.event;
 
 					//Replace the id in the URL with the slug if we have it and it isn't currently set
 					if (id === selectedEventId && slug) {
@@ -180,6 +182,13 @@ class ViewEvent extends Component {
 					}
 
 					analytics.viewContent([selectedEventId], getAllUrlParams());
+					if (user.isAuthenticated) {
+						const { organizations } = user;
+						if (organizations.hasOwnProperty(organizationId)) {
+							user.setCurrentOrganizationRolesAndScopes(organizationId, false);
+						}
+					}
+
 				}
 			);
 		} else {
@@ -407,7 +416,10 @@ class ViewEvent extends Component {
 
 				<div className={classes.spacer}/>
 
-				<EventDetail classes={classes} iconUrl={"/icons/events-black.svg"}>
+				<EventDetail
+					classes={classes}
+					iconUrl={"/icons/events-black.svg"}
+				>
 					<Typography className={classes.eventDetailText}>
 						<span className={classes.eventDetailBoldText}>
 							{displayEventStartDate}
@@ -423,7 +435,10 @@ class ViewEvent extends Component {
 					<div>
 						<Divider className={classes.divider}/>
 
-						<EventDetail classes={classes} iconUrl={"/icons/ticket-black.svg"}>
+						<EventDetail
+							classes={classes}
+							iconUrl={"/icons/ticket-black.svg"}
+						>
 							<Typography className={classes.eventDetailText}>
 								Tickets from {priceTagText}
 							</Typography>
@@ -433,7 +448,10 @@ class ViewEvent extends Component {
 
 				<Divider className={classes.divider}/>
 
-				<EventDetail classes={classes} iconUrl={"/icons/location-black.svg"}>
+				<EventDetail
+					classes={classes}
+					iconUrl={"/icons/location-black.svg"}
+				>
 					<Typography className={classes.eventDetailText}>
 						{venue.name}
 						<br/>
@@ -524,7 +542,9 @@ class ViewEvent extends Component {
 
 				{/*MOBILE*/}
 				<Hidden mdUp>
-					<MaintainAspectRatio aspectRatio={Settings().promoImageAspectRatio}>
+					<MaintainAspectRatio
+						aspectRatio={Settings().promoImageAspectRatio}
+					>
 						<div
 							className={classes.mobileHeaderImage}
 							style={mobilePromoImageStyle}
@@ -546,7 +566,10 @@ class ViewEvent extends Component {
 
 						{artists && artists.length !== 0 ? (
 							<Typography className={classes.cardArtists}>
-								<SupportingArtistsLabel eventName={name} artists={artists}/>
+								<SupportingArtistsLabel
+									eventName={name}
+									artists={artists}
+								/>
 							</Typography>
 						) : null}
 
@@ -560,27 +583,37 @@ class ViewEvent extends Component {
 									classes={classes}
 									iconUrl={"/icons/event-detail-black.svg"}
 								>
-									<Typography className={classes.eventDetailText}>
-										{showAllAdditionalInfo ||
-										additional_info.length <= ADDITIONAL_INFO_CHAR_LIMIT ? (
-												<LinkifyReact options={options}>
-													{additional_info}
-												</LinkifyReact>
-											) : (
-												nl2br(
-													ellipsis(additional_info, ADDITIONAL_INFO_CHAR_LIMIT)
+									<Typography
+										className={classes.eventDetailText}
+									>
+										{
+											showAllAdditionalInfo ||
+											additional_info.length <= ADDITIONAL_INFO_CHAR_LIMIT ?
+												(
+													<LinkifyReact
+														options={options}
+													>
+														{additional_info}
+													</LinkifyReact>
+												) : (
+													nl2br(
+														ellipsis(additional_info, ADDITIONAL_INFO_CHAR_LIMIT)
+													)
 												)
-											)}
+										}
 
-										{additional_info &&
-										additional_info.length > ADDITIONAL_INFO_CHAR_LIMIT ? (
-												<span
-													className={classes.eventDetailLinkText}
-													onClick={this.showHideMoreAdditionalInfo.bind(this)}
-												>
-													{showAllAdditionalInfo ? "Read less" : "Read more"}
-												</span>
-											) : null}
+										{
+											additional_info &&
+											additional_info.length > ADDITIONAL_INFO_CHAR_LIMIT ?
+												(
+													<span
+														className={classes.eventDetailLinkText}
+														onClick={this.showHideMoreAdditionalInfo.bind(this)}
+													>
+														{showAllAdditionalInfo ? "Read less" : "Read more"}
+													</span>
+												) : null
+										}
 									</Typography>
 								</EventDetail>
 
