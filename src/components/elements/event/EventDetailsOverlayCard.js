@@ -69,7 +69,7 @@ class EventDetailsOverlayCard extends Component {
 	}
 
 	render() {
-		const { classes, children, header, style, artists } = this.props;
+		const { classes, children, header, style, artists = [] } = this.props;
 
 		const imageSrc = this.props.imageSrc
 			? optimizedImageUrl(this.props.imageSrc)

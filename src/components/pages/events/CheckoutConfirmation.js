@@ -349,7 +349,7 @@ class CheckoutConfirmation extends Component {
 
 		const { cartSummary, formattedExpiryTime, cartExpired } = cart;
 
-		const { event, artists, id, venue } = selectedEvent;
+		const { event, artists, id, venue, organization } = selectedEvent;
 		const eventIsCancelled = !!(event && event.cancelled_at);
 
 		if (event === null) {
@@ -439,7 +439,12 @@ class CheckoutConfirmation extends Component {
 
 				{/*DESKTOP*/}
 				<Hidden smDown>
-					<EventHeaderImage {...event} artists={artists}/>
+					<EventHeaderImage
+						{...event}
+						artists={artists}
+						organization={organization}
+						venue={venue}
+					/>
 					<TwoColumnLayout
 						containerClass={classes.desktopContent}
 						containerStyle={{ minHeight: overlayCardHeightAdjustment }}

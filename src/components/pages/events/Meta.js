@@ -207,6 +207,8 @@ const Meta = props => {
 	const headlineArtist = artists.find(artist => artist.importance === 0);
 	const headliner = headlineArtist ? headlineArtist.artist.name : null;
 
+	const { name: organizationName = "" } = organization || {};
+
 	const sameText = `in ${
 		venue.city
 	} - ${formattedDate} - Doors ${doorTime}, Show ${showTime} ${
@@ -214,10 +216,8 @@ const Meta = props => {
 	}, ${cutDesc}`;
 
 	const description = headliner
-		? `${name} - ${headliner} Tickets and ${headliner} Concert Tickets to ${
-			organization.name
-		  } ${sameText}`
-		: `${name} - Tickets to ${organization.name} ${sameText}`;
+		? `${name} - ${headliner} Tickets and ${headliner} Concert Tickets to ${organizationName} ${sameText}`
+		: `${name} - Tickets to ${organizationName} ${sameText}`;
 
 	//If they're at a later stage of the event checkout, adjust title accordingly
 	switch (type) {
