@@ -20,6 +20,7 @@ const structuredEventData = (
 		event_start,
 		event_end,
 		ticket_types,
+		publish_date,
 		...event
 	},
 	ticketSelectionUrl
@@ -60,10 +61,14 @@ const structuredEventData = (
 
 				if (availability) {
 					const { price_in_cents } = ticket_pricing;
-					const startDate = moment
-						.utc(start_date, URL_DATE_FORMAT)
-						.tz(timezone)
-						.format();
+					let startDate = moment
+						.utc(start_date || publish_date, URL_DATE_FORMAT)
+						.tz(timezone);
+					if (startDate < moment.utc("1900-01-02T00:00:00")) {
+						startDate = moment.utc(publish_date, URL_DATE_FORMAT).tz(timezone);
+					}
+
+					startDate = startDate.format();
 
 					offers.push({
 						"@type": "Offer",
