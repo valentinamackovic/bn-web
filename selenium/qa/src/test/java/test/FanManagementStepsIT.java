@@ -9,8 +9,11 @@ import model.Event;
 import model.Purchase;
 import model.User;
 import pages.EventsPage;
+import pages.admin.orders.SelectedOrderPage;
 import pages.components.admin.orders.manage.ActivityItem;
 import pages.components.admin.orders.manage.ActivityItem.ExpandedContent;
+import pages.components.dialogs.IssueRefundDialog.RefundReason;
+import test.facade.AdminEventDashboardFacade;
 import test.facade.AdminFanManagementFacade;
 import test.facade.EventStepsFacade;
 import test.facade.LoginStepsFacade;
@@ -21,13 +24,13 @@ public class FanManagementStepsIT extends BaseSteps {
 	private static final String EVENT_NAME = "TestFanManagementEventName";
 	private static final Integer START_DAY_OFFSET = 1;
 	private static final Integer DAYS_RANGE = 2;
-	private static final Integer PURCHASE_QUANTITY = 1;
+	private static final Integer PURCHASE_QUANTITY = 3;
 	private Purchase purchase;
 	
 	
 	@Test(dataProvider = "fan_profile_data", dependsOnMethods = {"predifinedDataUserPurchasesTickets"},
-			priority = 22, retryAnalyzer = utils.RetryAnalizer.class )
-	public void viewFanProfileAndEventsFiltering(User fan, User orgAdmin, Purchase purchase) {
+			priority = 23, retryAnalyzer = utils.RetryAnalizer.class )
+	public void viewFanProfileAndEventsFiltering(User fan, User orgAdmin) {
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
 		AdminFanManagementFacade fanManagementFacade = new AdminFanManagementFacade(driver);
 		maximizeWindow();
@@ -45,7 +48,7 @@ public class FanManagementStepsIT extends BaseSteps {
 		loginFacade.logOut();
 	}
 		
-	@Test(dataProvider = "fan_profile_data", priority = 23, retryAnalyzer = utils.RetryAnalizer.class)
+	@Test(dataProvider = "fan_profile_data", priority = 24, retryAnalyzer = utils.RetryAnalizer.class)
 	public void fanProfileEventSummaryCardsContainData(User fan, User orgAdmin, Purchase purchase) {
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
 		AdminFanManagementFacade fanManagementFacade = new AdminFanManagementFacade(driver);
@@ -58,7 +61,7 @@ public class FanManagementStepsIT extends BaseSteps {
 		loginFacade.logOut();
 	}
 	
-	@Test(dataProvider = "fan_profile_data", priority = 24, retryAnalyzer = utils.RetryAnalizer.class)
+	@Test(dataProvider = "fan_profile_data", priority = 25, retryAnalyzer = utils.RetryAnalizer.class)
 	public void fanProfilePurchasedActivityItems(User fan, User orgAdmin, Purchase purchase) {
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
 		AdminFanManagementFacade fanManagementFacade = new AdminFanManagementFacade(driver);
@@ -68,10 +71,42 @@ public class FanManagementStepsIT extends BaseSteps {
 		ExpandedContent expandedContent = item.getExpandedContent();
 		boolean isDataVisible = expandedContent.isDataVisible();
 		Assert.assertTrue(isDataVisible, "Not all data in expanded purchased activity item is visible");
+		
+		loginFacade.logOut();
+	}
+	
+	@Test(dataProvider = "fan_profile_data", priority = 26/*, retryAnalyzer = utils.RetryAnalizer.class*/)
+	public void fanProfileRefundedActivityItem(User fan, User orgAdmin, Purchase purchase) {
+		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
+		AdminFanManagementFacade fanManagementFacade = new AdminFanManagementFacade(driver);
+		AdminEventDashboardFacade dashboardFacade = new AdminEventDashboardFacade(driver);
+		maximizeWindow();
+		
+		//given
+		loginAndNavigationToFanProfilePage(loginFacade, fanManagementFacade, fan, orgAdmin);
+		
+		//when
+		fanManagementFacade.whenUserPicksEventSummaryCard(this.purchase.getEvent());
+		SelectedOrderPage selectedOrderPage = fanManagementFacade.whenUserClicksOnPurchasedActivityItemOrderNumberLink();
+		boolean isOnOrderManagePage = dashboardFacade.thenUserIsOnSelectedManageOrderPage(selectedOrderPage);
+		Assert.assertTrue(isOnOrderManagePage, "Not on orders manage page");
+		dashboardFacade.refundSteps(RefundReason.UNABLE_TO_ATTEND);
+		navigateToFanProfilePage(fanManagementFacade, fan);
+		fanManagementFacade.whenUserPicksEventSummaryCard(this.purchase.getEvent());
+		
+		//then
+		boolean isRefundDataVisible = fanManagementFacade.thenRefundedActivityItemForSpecificEventShouldBeVisible(orgAdmin, fan);
+		Assert.assertTrue(isRefundDataVisible, "Refund data on activity item missing");
+		loginFacade.logOut();
+		
 	}
 	
 	private void loginAndNavigationToFanProfilePage(LoginStepsFacade loginFacade, AdminFanManagementFacade fanManagementFacade, User fan, User orgAdmin) {
 		loginFacade.givenAdminUserIsLogedIn(orgAdmin);
+		navigateToFanProfilePage(fanManagementFacade, fan);
+	}
+	
+	private void navigateToFanProfilePage(AdminFanManagementFacade fanManagementFacade, User fan) {
 		fanManagementFacade.givenUserIsOnFansPage();
 		fanManagementFacade.whenUserSelectsFanFormList(fan);
 	}
@@ -85,7 +120,7 @@ public class FanManagementStepsIT extends BaseSteps {
 		return new Object[][] {{fan, orgAdmin, purchase}};
 	}
 	
-	@Test(dataProvider = "purchase_data", priority = 22)
+	@Test(dataProvider = "purchase_data", priority = 23)
 	public void predifinedDataUserPurchasesTickets(User fan, Purchase purchas) throws Exception {
 		maximizeWindow();
 		EventStepsFacade eventsFacade = new EventStepsFacade(driver);

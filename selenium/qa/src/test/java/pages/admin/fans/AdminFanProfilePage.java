@@ -49,6 +49,10 @@ public class AdminFanProfilePage extends BasePage {
 	public void presetUrl() {
 		setUrl(Constants.getAdminFans() + "/" + fanId);
 	}
+	
+	public void navigate() {
+		driver.get(getUrl());
+	}
 
 	public String getFanName() {
 		explicitWaitForVisiblity(userNameElement);

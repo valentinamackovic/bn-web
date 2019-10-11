@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -14,9 +15,11 @@ import pages.admin.fans.AdminFanProfilePage;
 import pages.admin.fans.AdminFanProfilePage.FanProfileEventDataHolder;
 import pages.admin.fans.AdminFansListPage;
 import pages.admin.fans.AdminFansListPage.FanRowComponent;
+import pages.admin.orders.SelectedOrderPage;
 import pages.components.admin.AdminSideBar;
 import pages.components.admin.fans.manage.FanProfileEventSummaryComponent;
 import pages.components.admin.orders.manage.ActivityItem;
+import pages.components.admin.orders.manage.ActivityItem.RefundedExpandedContent;
 
 public class AdminFanManagementFacade extends BaseFacadeSteps {
 
@@ -28,6 +31,7 @@ public class AdminFanManagementFacade extends BaseFacadeSteps {
 	private Integer FAN_PROFILE_EVENT_LIST_LIMIT_LG = 100;
 	private String FAN_PROFILE_PAGE_KEY = "fan_profile_page";
 	private String FAN_PROFILE_UPCOMING_EVENT_LIST = "fan_profile_upcoming_event_list";
+	private String FAN_PROFILE_REFUND_SUMMARY_CARD = "fan_profile_refund_summary_card";
 
 	public AdminFanManagementFacade(WebDriver driver) {
 		super(driver);
@@ -110,6 +114,45 @@ public class AdminFanManagementFacade extends BaseFacadeSteps {
 			}
 		} 
 		return null;
+	}
+	
+	public void whenUserPicksEventSummaryCard(Event event) {
+		AdminFanProfilePage profilePage = (AdminFanProfilePage) getData(FAN_PROFILE_PAGE_KEY);
+		FanProfileEventSummaryComponent summaryCard = profilePage.findSummaryComponent(
+				comp-> comp.getEventName().contains(event.getEventName()), FAN_PROFILE_EVENT_LIST_LIMIT);
+		if(summaryCard == null) {
+			throw new NoSuchElementException("Summary card on fan profile page not found");
+		}
+		setData(FAN_PROFILE_REFUND_SUMMARY_CARD	, summaryCard);
+	}
+	
+	public SelectedOrderPage whenUserClicksOnPurchasedActivityItemOrderNumberLink() {
+		FanProfileEventSummaryComponent summaryCard = (FanProfileEventSummaryComponent) getData(FAN_PROFILE_REFUND_SUMMARY_CARD);
+		summaryCard.clickOnShowDetailsButton();
+		ActivityItem activityItem = summaryCard.getActivityItem(aitem->aitem.isPruchased());
+		if (activityItem != null) {
+			String orderId = activityItem.getOrderId();
+			activityItem.clickOnOrderNumberLink();
+			SelectedOrderPage selectedOrderPage = new SelectedOrderPage(driver, orderId);
+			return selectedOrderPage;
+		} else {
+			return null;
+		}
+	}
+	
+	public boolean thenRefundedActivityItemForSpecificEventShouldBeVisible(User refunder, User refundee) {
+		FanProfileEventSummaryComponent summaryCard = (FanProfileEventSummaryComponent) getData(FAN_PROFILE_REFUND_SUMMARY_CARD);
+		summaryCard.clickOnShowDetailsButton();
+		ActivityItem activityItem = summaryCard.getActivityItem(aitem->aitem.isRefunded());
+		if (activityItem != null) {
+			if(activityItem.isRefundedItemRowInfoValid(refunder, refundee)) {
+				activityItem.clickOnShowDetailsLink();
+				RefundedExpandedContent expandedContent = activityItem.getRefundedExpandedContent();
+				return expandedContent.isDataVisible();
+			}
+			
+		}
+		return false;
 	}
 			
 	public boolean thenUserShoudBeOnFanProfilePage() {

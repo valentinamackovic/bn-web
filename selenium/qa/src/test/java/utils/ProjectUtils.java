@@ -121,5 +121,4 @@ public class ProjectUtils {
 		return text.replace(oldChar, newChar);
 		
 	}
-		
 }
