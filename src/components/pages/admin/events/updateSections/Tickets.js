@@ -34,6 +34,9 @@ const formatForSaving = (ticketTypes, event) => {
 			description,
 			parentId,
 			additionalFeeInDollars,
+			appSalesEnabled,
+			webSalesEnabled,
+			boxOfficeSalesEnabled,
 			rank
 		} = ticketType;
 
@@ -161,6 +164,9 @@ const formatForSaving = (ticketTypes, event) => {
 			visibility: visibility,
 			description,
 			parent_id: parentId,
+			app_sales_enabled: appSalesEnabled,
+			web_sales_enabled: webSalesEnabled,
+			box_office_sales_enabled: boxOfficeSalesEnabled,
 			additional_fee_in_cents: additionalFeeInDollars
 				? Number(additionalFeeInDollars) * 100
 				: null,
@@ -188,7 +194,10 @@ const formatForInput = (ticket_types, event) => {
 			status,
 			visibility,
 			parent_id,
-			additional_fee_in_cents
+			additional_fee_in_cents,
+			app_sales_enabled,
+			web_sales_enabled,
+			box_office_sales_enabled
 		} = ticket_type;
 
 		const pricing = [];
@@ -284,7 +293,10 @@ const formatForInput = (ticket_types, event) => {
 			showVisibility: !visibility && visibility !== "Always",
 			showCartQuantityIncrement: !!increment && increment !== 1,
 			showAdditionalFee,
-			additionalFeeInDollars
+			additionalFeeInDollars,
+			appSalesEnabled: app_sales_enabled,
+			webSalesEnabled: web_sales_enabled,
+			boxOfficeSalesEnabled: box_office_sales_enabled
 		};
 
 		ticketTypes.push(ticketType);
