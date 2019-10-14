@@ -208,14 +208,11 @@ const Meta = props => {
 		venue.timezone
 	}, ${cutDesc}`;
 
-	const orgName =
-		organization && organization.name ? ` to${organization.name}` : "";
-
 	const description = headliner
-		? `${name} - ${headliner} Tickets and ${headliner} Concert Tickets${
-			orgName ? `to ${orgName}` : ""
+		? `${name} - ${headliner} Tickets and ${headliner} Concert Tickets to ${
+			organization.name
 		  } ${sameText}`
-		: `${name} - Tickets to ${orgName ? `to ${orgName}` : ""} ${sameText}`;
+		: `${name} - Tickets to ${organization.name} ${sameText}`;
 
 	//If they're at a later stage of the event checkout, adjust title accordingly
 	switch (type) {
