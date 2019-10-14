@@ -13,7 +13,7 @@ import SelectGroup from "../../../../common/form/SelectGroup";
 import Bigneon from "../../../../../helpers/bigneon";
 import eventUpdateStore from "../../../../../stores/eventUpdate";
 import RichTextInputField from "../../../../elements/form/rich-editor/RichTextInputField";
-// import RichTextInputField_Link from "../../../../elements/form/rich-editor/RichTextInputField_Link";
+import RichTextInputField_Link from "../../../../elements/form/rich-editor/RichTextInputField_Link";
 import FormatInputLabel from "../../../../elements/form/FormatInputLabel";
 
 const styles = theme => ({
@@ -759,10 +759,10 @@ class Details extends Component {
 							}
 						/>
 
-						{/*<br/>*/}
-						{/*<br/>*/}
-						{/*<br/>*/}
-						{/*<RichTextInputField_Link/>*/}
+						<br/>
+						<br/>
+						<br/>
+						<RichTextInputField_Link/>
 						{/*<InputGroup*/}
 						{/*	error={errors.additionalInfo}*/}
 						{/*	value={additionalInfo}*/}

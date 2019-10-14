@@ -168,6 +168,12 @@ class RichTextInputField extends Component {
 		this.setState({ editorState }, () => {
 			const currentContent = this.state.editorState.getCurrentContent();
 			const html = convertToHTML(currentContent);
+
+			//TODO
+			html.replace("<p></p>", "<br/>");
+
+			//Replace <p></p> with <br/>
+
 			this.props.onChange(html);
 		});
 	}

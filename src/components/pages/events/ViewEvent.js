@@ -42,8 +42,7 @@ import replaceIdWithSlug from "../../../helpers/replaceIdWithSlug";
 import analytics from "../../../helpers/analytics";
 import getAllUrlParams from "../../../helpers/getAllUrlParams";
 import LinkifyReact from "linkifyjs/react";
-
-const ADDITIONAL_INFO_CHAR_LIMIT = 300;
+import FormattedAdditionalInfo from "./FormattedAdditionalInfo";
 
 const styles = theme => {
 	return {
@@ -148,8 +147,7 @@ class ViewEvent extends Component {
 		super(props);
 
 		this.state = {
-			overlayCardHeight: 600,
-			showAllAdditionalInfo: false
+			overlayCardHeight: 600
 		};
 	}
 
@@ -172,7 +170,11 @@ class ViewEvent extends Component {
 					});
 				},
 				() => {
-					const { id: selectedEventId, slug } = selectedEvent.event;
+					const {
+						id: selectedEventId,
+						slug,
+						organization
+					} = selectedEvent.event;
 
 					//Replace the id in the URL with the slug if we have it and it isn't currently set
 					if (id === selectedEventId && slug) {
@@ -318,12 +320,6 @@ class ViewEvent extends Component {
 		this.setState({ overlayCardHeight });
 	}
 
-	showHideMoreAdditionalInfo() {
-		this.setState(({ showAllAdditionalInfo }) => ({
-			showAllAdditionalInfo: !showAllAdditionalInfo
-		}));
-	}
-
 	priceTagText(min, max, separator = "to") {
 		if ((min === null || isNaN(min)) && (max === null || isNaN(max))) {
 			return null;
@@ -392,8 +388,6 @@ class ViewEvent extends Component {
 		if (promo_image_url) {
 			mobilePromoImageStyle.backgroundImage = `url(${promo_image_url})`;
 		}
-
-		const { showAllAdditionalInfo } = this.state;
 
 		const priceTagText = this.priceTagText(min_ticket_price, max_ticket_price);
 
@@ -500,7 +494,9 @@ class ViewEvent extends Component {
 								eventIsCancelled={eventIsCancelled}
 								artists={artists}
 							>
-								{additional_info}
+								<FormattedAdditionalInfo>
+									{additional_info}
+								</FormattedAdditionalInfo>
 							</EventDescriptionBody>
 						)}
 						col2={(
@@ -560,28 +556,9 @@ class ViewEvent extends Component {
 									classes={classes}
 									iconUrl={"/icons/event-detail-black.svg"}
 								>
-									<Typography className={classes.eventDetailText}>
-										{showAllAdditionalInfo ||
-										additional_info.length <= ADDITIONAL_INFO_CHAR_LIMIT ? (
-												<LinkifyReact options={options}>
-													{additional_info}
-												</LinkifyReact>
-											) : (
-												nl2br(
-													ellipsis(additional_info, ADDITIONAL_INFO_CHAR_LIMIT)
-												)
-											)}
-
-										{additional_info &&
-										additional_info.length > ADDITIONAL_INFO_CHAR_LIMIT ? (
-												<span
-													className={classes.eventDetailLinkText}
-													onClick={this.showHideMoreAdditionalInfo.bind(this)}
-												>
-													{showAllAdditionalInfo ? "Read less" : "Read more"}
-												</span>
-											) : null}
-									</Typography>
+									<FormattedAdditionalInfo>
+										{additional_info}
+									</FormattedAdditionalInfo>
 								</EventDetail>
 
 								<Divider
