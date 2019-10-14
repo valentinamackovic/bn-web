@@ -17,9 +17,14 @@ import SearchBox from "../../../../elements/SearchBox";
 import { Pagination, urlPageParam } from "../../../../elements/pagination";
 import user from "../../../../../stores/user";
 import { observer } from "mobx-react";
+import { fontFamilyDemiBold } from "../../../../../config/theme";
 
 const styles = theme => ({
 	root: {},
+	pageTitle: {
+		fontSize: 22,
+		fontFamily: fontFamilyDemiBold
+	},
 	header: {
 		display: "flex",
 		minHeight: 60,
@@ -456,7 +461,7 @@ class Transactions extends Component {
 			<div className={classes.root}>
 				<Grid className={classes.header} container>
 					<Grid item xs={12} sm={12} md={4} lg={4}>
-						<Typography variant="title">
+						<Typography className={classes.pageTitle}>
 							{eventId ? "Event" : "Organization"} transaction report
 						</Typography>
 					</Grid>

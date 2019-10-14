@@ -18,6 +18,7 @@ import SummaryAudit from "./eventSummaryAudit/SummaryAudit";
 import EventPromoCodesReport from "./eventPromoCode/EventPromoCode.js";
 import user from "../../../../stores/user";
 import servedImage from "../../../../helpers/imagePathHelper";
+import BoxOfficeSalesSummary from "./boxOfficeSalesSummary/BoxOfficeSalesSummary";
 
 const styles = theme => ({
 	root: {
@@ -64,6 +65,10 @@ const reportTypes = {
 	promo_codes: {
 		label: "Event promo codes report",
 		ReportComponent: EventPromoCodesReport
+	},
+	box_office_sales_summary: {
+		label: "Box office sales summary",
+		ReportComponent: BoxOfficeSalesSummary
 	}
 };
 
@@ -119,8 +124,9 @@ class ExportPDF extends Component {
 
 	render() {
 		const organizationId = user.currentOrganizationId;
+		const organizationTimezone = user.currentOrgTimezone;
 
-		if (!organizationId) {
+		if (!organizationId || !organizationTimezone) {
 			return <Loader/>;
 		}
 
@@ -179,6 +185,7 @@ class ExportPDF extends Component {
 
 				<ReportComponent
 					organizationId={organizationId}
+					organizationTimezone={organizationTimezone}
 					eventId={event_id}
 					printVersion
 					onLoad={this.onReportLoad}

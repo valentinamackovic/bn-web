@@ -9,10 +9,8 @@ const styles = theme => {
 		root: {
 			paddingLeft: theme.spacing.unit * 2,
 			paddingRight: theme.spacing.unit * 2,
-
 			paddingTop: theme.spacing.unit,
 			paddingBottom: theme.spacing.unit,
-
 			display: "flex"
 		},
 		default: {},
@@ -29,8 +27,9 @@ const styles = theme => {
 			fontFamily: fontFamilyDemiBold
 		},
 		headingText: {
-			fontSize: theme.typography.fontSize * 0.8,
-			color: "#FFFFFF"
+			fontSize: theme.typography.fontSize,
+			color: "#FFFFFF",
+			textTransform: "capitalize"
 		},
 		total: {
 			backgroundColor: primaryHex,
@@ -39,18 +38,29 @@ const styles = theme => {
 		},
 		totalText: {
 			color: "#FFFFFF",
-			borderRadius: 4
+			borderRadius: 4,
+			fontFamily: fontFamilyDemiBold,
+			textTransform: "uppercase"
 		},
 		text: {
-			fontSize: theme.typography.fontSize * 0.9
+			fontSize: theme.typography.fontSize
+		},
+		subTotal1: {
+			backgroundColor: "#a6becd"
+		},
+		subTotal2: {
+			backgroundColor: "#97a3c5"
 		}
 	};
 };
 
-const TicketCountRow = props => {
+const TableRow = props => {
 	const {
+		columnStyles,
 		heading,
 		subHeading,
+		subTotal1,
+		subTotal2,
 		gray,
 		children,
 		classes,
@@ -58,30 +68,12 @@ const TicketCountRow = props => {
 		...rest
 	} = props;
 
-	const columnStyles = [
-		{ flex: 3, textAlign: "left" },
-		{ flex: 2, textAlign: "left" },
-		{ flex: 2, textAlign: "left" },
-		{ flex: 2, textAlign: "left" },
-		{ flex: 2, textAlign: "left" },
-		{ flex: 2, textAlign: "left" },
-		{ flex: 2, textAlign: "left" },
-		{ flex: 2, textAlign: "left" },
-		{ flex: 2, textAlign: "left" },
-		{ flex: 2, textAlign: "left" }
-	];
-
-	//If they're adding the event name, make the second column sider
-	if (children.length === 8) {
-		columnStyles.splice(1, 0, { flex: 3, textAlign: "left" });
-	}
-
 	const columns = children.map((text, index) => {
 		return (
 			<Typography
 				noWrap
 				className={classNames({
-					[classes.headingText]: heading,
+					[classes.headingText]: heading || subTotal1 || subTotal2,
 					[classes.subHeading]: subHeading,
 					[classes.text]: !heading,
 					[classes.totalText]: total
@@ -101,7 +93,9 @@ const TicketCountRow = props => {
 				[classes.gray]: gray,
 				[classes.total]: total,
 				[classes.heading]: heading,
-				[classes.subHeading]: subHeading
+				[classes.subHeading]: subHeading,
+				[classes.subTotal1]: subTotal1,
+				[classes.subTotal2]: subTotal2
 			})}
 			{...rest}
 		>
@@ -110,13 +104,16 @@ const TicketCountRow = props => {
 	);
 };
 
-TicketCountRow.propTypes = {
+TableRow.propTypes = {
 	classes: PropTypes.object.isRequired,
+	columnStyles: PropTypes.array.isRequired,
 	children: PropTypes.array.isRequired,
 	gray: PropTypes.bool,
 	total: PropTypes.bool,
+	subTotal1: PropTypes.bool,
+	subTotal2: PropTypes.bool,
 	heading: PropTypes.bool,
 	subHeading: PropTypes.bool
 };
 
-export default withStyles(styles)(TicketCountRow);
+export default withStyles(styles)(TableRow);
