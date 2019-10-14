@@ -85,10 +85,10 @@ const EventHeaderImage = props => {
 		cover_image_url,
 		height,
 		name,
-		venue,
+		venue = {},
 		top_line_info,
-		organization,
-		artists
+		organization = {},
+		artists = []
 	} = props;
 
 	//Adjust these thresholds as needed
@@ -145,7 +145,7 @@ const EventHeaderImage = props => {
 									[classes.eventNameTextLong]: eventNameIsLong
 								})}
 							>
-								{name} in {venue.city} - Big Neon
+								{organization.name} in {venue.city} - Big Neon
 							</Typography>
 						)}
 

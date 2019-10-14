@@ -20,6 +20,7 @@ const structuredEventData = (
 		event_start,
 		event_end,
 		ticket_types,
+		publish_date,
 		...event
 	},
 	ticketSelectionUrl
@@ -60,10 +61,14 @@ const structuredEventData = (
 
 				if (availability) {
 					const { price_in_cents } = ticket_pricing;
-					const startDate = moment
-						.utc(start_date, URL_DATE_FORMAT)
-						.tz(timezone)
-						.format();
+					let startDate = moment
+						.utc(start_date || publish_date, URL_DATE_FORMAT)
+						.tz(timezone);
+					if (startDate < moment.utc("1900-01-02T00:00:00")) {
+						startDate = moment.utc(publish_date, URL_DATE_FORMAT).tz(timezone);
+					}
+
+					startDate = startDate.format();
 
 					offers.push({
 						"@type": "Offer",
@@ -202,6 +207,8 @@ const Meta = props => {
 	const headlineArtist = artists.find(artist => artist.importance === 0);
 	const headliner = headlineArtist ? headlineArtist.artist.name : null;
 
+	const { name: organizationName = "" } = organization || {};
+
 	const sameText = `in ${
 		venue.city
 	} - ${formattedDate} - Doors ${doorTime}, Show ${showTime} ${
@@ -209,10 +216,8 @@ const Meta = props => {
 	}, ${cutDesc}`;
 
 	const description = headliner
-		? `${name} - ${headliner} Tickets and ${headliner} Concert Tickets to ${
-			organization.name
-		  } ${sameText}`
-		: `${name} - Tickets to ${organization.name} ${sameText}`;
+		? `${name} - ${headliner} Tickets and ${headliner} Concert Tickets to ${organizationName} ${sameText}`
+		: `${name} - Tickets to ${organizationName} ${sameText}`;
 
 	//If they're at a later stage of the event checkout, adjust title accordingly
 	switch (type) {

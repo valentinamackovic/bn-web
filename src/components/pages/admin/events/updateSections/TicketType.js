@@ -20,6 +20,7 @@ import PricePoint from "./PricePoint";
 import eventUpdateStore from "../../../../../stores/eventUpdate";
 import SelectGroup from "../../../../common/form/SelectGroup";
 import { dollars } from "../../../../../helpers/money";
+import CheckBox from "../../../../elements/form/CheckBox";
 
 const styles = theme => {
 	return {
@@ -179,7 +180,10 @@ const TicketDetails = observer(props => {
 		showCartQuantityIncrement,
 		showAdditionalFee,
 		additionalFeeInDollars,
-		onChangeDate
+		onChangeDate,
+		appSalesEnabled,
+		webSalesEnabled,
+		boxOfficeSalesEnabled
 	} = props;
 
 	let useEndDate = endDate;
@@ -617,6 +621,35 @@ const TicketDetails = observer(props => {
 									updateTicketType(index, { visibility: e.target.value });
 								}}
 							/>
+							<CheckBox
+								name={"appSalesEnabled"}
+								active={appSalesEnabled}
+								onClick={e =>
+									updateTicketType(index, { appSalesEnabled: !appSalesEnabled })
+								}
+							>
+								Available in App
+							</CheckBox>
+							<CheckBox
+								name={"webSalesEnabled"}
+								active={webSalesEnabled}
+								onClick={e =>
+									updateTicketType(index, { webSalesEnabled: !webSalesEnabled })
+								}
+							>
+								Available on web
+							</CheckBox>
+							<CheckBox
+								name={"boxOfficeSalesEnabled"}
+								active={boxOfficeSalesEnabled}
+								onClick={e =>
+									updateTicketType(index, {
+										boxOfficeSalesEnabled: !boxOfficeSalesEnabled
+									})
+								}
+							>
+								Available in box office
+							</CheckBox>
 						</Collapse>
 					</Grid>
 				</Grid>
