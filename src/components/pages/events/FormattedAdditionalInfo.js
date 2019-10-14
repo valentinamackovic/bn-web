@@ -1,28 +1,37 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import LinkifyReact from "linkifyjs/react";
+import linkifyHtml from "linkifyjs/html";
+import classnames from "classnames";
 
-import {
-	textColorPrimary,
-	secondaryHex,
-	fontFamilyDemiBold,
-	fontFamilyBold
-} from "../../../config/theme";
-import Hidden from "@material-ui/core/Hidden";
+import { secondaryHex, fontFamilyDemiBold } from "../../../config/theme";
 
 const styles = theme => ({
 	root: {},
 	readMoreLink: {
 		font: "inherit",
 		color: secondaryHex,
-		cursor: "pointer"
+		cursor: "pointer",
+		[theme.breakpoints.up("md")]: {
+			display: "none"
+		}
+	},
+	shortenedTextBlock: {
+		[theme.breakpoints.down("sm")]: {
+			overflow: "hidden",
+			display: "-webkit-box",
+			WebkitLineClamp: "3",
+			WebkitBoxOrient: "vertical",
+			textOverflow: "ellipsis"
+		}
+	},
+	descriptionLink: {
+		font: "inherit",
+		color: secondaryHex,
+		cursor: "pointer",
+		fontFamily: fontFamilyDemiBold
 	}
 });
-
-const ADDITIONAL_INFO_CHAR_LIMIT = 300;
 
 class FormattedAdditionalInfo extends Component {
 	constructor(props) {
@@ -50,50 +59,27 @@ class FormattedAdditionalInfo extends Component {
 
 		const options = {
 			nl2br: true,
-			className: classes.eventDescriptionLink
+			className: classes.descriptionLink
 		};
 
-		//TODO limit chars
+		const linkifiedText = linkifyHtml(children, options);
 
 		return (
 			<div className={classes.root}>
-				<LinkifyReact options={options}>{children}</LinkifyReact>
+				<span
+					className={classnames({
+						[classes.shortenedTextBlock]: !showAllAdditionalInfo
+					})}
+				>
+					<div dangerouslySetInnerHTML={{ __html: linkifiedText }}/>
+				</span>
 
 				<span
 					className={classes.readMoreLink}
 					onClick={this.showHideMoreAdditionalInfo.bind(this)}
 				>
-					{showAllAdditionalInfo ? "Read less" : "Read more"}
+					{showAllAdditionalInfo ? " Read less" : " Read more"}
 				</span>
-
-				{/*<Typography className={classes.eventDetailText}>*/}
-				{/*	{showAllAdditionalInfo ||*/}
-				{/*	additional_info.length <= ADDITIONAL_INFO_CHAR_LIMIT ? (*/}
-				{/*			<FormattedAdditionalInfo>*/}
-				{/*				{additional_info}*/}
-				{/*			</FormattedAdditionalInfo>*/}
-				{/*		) : (*/}
-				{/*			nl2br(*/}
-				{/*				ellipsis(additional_info, ADDITIONAL_INFO_CHAR_LIMIT)*/}
-				{/*			)*/}
-				{/*		)}*/}
-
-				{/*	{additional_info &&*/}
-				{/*	additional_info.length > ADDITIONAL_INFO_CHAR_LIMIT ? (*/}
-				{/*			<span*/}
-				{/*				className={classes.eventDetailLinkText}*/}
-				{/*				onClick={this.showHideMoreAdditionalInfo.bind(this)}*/}
-				{/*			>*/}
-				{/*				{showAllAdditionalInfo ? "Read less" : "Read more"}*/}
-				{/*			</span>*/}
-				{/*		) : null}*/}
-				{/*</Typography>*/}
-
-				<p>
-					<Hidden mdUp>Mobile</Hidden>
-
-					<Hidden smDown>Desktop</Hidden>
-				</p>
 			</div>
 		);
 	}

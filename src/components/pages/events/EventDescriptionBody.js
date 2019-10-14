@@ -38,7 +38,7 @@ const styles = theme => ({
 		color: secondaryHex
 	},
 	similarArtists: {
-		marginTop: theme.spacing.unit,
+		marginTop: theme.spacing.unit * 2,
 		marginBottom: theme.spacing.unit * 2
 	},
 	boldSpan: {
@@ -103,7 +103,7 @@ EventDescriptionBody.defaultProps = {};
 
 EventDescriptionBody.propTypes = {
 	classes: PropTypes.object.isRequired,
-	children: PropTypes.string,
+	children: PropTypes.object,
 	artists: PropTypes.array,
 	eventIsCancelled: PropTypes.bool
 };
