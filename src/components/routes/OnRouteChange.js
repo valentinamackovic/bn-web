@@ -9,9 +9,9 @@ const showStudioLogoRoutes = ["/admin", "/box-office"];
 const showFooterRoutes = ["/events", "/tickets/transfers", "/public/ticket"];
 const removePaddingRoutes = [
 	"/events",
+	"/cities",
 	"/venues",
 	"/tickets/transfers",
-	"/events-venue",
 	"/public/tickets"
 ];
 const removeContainerRoutes = [
@@ -26,7 +26,7 @@ const removeContainerRoutes = [
 const hideBottomMobileCartBar = [
 	"/tickets",
 	"/tickets/confirmation",
-	"/events-venue",
+	"/cities",
 	"/events/"
 ];
 

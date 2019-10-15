@@ -3,7 +3,7 @@ import { observer } from "mobx-react";
 import { withStyles, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import { fontFamilyBold } from "../../../config/theme";
-import eventResults from "../../../stores/eventResults";
+import slugResults from "../../../stores/slugResults";
 import AltEventResultCard from "../../elements/event/AltEventResultCard";
 import Button from "../../elements/Button";
 import servedImage from "../../../helpers/imagePathHelper";
@@ -70,7 +70,7 @@ const NoResults = ({ classes, onClear }) => (
 );
 
 @observer
-class VenueResults extends Component {
+class AltResults extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -114,7 +114,8 @@ class VenueResults extends Component {
 
 	render() {
 		const { classes } = this.props;
-		const events = eventResults.filteredEvents;
+		const events = slugResults.events;
+		console.log("events", events);
 		const { shownEvents } = this.state;
 
 		let hasResults = null;
@@ -139,7 +140,7 @@ class VenueResults extends Component {
 				{hasResults === false ? (
 					<NoResults
 						classes={classes}
-						onClear={() => eventResults.clearFilter()}
+						onClear={() => slugResults.clearFilter()}
 					/>
 				) : null}
 
@@ -161,4 +162,4 @@ class VenueResults extends Component {
 	}
 }
 
-export default withStyles(styles)(VenueResults);
+export default withStyles(styles)(AltResults);

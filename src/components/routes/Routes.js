@@ -32,6 +32,7 @@ const PublicTicketViewer = asyncComponent(() =>
 //Unauthenticated pages
 import Home from "../pages/landing/Index";
 import VenueLanding from "../pages/venuelanding/Index";
+import CityLanding from "../pages/citylanding/Index";
 import ViewEvent from "../pages/events/ViewEvent";
 import ViewVenue from "../pages/venues/ViewVenue";
 import CheckoutSelection from "../pages/events/CheckoutSelection";
@@ -211,7 +212,8 @@ class Routes extends Component {
 								/>
 								<Route exact path="/" component={Home}/>
 								<Route exact path="/events" component={Home}/>
-								<Route exact path="/events-venue" component={VenueLanding}/>
+								<Route exact path="/venues/:id" component={VenueLanding}/>
+								<Route exact path="/cities/:id" component={CityLanding}/>
 								<Route exact path="/sign-up" component={Signup}/>
 								<Route exact path="/login" component={Login}/>
 								<Route exact path="/password-reset" component={PasswordReset}/>
