@@ -3,12 +3,9 @@ import { withStyles, Typography, Grid, Hidden } from "@material-ui/core";
 import { observer } from "mobx-react";
 import LandingAppBar from "../../elements/header/LandingAppBar";
 import user from "../../../stores/user";
-import { fontFamilyBold } from "../../../config/theme";
 import VenueLandingHero from "./Hero";
-import Hero from "../landing/Hero";
 import eventResults from "../../../stores/eventResults";
 import Loader from "../../elements/loaders/Loader";
-import Results from "../landing/cards/Results";
 import VenueResults from "./VenueResults";
 
 const styles = theme => ({
