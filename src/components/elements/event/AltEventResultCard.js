@@ -63,10 +63,11 @@ const styles = theme => ({
 		display: "flex",
 		flexDirection: "column",
 		width: "100%",
+		justifyContent: "space-around",
 		paddingLeft: theme.spacing.unit * 2,
 		paddingRight: theme.spacing.unit * 2,
 		paddingTop: theme.spacing.unit * 2,
-		paddingBottom: theme.spacing.unit
+		paddingBottom: theme.spacing.unit * 2
 	},
 	detailsContentSegment: {
 		display: "flex",
@@ -98,13 +99,14 @@ const styles = theme => ({
 		lineHeight: "16px"
 	},
 	value: {
-		fontSize: theme.typography.fontSize,
 		color: "#9DA3B4",
-		fontWeight: 500
+		fontWeight: 500,
+		fontSize: 16,
+		lineHeight: "18px"
 	},
 	valueTitle: {
 		fontSize: theme.typography.fontSize,
-		color: "#9DA3B4",
+		color: "#CCCFD9",
 		textTransform: "uppercase",
 		fontWeight: 500
 	},
