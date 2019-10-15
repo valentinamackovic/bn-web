@@ -16,6 +16,7 @@ import { withStyles } from "@material-ui/core";
 import PropTypes from "prop-types";
 import "./editor.css";
 import Divider from "../../../common/Divider";
+import "../../../pages/events/rich-event-description.css";
 
 const convertHtmlPropToEditorState = html => {
 	const blocksFromHTML = convertFromHTML(html);
@@ -44,8 +45,8 @@ const INLINE_STYLES = [
 ];
 
 const BLOCK_TYPES = [
-	{ label: "H1", style: "header-one" },
-	{ label: "H2", style: "header-two" },
+	{ label: "Header 1", style: "header-one" },
+	{ label: "Header 2", style: "header-two" },
 	// { label: "H3", style: "header-three" },
 	// { label: "H4", style: "header-four" },
 	// { label: "H5", style: "header-five" },
@@ -169,10 +170,8 @@ class RichTextInputField extends Component {
 			const currentContent = this.state.editorState.getCurrentContent();
 			const html = convertToHTML(currentContent);
 
-			//TODO
-			html.replace("<p></p>", "<br/>");
-
-			//Replace <p></p> with <br/>
+			//TODO, doens't appear to be working
+			//html = html.split("<p></p>").join("<br/>");
 
 			this.props.onChange(html);
 		});
@@ -236,19 +235,21 @@ class RichTextInputField extends Component {
 
 				<Divider style={{ marginBottom: 10 }}/>
 
-				<Editor
-					editorState={this.state.editorState}
-					onChange={this.onChange}
-					blockStyleFn={getBlockStyle}
-					customStyleMap={styleMap}
-					editorState={editorState}
-					handleKeyCommand={this.handleKeyCommand.bind(this)}
-					keyBindingFn={this.mapKeyToEditorCommand.bind(this)}
-					onChange={this.onChange}
-					placeholder={placeholder}
-					ref={ref => (this.editor = ref)}
-					spellCheck={true}
-				/>
+				<div className={"rich-edit-content"}>
+					<Editor
+						editorState={this.state.editorState}
+						onChange={this.onChange}
+						blockStyleFn={getBlockStyle}
+						customStyleMap={styleMap}
+						editorState={editorState}
+						handleKeyCommand={this.handleKeyCommand.bind(this)}
+						keyBindingFn={this.mapKeyToEditorCommand.bind(this)}
+						onChange={this.onChange}
+						placeholder={placeholder}
+						ref={ref => (this.editor = ref)}
+						spellCheck={true}
+					/>
+				</div>
 			</div>
 		);
 	}

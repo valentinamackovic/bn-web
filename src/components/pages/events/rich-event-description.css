@@ -1,0 +1,29 @@
+.rich-edit-content {
+	color: #656d78;
+}
+
+.rich-edit-content h1 {
+}
+
+.rich-edit-content h2 {
+}
+
+.rich-edit-content p {
+	font-size: 18px;
+	line-height: 30px;
+}
+
+.rich-edit-content a {
+	font-weight: bold;
+	cursor: pointer;
+	color: #ff20b1;
+}
+
+.rich-edit-content b {
+}
+
+.rich-edit-content li {
+}
+
+.rich-edit-content blockquote {
+}

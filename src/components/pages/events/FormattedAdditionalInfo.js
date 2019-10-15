@@ -5,6 +5,7 @@ import linkifyHtml from "linkifyjs/html";
 import classnames from "classnames";
 
 import { secondaryHex, fontFamilyDemiBold } from "../../../config/theme";
+import "./rich-event-description.css";
 
 const styles = theme => ({
 	root: {},
@@ -71,7 +72,10 @@ class FormattedAdditionalInfo extends Component {
 						[classes.shortenedTextBlock]: !showAllAdditionalInfo
 					})}
 				>
-					<div dangerouslySetInnerHTML={{ __html: linkifiedText }}/>
+					<div
+						className={"rich-edit-content"}
+						dangerouslySetInnerHTML={{ __html: linkifiedText }}
+					/>
 				</span>
 
 				<span
