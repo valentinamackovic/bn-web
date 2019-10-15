@@ -269,6 +269,26 @@ class Routes extends Component {
 									isAuthenticated={isAuthenticated}
 								/>
 								<Route exact path="/venues/:id" component={ViewVenue}/>
+								{/*to be tickets only NOT events */}
+								<Route exact path="/tickets/:id" component={ViewEvent}/>
+								<Route
+									exact
+									path="/tickets/:id/tickets"
+									component={CheckoutSelection}
+								/>
+								<Route
+									exact
+									path="/tickets/:id/tickets/confirmation"
+									component={CheckoutConfirmation}
+								/>
+								<PrivateRoute
+									exact
+									path="/tickets/:id/tickets/success"
+									component={CheckoutSuccess}
+									isAuthenticated={isAuthenticated}
+								/>
+								{/*end tickets*/}
+								{/*events to be removed for ticket*/}
 								<Route exact path="/events/:id" component={ViewEvent}/>
 								<Route
 									exact
@@ -280,14 +300,16 @@ class Routes extends Component {
 									path="/events/:id/tickets/confirmation"
 									component={CheckoutConfirmation}
 								/>
-
-								{/* <Route exact path="/cart" component={CheckoutConfirmation} /> */}
 								<PrivateRoute
 									exact
 									path="/events/:id/tickets/success"
 									component={CheckoutSuccess}
 									isAuthenticated={isAuthenticated}
 								/>
+								{/*events end*/}
+
+								{/* <Route exact path="/cart" component={CheckoutConfirmation} /> */}
+
 								<Route
 									exact
 									path="/mobile_stripe_token_auth/:access_token/:refresh_token"

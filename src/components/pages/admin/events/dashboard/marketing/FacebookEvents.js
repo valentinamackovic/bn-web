@@ -52,11 +52,15 @@ class FacebookEvents extends Component {
 		Bigneon()
 			.external.facebook.pages()
 			.then(response =>
-				this.setState({ pages: response.data, isFacebookLinked: true })
+				this.setState({
+					pages: response.data,
+					isFacebookLinked: true,
+					isSubmitting: false
+				})
 			)
 			.catch(error => {
 				console.error(error);
-				this.setState({ isFacebookLinked: false });
+				this.setState({ isFacebookLinked: false, isSubmitting: false });
 			});
 	}
 

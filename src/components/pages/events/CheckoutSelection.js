@@ -628,7 +628,12 @@ class CheckoutSelection extends Component {
 				<Meta {...event} venue={venue} artists={artists} type={"selection"}/>
 				{/*DESKTOP*/}
 				<Hidden smDown>
-					<EventHeaderImage {...event} artists={artists}/>
+					<EventHeaderImage
+						{...event}
+						artists={artists}
+						organization={organization}
+						venue={venue}
+					/>
 					<TwoColumnLayout
 						containerClass={classes.desktopContent}
 						containerStyle={{ minHeight: overlayCardHeightAdjustment }}

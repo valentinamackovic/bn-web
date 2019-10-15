@@ -20,6 +20,7 @@ import PricePoint from "./PricePoint";
 import eventUpdateStore from "../../../../../stores/eventUpdate";
 import SelectGroup from "../../../../common/form/SelectGroup";
 import { dollars } from "../../../../../helpers/money";
+import CheckBox from "../../../../elements/form/CheckBox";
 
 const styles = theme => {
 	return {
@@ -179,15 +180,11 @@ const TicketDetails = observer(props => {
 		showCartQuantityIncrement,
 		showAdditionalFee,
 		additionalFeeInDollars,
-		onChangeDate
+		onChangeDate,
+		appSalesEnabled,
+		webSalesEnabled,
+		boxOfficeSalesEnabled
 	} = props;
-
-	let useEndDate = endDate;
-	let useEndTime = endTime;
-	if (!ticketTimesDirty) {
-		useEndDate = eventStartDate.clone();
-		useEndTime = eventStartDate;
-	}
 
 	const pricingErrors = errors && errors.pricing ? errors.pricing : {};
 
@@ -214,7 +211,10 @@ const TicketDetails = observer(props => {
 
 	const parentTicketTypes = ticketTypes
 		.map((tt, i) => {
-			return { index: i, inner: tt };
+			return {
+				index: i,
+				inner: tt
+			};
 		})
 		// Cannot choose yourself, and cannot choose a ticket type that is parented to yourself
 		.filter(
@@ -236,7 +236,9 @@ const TicketDetails = observer(props => {
 	});
 
 	const onShowAdditionalOptions = () =>
-		updateTicketType(index, { showAdditionalOptions: true });
+		updateTicketType(index, {
+			showAdditionalOptions: true
+		});
 
 	const showCustomStartTimes = saleStartTimeOption === "custom";
 	const showStartSaleWhenTicketSaleEnds = saleStartTimeOption === "parent";
@@ -244,12 +246,21 @@ const TicketDetails = observer(props => {
 	const showCustomEndTime = saleEndTimeOption === "custom";
 
 	const saleStartOptions = [
-		{ value: "immediately", label: "Immediately" },
-		{ value: "custom", label: "At a specific time" }
+		{
+			value: "immediately",
+			label: "Immediately"
+		},
+		{
+			value: "custom",
+			label: "At a specific time"
+		}
 	];
 
 	if (parentTicketTypes.length > 0) {
-		saleStartOptions.push({ value: "parent", label: "When sales end for..." });
+		saleStartOptions.push({
+			value: "parent",
+			label: "When sales end for..."
+		});
 	}
 
 	return (
@@ -268,7 +279,9 @@ const TicketDetails = observer(props => {
 						placeholder="General Admission"
 						type="text"
 						onChange={e => {
-							updateTicketType(index, { name: e.target.value });
+							updateTicketType(index, {
+								name: e.target.value
+							});
 						}}
 						onBlur={validateFields}
 					/>
@@ -284,7 +297,9 @@ const TicketDetails = observer(props => {
 						placeholder="1"
 						type="number"
 						onChange={e => {
-							updateTicketType(index, { capacity: e.target.value });
+							updateTicketType(index, {
+								capacity: e.target.value
+							});
 						}}
 						onBlur={validateFields}
 					/>
@@ -305,7 +320,9 @@ const TicketDetails = observer(props => {
 						placeholder=""
 						type="number"
 						onChange={e => {
-							updateTicketType(index, { priceForDisplay: e.target.value });
+							updateTicketType(index, {
+								priceForDisplay: e.target.value
+							});
 						}}
 						onBlur={validateFields}
 					/>
@@ -316,7 +333,9 @@ const TicketDetails = observer(props => {
 				<div>
 					<Hidden mdUp>
 						<Button
-							style={{ width: "100%" }}
+							style={{
+								width: "100%"
+							}}
 							variant="additional"
 							onClick={onShowAdditionalOptions}
 						>
@@ -374,7 +393,10 @@ const TicketDetails = observer(props => {
 								type="date"
 								onChange={startDate => {
 									onChangeDate();
-									updateTicketType(index, { parentId: null, startDate });
+									updateTicketType(index, {
+										parentId: null,
+										startDate
+									});
 								}}
 								onBlur={validateFields}
 								minDate={false}
@@ -398,7 +420,10 @@ const TicketDetails = observer(props => {
 								type="time"
 								onChange={startTime => {
 									onChangeDate();
-									updateTicketType(index, { parentId: null, startTime });
+									updateTicketType(index, {
+										parentId: null,
+										startTime
+									});
 								}}
 								onBlur={validateFields}
 								minDate={false}
@@ -448,10 +473,22 @@ const TicketDetails = observer(props => {
 							disabled={isCancelled}
 							value={saleEndTimeOption || "close"}
 							items={[
-								{ value: "door", label: "Door Time" },
-								{ value: "start", label: "Event Start" },
-								{ value: "close", label: "Event End" },
-								{ value: "custom", label: "At a specific time" }
+								{
+									value: "door",
+									label: "Door Time"
+								},
+								{
+									value: "start",
+									label: "Event Start"
+								},
+								{
+									value: "close",
+									label: "Event End"
+								},
+								{
+									value: "custom",
+									label: "At a specific time"
+								}
 							]}
 							name={"close-times"}
 							label={"Sales end *"}
@@ -473,13 +510,15 @@ const TicketDetails = observer(props => {
 							<DateTimePickerGroup
 								disabled={isCancelled}
 								error={errors.endDate}
-								value={useEndDate}
+								value={endDate}
 								name="endDate"
 								type="date"
 								label="End date *"
 								onChange={endDate => {
 									onChangeDate();
-									updateTicketType(index, { endDate });
+									updateTicketType(index, {
+										endDate
+									});
 								}}
 								onBlur={validateFields}
 								minDate={false}
@@ -497,13 +536,15 @@ const TicketDetails = observer(props => {
 							<DateTimePickerGroup
 								disabled={isCancelled}
 								error={errors.endTime}
-								value={useEndTime}
+								value={endTime}
 								name="endTime"
 								type="time"
 								label="End time *"
 								onChange={endTime => {
 									onChangeDate();
-									updateTicketType(index, { endTime });
+									updateTicketType(index, {
+										endTime
+									});
 								}}
 								onBlur={validateFields}
 								minDate={false}
@@ -543,7 +584,9 @@ const TicketDetails = observer(props => {
 							placeholder="Short description of this ticket type"
 							type="text"
 							onChange={e => {
-								updateTicketType(index, { description: e.target.value });
+								updateTicketType(index, {
+									description: e.target.value
+								});
 							}}
 							onBlur={validateFields}
 						/>
@@ -561,7 +604,9 @@ const TicketDetails = observer(props => {
 							<Button
 								variant="additional"
 								onClick={() => {
-									updateTicketType(index, { showMaxTicketsPerCustomer: true });
+									updateTicketType(index, {
+										showMaxTicketsPerCustomer: true
+									});
 								}}
 							>
 								Set max tix per customer
@@ -599,7 +644,9 @@ const TicketDetails = observer(props => {
 							<Button
 								variant="additional"
 								onClick={() => {
-									updateTicketType(index, { showVisibility: true });
+									updateTicketType(index, {
+										showVisibility: true
+									});
 								}}
 							>
 								Set visibility/access rules
@@ -614,9 +661,40 @@ const TicketDetails = observer(props => {
 								name={"visibility"}
 								label={"Visibility *"}
 								onChange={e => {
-									updateTicketType(index, { visibility: e.target.value });
+									updateTicketType(index, {
+										visibility: e.target.value
+									});
 								}}
 							/>
+							<CheckBox
+								name={"appSalesEnabled"}
+								active={appSalesEnabled}
+								onClick={e =>
+									updateTicketType(index, { appSalesEnabled: !appSalesEnabled })
+								}
+							>
+								Available in App
+							</CheckBox>
+							<CheckBox
+								name={"webSalesEnabled"}
+								active={webSalesEnabled}
+								onClick={e =>
+									updateTicketType(index, { webSalesEnabled: !webSalesEnabled })
+								}
+							>
+								Available on web
+							</CheckBox>
+							<CheckBox
+								name={"boxOfficeSalesEnabled"}
+								active={boxOfficeSalesEnabled}
+								onClick={e =>
+									updateTicketType(index, {
+										boxOfficeSalesEnabled: !boxOfficeSalesEnabled
+									})
+								}
+							>
+								Available in box office
+							</CheckBox>
 						</Collapse>
 					</Grid>
 				</Grid>
@@ -632,7 +710,9 @@ const TicketDetails = observer(props => {
 							<Button
 								variant="additional"
 								onClick={() => {
-									updateTicketType(index, { showCartQuantityIncrement: true });
+									updateTicketType(index, {
+										showCartQuantityIncrement: true
+									});
 								}}
 							>
 								Enforce qty increment
@@ -649,7 +729,9 @@ const TicketDetails = observer(props => {
 								placeholder=""
 								type="number"
 								onChange={e => {
-									updateTicketType(index, { increment: e.target.value });
+									updateTicketType(index, {
+										increment: e.target.value
+									});
 								}}
 								onBlur={validateFields}
 							/>
@@ -668,7 +750,9 @@ const TicketDetails = observer(props => {
 							<Button
 								variant="additional"
 								onClick={() => {
-									updateTicketType(index, { showAdditionalFee: true });
+									updateTicketType(index, {
+										showAdditionalFee: true
+									});
 								}}
 							>
 								Increase service fee/rev share
@@ -720,7 +804,9 @@ const TicketDetails = observer(props => {
 							variant="additional"
 							onClick={() => {
 								eventUpdateStore.addTicketPricing(index);
-								updateTicketType(index, { showPricing: true });
+								updateTicketType(index, {
+									showPricing: true
+								});
 							}}
 						>
 							Schedule a price change
@@ -754,7 +840,9 @@ const TicketDetails = observer(props => {
 											const updatedPricing = pricing;
 											updatedPricing[pricePointIndex] = updatedPricePoint;
 
-											updateTicketType(index, { pricing: updatedPricing });
+											updateTicketType(index, {
+												pricing: updatedPricing
+											});
 										}}
 										errors={pricingErrors[pricePointIndex] || {}}
 										validateFields={validateFields}

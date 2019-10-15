@@ -4,7 +4,12 @@ import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Typography from "@material-ui/core/Typography";
 
-import { textColorPrimary, secondaryHex } from "../../../config/theme";
+import {
+	textColorPrimary,
+	secondaryHex,
+	fontFamilyDemiBold,
+	fontFamilyBold
+} from "../../../config/theme";
 import ArtistSummary from "../../elements/event/ArtistSummary";
 import { Link } from "react-router-dom";
 import LinkifyReact from "linkifyjs/react";
@@ -31,6 +36,17 @@ const styles = theme => ({
 	},
 	eventDescriptionLink: {
 		color: secondaryHex
+	},
+	similarArtists: {
+		marginTop: theme.spacing.unit,
+		marginBottom: theme.spacing.unit * 2
+	},
+	boldSpan: {
+		fontFamily: fontFamilyDemiBold
+	},
+	bnLink: {
+		color: secondaryHex,
+		textDecoration: "underline"
 	}
 });
 
@@ -40,6 +56,10 @@ const EventDescriptionBody = props => {
 		nl2br: true,
 		className: classes.eventDescriptionLink
 	};
+
+	const headlineArtist = artists.find(artist => artist.importance === 0);
+	const headliner = headlineArtist ? headlineArtist.artist.name : null;
+
 	return (
 		<div className={classes.root}>
 			{eventIsCancelled ? (
@@ -51,6 +71,18 @@ const EventDescriptionBody = props => {
 			{children ? (
 				<Typography className={classes.eventDetailText}>
 					<LinkifyReact options={options}>{children}</LinkifyReact>
+				</Typography>
+			) : null}
+
+			{headliner ? (
+				<Typography className={classes.similarArtists}>
+					<span className={classes.boldSpan}>
+						Looking for events similar to {headliner} tickets?
+					</span>{" "}
+					Browse all concerts & events on&nbsp;
+					<Link to="/" className={classes.bnLink}>
+						Big Neon
+					</Link>
 				</Typography>
 			) : null}
 
