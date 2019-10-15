@@ -12,7 +12,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
+
+import pages.interfaces.Visible;
 
 public class ProjectUtils {
 
@@ -136,6 +139,20 @@ public class ProjectUtils {
 		String date = now.format(formater);
 		
 		return baseName + "_" + date;
+	}
+
+	public static String getId(String urlPath, String match) {
+		int index = urlPath.indexOf(match);
+		String id = urlPath.substring(index + match.length());
+		return id;
+	}
+
+	public static Visible getVisibleComponent(Visible visible) {
+		if (visible.isVisible()) {
+			return visible;
+		} else {
+			throw new NoSuchElementException("Element for component:" + visible.getClass() + "not found");
+		}
 	}
 
 }

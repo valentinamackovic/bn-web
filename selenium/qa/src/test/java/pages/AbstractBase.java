@@ -130,6 +130,18 @@ public class AbstractBase implements Serializable {
 			waitForTime(100);
 		}
 	}
+	
+	public void waitVisibilityAndClearFieldSendKeys(WebElement inputField, String value) {
+		String text = inputField.getAttribute("value");
+	    inputField.clear();
+	    String newtext = inputField.getAttribute("value");
+	    if(!newtext.isEmpty()) {
+			for (int i = 0; i < text.length() + 4; i++) {
+				inputField.sendKeys(Keys.BACK_SPACE);
+			}
+	    }
+		waitVisibilityAndSendKeys(inputField, value);
+	}
 
 	public void waitVisibilityAndSendKeys(WebElement element, String value) {
 		explicitWaitForVisiblity(element);

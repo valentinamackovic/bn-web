@@ -89,7 +89,16 @@
 		"name": "Auto test ",
 		"phone_number": "1111111111",
 		"time_zone": "Africa/Johannesburg",
-		"location": "Johannesburg, South Africa"
+		"location": "Johannesburg, South Africa",
+		"other_fees": {
+			"settlement_type": {
+				"label":"Post event",
+				"value":"PostEvent"
+			},
+			"per_order_client_fee":1,
+			"per_order_big_neon_fee":0,
+			"credit_card_fee":2.75
+		}
 	},
 	"auto_test_organization_box_office_user": {
 		"name": "4000 Tix Org",
@@ -108,7 +117,16 @@
 			"name": "Auto Test12",
 			"phone_number": "1111111111",
 			"time_zone": "Africa/Johannesburg",
-			"location": "Johannesburg, South Africa"
+			"location": "Johannesburg, South Africa",
+			"other_fees": {
+				"settlement_type": {
+					"label":"Post event",
+					"value":"PostEvent"
+				},
+				"per_order_client_fee":1,
+				"per_order_big_neon_fee":0,
+				"credit_card_fee":2.75
+			}
 		},
 		"artist_name": "TheTestArtistAuto",
 		"event_name": "TestNameEvent",
@@ -134,7 +152,16 @@
 			"name": "Auto Test12",
 			"phone_number": "1111111111",
 			"time_zone": "Africa/Johannesburg",
-			"location": "Johannesburg, South Africa"
+			"location": "Johannesburg, South Africa",
+			"other_fees": {
+				"settlement_type": {
+					"label":"Post event",
+					"value":"PostEvent"
+				},
+				"per_order_client_fee":1,
+				"per_order_big_neon_fee":0,
+				"credit_card_fee":2.75
+			}
 		},
 		"artist_name": "TheTestArtistAuto",
 		"event_name": "TestNameEvent",
