@@ -11,6 +11,7 @@ const removePaddingRoutes = [
 	"/events",
 	"/venues",
 	"/tickets/transfers",
+	"/events-venue",
 	"/public/tickets"
 ];
 const removeContainerRoutes = [
@@ -25,6 +26,7 @@ const removeContainerRoutes = [
 const hideBottomMobileCartBar = [
 	"/tickets",
 	"/tickets/confirmation",
+	"/events-venue",
 	"/events/"
 ];
 
