@@ -1,11 +1,16 @@
 .rich-edit-content {
 	color: #656d78;
+	/*border: solid;*/
 }
 
 .rich-edit-content h1 {
+	display: inline;
+	/*border: solid;*/
+	font-family: TTCommons-DemiBold;
 }
 
 .rich-edit-content h2 {
+	display: inline;
 }
 
 .rich-edit-content p {
@@ -14,12 +19,13 @@
 }
 
 .rich-edit-content a {
-	font-weight: bold;
+	font-family: TTCommons-DemiBold;
 	cursor: pointer;
 	color: #ff20b1;
 }
 
-.rich-edit-content b {
+.rich-edit-content strong {
+	font-family: TTCommons-Bold;
 }
 
 .rich-edit-content li {
