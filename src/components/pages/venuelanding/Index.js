@@ -7,6 +7,7 @@ import VenueLandingHero from "./Hero";
 import eventResults from "../../../stores/eventResults";
 import Loader from "../../elements/loaders/Loader";
 import VenueResults from "./VenueResults";
+import notifications from "../../../stores/notifications";
 
 const styles = theme => ({
 	root: {}
@@ -19,7 +20,17 @@ class VenueLanding extends Component {
 		this.state = {};
 	}
 
-	componentDidMount() {}
+	componentWillMount() {
+		eventResults.refreshResults(
+			() => {},
+			message => {
+				notifications.show({
+					message,
+					variant: "error"
+				});
+			}
+		);
+	}
 
 	render() {
 		const { history, classes } = this.props;

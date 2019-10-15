@@ -165,6 +165,7 @@ class AltEventResultCard extends Component {
 			promo_image_url,
 			event_start,
 			venueName,
+			event_end,
 			city,
 			state,
 			door_time,
@@ -186,11 +187,15 @@ class AltEventResultCard extends Component {
 
 		const newVenueTimezone = venueTimezone || "America/Los_Angeles";
 		const eventStartDateMoment = moment.utc(event_start);
+		const eventEndDateMoment = moment.utc(event_end);
 
 		const displayEventStartDate = eventStartDateMoment
 			.tz(newVenueTimezone)
 			.format("ddd, MMM Do");
 		const displayShowTime = moment(eventStartDateMoment)
+			.tz(newVenueTimezone)
+			.format("h:mm A");
+		const displayShowEndTime = moment(eventEndDateMoment)
 			.tz(newVenueTimezone)
 			.format("h:mm A");
 
@@ -257,7 +262,7 @@ class AltEventResultCard extends Component {
 								<div>
 									<Typography className={classes.valueTitle}>Ends:</Typography>
 									<Typography className={classes.date}>
-										{displayShowTime}
+										{displayShowEndTime}
 									</Typography>
 								</div>
 							</div>
