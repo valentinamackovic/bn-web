@@ -4,130 +4,66 @@ import {
 	EditorState,
 	RichUtils,
 	getDefaultKeyBinding,
-	convertFromRaw,
-	convertToRaw,
-	ContentState,
-	ContentBlock,
-	convertFromHTML
+	ContentState
 } from "draft-js";
-import { convertToHTML } from "draft-convert";
-
+import { convertToHTML, convertFromHTML } from "draft-convert";
 import { withStyles } from "@material-ui/core";
 import PropTypes from "prop-types";
+
 import "./editor.css";
 import Divider from "../../../common/Divider";
 import "../../../pages/events/rich-event-description.css";
+import { styleMap } from "./EditorSettings";
+import BlockStyleControls from "./BlockStyleControls";
+import LinkFieldDialog from "./LinkFieldDialog";
+import InlineStyleControls from "./InlineStyleControls";
 
 const convertHtmlPropToEditorState = html => {
-	const blocksFromHTML = convertFromHTML(html);
-	const state = ContentState.createFromBlockArray(
-		blocksFromHTML.contentBlocks,
-		blocksFromHTML.entityMap
-	);
-
-	return EditorState.createWithContent(state);
-};
-
-const styleMap = {
-	CODE: {
-		backgroundColor: "rgba(0, 0, 0, 0.05)",
-		fontFamily: '"Inconsolata", "Menlo", "Consolas", monospace',
-		fontSize: 16,
-		padding: 2
-	}
-};
-
-const INLINE_STYLES = [
-	{ label: "Bold", style: "BOLD" },
-	{ label: "Italic", style: "ITALIC" },
-	{ label: "Underline", style: "UNDERLINE" }
-	//{ label: "Monospace", style: "CODE" }
-];
-
-const BLOCK_TYPES = [
-	{ label: "Header 1", style: "header-one" },
-	{ label: "Header 2", style: "header-two" },
-	// { label: "H3", style: "header-three" },
-	// { label: "H4", style: "header-four" },
-	// { label: "H5", style: "header-five" },
-	// { label: "H6", style: "header-six" },
-	{ label: "Blockquote", style: "blockquote" },
-	{ label: "List", style: "unordered-list-item" }
-	//{ label: "OL", style: "ordered-list-item" }
-	//{ label: "Code Block", style: "code-block" }
-];
-
-class StyleButton extends Component {
-	constructor(props) {
-		super(props);
-		this.onToggle = e => {
-			e.preventDefault();
-			this.props.onToggle(this.props.style);
-		};
+	if (!html || html === "<p></p>") {
+		return EditorState.createEmpty();
 	}
 
-	render() {
-		let className = "RichEditor-styleButton";
-		if (this.props.active) {
-			className += " RichEditor-activeButton";
+	const contentStateFromHtml = convertFromHTML({
+		htmlToStyle: (nodeName, node, currentStyle) => {
+			if (nodeName === "a") {
+				return currentStyle.add("LINK");
+			} else {
+				return currentStyle;
+			}
+		},
+		htmlToEntity: (nodeName, node, createEntity) => {
+			if (nodeName === "a") {
+				return createEntity("LINK", "MUTABLE", { url: node.href });
+			}
+		},
+		htmlToBlock: (nodeName, node) => {
+			if (nodeName === "blockquote") {
+				return {
+					type: "blockquote",
+					data: {}
+				};
+			}
 		}
+	})(html);
 
-		return (
-			<span className={className} onMouseDown={this.onToggle}>
-				{this.props.label}
-			</span>
-		);
-	}
-}
+	const editorState = EditorState.createWithContent(contentStateFromHtml);
 
-const InlineStyleControls = props => {
-	const currentStyle = props.editorState.getCurrentInlineStyle();
+	// const state = ContentState.createFromBlockArray(
+	// 	editorState.contentBlocks,
+	// 	editorState.entityMap
+	// );
 
-	return (
-		<div className="RichEditor-controls">
-			{INLINE_STYLES.map(type => (
-				<StyleButton
-					key={type.label}
-					active={currentStyle.has(type.style)}
-					label={type.label}
-					onToggle={props.onToggle}
-					style={type.style}
-				/>
-			))}
-		</div>
-	);
+	return editorState; //EditorState.createWithContent(editorState);
 };
 
-const BlockStyleControls = props => {
-	const { editorState } = props;
-	const selection = editorState.getSelection();
-	const blockType = editorState
-		.getCurrentContent()
-		.getBlockForKey(selection.getStartKey())
-		.getType();
-	return (
-		<div className="RichEditor-controls">
-			{BLOCK_TYPES.map(type => (
-				<StyleButton
-					key={type.label}
-					active={type.style === blockType}
-					label={type.label}
-					onToggle={props.onToggle}
-					style={type.style}
-				/>
-			))}
-		</div>
-	);
-};
-
-function getBlockStyle(block) {
+const getBlockStyle = block => {
 	switch (block.getType()) {
 		case "blockquote":
 			return "RichEditor-blockquote";
 		default:
 			return null;
 	}
-}
+};
 
 const styles = theme => ({
 	root: {
@@ -147,9 +83,70 @@ class RichTextInputField extends Component {
 	constructor(props) {
 		super(props);
 
-		this.state = { editorState: EditorState.createEmpty() };
+		this.state = {
+			editorState: EditorState.createEmpty(),
+			showLinkField: false,
+			existingUrlForPrompt: ""
+		};
 
 		this.onChange = this.onChange.bind(this);
+		this.onSetUrl = this.onSetUrl.bind(this);
+	}
+
+	hidePromptForLink() {
+		this.setState({ showLinkField: false });
+	}
+
+	promptForLink() {
+		const { editorState } = this.state;
+		const selection = editorState.getSelection();
+		if (!selection.isCollapsed()) {
+			const contentState = editorState.getCurrentContent();
+			const startKey = editorState.getSelection().getStartKey();
+			const startOffset = editorState.getSelection().getStartOffset();
+			const blockWithLinkAtBeginning = contentState.getBlockForKey(startKey);
+			const linkKey = blockWithLinkAtBeginning.getEntityAt(startOffset);
+			let url = "";
+			if (linkKey) {
+				const linkInstance = contentState.getEntity(linkKey);
+				url = linkInstance.getData().url;
+				this.setState({ existingUrlForPrompt: url });
+			}
+
+			this.setState({ showLinkField: true });
+		}
+	}
+
+	onSetUrl(url) {
+		const { editorState } = this.state;
+		const contentState = editorState.getCurrentContent();
+		const contentStateWithEntity = contentState.createEntity(
+			"LINK",
+			"MUTABLE",
+			{ url }
+		);
+		const entityKey = contentStateWithEntity.getLastCreatedEntityKey();
+		const newEditorState = EditorState.set(editorState, {
+			currentContent: contentStateWithEntity
+		});
+
+		this.onChange(
+			RichUtils.toggleLink(
+				newEditorState,
+				newEditorState.getSelection(),
+				entityKey
+			)
+		);
+
+		this.applyLinkStyle();
+	}
+
+	applyLinkStyle() {
+		setTimeout(() => {
+			this.onChange(
+				RichUtils.toggleInlineStyle(this.state.editorState, "LINK")
+			);
+		}, 200);
 	}
 
 	componentDidUpdate(prevProps, prevState, snapshot) {
@@ -162,16 +159,29 @@ class RichTextInputField extends Component {
 			const editorState = convertHtmlPropToEditorState(currentHtml);
 			this.htmlHasBeenSet = true;
 			this.setState({ editorState });
+			this.applyLinkStyle();
 		}
 	}
 
 	onChange(editorState) {
 		this.setState({ editorState }, () => {
 			const currentContent = this.state.editorState.getCurrentContent();
-			const html = convertToHTML(currentContent);
+			//const html = convertToHTML(currentContent);
 
-			//TODO, doens't appear to be working
-			//html = html.split("<p></p>").join("<br/>");
+			const html = convertToHTML({
+				styleToHTML: style => {},
+				blockToHTML: block => {},
+				entityToHTML: (entity, originalText) => {
+					if (entity.type === "LINK") {
+						return (
+							<a target="_blank" href={entity.data.url}>
+								{originalText}
+							</a>
+						);
+					}
+					return originalText;
+				}
+			})(currentContent);
 
 			this.props.onChange(html);
 		});
@@ -211,46 +221,59 @@ class RichTextInputField extends Component {
 	}
 
 	toggleInlineStyle(inlineStyle) {
+		if (inlineStyle === "LINK") {
+			this.promptForLink();
+			return;
+		}
+
 		this.onChange(
 			RichUtils.toggleInlineStyle(this.state.editorState, inlineStyle)
 		);
 	}
 
 	render() {
-		const { editorState } = this.state;
+		const { editorState, showLinkField, existingUrlForPrompt } = this.state;
 		const { classes, placeholder } = this.props;
 
 		return (
-			<div className={classes.root} onClick={() => this.editor.focus()}>
-				<div className={classes.styleContainer}>
-					<BlockStyleControls
-						editorState={editorState}
-						onToggle={this.toggleBlockType.bind(this)}
-					/>
-					<InlineStyleControls
-						editorState={editorState}
-						onToggle={this.toggleInlineStyle.bind(this)}
-					/>
-				</div>
+			<React.Fragment>
+				<LinkFieldDialog
+					open={showLinkField}
+					onClose={() => this.hidePromptForLink()}
+					onSetUrl={this.onSetUrl}
+					existingUrl={existingUrlForPrompt}
+				/>
+				<div className={classes.root} onClick={() => this.editor.focus()}>
+					<div className={classes.styleContainer}>
+						<BlockStyleControls
+							editorState={editorState}
+							onToggle={this.toggleBlockType.bind(this)}
+						/>
+						<InlineStyleControls
+							editorState={editorState}
+							onToggle={this.toggleInlineStyle.bind(this)}
+						/>
+					</div>
 
-				<Divider style={{ marginBottom: 10 }}/>
+					<Divider style={{ marginBottom: 10 }}/>
 
-				<div className={"rich-edit-content"}>
-					<Editor
-						editorState={this.state.editorState}
-						onChange={this.onChange}
-						blockStyleFn={getBlockStyle}
-						customStyleMap={styleMap}
-						editorState={editorState}
-						handleKeyCommand={this.handleKeyCommand.bind(this)}
-						keyBindingFn={this.mapKeyToEditorCommand.bind(this)}
-						onChange={this.onChange}
-						placeholder={placeholder}
-						ref={ref => (this.editor = ref)}
-						spellCheck={true}
-					/>
+					<div className={"rich-edit-content"}>
+						<Editor
+							editorState={this.state.editorState}
+							onChange={this.onChange}
+							blockStyleFn={getBlockStyle}
+							customStyleMap={styleMap}
+							editorState={editorState}
+							handleKeyCommand={this.handleKeyCommand.bind(this)}
+							keyBindingFn={this.mapKeyToEditorCommand.bind(this)}
+							onChange={this.onChange}
+							placeholder={placeholder}
+							ref={ref => (this.editor = ref)}
+							spellCheck={true}
+						/>
+					</div>
 				</div>
-			</div>
+			</React.Fragment>
 		);
 	}
 }
