@@ -9,7 +9,8 @@ const styles = theme => ({
 		backgroundColor: "#221D27",
 		display: "flex",
 		flexDirection: "column",
-		// paddingLeft
+		justifyContent: "center",
+
 		minHeight: 267,
 		[theme.breakpoints.down("sm")]: {
 			flexDirection: "column",
@@ -21,7 +22,6 @@ const styles = theme => ({
 		fontFamily: fontFamilyBold,
 		color: "#fff",
 		lineHeight: "72px",
-		marginTop: theme.spacing.unit * 4,
 		[theme.breakpoints.down("sm")]: {
 			fontSize: theme.typography.fontSize * 2.9,
 			paddingLeft: theme.spacing.unit * 3,

@@ -9,10 +9,21 @@ import slugResults from "../../../stores/slugResults";
 import Loader from "../../elements/loaders/Loader";
 import AltResults from "../../elements/event/AltResults";
 import notifications from "../../../stores/notifications";
+import { fontFamilyDemiBold } from "../../../config/theme";
+
 import getUrlParam from "../../../helpers/getUrlParam";
+import createGoogleMapsLink from "../../../helpers/createGoogleMapsLink";
 
 const styles = theme => ({
-	root: {}
+	root: {},
+	heading: {
+		color: "#2C3136",
+		fontSize: "36px",
+		fontFamily: fontFamilyDemiBold,
+		lineHeight: "41px",
+		marginTop: theme.spacing.unit * 5,
+		marginBottom: theme.spacing.unit * 3
+	}
 });
 
 @observer
@@ -83,6 +94,11 @@ class VenueLanding extends Component {
 						pageSubTitle={
 							slugResults.venueInfo ? slugResults.venueInfo.address : ""
 						}
+						mapLink={
+							slugResults.venueInfo
+								? createGoogleMapsLink(slugResults.venueInfo)
+								: null
+						}
 						history={history}
 					/>
 				)}
@@ -96,7 +112,12 @@ class VenueLanding extends Component {
 						{slugResults.isLoading ? (
 							<Loader>Finding events...</Loader>
 						) : (
-							<AltResults/>
+							<div>
+								<Typography variant={"display1"} className={classes.heading}>
+									Upcoming Events at {slugResults.venueInfo.name}
+								</Typography>
+								<AltResults/>
+							</div>
 						)}
 					</Grid>
 				</Grid>

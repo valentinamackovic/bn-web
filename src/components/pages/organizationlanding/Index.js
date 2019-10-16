@@ -11,9 +11,18 @@ import notifications from "../../../stores/notifications";
 import getUrlParam from "../../../helpers/getUrlParam";
 import Organization from "../admin/organizations/Organization";
 import Meta from "../organizationlanding/Meta";
+import { fontFamilyDemiBold } from "../../../config/theme";
 
 const styles = theme => ({
-	root: {}
+	root: {},
+	heading: {
+		color: "#2C3136",
+		fontSize: "36px",
+		fontFamily: fontFamilyDemiBold,
+		lineHeight: "41px",
+		marginTop: theme.spacing.unit * 5,
+		marginBottom: theme.spacing.unit * 3
+	}
 });
 
 @observer
@@ -92,7 +101,12 @@ class OrganizationLanding extends Component {
 						{slugResults.isLoading ? (
 							<Loader>Finding events...</Loader>
 						) : (
-							<AltResults/>
+							<div>
+								<Typography variant={"display1"} className={classes.heading}>
+									Upcoming Events at {slugResults.orgInfo.name}
+								</Typography>
+								<AltResults/>
+							</div>
 						)}
 					</Grid>
 				</Grid>

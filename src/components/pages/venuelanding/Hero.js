@@ -2,15 +2,15 @@ import React, { Component } from "react";
 import { withStyles, Typography, Hidden } from "@material-ui/core";
 import LandingAppBar from "../../elements/header/LandingAppBar";
 import user from "../../../stores/user";
-import { fontFamilyBold } from "../../../config/theme";
+import { fontFamilyBold, secondaryHex } from "../../../config/theme";
 
 const styles = theme => ({
 	root: {
 		backgroundColor: "#221D27",
 		display: "flex",
 		flexDirection: "column",
-		// paddingLeft
 		minHeight: 267,
+		justifyContent: "center",
 		[theme.breakpoints.down("sm")]: {
 			flexDirection: "column",
 			minHeight: 350
@@ -21,12 +21,18 @@ const styles = theme => ({
 		fontFamily: fontFamilyBold,
 		color: "#fff",
 		lineHeight: "72px",
-		marginTop: theme.spacing.unit * 4,
+		// marginTop: theme.spacing.unit * 4,
 		[theme.breakpoints.down("sm")]: {
 			fontSize: theme.typography.fontSize * 2.9,
 			paddingLeft: theme.spacing.unit * 3,
 			paddingRight: theme.spacing.unit * 3
 		}
+	},
+	viewMapLinkText: {
+		fontSize: 16,
+		marginLeft: theme.spacing.unit * 1.5,
+		color: "#fff",
+		cursor: "pointer"
 	},
 	headingContainer: {
 		width: 1400,
@@ -48,7 +54,7 @@ class VenueLandingHero extends Component {
 	}
 
 	render() {
-		const { history, classes, pageTitle, pageSubTitle } = this.props;
+		const { history, classes, pageTitle, pageSubTitle, mapLink } = this.props;
 
 		return (
 			<div className={classes.root}>
@@ -60,8 +66,17 @@ class VenueLandingHero extends Component {
 				</Hidden>
 
 				<div className={classes.headingContainer}>
-					<Typography className={classes.heading}>{pageTitle}</Typography>
-					<Typography className={classes.subHeading}>{pageSubTitle}</Typography>
+					<Typography variant={"display1"} className={classes.heading}>
+						{pageTitle}
+					</Typography>
+					<Typography className={classes.subHeading}>
+						{pageSubTitle}
+						{mapLink ? (
+							<a target="_blank" href={mapLink}>
+								<span className={classes.viewMapLinkText}>View on map</span>
+							</a>
+						) : null}
+					</Typography>
 				</div>
 			</div>
 		);

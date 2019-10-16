@@ -172,6 +172,7 @@ class AltEventResultCard extends Component {
 			min_ticket_price,
 			max_ticket_price,
 			venueTimezone,
+			imgAlt,
 			slug
 		} = this.props;
 		const { hoverId } = this.state;
@@ -215,7 +216,7 @@ class AltEventResultCard extends Component {
 					variant="default"
 				>
 					<MaintainAspectRatio aspectRatio={Settings().promoImageAspectRatio}>
-						<div className={classes.media} style={style}/>
+						<div title={imgAlt} className={classes.media} style={style}/>
 					</MaintainAspectRatio>
 					<div className={classes.detailsContent}>
 						<div className={classes.detailsContentSegment}>

@@ -9,7 +9,7 @@ const styles = theme => ({
 		backgroundColor: "#221D27",
 		display: "flex",
 		flexDirection: "column",
-		// paddingLeft
+		justifyContent: "center",
 		minHeight: 267,
 		[theme.breakpoints.down("sm")]: {
 			flexDirection: "column",
@@ -22,7 +22,7 @@ const styles = theme => ({
 		color: "#fff",
 		lineHeight: "72px",
 
-		marginTop: theme.spacing.unit * 4,
+		// marginTop: theme.spacing.unit * 4,
 		[theme.breakpoints.down("sm")]: {
 			fontSize: theme.typography.fontSize * 2.9,
 			paddingLeft: theme.spacing.unit * 3,
@@ -62,9 +62,9 @@ class CityLandingHero extends Component {
 
 				<div className={classes.headingContainer}>
 					<Typography className={classes.heading}>{pageTitle}</Typography>
-					<Typography className={classes.subHeading}>
-						All the leaves are brown and the sky is grey.
-					</Typography>
+					{/*<Typography className={classes.subHeading}>*/}
+					{/*	All the leaves are brown and the sky is grey.*/}
+					{/*</Typography>*/}
 				</div>
 			</div>
 		);

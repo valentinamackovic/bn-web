@@ -96,6 +96,12 @@ class AltResults extends Component {
 					}
 					event.door_time = event.door_time || event.event_start;
 					const { timezone, name, city, state } = venue;
+					const { artists } = event;
+
+					const headlineArtist = artists.find(
+						artist => artist.importance === 0
+					);
+					const headliner = headlineArtist ? headlineArtist.artist.name : null;
 
 					return (
 						<Grid item xs={12} sm={12} lg={12} key={event.id}>
@@ -103,6 +109,7 @@ class AltResults extends Component {
 								venueTimezone={timezone}
 								venueName={name}
 								city={city}
+								imgAlt={headliner}
 								state={state}
 								{...event}
 							/>
@@ -131,9 +138,6 @@ class AltResults extends Component {
 
 		return (
 			<div className={classes.root}>
-				<Typography className={classes.eventHeading}>
-					Upcoming events
-				</Typography>
 
 				{hasResults === true ? this.renderEventList(events) : null}
 
