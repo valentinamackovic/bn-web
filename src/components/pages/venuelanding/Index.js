@@ -67,6 +67,9 @@ class VenueLanding extends Component {
 								? slugResults.venueInfo.name
 								: "No events for this venue"
 						}
+						pageSubTitle={
+							slugResults.venueInfo ? slugResults.venueInfo.address : ""
+						}
 						history={history}
 					/>
 				)}

@@ -20,6 +20,8 @@ const styles = theme => ({
 		fontSize: 72,
 		fontFamily: fontFamilyBold,
 		color: "#fff",
+		lineHeight: "72px",
+
 		marginTop: theme.spacing.unit * 4,
 		[theme.breakpoints.down("sm")]: {
 			fontSize: theme.typography.fontSize * 2.9,

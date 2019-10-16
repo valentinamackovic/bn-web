@@ -20,6 +20,7 @@ const styles = theme => ({
 		fontSize: 72,
 		fontFamily: fontFamilyBold,
 		color: "#fff",
+		lineHeight: "72px",
 		marginTop: theme.spacing.unit * 4,
 		[theme.breakpoints.down("sm")]: {
 			fontSize: theme.typography.fontSize * 2.9,
@@ -47,7 +48,7 @@ class VenueLandingHero extends Component {
 	}
 
 	render() {
-		const { history, classes, pageTitle } = this.props;
+		const { history, classes, pageTitle, pageSubTitle } = this.props;
 
 		return (
 			<div className={classes.root}>
@@ -60,9 +61,7 @@ class VenueLandingHero extends Component {
 
 				<div className={classes.headingContainer}>
 					<Typography className={classes.heading}>{pageTitle}</Typography>
-					<Typography className={classes.subHeading}>
-						All the leaves are brown and the sky is grey.
-					</Typography>
+					<Typography className={classes.subHeading}>{pageSubTitle}</Typography>
 				</div>
 			</div>
 		);

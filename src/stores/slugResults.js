@@ -17,6 +17,9 @@ class SlugResults {
 	@observable
 	venueInfo = null;
 
+	@observable
+	orgInfo = null;
+
 	@action
 	refreshResults(slug, params, onSuccess, onError) {
 		this.isLoading = true;
@@ -26,7 +29,7 @@ class SlugResults {
 			.then(response => {
 				const result = [];
 
-				const { events } = response.data;
+				const { events, organization } = response.data;
 				events.forEach(eventData => {
 					const { venue, promo_image_url, cancelled_at, ...event } = eventData;
 
@@ -50,6 +53,7 @@ class SlugResults {
 				});
 
 				this.events = result;
+				this.orgInfo = organization;
 				this.isLoading = false;
 
 				onSuccess();
