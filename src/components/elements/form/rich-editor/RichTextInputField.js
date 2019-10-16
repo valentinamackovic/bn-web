@@ -46,14 +46,7 @@ const convertHtmlPropToEditorState = html => {
 		}
 	})(html);
 
-	const editorState = EditorState.createWithContent(contentStateFromHtml);
-
-	// const state = ContentState.createFromBlockArray(
-	// 	editorState.contentBlocks,
-	// 	editorState.entityMap
-	// );
-
-	return editorState; //EditorState.createWithContent(editorState);
+	return EditorState.createWithContent(contentStateFromHtml);
 };
 
 const getBlockStyle = block => {
