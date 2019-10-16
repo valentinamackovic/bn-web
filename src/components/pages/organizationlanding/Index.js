@@ -3,22 +3,26 @@ import { withStyles, Typography, Grid, Hidden } from "@material-ui/core";
 import { observer } from "mobx-react";
 import LandingAppBar from "../../elements/header/LandingAppBar";
 import user from "../../../stores/user";
-import CityLandingHero from "./Hero";
-import Meta from "./Meta";
+import OrgLandingHero from "./Hero";
 import slugResults from "../../../stores/slugResults";
 import Loader from "../../elements/loaders/Loader";
 import AltResults from "../../elements/event/AltResults";
 import notifications from "../../../stores/notifications";
+import getUrlParam from "../../../helpers/getUrlParam";
+import Organization from "../admin/organizations/Organization";
+import Meta from "../organizationlanding/Meta";
 
 const styles = theme => ({
 	root: {}
 });
 
 @observer
-class CityLanding extends Component {
+class OrganizationLanding extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			pageTitle: ""
+		};
 	}
 
 	componentWillMount() {
@@ -28,8 +32,6 @@ class CityLanding extends Component {
 			this.props.match.params.id
 		) {
 			const { id } = this.props.match.params;
-			// eventResults.changeFilter("city", "New York");
-			// eventResults.changeFilter("state", venueFromUrl);
 			slugResults.refreshResults(
 				id,
 				() => {},
@@ -53,10 +55,13 @@ class CityLanding extends Component {
 			<div className={classes.root}>
 				<Meta
 					cityName={
-						slugResults.cityInfo
-							? slugResults.cityInfo.city
+						slugResults.orgInfo
+							? slugResults.orgInfo.city
+								? `in ${slugResults.orgInfo.city} `
+								: ""
 							: ""
 					}
+					orgName={slugResults.orgInfo ? `to ${slugResults.orgInfo.name}` : ""}
 				/>
 				<Hidden smDown>
 					<LandingAppBar
@@ -68,11 +73,11 @@ class CityLanding extends Component {
 				{slugResults.isLoading ? (
 					<Loader>Finding events...</Loader>
 				) : (
-					<CityLandingHero
+					<OrgLandingHero
 						pageTitle={
-							slugResults.cityInfo
-								? slugResults.cityInfo.city
-								: "No events for this city"
+							slugResults.orgInfo
+								? slugResults.orgInfo.name
+								: "No events for this organization"
 						}
 						history={history}
 					/>
@@ -96,4 +101,4 @@ class CityLanding extends Component {
 	}
 }
 
-export default withStyles(styles)(CityLanding);
+export default withStyles(styles)(OrganizationLanding);

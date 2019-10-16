@@ -4,6 +4,7 @@ import { observer } from "mobx-react";
 import LandingAppBar from "../../elements/header/LandingAppBar";
 import user from "../../../stores/user";
 import VenueLandingHero from "./Hero";
+import Meta from "./Meta";
 import slugResults from "../../../stores/slugResults";
 import Loader from "../../elements/loaders/Loader";
 import AltResults from "../../elements/event/AltResults";
@@ -51,6 +52,18 @@ class VenueLanding extends Component {
 		const { history, classes } = this.props;
 		return (
 			<div className={classes.root}>
+				<Meta
+					cityName={
+						slugResults.venueInfo
+							? slugResults.venueInfo.city
+								? `in ${slugResults.venueInfo.city} `
+								: ""
+							: ""
+					}
+					venueName={
+						slugResults.venueInfo ? `to ${slugResults.venueInfo.name}` : ""
+					}
+				/>
 				<Hidden smDown>
 					<LandingAppBar
 						isAuthenticated={user.isAuthenticated}
