@@ -71,10 +71,9 @@ const styles = theme => {
 			marginBottom: theme.spacing.unit
 		},
 		withArtistsText: {
-			color: "#9DA3B4",
-			fontFamily: fontFamilyDemiBold,
-			fontSize: 25,
-			lineHeight: 0.9
+			color: "#BFC4D2",
+			fontSize: 19,
+			lineHeight: "31px"
 		}
 	};
 };
