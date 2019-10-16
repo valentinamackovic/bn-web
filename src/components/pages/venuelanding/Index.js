@@ -62,7 +62,11 @@ class VenueLanding extends Component {
 					<Loader>Finding events...</Loader>
 				) : (
 					<VenueLandingHero
-						pageTitle={slugResults.venueInfo.name}
+						pageTitle={
+							slugResults.venueInfo
+								? slugResults.venueInfo.name
+								: "No events for this venue"
+						}
 						history={history}
 					/>
 				)}

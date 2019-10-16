@@ -63,7 +63,11 @@ class CityLanding extends Component {
 					<Loader>Finding events...</Loader>
 				) : (
 					<CityLandingHero
-						pageTitle={slugResults.venueInfo.city}
+						pageTitle={
+							slugResults.venueInfo
+								? slugResults.venueInfo.city
+								: "No events for this city"
+						}
 						history={history}
 					/>
 				)}

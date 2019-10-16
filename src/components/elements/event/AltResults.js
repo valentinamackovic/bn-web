@@ -4,6 +4,7 @@ import { withStyles, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
 import { fontFamilyBold } from "../../../config/theme";
 import slugResults from "../../../stores/slugResults";
+import { Link } from "react-router-dom";
 import AltEventResultCard from "../../elements/event/AltEventResultCard";
 import Button from "../../elements/Button";
 import servedImage from "../../../helpers/imagePathHelper";
@@ -63,9 +64,9 @@ const NoResults = ({ classes, onClear }) => (
 			src={servedImage("/icons/events-gray.svg")}
 		/>
 		<Typography className={classes.noResultText}>No results found.</Typography>
-		<Button variant="callToAction" onClick={onClear}>
-			Available events
-		</Button>
+		<Link to="/">
+			<Button variant="callToAction">Available events</Button>
+		</Link>
 	</div>
 );
 
@@ -119,7 +120,7 @@ class AltResults extends Component {
 
 		let hasResults = null;
 		if (events === null) {
-			hasResults = null;
+			hasResults = false;
 		} else if (events instanceof Array) {
 			if (events.length > 0) {
 				hasResults = true;
@@ -136,26 +137,22 @@ class AltResults extends Component {
 
 				{hasResults === true ? this.renderEventList(events) : null}
 
-				{hasResults === false ? (
-					<NoResults
-						classes={classes}
-						onClear={() => slugResults.clearFilter()}
-					/>
-				) : null}
+				{hasResults === false ? <NoResults classes={classes}/> : null}
 
 				{hasResults === null ? (
 					<Typography className={classes.subHeading}>Searching...</Typography>
 				) : null}
 
-				{hasResults && events.length > shownEvents || hasResults && events.length === shownEvents ? (
-					<div className={classes.btnContainer}>
-						<Button onClick={this.loadMore} variant="pinkBorder" size="large">
+				{(hasResults && events.length > shownEvents) ||
+				(hasResults && events.length === shownEvents) ? (
+						<div className={classes.btnContainer}>
+							<Button onClick={this.loadMore} variant="pinkBorder" size="large">
 							Load More
-						</Button>
-					</div>
-				) : (
-					<div/>
-				)}
+							</Button>
+						</div>
+					) : (
+						<div/>
+					)}
 			</div>
 		);
 	}
