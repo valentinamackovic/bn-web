@@ -47,7 +47,7 @@ class CityLandingHero extends Component {
 	}
 
 	render() {
-		const { history, classes } = this.props;
+		const { history, classes, pageTitle } = this.props;
 
 		return (
 			<div className={classes.root}>
@@ -59,7 +59,7 @@ class CityLandingHero extends Component {
 				</Hidden>
 
 				<div className={classes.headingContainer}>
-					<Typography className={classes.heading}>CAlifornia</Typography>
+					<Typography className={classes.heading}>{pageTitle}</Typography>
 					<Typography className={classes.subHeading}>
 						All the leaves are brown and the sky is grey.
 					</Typography>

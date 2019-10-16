@@ -14,6 +14,9 @@ class SlugResults {
 	@observable
 	filters = {};
 
+	@observable
+	venueInfo = null;
+
 	@action
 	refreshResults(slug, params, onSuccess, onError) {
 		this.isLoading = true;
@@ -31,6 +34,7 @@ class SlugResults {
 					if (cancelled_at) {
 						return;
 					}
+					this.venueInfo = venue;
 
 					result.push({
 						...event,
@@ -69,5 +73,4 @@ class SlugResults {
 }
 
 const slugResults = new SlugResults();
-
 export default slugResults;

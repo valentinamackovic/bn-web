@@ -4,7 +4,7 @@ import { observer } from "mobx-react";
 import LandingAppBar from "../../elements/header/LandingAppBar";
 import user from "../../../stores/user";
 import VenueLandingHero from "./Hero";
-import eventResults from "../../../stores/eventResults";
+import slugResults from "../../../stores/slugResults";
 import Loader from "../../elements/loaders/Loader";
 import AltResults from "../../elements/event/AltResults";
 import notifications from "../../../stores/notifications";
@@ -19,22 +19,32 @@ class VenueLanding extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			venueFromUrl: getUrlParam("venuename")
+			pageTitle: ""
 		};
 	}
 
 	componentWillMount() {
-		eventResults.changeFilter("name", "MSG");
-		// eventResults.changeFilter("state", venueFromUrl);
-		eventResults.refreshResults(
-			() => {},
-			message => {
-				notifications.show({
-					message,
-					variant: "error"
-				});
-			}
-		);
+		if (
+			this.props.match &&
+			this.props.match.params &&
+			this.props.match.params.id
+		) {
+			const { id } = this.props.match.params;
+			slugResults.refreshResults(
+				id,
+				() => {},
+				() => {},
+				message => {
+					notifications.show({
+						message,
+						variant: "error"
+					});
+				}
+			);
+		} else {
+			// 404 ....
+			console.error("Could not find id");
+		}
 	}
 
 	render() {
@@ -48,7 +58,14 @@ class VenueLanding extends Component {
 					/>
 				</Hidden>
 
-				<VenueLandingHero history={history}/>
+				{slugResults.isLoading ? (
+					<Loader>Finding events...</Loader>
+				) : (
+					<VenueLandingHero
+						pageTitle={slugResults.venueInfo.name}
+						history={history}
+					/>
+				)}
 
 				<Grid
 					container
@@ -56,7 +73,7 @@ class VenueLanding extends Component {
 					style={{ maxWidth: 1600, margin: "0 auto" }}
 				>
 					<Grid item xs={11} sm={11} lg={10}>
-						{eventResults.isLoading ? (
+						{slugResults.isLoading ? (
 							<Loader>Finding events...</Loader>
 						) : (
 							<AltResults/>

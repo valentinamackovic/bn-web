@@ -9,6 +9,7 @@ import Loader from "../../elements/loaders/Loader";
 import AltResults from "../../elements/event/AltResults";
 import notifications from "../../../stores/notifications";
 import getUrlParam from "../../../helpers/getUrlParam";
+import VenueLandingHero from "../venuelanding/Hero";
 
 const styles = theme => ({
 	root: {}
@@ -18,9 +19,7 @@ const styles = theme => ({
 class CityLanding extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			venueFromUrl: getUrlParam("venuename")
-		};
+		this.state = {};
 	}
 
 	componentWillMount() {
@@ -60,7 +59,14 @@ class CityLanding extends Component {
 					/>
 				</Hidden>
 
-				<CityLandingHero history={history}/>
+				{slugResults.isLoading ? (
+					<Loader>Finding events...</Loader>
+				) : (
+					<CityLandingHero
+						pageTitle={slugResults.venueInfo.city}
+						history={history}
+					/>
+				)}
 
 				<Grid
 					container

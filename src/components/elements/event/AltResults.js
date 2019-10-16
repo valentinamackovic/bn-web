@@ -115,7 +115,6 @@ class AltResults extends Component {
 	render() {
 		const { classes } = this.props;
 		const events = slugResults.events;
-		console.log("events", events);
 		const { shownEvents } = this.state;
 
 		let hasResults = null;
@@ -148,7 +147,7 @@ class AltResults extends Component {
 					<Typography className={classes.subHeading}>Searching...</Typography>
 				) : null}
 
-				{events.length > shownEvents || events.length === shownEvents ? (
+				{hasResults && events.length > shownEvents || hasResults && events.length === shownEvents ? (
 					<div className={classes.btnContainer}>
 						<Button onClick={this.loadMore} variant="pinkBorder" size="large">
 							Load More
