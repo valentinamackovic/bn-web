@@ -12,6 +12,9 @@ public class MsgConstants {
 	public static final String ORGANIZATION_CREATE_DUPLICATE_ERROR = "Duplicate record exists";
 	public static final String ORGANIZATION_CREATE_FAILED = "Create organization failed";
 	public static final String ORGANIZATION_CREATED_SUCCESS = "Organization created";
+	
+	public static final String VENUE_CREATED_SUCCESS = "Venue created";
+	public static final String VENUE_UPDATED_SUCCESS = "Venue updated";
 		
 	public static final String EVENT_PUBLISHED = "Event published";
 	public static final String EVENT_SAVED_TO_DRAFT = "Draft saved";
@@ -27,6 +30,8 @@ public class MsgConstants {
 	public static final String QUERY_ERROR = "Query error";
 	
 	public static final String FAN_PROFILE_LOAD_ERROR = "Failed to load fan profile";	
+	public static final String ORDER_MANANGE_ACTIVITY_ITEM_NOTE_ADDED = "Note saved";
+	
 	
 	public static String resetPasswordMessage(String mail) {
 		return "Your request has been received; " + mail + " will receive an email shortly with a link to reset your password if it is an account on file";

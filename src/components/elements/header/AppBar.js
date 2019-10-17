@@ -9,6 +9,7 @@ import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Hidden from "@material-ui/core/Hidden";
 import MenuIcon from "@material-ui/icons/Menu";
+import Slide from "@material-ui/core/Slide";
 
 import { secondaryHex, toolBarHeight } from "../../../config/theme";
 import RightUserMenu from "./RightUserMenu";
@@ -53,6 +54,9 @@ const styles = theme => {
 			display: "flex",
 			justifyContent: "space-between",
 			...toolBarHeight
+		},
+		icon: {
+			marginRight: 4
 		}
 	};
 };
@@ -131,16 +135,17 @@ class CustomAppBar extends Component {
 						<RightUserMenu history={history}/>
 					</span>
 				</Toolbar>
-				{!layout.showStudioLogo && this.state.showSearch ? (
+				<Slide
+					direction="left"
+					in={!layout.showStudioLogo && this.state.showSearch}
+				>
 					<div className={classes.mobiSearchContainer}>
 						<SearchToolBarInput
 							onCloseClick={this.closeSearch.bind(this)}
 							history={history}
 						/>
 					</div>
-				) : (
-					<div/>
-				)}
+				</Slide>
 			</AppBar>
 		);
 	}

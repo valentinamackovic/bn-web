@@ -10,7 +10,6 @@
       <class name="test.CreateEventStepsIT"/>
       <class name="test.PurchaseStepsIT"/>
       <class name="test.PurchaseWithTicketChangeStepsIT"/>
-      <!-- <class name="test.TransferTicketStepsIT"/> -->
       <class name="test.CancelEventStepsIT"/>
       <class name="test.CreateEventWithAdditionalOptionsStepsIT"/>
       <class name="test.CreateDraftEventStepsIT"/>
@@ -18,7 +17,7 @@
       <class name="test.OrderManagmentSearchForOrdersStepsIT"/>
       <class name="test.PublishEventWithDeleteEventIT"/>
       <class name="test.BoxOfficeSellTicketStepsIT"/>
-       <!-- <class name="test.VenueStepsIT"/> -->
+      <class name="test.VenueStepsIT"/>
       <class name="test.FanManagementStepsIT"/>
     </classes>
   </test>
@@ -31,7 +30,6 @@
       <class name="test.CreateEventStepsIT"/>
       <class name="test.PurchaseStepsIT"/> 
       <class name="test.PurchaseWithTicketChangeStepsIT"/>
-     <!--  <class name="test.TransferTicketStepsIT"/> -->
       <class name="test.CancelEventStepsIT"/>
       <class name="test.CreateEventWithAdditionalOptionsStepsIT"/>
       <class name="test.CreateDraftEventStepsIT"/>
@@ -39,7 +37,7 @@
       <class name="test.OrderManagmentSearchForOrdersStepsIT"/>
       <class name="test.PublishEventWithDeleteEventIT"/>
       <class name="test.BoxOfficeSellTicketStepsIT"/>
-       <!-- <class name="test.VenueStepsIT"/> -->
+      <class name="test.VenueStepsIT"/>
       <class name="test.FanManagementStepsIT"/>
      </classes>
   </test>  

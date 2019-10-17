@@ -3,7 +3,6 @@ package test.facade;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -15,7 +14,7 @@ import pages.admin.fans.AdminFanProfilePage;
 import pages.admin.fans.AdminFanProfilePage.FanProfileEventDataHolder;
 import pages.admin.fans.AdminFansListPage;
 import pages.admin.fans.AdminFansListPage.FanRowComponent;
-import pages.admin.orders.SelectedOrderPage;
+import pages.admin.orders.manage.SelectedOrderPage;
 import pages.components.admin.AdminSideBar;
 import pages.components.admin.fans.manage.FanProfileEventSummaryComponent;
 import pages.components.admin.orders.manage.ActivityItem;

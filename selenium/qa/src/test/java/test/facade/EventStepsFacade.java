@@ -6,6 +6,7 @@ import org.testng.Assert;
 import model.CreditCard;
 import model.Event;
 import model.Purchase;
+import model.TicketType;
 import model.User;
 import pages.EventsPage;
 import pages.LoginPage;
@@ -116,6 +117,10 @@ public class EventStepsFacade extends BaseFacadeSteps {
 	public void whenUserSelectsNumberOfTicketsAndClicksOnContinue(Purchase purchase) {
 		ticketPage.selectTicketNumberAndClickOnContinue(purchase.getNumberOfTickets());
 	}
+	
+	public void whenUserSelectsNumberOfTicketsAndClicksOnContinue(Purchase purchase, TicketType ticketType) {
+		ticketPage.selectTicketNumberAndClickOnContinue(purchase.getNumberOfTickets(), ticketType);
+	}
 
 	public void whenUserEntersCreditCardDetailsAndClicksOnPurchase(CreditCard card) {
 		this.ticketsConfirmationPage.ticketsConfirmationPageSteps(card);
@@ -153,5 +158,16 @@ public class EventStepsFacade extends BaseFacadeSteps {
 	public void whenUserEntersPhoneNumberAndClicksSend(String phoneNumber) {
 		this.succesPage.enterPhoneNumberAndClickSend(phoneNumber);
 	}
+
+	@Override
+	protected void setData(String key, Object value) {
+	}
+
+	@Override
+	protected Object getData(String key) {
+		return null;
+	}
+	
+	
 
 }

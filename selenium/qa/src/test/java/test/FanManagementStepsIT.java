@@ -9,7 +9,7 @@ import model.Event;
 import model.Purchase;
 import model.User;
 import pages.EventsPage;
-import pages.admin.orders.SelectedOrderPage;
+import pages.admin.orders.manage.SelectedOrderPage;
 import pages.components.admin.orders.manage.ActivityItem;
 import pages.components.admin.orders.manage.ActivityItem.ExpandedContent;
 import pages.components.dialogs.IssueRefundDialog.RefundReason;

@@ -19,11 +19,20 @@ const styles = {
 	},
 	input: {
 		border: "none",
-		fontSize: 14,
+		fontSize: 19,
+		color: "#9DA3B4",
 		outline: "none"
 	},
 	icon: {
-		marginRight: 12
+		marginRight: -8,
+		height: 61,
+		width: 61,
+		marginLeft: -24
+	},
+
+	closeIcon: {
+		marginRight: 8,
+		marginLeft: -24
 	}
 };
 
@@ -92,7 +101,7 @@ class SearchToolBarInput extends Component {
 					<img
 						alt="Search icon"
 						className={classes.icon}
-						src={servedImage("/icons/search-gray.svg")}
+						src={servedImage("/icons/search-pink.svg")}
 					/>
 					<input
 						ref={input => (this.input = input)}
@@ -100,13 +109,13 @@ class SearchToolBarInput extends Component {
 						value={query}
 						onChange={e => this.setState({ query: e.target.value })}
 						className={classes.input}
-						placeholder="Search events"
+						placeholder="Search Events"
 					/>
 				</div>
 				<Hidden smUp>
 					<img
 						alt="Search icon"
-						className={classes.icon}
+						className={classes.closeIcon}
 						src={servedImage("/icons/delete-gray.svg")}
 						onClick={this.props.onCloseClick}
 					/>

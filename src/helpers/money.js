@@ -3,7 +3,12 @@ export const dollars = (cents, trimDecimalIfZero = false, prefix = "$") => {
 		return `${prefix}0`;
 	}
 
-	const dollars = cents / 100;
+	let dollars = cents / 100;
+
+	if (cents < 0) {
+		prefix = `-${prefix}`;
+		dollars = dollars * -1;
+	}
 
 	if (trimDecimalIfZero && dollars % 1 === 0) {
 		return `${prefix}${dollars.toFixed(0)}`;

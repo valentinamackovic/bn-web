@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { observer } from "mobx-react";
 import { withStyles, Typography } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
-import { fontFamilyBebas, fontFamilyDemiBold } from "../../../../config/theme";
+import { fontFamilyBebas, fontFamilyBold } from "../../../../config/theme";
 import ResultsRegionFilter from "./ResultsRegionFilter";
 import eventResults from "../../../../stores/eventResults";
 import EventResultCard from "../../../elements/event/EventResultCard";
@@ -47,7 +47,7 @@ const styles = theme => ({
 		textAlign: "center",
 		fontSize: 22,
 		letterSpacing: "-0.9px",
-		fontFamily: fontFamilyDemiBold,
+		fontFamily: fontFamilyBold,
 		textTransform: "uppercase",
 		paddingTop: theme.spacing.unit * 4,
 		paddingBottom: theme.spacing.unit * 4,
@@ -125,13 +125,15 @@ class Results extends Component {
 						return null;
 					}
 					event.door_time = event.door_time || event.event_start;
-					const { timezone, address } = venue;
+					const { timezone, name, city, state } = venue;
 
 					return (
 						<Grid item xs={12} sm={6} lg={4} key={event.id}>
 							<EventResultCard
 								venueTimezone={timezone}
-								address={address}
+								venueName={name}
+								city={city}
+								state={state}
 								{...event}
 							/>
 						</Grid>

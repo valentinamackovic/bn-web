@@ -28,6 +28,8 @@ public class DataConstants {
 	public static final String BOX_OFFICE_SELL_PURCHASE_STD_KEY = "box_office_sell_purchase_std";
 	public static final String BOX_OFFICE_USER_KEY = "box_office_user_std";
 	
+	public static final String VENUE_STANDARD_KEY = "venue_std";
+	
 	public static final String ORGANIZATION_ADMIN_USER_KEY = "organization_admin_user";
 	
 	public static int RANDOM_NUMBER_SIZE_10M = 10000000;

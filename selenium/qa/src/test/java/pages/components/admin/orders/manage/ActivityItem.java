@@ -122,13 +122,11 @@ public class ActivityItem extends BaseComponent {
 		ExpandedContent content = new ExpandedContent(driver, expandedContentContainer);
 		return content;
 	}
-
 	public RefundedExpandedContent getRefundedExpandedContent() {
 		WebElement expandedContentContainer = getExpandedElement();
 		RefundedExpandedContent content = new RefundedExpandedContent(driver, expandedContentContainer);
 		return content;
 	}
-
 	public NoteExpandedContent getNoteExpandedContent() {
 		WebElement noteContent = getExpandedElement();
 		NoteExpandedContent content = new NoteExpandedContent(driver, noteContent);
@@ -158,7 +156,6 @@ public class ActivityItem extends BaseComponent {
 			return false;
 		}
 	}
-
 	public boolean isNoteItem() {
 		String text = getStatusElement().getText();
 		if (text.contains("added a note")) {

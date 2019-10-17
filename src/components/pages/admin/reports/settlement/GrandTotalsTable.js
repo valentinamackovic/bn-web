@@ -1,8 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
+import Typography from "@material-ui/core/Typography";
+import { withStyles } from "@material-ui/core";
+
 import TotalsRow from "./TotalsRow";
 import { dollars } from "../../../../../helpers/money";
-import { Typography, withStyles } from "@material-ui/core";
 import { fontFamilyDemiBold, secondaryHex } from "../../../../../config/theme";
 
 const styles = theme => ({
@@ -32,48 +34,42 @@ const styles = theme => ({
 const GrandTotalsTable = props => {
 	const {
 		classes,
-		totalFaceAmountOwedToClientInCents,
-		totalServiceFeesRevenueShareInCents,
+		totalFaceInCents,
+		totalRevenueShareInCents,
 		adjustmentsInCents,
-		onEditAdjustments,
-		adjustmentNotes,
+		onAddAdjustment,
 		totalSettlementInCents
 	} = props;
 
 	return (
 		<div className={classes.root}>
-			<Typography className={classes.heading}>
-				Grand totals
-			</Typography>
+			<Typography className={classes.heading}>Grand totals</Typography>
 
-			<TotalsRow heading>{[ "Total", "" ]}</TotalsRow>
+			<TotalsRow heading>{["Total", ""]}</TotalsRow>
 
-			<TotalsRow>
-				{[ "Face amount owed to client", dollars(totalFaceAmountOwedToClientInCents) ]}
-			</TotalsRow>
+			<TotalsRow>{["Total face", dollars(totalFaceInCents)]}</TotalsRow>
 
 			<TotalsRow gray>
-				{[ "Service fee revenue share", dollars(totalServiceFeesRevenueShareInCents) ]}
+				{["Total revenue share", dollars(totalRevenueShareInCents)]}
 			</TotalsRow>
 
 			<TotalsRow>
 				{[
 					<span key={"adjustments"} className={classes.adjustmentText}>
 						Adjustments&nbsp;
-						{onEditAdjustments ? <span className={classes.editText} onClick={onEditAdjustments}>Edit adjustments</span> : null}
+						{onAddAdjustment ? (
+							<span className={classes.editText} onClick={onAddAdjustment}>
+								Add adjustments
+							</span>
+						) : null}
 					</span>,
 					dollars(adjustmentsInCents)
 				]}
 			</TotalsRow>
 
 			<TotalsRow total>
-				{[ "Total Settlement", dollars(totalSettlementInCents) ]}
+				{["Total settlement", dollars(totalSettlementInCents)]}
 			</TotalsRow>
-
-			<Typography className={classes.adjustmentText}>
-				<span className={classes.boldText}>Adjustment Notes:</span>{" "}
-				{adjustmentsInCents > 0 || adjustmentsInCents < 0 ? adjustmentNotes : "No adjustments applies"}
-			</Typography>
 		</div>
 	);
 };
@@ -81,10 +77,9 @@ const GrandTotalsTable = props => {
 GrandTotalsTable.propTypes = {
 	classes: PropTypes.object.isRequired,
 	adjustmentsInCents: PropTypes.number.isRequired,
-	onEditAdjustments: PropTypes.func,
-	adjustmentNotes: PropTypes.string,
-	totalFaceAmountOwedToClientInCents: PropTypes.number.isRequired,
-	totalServiceFeesRevenueShareInCents: PropTypes.number.isRequired,
+	onAddAdjustment: PropTypes.func,
+	totalFaceInCents: PropTypes.number.isRequired,
+	totalRevenueShareInCents: PropTypes.number.isRequired,
 	totalSettlementInCents: PropTypes.number.isRequired
 };
 

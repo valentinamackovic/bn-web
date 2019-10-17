@@ -51,6 +51,14 @@ public class Constants {
 	public static String getAdminOrganizations() {
 		return getBaseUrlBigNeon() + "admin/organizations/";
 	}
+	
+	public static String getAdminVenues() {
+		return getBaseUrlBigNeon() + "admin/venues";
+	}
+	
+	public static String getAdminVenueCreate() {
+		return getAdminVenues() + "/create";
+	}
 
 	public static String getAdminOrganizationsCreate() {
 		return getAdminOrganizations() + "create";

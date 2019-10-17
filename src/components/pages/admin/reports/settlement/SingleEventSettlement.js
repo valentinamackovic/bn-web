@@ -2,10 +2,10 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core";
 import Typography from "@material-ui/core/Typography";
+
 import { fontFamilyDemiBold } from "../../../../../config/theme";
-import EventTotalsTable from "./EventTotalsTable";
-import InventorySoldTable from "./InventorySoldTable";
-import RevenueShareTable from "./RevenueShareTable";
+import EventSettlementRow from "./EventSettlementRow";
+import { dollars } from "../../../../../helpers/money";
 
 const styles = theme => {
 	return {
@@ -16,11 +16,6 @@ const styles = theme => {
 			fontSize: theme.typography.fontSize * 1.6,
 			fontFamily: fontFamilyDemiBold
 		},
-		subHeading: {
-			fontSize: theme.typography.fontSize * 1.2,
-			fontFamily: fontFamilyDemiBold,
-			marginTop: theme.spacing.unit * 2
-		},
 		boldSpan: {
 			fontFamily: fontFamilyDemiBold
 		}
@@ -28,33 +23,99 @@ const styles = theme => {
 };
 
 const SingleEventSettlement = props => {
-	const { classes, eventName, totals, tickets, displayStartDate, venueName } = props;
+	const { classes, eventDetails, entries } = props;
+
+	const { displayStartTime, venue, name } = eventDetails;
+
+	let totalOnlineSoldQuantity = 0;
+	let totalFaceInCents = 0;
+	let totalRevShareInCents = 0;
+	let totalSalesInCents = 0;
 
 	return (
 		<div className={classes.root}>
-			<Typography className={classes.heading}>{eventName}</Typography>
-			<Typography>Event start date/time: <span className={classes.boldSpan}>{displayStartDate}</span></Typography>
-			<Typography>Venue: <span className={classes.boldSpan}>{venueName}</span></Typography>
+			<Typography className={classes.heading}>{name}</Typography>
+			<Typography>
+				Event start date/time:{" "}
+				<span className={classes.boldSpan}>{displayStartTime}</span>
+			</Typography>
+			<Typography>
+				Venue: <span className={classes.boldSpan}>{venue.name}</span>
+			</Typography>
 
-			<Typography className={classes.subHeading}>Event totals</Typography>
-			<EventTotalsTable {...totals}/>
+			<EventSettlementRow heading>
+				{[
+					" ",
+					"Face",
+					"Rev share",
+					"Online sold",
+					"Total face",
+					"Total rev share",
+					"Total"
+				]}
+			</EventSettlementRow>
 
-			<Typography className={classes.subHeading}>Inventory sold (Net)</Typography>
-			<InventorySoldTable totals={totals} tickets={tickets}/>
+			{entries.map((entry, index) => {
+				const {
+					settlement_entry_type,
+					ticket_type_name,
+					face_value_in_cents,
+					fee_sold_quantity,
+					online_sold_quantity,
+					revenue_share_value_in_cents,
+					total_sales_in_cents
+				} = entry;
 
-			<Typography className={classes.subHeading}>Service Fee Revenue Share & Box Office Fees</Typography>
-			<RevenueShareTable totals={totals} tickets={tickets}/>
+				totalOnlineSoldQuantity =
+					totalOnlineSoldQuantity + online_sold_quantity;
+				totalFaceInCents =
+					totalFaceInCents + face_value_in_cents * online_sold_quantity;
+				totalRevShareInCents =
+					totalRevShareInCents +
+					revenue_share_value_in_cents * fee_sold_quantity;
+				totalSalesInCents = totalSalesInCents + total_sales_in_cents;
+
+				return (
+					<EventSettlementRow
+						subHeading={!!ticket_type_name}
+						totalNoRadius={settlement_entry_type === "EventFees"}
+						key={index}
+					>
+						{[
+							ticket_type_name,
+							dollars(face_value_in_cents),
+							dollars(revenue_share_value_in_cents),
+							online_sold_quantity,
+							dollars(face_value_in_cents * online_sold_quantity),
+							dollars(revenue_share_value_in_cents * fee_sold_quantity),
+							dollars(total_sales_in_cents)
+						]}
+					</EventSettlementRow>
+				);
+			})}
+
+			{/*<EventSettlementRow totalNoRadius>*/}
+			{/*	{["Per order revenue share", "", "TODO", "", "", "TODO", "TODO"]}*/}
+			{/*</EventSettlementRow>*/}
+			<EventSettlementRow total>
+				{[
+					"Total",
+					"",
+					"",
+					totalOnlineSoldQuantity,
+					dollars(totalFaceInCents),
+					dollars(totalRevShareInCents),
+					dollars(totalSalesInCents)
+				]}
+			</EventSettlementRow>
 		</div>
 	);
 };
 
 SingleEventSettlement.propTypes = {
 	classes: PropTypes.object.isRequired,
-	eventName: PropTypes.string.isRequired,
-	tickets: PropTypes.object.isRequired,
-	totals: PropTypes.object.isRequired,
-	displayStartDate: PropTypes.string.isRequired,
-	venueName: PropTypes.string.isRequired
+	eventDetails: PropTypes.object.isRequired,
+	entries: PropTypes.array.isRequired
 };
 
 export default withStyles(styles)(SingleEventSettlement);

@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class TestModel implements Serializable{
+public class Model implements Serializable{
 	
 	@JsonProperty("test")
 	private boolean test;

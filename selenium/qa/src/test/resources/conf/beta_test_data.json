@@ -68,7 +68,7 @@
 		"email_address": "orgadmneouser@mailinator.com",
 		"password": "test1111",
 		"confirm_password": "test1111",
-		"first_name": "orgadmin",
+		"first_name": "orgadmn",
 		"last_name": "neouser"
 	},
 	"user_data_std": {
@@ -113,6 +113,13 @@
 		"artist_name": "TheTestArtistAuto",
 		"event_name": "TestNameEvent",
 		"venue_name": "MSG",
+		"venue":{
+			"name":"MSG",
+			"timezone":"Africa/Johannesburg",
+			"region":"Other",
+			"phone_number":"27728146598",
+			"location":"Madison Square Garden, Pennsylvania Plaza, New York, NY, USA"
+		},
 		"start_time": "08:30 PM",
 		"end_time": "10:00 PM",
 		"door_time": "1",
@@ -229,5 +236,14 @@
 		"remove_ticket_number": 3,
 		"order_note": "some pretty text note",
 		"additional_tendered_amount": 3
+	},
+	"venue_std":{
+		"name":"TAEVenue",
+		"organization_name":"Auto Test12",
+		"timezone":"Africa/Johannesburg",
+		"region":"No Region",
+		"phone_number":"123456789012",
+		"location":"Opera, Douglas Drive, Douglasdale, Johannesburg, South Africa",
+		"image_name":"lorem_ipsum_img_101.jpg"
 	}
 }

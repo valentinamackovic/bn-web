@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { Typography, withStyles } from "@material-ui/core";
+import PropTypes from "prop-types";
 import moment from "moment-timezone";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
@@ -12,7 +12,6 @@ import Settings from "../../../config/settings";
 import getPhoneOS from "../../../helpers/getPhoneOS";
 import HoldRow from "../../pages/admin/events/dashboard/holds/children/ChildRow";
 
-let promoImgUrl = "";
 const styles = theme => ({
 	card: {
 		maxWidth: 400,
@@ -37,13 +36,24 @@ const styles = theme => ({
 		marginTop: theme.spacing.unit,
 		color: "#000000",
 		fontFamily: fontFamilyDemiBold,
-		fontSize: "36px",
-		lineHeight: "38px"
+		fontSize: 21,
+		lineHeight: "21px",
+		textAlign: "left",
+		lineClamp: 2,
+		display: "-webkit-box",
+		WebkitLineClamp: 3,
+		WebkitBoxOrient: "vertical",
+		overflow: "hidden",
+		textOverflow: "ellipsis"
 	},
-	nameSmall: {
+	abbr: {
+		textDecoration: "none",
+		marginTop: theme.spacing.unit,
 		color: "#000000",
 		fontFamily: fontFamilyDemiBold,
-		fontSize: "19px"
+		fontSize: 21,
+		lineHeight: "21px",
+		borderBottom: "none"
 	},
 	detailsContent: {
 		// height: 105,
@@ -93,15 +103,16 @@ const styles = theme => ({
 		lineHeight: "17px",
 		fontSize: 17
 	},
-	bgStyle: {
-		backgroundImage: `linear-gradient(to top, #000000, rgba(0, 0, 0, 0)), url(${optimizedImageUrl(
-			promoImgUrl,
-			"low",
-			{ w: 430 }
-		)})`
-	},
 	hoverCard: {
-		boxShadow: "5px 5px 5px 0 rgba(0,0,0,0.15)"
+		"&:hover": {
+			boxShadow: "5px 5px 5px 0 rgba(0,0,0,0.15)",
+			transition: "box-shadow .3s ease-out"
+		},
+		boxShadow: "none",
+		transition: "box-shadow .3s ease-in"
+	},
+	noHover: {
+		transition: "box-shadow .3s ease-out"
 	}
 });
 
@@ -140,7 +151,9 @@ class EventResultCard extends Component {
 			name,
 			promo_image_url,
 			event_start,
-			address,
+			venueName,
+			city,
+			state,
 			door_time,
 			min_ticket_price,
 			max_ticket_price,
@@ -149,8 +162,13 @@ class EventResultCard extends Component {
 		} = this.props;
 		const { hoverId } = this.state;
 
+		const style = {};
 		if (promo_image_url) {
-			promoImgUrl = promo_image_url;
+			style.backgroundImage = `linear-gradient(to top, #000000, rgba(0, 0, 0, 0)), url(${optimizedImageUrl(
+				promo_image_url,
+				"low",
+				{ w: 430 }
+			)})`;
 		}
 
 		const newVenueTimezone = venueTimezone || "America/Los_Angeles";
@@ -163,13 +181,6 @@ class EventResultCard extends Component {
 			.tz(newVenueTimezone)
 			.format("h:mm A");
 
-		const charCount = 17;
-		let useSmallText = false;
-
-		if (name.length > charCount) {
-			useSmallText = true;
-		}
-
 		return (
 			<Link
 				onMouseEnter={e => this.setState({ hoverId: id })}
@@ -178,18 +189,14 @@ class EventResultCard extends Component {
 			>
 				<Card
 					className={classNames({
+						[classes.noHover]: true,
 						[classes.hoverCard]: hoverId === id
 					})}
 					borderLess
 					variant="default"
 				>
 					<MaintainAspectRatio aspectRatio={Settings().promoImageAspectRatio}>
-						<div
-							className={classNames({
-								[classes.media]: true,
-								[classes.bgStyle]: promo_image_url
-							})}
-						/>
+						<div className={classes.media} style={style}/>
 					</MaintainAspectRatio>
 					<div className={classes.detailsContent}>
 						<div className={classes.singleDetail} style={{ textAlign: "left" }}>
@@ -199,11 +206,12 @@ class EventResultCard extends Component {
 							</Typography>
 							<Typography
 								className={classNames({
-									[classes.name]: true,
-									[classes.nameSmall]: useSmallText
+									[classes.name]: true
 								})}
 							>
-								{name}
+								<abbr className={classes.abbr} title={name}>
+									{name}
+								</abbr>
 							</Typography>
 						</div>
 						<div style={{ textAlign: "right" }}>
@@ -215,7 +223,9 @@ class EventResultCard extends Component {
 						</div>
 					</div>
 					<div className={classes.addressHolder}>
-						<Typography className={classes.value}>@ {address}</Typography>
+						<Typography className={classes.value}>
+							@ {venueName}, {city}, {state}
+						</Typography>
 					</div>
 				</Card>
 			</Link>

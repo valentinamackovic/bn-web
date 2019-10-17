@@ -183,7 +183,21 @@ class OtherFees extends Component {
 			<div>
 				<form noValidate autoComplete="off" onSubmit={this.onSubmit.bind(this)}>
 					<Grid container spacing={24}>
-						<Grid item xs={12} sm={4} lg={4}>
+						<Grid item xs={12} sm={4} lg={3}>
+							<SelectGroup
+								label={"Settlement types"}
+								name={"settlementType"}
+								value={settlement_type}
+								onChange={e =>
+									this.setState({ settlement_type: e.target.value })
+								}
+								items={settlementTypes}
+							/>
+						</Grid>
+					</Grid>
+
+					<Grid container spacing={24}>
+						<Grid item xs={12} sm={4} lg={3}>
 							<InputGroup
 								InputProps={{
 									startAdornment: (
@@ -201,7 +215,7 @@ class OtherFees extends Component {
 								onBlur={this.validateFields.bind(this)}
 							/>
 						</Grid>
-						<Grid item xs={12} sm={4} lg={4}>
+						<Grid item xs={12} sm={4} lg={3}>
 							<InputGroup
 								InputProps={{
 									startAdornment: (
@@ -219,7 +233,7 @@ class OtherFees extends Component {
 								onBlur={this.validateFields.bind(this)}
 							/>
 						</Grid>
-						<Grid item xs={12} sm={4} lg={4}>
+						<Grid item xs={12} sm={4} lg={3}>
 							<InputGroup
 								InputProps={{
 									endAdornment: (
@@ -235,9 +249,8 @@ class OtherFees extends Component {
 								onBlur={this.validateFields.bind(this)}
 							/>
 						</Grid>
-					</Grid>
-					<Grid container spacing={24}>
-						<Grid item xs={12} sm={4} lg={4}>
+
+						<Grid item xs={12} sm={4} lg={3}>
 							<InputGroup
 								InputProps={{
 									startAdornment: (
@@ -251,18 +264,6 @@ class OtherFees extends Component {
 								label="Total per order fee"
 								type="text"
 								onChange={e => {}}
-							/>
-						</Grid>
-
-						<Grid item xs={12} sm={4} lg={4}>
-							<SelectGroup
-								label={"Settlement types"}
-								name={"settlementType"}
-								value={settlement_type}
-								onChange={e =>
-									this.setState({ settlement_type: e.target.value })
-								}
-								items={settlementTypes}
 							/>
 						</Grid>
 					</Grid>

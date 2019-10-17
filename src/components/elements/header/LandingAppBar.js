@@ -43,7 +43,7 @@ const styles = theme => {
 			alignItems: "center",
 
 			width: "100%",
-			maxWidth: 1200
+			maxWidth: 1400
 		},
 		rightMenuOptions: {
 			alignItems: "center",
@@ -59,6 +59,21 @@ const styles = theme => {
 			// borderStyle: "solid",
 			// borderColor: "blue",
 			// borderWidth: 0.5
+		},
+		searchContainer: {
+			border: "1.2px solid #9DA3B433",
+			borderRadius: "10px",
+			width: 410,
+			height: 43,
+			display: "flex",
+			backgroundColor: "#fff",
+			padding: theme.spacing.unit * 2,
+			justifyContent: "flex-start",
+			alignItems: "center",
+			// marginTop: 25,
+			[theme.breakpoints.up("sm")]: {
+				justifyContent: "flex-center"
+			}
 		},
 		mobileHeaderImage: {
 			height: eventImageHeight,
@@ -99,28 +114,28 @@ class LandingAppBar extends Component {
 		super(props);
 
 		this.state = {
-			show: true,
+			show: false,
 			displayTime: ""
 		};
 
-		// this.onWindowScroll = this.onWindowScroll.bind(this);
+		this.onWindowScroll = this.onWindowScroll.bind(this);
 	}
 
-	// componentDidMount() {
-	// 	window.addEventListener("scroll", this.onWindowScroll);
-	// }
-	//
-	// componentWillUnmount() {
-	// 	window.removeEventListener("scroll", this.onWindowScroll);
-	// }
-	//
-	// onWindowScroll() {
-	// 	if (window.pageYOffset > showOnScrollHeight && !this.state.show) {
-	// 		this.setState({ show: true });
-	// 	} else if (window.pageYOffset < showOnScrollHeight && this.state.show) {
-	// 		this.setState({ show: false });
-	// 	}
-	// }
+	componentDidMount() {
+		window.addEventListener("scroll", this.onWindowScroll);
+	}
+
+	componentWillUnmount() {
+		window.removeEventListener("scroll", this.onWindowScroll);
+	}
+
+	onWindowScroll() {
+		if (window.pageYOffset > showOnScrollHeight && !this.state.show) {
+			this.setState({ show: true });
+		} else if (window.pageYOffset < showOnScrollHeight && this.state.show) {
+			this.setState({ show: false });
+		}
+	}
 
 	onAuth(type) {
 		user.showAuthRequiredDialog(() => {}, type);
@@ -132,26 +147,32 @@ class LandingAppBar extends Component {
 		const { show, displayTime } = this.state;
 
 		return (
-			<Slide direction="down" in={show}>
-				<AppBar>
-					<Toolbar className={classes.toolBar}>
-						<div className={classes.barContent}>
-							<Link to={"/"}>
-								<AppBarLogo/>
-							</Link>
+			<AppBar>
+				<Toolbar className={classes.toolBar}>
+					<div className={classes.barContent}>
+						<Link to={"/"}>
+							<AppBarLogo/>
+						</Link>
 
-							<span className={classes.rightMenuOptions}>
-								<Hidden smDown>
-									<BoxOfficeLink/>
-									<CurrentOrganizationMenu/>
-									<CartHeaderLink/>
-								</Hidden>
-								<RightUserMenu history={history}/>
-							</span>
-						</div>
-					</Toolbar>
-				</AppBar>
-			</Slide>
+						<Hidden smDown>
+							<Slide direction="down" in={show}>
+								<div className={classes.searchContainer}>
+									<SearchToolBarInput history={history}/>
+								</div>
+							</Slide>
+						</Hidden>
+
+						<span className={classes.rightMenuOptions}>
+							<Hidden smDown>
+								<BoxOfficeLink/>
+								<CurrentOrganizationMenu/>
+								<CartHeaderLink/>
+							</Hidden>
+							<RightUserMenu history={history}/>
+						</span>
+					</div>
+				</Toolbar>
+			</AppBar>
 		);
 	}
 }

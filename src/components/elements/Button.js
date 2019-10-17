@@ -35,15 +35,15 @@ const styles = theme => {
 		},
 		secondary: {
 			background: secondaryHex,
-			color: "#FFF"
+			color: "#FFF",
+			borderRadius: 3
 		},
 		plainWhite: {
 			boxSizing: " border-box",
 			height: 42,
 			width: 134,
 			border: " 1px solid #979797",
-			borderRadius: 3,
-			boxShadow: "0 1px 3.5px 1px rgba(112, 124, 237, 0.47)"
+			borderRadius: 3
 		},
 		default: {
 			background: `linear-gradient(45deg, #FFF 10%, #FFF 90%)`,
@@ -70,7 +70,7 @@ const styles = theme => {
 			backgroundRepeat: "no-repeat",
 			borderColor: secondaryHex,
 			borderRadius: 3,
-
+			fontSize: 18,
 			boxSizing: "border-box",
 			// height: 52,
 			width: 268,
