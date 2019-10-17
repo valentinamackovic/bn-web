@@ -38,7 +38,7 @@ const styles = theme => {
 			bottom: -25
 		},
 		noCoverImage: {
-			backgroundImage: "linear-gradient(255deg, #e53d96, #5491cc)"
+			backgroundImage: "linear-gradient(255deg, #972863, #335a7e)"
 		},
 		contentContainer: {
 			position: "absolute",
