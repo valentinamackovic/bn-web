@@ -285,31 +285,40 @@ class SettlementReport extends Component {
 						{...grandTotals}
 					/>
 
-					<AdjustmentsList adjustments={adjustments}/>
+					{adjustments && adjustments.length > 0 ? (
+						<React.Fragment>
+							<AdjustmentsList adjustments={adjustments}/> <br/>
+							<br/>
+						</React.Fragment>
+					) : null}
 
-					<br/>
-					<br/>
-
-					<EventListTable
-						eventList={eventList}
-						displayDateRange={displayDateRange}
-						onlyFinishedEvents={only_finished_events}
-					/>
-
-					<br/>
-					<br/>
+					{eventList && eventList.length > 0 ? (
+						<React.Fragment>
+							<EventListTable
+								eventList={eventList}
+								displayDateRange={displayDateRange}
+								onlyFinishedEvents={only_finished_events}
+							/>
+							<br/>
+							<br/>
+						</React.Fragment>
+					) : null}
 
 					<Typography className={classes.title}>
 						Event-by-event summary
 					</Typography>
 
-					{event_entries.map(({ event: eventDetails, entries }, index) => (
-						<SingleEventSettlement
-							key={index}
-							eventDetails={eventDetails}
-							entries={entries}
-						/>
-					))}
+					{!event_entries || event_entries.length === 0 ? (
+						<Typography>No events</Typography>
+					) : (
+						event_entries.map(({ event: eventDetails, entries }, index) => (
+							<SingleEventSettlement
+								key={index}
+								eventDetails={eventDetails}
+								entries={entries}
+							/>
+						))
+					)}
 				</div>
 			</Card>
 		);
