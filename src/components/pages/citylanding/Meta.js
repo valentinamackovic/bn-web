@@ -1,5 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet";
+import Settings from "../../../config/settings";
 
 //Reference: https://github.com/nfl/react-helmet
 
@@ -13,7 +14,8 @@ const Meta = props => {
 					content: "Big Neon - The new standard in event ticketing"
 				},
 				{ property: "og:type", content: "website" },
-				{ property: "og:url", content: "https://www.bigneon.com" },
+				{ property: "og:url", content: Settings().webUrl },
+
 				{
 					property: "og:description",
 					content:
@@ -21,7 +23,7 @@ const Meta = props => {
 				},
 				{
 					property: "og:image",
-					content: "https://www.bigneon.com/site/images/bigneon-screen-app.png"
+					content: `${Settings().webUrl}/site/images/bigneon-screen-app.png`
 				},
 				{ name: "twitter:site", content: "bigneon.com" },
 				{ name: "twitter:creator", content: "bigneon" },
@@ -31,7 +33,7 @@ const Meta = props => {
 				},
 				{
 					name: "twitter:image",
-					content: "https://www.bigneon.com/site/images/bigneon-screen-app.png"
+					content: `${Settings().webUrl}/site/images/bigneon-screen-app.png`
 				},
 				{
 					name: "description",
@@ -41,10 +43,10 @@ const Meta = props => {
 				}
 			]}
 			link={[
-				{ rel: "canonical", href: "https://www.bigneon.com" },
+				{ rel: "canonical", href: Settings().webUrl },
 				{
 					rel: "image_src",
-					href: "https://www.bigneon.com/site/images/home-logo.png"
+					href: `${Settings().webUrl}/site/images/home-logo.png`
 				}
 			]}
 		/>

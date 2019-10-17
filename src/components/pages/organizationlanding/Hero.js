@@ -42,29 +42,21 @@ const styles = theme => ({
 	}
 });
 
-class OrgLandingHero extends Component {
-	constructor(props) {
-		super(props);
-	}
+const OrgLandingHero = props => {
+	return (
+		<div className={props.classes.root}>
+			<Hidden smDown>
+				<LandingAppBar
+					isAuthenticated={user.isAuthenticated}
+					history={history}
+				/>
+			</Hidden>
 
-	render() {
-		const { history, classes, pageTitle, pageSubTitle } = this.props;
-
-		return (
-			<div className={classes.root}>
-				<Hidden smDown>
-					<LandingAppBar
-						isAuthenticated={user.isAuthenticated}
-						history={history}
-					/>
-				</Hidden>
-
-				<div className={classes.headingContainer}>
-					<Typography className={classes.heading}>{pageTitle}</Typography>
-				</div>
+			<div className={props.classes.headingContainer}>
+				<Typography className={props.classes.heading}>{props.pageTitle}</Typography>
 			</div>
-		);
-	}
-}
+		</div>
+	);
+};
 
 export default withStyles(styles)(OrgLandingHero);

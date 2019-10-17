@@ -48,39 +48,31 @@ const styles = theme => ({
 	}
 });
 
-class VenueLandingHero extends Component {
-	constructor(props) {
-		super(props);
-	}
+const VenueLandingHero = props => {
+	return (
+		<div className={props.classes.root}>
+			<Hidden smDown>
+				<LandingAppBar
+					isAuthenticated={user.isAuthenticated}
+					history={props.history}
+				/>
+			</Hidden>
 
-	render() {
-		const { history, classes, pageTitle, pageSubTitle, mapLink } = this.props;
-
-		return (
-			<div className={classes.root}>
-				<Hidden smDown>
-					<LandingAppBar
-						isAuthenticated={user.isAuthenticated}
-						history={history}
-					/>
-				</Hidden>
-
-				<div className={classes.headingContainer}>
-					<Typography variant={"display1"} className={classes.heading}>
-						{pageTitle}
-					</Typography>
-					<Typography className={classes.subHeading}>
-						{pageSubTitle}
-						{mapLink ? (
-							<a target="_blank" href={mapLink}>
-								<span className={classes.viewMapLinkText}>View on map</span>
-							</a>
-						) : null}
-					</Typography>
-				</div>
+			<div className={props.classes.headingContainer}>
+				<Typography variant={"display1"} className={props.classes.heading}>
+					{props.pageTitle}
+				</Typography>
+				<Typography className={props.classes.subHeading}>
+					{props.pageSubTitle}
+					{props.mapLink ? (
+						<a target="_blank" href={props.mapLink}>
+							<span className={props.classes.viewMapLinkText}>View on map</span>
+						</a>
+					) : null}
+				</Typography>
 			</div>
-		);
-	}
-}
+		</div>
+	);
+};
 
 export default withStyles(styles)(VenueLandingHero);

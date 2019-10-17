@@ -43,32 +43,26 @@ const styles = theme => ({
 	}
 });
 
-class CityLandingHero extends Component {
-	constructor(props) {
-		super(props);
-	}
+const CityLandingHero = props => {
+	return (
+		<div className={props.classes.root}>
+			<Hidden smDown>
+				<LandingAppBar
+					isAuthenticated={user.isAuthenticated}
+					history={history}
+				/>
+			</Hidden>
 
-	render() {
-		const { history, classes, pageTitle } = this.props;
-
-		return (
-			<div className={classes.root}>
-				<Hidden smDown>
-					<LandingAppBar
-						isAuthenticated={user.isAuthenticated}
-						history={history}
-					/>
-				</Hidden>
-
-				<div className={classes.headingContainer}>
-					<Typography className={classes.heading}>{pageTitle}</Typography>
-					{/*<Typography className={classes.subHeading}>*/}
-					{/*	All the leaves are brown and the sky is grey.*/}
-					{/*</Typography>*/}
-				</div>
+			<div className={props.classes.headingContainer}>
+				<Typography className={props.classes.heading}>
+					{props.pageTitle}
+				</Typography>
+				{/*<Typography className={classes.subHeading}>*/}
+				{/*	All the leaves are brown and the sky is grey.*/}
+				{/*</Typography>*/}
 			</div>
-		);
-	}
-}
+		</div>
+	);
+};
 
 export default withStyles(styles)(CityLandingHero);
