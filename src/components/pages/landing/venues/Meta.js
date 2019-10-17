@@ -1,6 +1,6 @@
 import React from "react";
 import { Helmet } from "react-helmet";
-import Settings from "../../../config/settings";
+import Settings from "../../../../config/settings";
 
 //Reference: https://github.com/nfl/react-helmet
 

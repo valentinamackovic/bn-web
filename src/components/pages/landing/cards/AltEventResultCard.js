@@ -4,14 +4,14 @@ import PropTypes from "prop-types";
 import moment from "moment-timezone";
 import { Link } from "react-router-dom";
 import classNames from "classnames";
-import Card from "../Card";
-import { fontFamilyDemiBold, secondaryHex } from "../../../config/theme";
-import MaintainAspectRatio from "../MaintainAspectRatio";
-import optimizedImageUrl from "../../../helpers/optimizedImageUrl";
-import Settings from "../../../config/settings";
-import getPhoneOS from "../../../helpers/getPhoneOS";
-import HoldRow from "../../pages/admin/events/dashboard/holds/children/ChildRow";
-import CustomButton from "../Button";
+import Card from "../../../elements/Card";
+import { fontFamilyDemiBold, secondaryHex } from "../../../../config/theme";
+import MaintainAspectRatio from "../../../elements/MaintainAspectRatio";
+import optimizedImageUrl from "../../../../helpers/optimizedImageUrl";
+import Settings from "../../../../config/settings";
+import getPhoneOS from "../../../../helpers/getPhoneOS";
+import HoldRow from "../../admin/events/dashboard/holds/children/ChildRow";
+import CustomButton from "../../../elements/Button";
 
 const styles = theme => ({
 	card: {

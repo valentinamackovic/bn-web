@@ -1,13 +1,13 @@
 import React, { Component } from "react";
-import { observer } from "mobx-react";
+import { observer } from "mobx-react/index";
 import { withStyles, Typography } from "@material-ui/core";
-import Grid from "@material-ui/core/Grid";
-import { fontFamilyBold } from "../../../config/theme";
-import slugResults from "../../../stores/slugResults";
+import Grid from "@material-ui/core/Grid/index";
+import { fontFamilyBold } from "../../../../config/theme";
+import slugResults from "../../../../stores/slugResults";
 import { Link } from "react-router-dom";
-import AltEventResultCard from "../../elements/event/AltEventResultCard";
-import Button from "../../elements/Button";
-import servedImage from "../../../helpers/imagePathHelper";
+import AltEventResultCard from "./AltEventResultCard";
+import Button from "../../../elements/Button";
+import servedImage from "../../../../helpers/imagePathHelper";
 
 const styles = theme => ({
 	root: {

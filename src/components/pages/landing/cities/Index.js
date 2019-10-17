@@ -1,18 +1,15 @@
 import React, { Component } from "react";
 import { withStyles, Typography, Grid, Hidden } from "@material-ui/core";
-import { observer } from "mobx-react";
-import LandingAppBar from "../../elements/header/LandingAppBar";
-import user from "../../../stores/user";
-import VenueLandingHero from "./Hero";
+import { observer } from "mobx-react/index";
+import LandingAppBar from "../../../elements/header/LandingAppBar";
+import user from "../../../../stores/user";
+import CityLandingHero from "./Hero";
 import Meta from "./Meta";
-import slugResults from "../../../stores/slugResults";
-import Loader from "../../elements/loaders/Loader";
-import AltResults from "../../elements/event/AltResults";
-import notifications from "../../../stores/notifications";
-import { fontFamilyDemiBold } from "../../../config/theme";
-
-import getUrlParam from "../../../helpers/getUrlParam";
-import createGoogleMapsLink from "../../../helpers/createGoogleMapsLink";
+import slugResults from "../../../../stores/slugResults";
+import Loader from "../../../elements/loaders/Loader";
+import AltResults from "../cards/AltResults";
+import notifications from "../../../../stores/notifications";
+import { fontFamilyDemiBold } from "../../../../config/theme";
 
 const styles = theme => ({
 	root: {},
@@ -27,12 +24,10 @@ const styles = theme => ({
 });
 
 @observer
-class VenueLanding extends Component {
+class CityLanding extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {
-			pageTitle: ""
-		};
+		this.state = {};
 	}
 
 	componentWillMount() {
@@ -42,6 +37,8 @@ class VenueLanding extends Component {
 			this.props.match.params.id
 		) {
 			const { id } = this.props.match.params;
+			// eventResults.changeFilter("city", "New York");
+			// eventResults.changeFilter("state", venueFromUrl);
 			slugResults.refreshResults(
 				id,
 				() => {},
@@ -64,16 +61,7 @@ class VenueLanding extends Component {
 		return (
 			<div className={classes.root}>
 				<Meta
-					cityName={
-						slugResults.venueInfo
-							? slugResults.venueInfo.city
-								? `in ${slugResults.venueInfo.city} `
-								: ""
-							: ""
-					}
-					venueName={
-						slugResults.venueInfo ? `to ${slugResults.venueInfo.name}` : ""
-					}
+					cityName={slugResults.cityInfo ? slugResults.cityInfo.city : ""}
 				/>
 				<Hidden smDown>
 					<LandingAppBar
@@ -85,19 +73,11 @@ class VenueLanding extends Component {
 				{slugResults.isLoading ? (
 					<Loader>Finding events...</Loader>
 				) : (
-					<VenueLandingHero
+					<CityLandingHero
 						pageTitle={
-							slugResults.venueInfo
-								? slugResults.venueInfo.name
-								: "No events for this venue"
-						}
-						pageSubTitle={
-							slugResults.venueInfo ? slugResults.venueInfo.address : ""
-						}
-						mapLink={
-							slugResults.venueInfo
-								? createGoogleMapsLink(slugResults.venueInfo)
-								: null
+							slugResults.cityInfo
+								? slugResults.cityInfo.city
+								: "No events for this city"
 						}
 						history={history}
 					/>
@@ -114,7 +94,7 @@ class VenueLanding extends Component {
 						) : (
 							<div>
 								<Typography variant={"display1"} className={classes.heading}>
-									Upcoming Events at {slugResults.venueInfo.name}
+									Upcoming Events in {slugResults.cityInfo.city}
 								</Typography>
 								<AltResults/>
 							</div>
@@ -126,4 +106,4 @@ class VenueLanding extends Component {
 	}
 }
 
-export default withStyles(styles)(VenueLanding);
+export default withStyles(styles)(CityLanding);

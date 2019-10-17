@@ -31,9 +31,9 @@ const PublicTicketViewer = asyncComponent(() =>
 
 //Unauthenticated pages
 import Home from "../pages/landing/Index";
-import VenueLanding from "../pages/venuelanding/Index";
-import CityLanding from "../pages/citylanding/Index";
-import OrganizationLanding from "../pages/organizationlanding/Index";
+import VenueLanding from "../pages/landing/venues/Index";
+import CityLanding from "../pages/landing/cities/Index";
+import OrganizationLanding from "../pages/landing/organizations/Index";
 import ViewEvent from "../pages/events/ViewEvent";
 import ViewVenue from "../pages/venues/ViewVenue";
 import CheckoutSelection from "../pages/events/CheckoutSelection";

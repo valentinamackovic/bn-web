@@ -1,17 +1,18 @@
 import React, { Component } from "react";
 import { withStyles, Typography, Grid, Hidden } from "@material-ui/core";
-import { observer } from "mobx-react";
-import LandingAppBar from "../../elements/header/LandingAppBar";
-import user from "../../../stores/user";
-import OrgLandingHero from "./Hero";
-import slugResults from "../../../stores/slugResults";
-import Loader from "../../elements/loaders/Loader";
-import AltResults from "../../elements/event/AltResults";
-import notifications from "../../../stores/notifications";
-import getUrlParam from "../../../helpers/getUrlParam";
-import Organization from "../admin/organizations/Organization";
-import Meta from "../organizationlanding/Meta";
-import { fontFamilyDemiBold } from "../../../config/theme";
+import { observer } from "mobx-react/index";
+import LandingAppBar from "../../../elements/header/LandingAppBar";
+import user from "../../../../stores/user";
+import VenueLandingHero from "./Hero";
+import Meta from "./Meta";
+import slugResults from "../../../../stores/slugResults";
+import Loader from "../../../elements/loaders/Loader";
+import AltResults from "../cards/AltResults";
+import notifications from "../../../../stores/notifications";
+import { fontFamilyDemiBold } from "../../../../config/theme";
+
+import getUrlParam from "../../../../helpers/getUrlParam";
+import createGoogleMapsLink from "../../../../helpers/createGoogleMapsLink";
 
 const styles = theme => ({
 	root: {},
@@ -26,7 +27,7 @@ const styles = theme => ({
 });
 
 @observer
-class OrganizationLanding extends Component {
+class VenueLanding extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
@@ -64,13 +65,15 @@ class OrganizationLanding extends Component {
 			<div className={classes.root}>
 				<Meta
 					cityName={
-						slugResults.orgInfo
-							? slugResults.orgInfo.city
-								? `in ${slugResults.orgInfo.city} `
+						slugResults.venueInfo
+							? slugResults.venueInfo.city
+								? `in ${slugResults.venueInfo.city} `
 								: ""
 							: ""
 					}
-					orgName={slugResults.orgInfo ? `to ${slugResults.orgInfo.name}` : ""}
+					venueName={
+						slugResults.venueInfo ? `to ${slugResults.venueInfo.name}` : ""
+					}
 				/>
 				<Hidden smDown>
 					<LandingAppBar
@@ -82,11 +85,19 @@ class OrganizationLanding extends Component {
 				{slugResults.isLoading ? (
 					<Loader>Finding events...</Loader>
 				) : (
-					<OrgLandingHero
+					<VenueLandingHero
 						pageTitle={
-							slugResults.orgInfo
-								? slugResults.orgInfo.name
-								: "No events for this organization"
+							slugResults.venueInfo
+								? slugResults.venueInfo.name
+								: "No events for this venue"
+						}
+						pageSubTitle={
+							slugResults.venueInfo ? slugResults.venueInfo.address : ""
+						}
+						mapLink={
+							slugResults.venueInfo
+								? createGoogleMapsLink(slugResults.venueInfo)
+								: null
 						}
 						history={history}
 					/>
@@ -103,7 +114,7 @@ class OrganizationLanding extends Component {
 						) : (
 							<div>
 								<Typography variant={"display1"} className={classes.heading}>
-									Upcoming Events at {slugResults.orgInfo.name}
+									Upcoming Events at {slugResults.venueInfo.name}
 								</Typography>
 								<AltResults/>
 							</div>
@@ -115,4 +126,4 @@ class OrganizationLanding extends Component {
 	}
 }
 
-export default withStyles(styles)(OrganizationLanding);
+export default withStyles(styles)(VenueLanding);

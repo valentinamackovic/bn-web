@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import { withStyles, Typography, Hidden } from "@material-ui/core";
-import LandingAppBar from "../../elements/header/LandingAppBar";
-import user from "../../../stores/user";
-import { fontFamilyBold } from "../../../config/theme";
+import LandingAppBar from "../../../elements/header/LandingAppBar";
+import user from "../../../../stores/user";
+import { fontFamilyBold } from "../../../../config/theme";
 
 const styles = theme => ({
 	root: {
