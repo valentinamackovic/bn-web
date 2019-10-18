@@ -16,6 +16,7 @@ import AdjustmentsList from "./AdjustmentsList";
 import Bn from "bn-api-node";
 import EventListTable from "./EventListTable";
 import SingleEventSettlement from "./SingleEventSettlement";
+import splitByCamelCase from "../../../../../helpers/splitByCamelCase";
 
 const statusEnums = Bn.Enums.SETTLEMENT_STATUS;
 
@@ -256,7 +257,7 @@ class SettlementReport extends Component {
 							</Typography>
 							<Typography>
 								Settlement type:{" "}
-								<span className={classes.boldText}>{settlement_type}</span>
+								<span className={classes.boldText}>{splitByCamelCase(settlement_type)}</span>
 							</Typography>
 							<Typography>
 								{only_finished_events ? "Events ended" : "Sales occurring"} from{" "}
