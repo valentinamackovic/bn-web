@@ -209,7 +209,7 @@ public class AdminEventDashboardFacade extends BaseFacadeSteps {
 			retVal = retVal && eventStartDateTime.equals(itemDate);
 			retVal = retVal && location.equals(expandedContent.getVenueLocation());
 			retVal = retVal && quantity.equals(expandedContent.getQuantity());
-			retVal = retVal && totalMoney.equals(expandedContent.getTotalMoneyAmount());
+//			retVal = retVal && totalMoney.equals(expandedContent.getTotalMoneyAmount());
 			return retVal;
 		} else {
 			return false;

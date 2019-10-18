@@ -28,9 +28,15 @@ public class FanManagementStepsIT extends BaseSteps {
 	private Purchase purchase;
 	
 	
+	/**
+	 * Automation: Big Neon : Test 32: Fan Management ,View Fan Profile And Event Activity Filtering #1830
+	 * @param fan
+	 * @param orgAdmin
+	 */
 	@Test(dataProvider = "fan_profile_data", dependsOnMethods = {"predifinedDataUserPurchasesTickets"},
 			priority = 23, retryAnalyzer = utils.RetryAnalizer.class )
 	public void viewFanProfileAndEventsFiltering(User fan, User orgAdmin) {
+		
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
 		AdminFanManagementFacade fanManagementFacade = new AdminFanManagementFacade(driver);
 		maximizeWindow();
@@ -47,9 +53,14 @@ public class FanManagementStepsIT extends BaseSteps {
 		Assert.assertTrue(checkIfEventsAreDifferent, "Events in upcoming and past list are not different");
 		loginFacade.logOut();
 	}
-		
+	
+	/**
+	 * Automation: Big Neon: Test 33: Fan Management: Event Summary Card Should Contain Data #1837
+	 * @param fan
+	 * @param orgAdmin
+	 */
 	@Test(dataProvider = "fan_profile_data", priority = 24, retryAnalyzer = utils.RetryAnalizer.class)
-	public void fanProfileEventSummaryCardsContainData(User fan, User orgAdmin, Purchase purchase) {
+	public void fanProfileEventSummaryCardsContainData(User fan, User orgAdmin) {
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
 		AdminFanManagementFacade fanManagementFacade = new AdminFanManagementFacade(driver);
 		maximizeWindow();
@@ -60,9 +71,13 @@ public class FanManagementStepsIT extends BaseSteps {
 		
 		loginFacade.logOut();
 	}
-	
+	/**
+	 * Automation: Big Neon Test 34: Fan Management: ActivityItem/Purchased #1843
+	 * @param fan
+	 * @param orgAdmin
+	 */
 	@Test(dataProvider = "fan_profile_data", priority = 25, retryAnalyzer = utils.RetryAnalizer.class)
-	public void fanProfilePurchasedActivityItems(User fan, User orgAdmin, Purchase purchase) {
+	public void fanProfilePurchasedActivityItems(User fan, User orgAdmin) {
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
 		AdminFanManagementFacade fanManagementFacade = new AdminFanManagementFacade(driver);
 		maximizeWindow();
@@ -74,9 +89,13 @@ public class FanManagementStepsIT extends BaseSteps {
 		
 		loginFacade.logOut();
 	}
-	
-	@Test(dataProvider = "fan_profile_data", priority = 26/*, retryAnalyzer = utils.RetryAnalizer.class*/)
-	public void fanProfileRefundedActivityItem(User fan, User orgAdmin, Purchase purchase) {
+	/**
+	 * Automation: Big Neon: Fan Management: Test 35: ActivityItems/Refunded Created
+	 * @param fan
+	 * @param orgAdmin
+	 */
+	@Test(dataProvider = "fan_profile_data", priority = 26, retryAnalyzer = utils.RetryAnalizer.class)
+	public void fanProfileRefundedActivityItem(User fan, User orgAdmin) {
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
 		AdminFanManagementFacade fanManagementFacade = new AdminFanManagementFacade(driver);
 		AdminEventDashboardFacade dashboardFacade = new AdminEventDashboardFacade(driver);
@@ -117,7 +136,7 @@ public class FanManagementStepsIT extends BaseSteps {
 		Purchase purchase = preparePurchase();
 		User fan = User.generateUserFromJson(DataConstants.DISTINCT_USER_THREE_KEY);
 		User orgAdmin = User.generateUserFromJson(DataConstants.ORGANIZATION_ADMIN_USER_KEY);
-		return new Object[][] {{fan, orgAdmin, purchase}};
+		return new Object[][] {{fan, orgAdmin}};
 	}
 	
 	@Test(dataProvider = "purchase_data", priority = 23)
@@ -128,7 +147,7 @@ public class FanManagementStepsIT extends BaseSteps {
 		// given
 		eventsFacade.givenUserIsOnEventPage();
 
-		EventsPage eventsPage = eventsFacade.givenThatEventExist(purchas.getEvent(), fan);
+		eventsFacade.givenThatEventExist(purchas.getEvent(), fan, false);
 		if (this.purchase == null ) {
 			this.purchase = purchas;
 		}
@@ -144,8 +163,7 @@ public class FanManagementStepsIT extends BaseSteps {
 
 		// then
 		eventsFacade.thenUserIsAtTicketPurchaseSuccessPage();
-		eventsPage.logOut();
-
+		eventsFacade.getLoginPage().logOut();
 	}
 
 	@DataProvider(name = "purchase_data")
@@ -162,9 +180,7 @@ public class FanManagementStepsIT extends BaseSteps {
 		purchase.setCreditCard(CreditCard.generateCreditCard());
 		purchase.setNumberOfTickets(PURCHASE_QUANTITY);
 		purchase.setEvent(Event.generateEventFromJson(DataConstants.EVENT_DATA_STANARD_KEY,
-				EVENT_NAME, false, START_DAY_OFFSET, DAYS_RANGE));
+				EVENT_NAME, true, START_DAY_OFFSET, DAYS_RANGE));
 		return purchase;
 	}
-
-
 }

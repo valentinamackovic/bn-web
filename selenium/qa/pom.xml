@@ -23,6 +23,7 @@
 		<maven-failsafe-plugin.version>2.21.0</maven-failsafe-plugin.version>
 		<browser>rm</browser>
 		<baseurl>https://develop.bigneon.com/</baseurl>
+		<huburl/>
 		<webdriver.chrome.driver/>
 		<webdriver.gecko.driver/>
 		<webdriver.edge.driver/>
@@ -95,7 +96,6 @@
                         <webdriver.chrome.driver>${webdriver.chrome.driver}</webdriver.chrome.driver>
                         <webdriver.gecko.driver>${webdriver.gecko.driver}</webdriver.gecko.driver>
                         <webdriver.edge.driver>${webdriver.edge.driver}</webdriver.edge.driver>
-						<huburl>${huburl}</huburl>
 					</systemPropertyVariables>
 					<suiteXmlFiles>
 						<suiteXmlFile>config/local/ltestng.xml</suiteXmlFile>

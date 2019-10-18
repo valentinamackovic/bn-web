@@ -276,8 +276,8 @@ public class ActivityItem extends BaseComponent {
 			String dateTime = getEventDateAndTime();
 			Integer qty = getQuantity();
 			BigDecimal totalMoney = getTotalMoneyAmount();
-			boolean isVenueVisible = venue == null ? false : venue.isEmpty();
-			boolean isDateTimeVisible = dateTime == null ? false : dateTime.isEmpty();
+			boolean isVenueVisible = venue == null ? false : !venue.isEmpty();
+			boolean isDateTimeVisible = dateTime == null ? false : !dateTime.isEmpty();
 			boolean isQtyVisible = qty == null ? false : true;
 			boolean isTotalMoneyVisible = totalMoney == null ? false : true;
 			return isVenueVisible && isDateTimeVisible && isQtyVisible && isTotalMoneyVisible;
