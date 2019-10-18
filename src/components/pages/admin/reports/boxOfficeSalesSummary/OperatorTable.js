@@ -16,12 +16,12 @@ const styles = theme => {
 const OperatorTable = props => {
 	const { classes, payments, events } = props;
 	const columnStyles = [
-		{ flex: 1 },
+		{ flex: 4 },
+		{ flex: 3 },
 		{ flex: 2 },
-		{ flex: 1 },
-		{ flex: 1 },
-		{ flex: 1 },
-		{ flex: 1 }
+		{ flex: 2 },
+		{ flex: 2 },
+		{ flex: 2 }
 	];
 
 	let totalInCents = 0;

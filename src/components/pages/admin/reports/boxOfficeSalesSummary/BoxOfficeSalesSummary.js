@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Typography, withStyles } from "@material-ui/core";
 import PropTypes from "prop-types";
+import moment from "moment-timezone";
 
 import notifications from "../../../../../stores/notifications";
 import Button from "../../../../elements/Button";
@@ -11,9 +12,6 @@ import Bigneon from "../../../../../helpers/bigneon";
 import GrandTotalTable from "./GrandTotalTable";
 import OperatorTable from "./OperatorTable";
 import ReportsDate from "../ReportDate";
-import moment from "moment-timezone";
-import user from "../../../../../stores/user";
-import TableRow from "./TableRow";
 import { dollars } from "../../../../../helpers/money";
 
 const styles = theme => ({
@@ -67,7 +65,7 @@ class BoxOfficeSalesSummary extends Component {
 		} = this.state;
 
 		const reportRunDisplay = moment(event.event_date).format(
-			"MMM DD, YYY at H:mm A"
+			"MMM DD, YYY at h:mm A"
 		);
 
 		const csvRows = [];
@@ -183,7 +181,7 @@ class BoxOfficeSalesSummary extends Component {
 						event.event_date = moment
 							.utc(event.event_date)
 							.tz(organizationTimezone)
-							.format("MM/DD/YYYY H:mm A");
+							.format("MM/DD/YYYY h:mm A, z");
 					});
 				});
 
