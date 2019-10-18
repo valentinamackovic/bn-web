@@ -133,8 +133,7 @@ const EventHeaderImage = props => {
 									[classes.eventNameTextLong]: eventNameIsLong
 								})}
 							>
-								{headliner} Tickets to {organization.name} in {venue.city} - Big
-								Neon
+								{name}
 							</Typography>
 						) : (
 							<Typography
@@ -144,7 +143,7 @@ const EventHeaderImage = props => {
 									[classes.eventNameTextLong]: eventNameIsLong
 								})}
 							>
-								{organization.name} in {venue.city} - Big Neon
+								{name}
 							</Typography>
 						)}
 
