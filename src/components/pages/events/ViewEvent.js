@@ -310,7 +310,7 @@ class ViewEvent extends Component {
 			);
 		} else {
 			return (
-				<Link to={`/events/${event.slug || id}/tickets`}>
+				<Link to={`/events/${id}/tickets`}>
 					<Button
 						size={"mediumLarge"}
 						className={classes.callToAction}
