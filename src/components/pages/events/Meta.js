@@ -214,9 +214,7 @@ const Meta = props => {
 
 	const sameText = `in ${
 		venue.city
-	} - ${formattedDate} - Doors ${doorTime}, Show ${showTime} ${
-		venue.timezone
-	}, ${cutDesc}`;
+	} - ${formattedDate} - Doors ${doorTime}, Show ${showTime}`;
 
 	const description = headliner
 		? `${name} - ${headliner} Tickets and ${headliner} Concert Tickets to ${organizationName} ${sameText}`
