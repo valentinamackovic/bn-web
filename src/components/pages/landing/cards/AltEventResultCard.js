@@ -216,9 +216,7 @@ class AltEventResultCard extends Component {
 					borderLess
 					variant="default"
 				>
-					<MaintainAspectRatio
-						aspectRatio={Settings().promoImageAspectRatio}
-					>
+					<MaintainAspectRatio aspectRatio={Settings().promoImageAspectRatio}>
 						<div title={imgAlt} className={classes.media} style={style}/>
 					</MaintainAspectRatio>
 					<div className={classes.detailsContent}>
@@ -235,7 +233,7 @@ class AltEventResultCard extends Component {
 									</abbr>
 								</Typography>
 								<Typography className={classes.value}>
-									{venueName}, {city}, {stateToAbbr(state, "abbr")}
+									{venueName}, {city}, {stateToAbbr(state)}
 								</Typography>
 							</div>
 							{/*<div>*/}
@@ -250,25 +248,19 @@ class AltEventResultCard extends Component {
 						<div className={classes.detailsContentSegment}>
 							<div className={classes.dateDetails}>
 								<div>
-									<Typography className={classes.valueTitle}>
-										DATE
-									</Typography>
+									<Typography className={classes.valueTitle}>DATE</Typography>
 									<Typography className={classes.date}>
 										{displayEventStartDate}
 									</Typography>
 								</div>
 								<div>
-									<Typography className={classes.valueTitle}>
-										Begins
-									</Typography>
+									<Typography className={classes.valueTitle}>Begins</Typography>
 									<Typography className={classes.date}>
 										{displayShowTime}
 									</Typography>
 								</div>
 								<div>
-									<Typography className={classes.valueTitle}>
-										Ends
-									</Typography>
+									<Typography className={classes.valueTitle}>Ends</Typography>
 									<Typography className={classes.date}>
 										{displayShowEndTime}
 									</Typography>
