@@ -91,7 +91,7 @@ public class AdminEventDashboardFacade extends BaseFacadeSteps {
 		Integer orderQty = order.getQuantity();
 		return orderQty.compareTo(purchaseQuantity) == 0;
 	}
-
+	
 	public void whenUserClicksOnOrderLinkOfGivenUser(User owner) {
 		ManageOrderRow orderRow = ordersManagePage.findOrderRowWithUserName(owner.getFirstName() + " ");
 		String orderId = orderRow.getOrderId();
@@ -131,6 +131,24 @@ public class AdminEventDashboardFacade extends BaseFacadeSteps {
 		refundDialog.isVisible();
 		String ticketOwnerInfo = refundDialog.getTicketOwnerInfo();
 		refundDialog.clickOnGotItButton();
+	}
+	
+	public void refundSteps(RefundReason refundReason) {
+		whenUserExpandOrderDetailsAndCheckIfExpanded();
+		whenUserSelectsTicketForRefundAndClicksOnRefundButton();
+		thenRefundDialogShouldBeVisible();
+		whenUserSelectRefundReasonAndClicksOnConfirmButton(RefundReason.OTHER);
+		thenRefundDialogShouldBeVisible();
+		whenUserClicksOnGotItButtonOnRefundSuccessDialog();
+	}
+	
+	public boolean thenUserIsOnSelectedManageOrderPage(SelectedOrderPage selectedOrderPage) {
+		boolean retVal = selectedOrderPage.isAtPage();
+		if (retVal) {
+			setData(SELECTED_ORDER_PAGE_KEY, selectedOrderPage);
+			return retVal;
+		} 
+		return retVal;
 	}
 	
 	public boolean thenThereShouldBeItemsInOrderHistory(int number) {
@@ -191,7 +209,7 @@ public class AdminEventDashboardFacade extends BaseFacadeSteps {
 			retVal = retVal && eventStartDateTime.equals(itemDate);
 			retVal = retVal && location.equals(expandedContent.getVenueLocation());
 			retVal = retVal && quantity.equals(expandedContent.getQuantity());
-			retVal = retVal && totalMoney.equals(expandedContent.getTotalMoneyAmount());
+//			retVal = retVal && totalMoney.equals(expandedContent.getTotalMoneyAmount());
 			return retVal;
 		} else {
 			return false;
