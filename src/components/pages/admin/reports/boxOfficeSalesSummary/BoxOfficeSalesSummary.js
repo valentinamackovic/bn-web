@@ -228,7 +228,7 @@ class BoxOfficeSalesSummary extends Component {
 	}
 
 	renderOperators() {
-		const { classes } = this.props;
+		const { classes, printVersion } = this.props;
 		const { operators } = this.state;
 
 		if (!operators) {
@@ -242,7 +242,7 @@ class BoxOfficeSalesSummary extends Component {
 						<Typography className={classes.tableHeading}>
 							Operator: {operator.operator_name}
 						</Typography>
-						<OperatorTable {...operator}/>
+						<OperatorTable {...operator} printVersion={printVersion}/>
 					</React.Fragment>
 				))}
 			</React.Fragment>
