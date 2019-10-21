@@ -60,7 +60,7 @@ class SettlementReport extends Component {
 	}
 
 	componentDidMount() {
-		const settlementId = getUrlParam("id");
+		const settlementId = getUrlParam("id") || this.props.settlementId;
 		if (!settlementId) {
 			return notifications.show({
 				message: "Report not found.",
@@ -69,7 +69,7 @@ class SettlementReport extends Component {
 		}
 
 		this.setState({ settlementId }, () => {
-			this.loadSettlementDetails();
+			this.loadSettlementDetails(this.props.onLoad);
 			this.loadOrgDetails();
 		});
 	}
@@ -217,32 +217,108 @@ class SettlementReport extends Component {
 		this.loadSettlementDetails();
 	}
 
-	render() {
+	renderTitleSection() {
 		const { classes } = this.props;
+
+		const { settlement_type, settlement } = this.state;
+
+		const { displayDateRange, only_finished_events } = settlement;
+
+		return (
+			<div>
+				<Typography className={classes.subtitle}>Settlement report</Typography>
+				<Typography>
+					Settlement type:{" "}
+					<span className={classes.boldText}>
+						{splitByCamelCase(settlement_type)}
+					</span>
+				</Typography>
+				<Typography>
+					{only_finished_events ? "Events" : "Sales occurring"} from{" "}
+					<span className={classes.boldText}>{displayDateRange}</span>
+				</Typography>
+				{/*<Typography>*/}
+				{/*	Status:{" "}*/}
+				{/*	<span className={classes.boldText}>{statusEnums[status]}</span>*/}
+				{/*</Typography>*/}
+			</div>
+		);
+	}
+
+	renderReportContent() {
+		const { classes, printVersion } = this.props;
+
 		const {
-			settlement_type,
 			settlement,
 			event_entries,
 			adjustments,
 			grandTotals,
-			showAdjustmentDialog,
-			settlementId,
 			eventList
 		} = this.state;
+
+		const { only_finished_events, displayDateRangeNoTimezone } = settlement;
+
+		let onAddAdjustment = null;
+		if (!printVersion) {
+			onAddAdjustment = () => this.setState({ showAdjustmentDialog: true });
+		}
+
+		return (
+			<React.Fragment>
+				<GrandTotalsTable onAddAdjustment={onAddAdjustment} {...grandTotals}/>
+
+				{adjustments && adjustments.length > 0 ? (
+					<React.Fragment>
+						<AdjustmentsList adjustments={adjustments}/> <br/>
+						<br/>
+					</React.Fragment>
+				) : null}
+
+				{eventList && eventList.length > 0 ? (
+					<React.Fragment>
+						<EventListTable
+							eventList={eventList}
+							displayDateRangeNoTimezone={displayDateRangeNoTimezone}
+							onlyFinishedEvents={only_finished_events}
+						/>
+						<br/>
+						<br/>
+					</React.Fragment>
+				) : null}
+
+				<Typography className={classes.title}>Event summary</Typography>
+
+				{!event_entries || event_entries.length === 0 ? (
+					<Typography>No events</Typography>
+				) : (
+					event_entries.map(({ event: eventDetails, entries }, index) => (
+						<SingleEventSettlement
+							key={index}
+							eventDetails={eventDetails}
+							entries={entries}
+						/>
+					))
+				)}
+			</React.Fragment>
+		);
+	}
+
+	render() {
+		const { classes, printVersion } = this.props;
+		const { settlement, showAdjustmentDialog, settlementId } = this.state;
 
 		if (!settlement) {
 			return <Loader>Loading settlement report...</Loader>;
 		}
 
-		const {
-			created_at,
-			only_finished_events,
-			status,
-			start_time,
-			end_time,
-			displayDateRange,
-			displayDateRangeNoTimezone
-		} = settlement;
+		if (printVersion) {
+			return (
+				<React.Fragment>
+					{this.renderTitleSection()}
+					{this.renderReportContent()}
+				</React.Fragment>
+			);
+		}
 
 		return (
 			<Card variant={"block"}>
@@ -262,27 +338,19 @@ class SettlementReport extends Component {
 							alignItems: "flex-end"
 						}}
 					>
-						<div>
-							<Typography className={classes.subtitle}>
-								Settlement report
-							</Typography>
-							<Typography>
-								Settlement type:{" "}
-								<span className={classes.boldText}>
-									{splitByCamelCase(settlement_type)}
-								</span>
-							</Typography>
-							<Typography>
-								{only_finished_events ? "Events" : "Sales occurring"} from{" "}
-								<span className={classes.boldText}>{displayDateRange}</span>
-							</Typography>
-							{/*<Typography>*/}
-							{/*	Status:{" "}*/}
-							{/*	<span className={classes.boldText}>{statusEnums[status]}</span>*/}
-							{/*</Typography>*/}
-						</div>
+						{this.renderTitleSection()}
 
 						<span style={{ flex: 1 }}/>
+						<Button
+							iconUrl="/icons/pdf-active.svg"
+							variant="text"
+							target={"_blank"}
+							href={`/exports/reports/?type=settlement&settlement_id=${
+								settlement.id
+							}`}
+						>
+							Export PDF
+						</Button>
 						<Button
 							iconUrl="/icons/csv-active.svg"
 							variant="text"
@@ -292,45 +360,7 @@ class SettlementReport extends Component {
 						</Button>
 					</div>
 
-					<GrandTotalsTable
-						onAddAdjustment={() =>
-							this.setState({ showAdjustmentDialog: true })
-						}
-						{...grandTotals}
-					/>
-
-					{adjustments && adjustments.length > 0 ? (
-						<React.Fragment>
-							<AdjustmentsList adjustments={adjustments}/> <br/>
-							<br/>
-						</React.Fragment>
-					) : null}
-
-					{eventList && eventList.length > 0 ? (
-						<React.Fragment>
-							<EventListTable
-								eventList={eventList}
-								displayDateRangeNoTimezone={displayDateRangeNoTimezone}
-								onlyFinishedEvents={only_finished_events}
-							/>
-							<br/>
-							<br/>
-						</React.Fragment>
-					) : null}
-
-					<Typography className={classes.title}>Event summary</Typography>
-
-					{!event_entries || event_entries.length === 0 ? (
-						<Typography>No events</Typography>
-					) : (
-						event_entries.map(({ event: eventDetails, entries }, index) => (
-							<SingleEventSettlement
-								key={index}
-								eventDetails={eventDetails}
-								entries={entries}
-							/>
-						))
-					)}
+					{this.renderReportContent()}
 				</div>
 			</Card>
 		);
@@ -342,7 +372,7 @@ SettlementReport.propTypes = {
 	organizationId: PropTypes.string.isRequired,
 	organizationTimezone: PropTypes.string.isRequired,
 	onLoad: PropTypes.func,
-	history: PropTypes.object.isRequired
+	printVersion: PropTypes.bool
 };
 
 export default withStyles(styles)(SettlementReport);
