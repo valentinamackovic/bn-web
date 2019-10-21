@@ -12,6 +12,7 @@ import Settings from "../../../../config/settings";
 import getPhoneOS from "../../../../helpers/getPhoneOS";
 import HoldRow from "../../admin/events/dashboard/holds/children/ChildRow";
 import CustomButton from "../../../elements/Button";
+import stateToAbbr from "../../../../helpers/stateToAbbr";
 
 const styles = theme => ({
 	card: {
@@ -215,7 +216,9 @@ class AltEventResultCard extends Component {
 					borderLess
 					variant="default"
 				>
-					<MaintainAspectRatio aspectRatio={Settings().promoImageAspectRatio}>
+					<MaintainAspectRatio
+						aspectRatio={Settings().promoImageAspectRatio}
+					>
 						<div title={imgAlt} className={classes.media} style={style}/>
 					</MaintainAspectRatio>
 					<div className={classes.detailsContent}>
@@ -232,7 +235,7 @@ class AltEventResultCard extends Component {
 									</abbr>
 								</Typography>
 								<Typography className={classes.value}>
-									{venueName}, {city}, {state}
+									{venueName}, {city}, {stateToAbbr(state, "abbr")}
 								</Typography>
 							</div>
 							{/*<div>*/}
@@ -247,7 +250,9 @@ class AltEventResultCard extends Component {
 						<div className={classes.detailsContentSegment}>
 							<div className={classes.dateDetails}>
 								<div>
-									<Typography className={classes.valueTitle}>DATE</Typography>
+									<Typography className={classes.valueTitle}>
+										DATE
+									</Typography>
 									<Typography className={classes.date}>
 										{displayEventStartDate}
 									</Typography>
@@ -261,7 +266,9 @@ class AltEventResultCard extends Component {
 									</Typography>
 								</div>
 								<div>
-									<Typography className={classes.valueTitle}>Ends</Typography>
+									<Typography className={classes.valueTitle}>
+										Ends
+									</Typography>
 									<Typography className={classes.date}>
 										{displayShowEndTime}
 									</Typography>
