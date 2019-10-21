@@ -113,7 +113,7 @@ class VenueLanding extends Component {
 							<Loader>Finding events...</Loader>
 						) : (
 							<div>
-								<Typography variant={"display1"} className={classes.heading}>
+								<Typography variant={"title"} className={classes.heading}>
 									Upcoming Events at {slugResults.venueInfo.name}
 								</Typography>
 								<AltResults/>

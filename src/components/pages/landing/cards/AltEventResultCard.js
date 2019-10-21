@@ -12,6 +12,7 @@ import Settings from "../../../../config/settings";
 import getPhoneOS from "../../../../helpers/getPhoneOS";
 import HoldRow from "../../admin/events/dashboard/holds/children/ChildRow";
 import CustomButton from "../../../elements/Button";
+import stateToAbbr from "../../../../helpers/stateToAbbr";
 
 const styles = theme => ({
 	card: {
@@ -204,7 +205,7 @@ class AltEventResultCard extends Component {
 			<Link
 				onMouseEnter={e => this.setState({ hoverId: id })}
 				onMouseLeave={e => this.setState({ hoverId: null })}
-				to={`/events/${slug || id}`}
+				to={`/tickets/${slug}`}
 			>
 				<Card
 					className={classNames({
@@ -232,36 +233,34 @@ class AltEventResultCard extends Component {
 									</abbr>
 								</Typography>
 								<Typography className={classes.value}>
-									@ {venueName}, {city}, {state}
+									{venueName}, {city}, {stateToAbbr(state, "state")}
 								</Typography>
 							</div>
-							<div>
-								<PriceTag
-									min={min_ticket_price}
-									max={max_ticket_price}
-									classes={classes}
-								/>
-							</div>
+							{/*<div>*/}
+							{/*	<PriceTag*/}
+							{/*		min={min_ticket_price}*/}
+							{/*		max={max_ticket_price}*/}
+							{/*		classes={classes}*/}
+							{/*	/>*/}
+							{/*</div>*/}
 						</div>
 
 						<div className={classes.detailsContentSegment}>
 							<div className={classes.dateDetails}>
 								<div>
-									<Typography className={classes.valueTitle}>DATE:</Typography>
+									<Typography className={classes.valueTitle}>DATE</Typography>
 									<Typography className={classes.date}>
 										{displayEventStartDate}
 									</Typography>
 								</div>
 								<div>
-									<Typography className={classes.valueTitle}>
-										Begins:
-									</Typography>
+									<Typography className={classes.valueTitle}>Begins</Typography>
 									<Typography className={classes.date}>
 										{displayShowTime}
 									</Typography>
 								</div>
 								<div>
-									<Typography className={classes.valueTitle}>Ends:</Typography>
+									<Typography className={classes.valueTitle}>Ends</Typography>
 									<Typography className={classes.date}>
 										{displayShowEndTime}
 									</Typography>
