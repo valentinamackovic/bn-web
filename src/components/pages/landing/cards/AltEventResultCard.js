@@ -233,7 +233,7 @@ class AltEventResultCard extends Component {
 									</abbr>
 								</Typography>
 								<Typography className={classes.value}>
-									{venueName}, {city}, {stateToAbbr(state)}
+									{venueName}, {city}, {stateToAbbr(state, "abbr")}
 								</Typography>
 							</div>
 							{/*<div>*/}

@@ -1,5 +1,5 @@
 //Takes a state's full name and gives us the abbreviation
-export default input => {
+export default (input, to) => {
 	const states = [
 		["Arizona", "AZ"],
 		["Alabama", "AL"],
@@ -53,23 +53,32 @@ export default input => {
 		["Wyoming", "WY"]
 	];
 
-	input = input.replace(/\w\S*/g, function(txt) {
-		return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
-	});
-
 	let state = "";
+	if (to === "abbr") {
+		input = input.replace(/\w\S*/g, function(txt) {
+			return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+		});
 
-	for (let i = 0; i < states.length; i++) {
-		if (states[i][0] === input) {
-			state = states[i][1];
-			break;
-		} else {
-			if (input.length > 2) {
-				state = input;
+		for (let i = 0; i < states.length; i++) {
+			if (states[i][0] === input) {
+				state = states[i][1];
+				break;
 			} else {
-				state = input.toUpperCase();
+				if (input.length > 2) {
+					state = input;
+				} else {
+					state = input.toUpperCase();
+				}
+			}
+		}
+	} else if (to === "fullName") {
+		input = input.toUpperCase();
+		for (let i = 0; i < states.length; i++) {
+			if (states[i][1] === input) {
+				state = states[i][0];
 			}
 		}
 	}
+
 	return state;
 };
