@@ -35,7 +35,7 @@ const styles = theme => ({
 	btnContainer: {
 		display: "flex",
 		alignItems: "center",
-		justifyContent: "center",
+		justifyContent: "flex-end",
 		marginTop: theme.spacing.unit * 8
 	},
 	eventHeading: {
