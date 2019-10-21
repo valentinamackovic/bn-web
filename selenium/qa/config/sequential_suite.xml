@@ -11,8 +11,9 @@
       <class name="test.PurchaseWithTicketChangeStepsIT"/>
       <class name="test.EditEventInformationStepsIT"/>
       <class name="test.OrderManagmentSearchForOrdersStepsIT"/>
-       <class name="test.BoxOfficeSellTicketStepsIT"/>
+      <class name="test.BoxOfficeSellTicketStepsIT"/>
       <class name="test.VenueStepsIT"/>
+      <class name="test.FanManagementStepsIT"/>
     </classes>
   </test>
   <test name="Firefox">
@@ -27,6 +28,7 @@
       <class name="test.OrderManagmentSearchForOrdersStepsIT"/>
       <class name="test.BoxOfficeSellTicketStepsIT"/>
       <class name="test.VenueStepsIT"/>
-    </classes>
+      <class name="test.FanManagementStepsIT"/>
+     </classes>
   </test>  
  </suite>

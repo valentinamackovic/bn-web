@@ -36,7 +36,6 @@ const SingleEventSettlement = props => {
 		<div className={classes.root}>
 			<Typography className={classes.heading}>{name}</Typography>
 			<Typography>
-				Event start date/time:{" "}
 				<span className={classes.boldSpan}>{displayStartTime}</span>
 			</Typography>
 			<Typography>

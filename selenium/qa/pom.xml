@@ -27,6 +27,10 @@
 		<webdriver.edge.driver/>
 		<browser>rm</browser>
 		<baseurl>https://develop.bigneon.com/</baseurl>
+		<huburl/>
+		<webdriver.chrome.driver/>
+		<webdriver.gecko.driver/>
+		<webdriver.edge.driver/>
 
 	</properties>
 
@@ -164,7 +168,7 @@
 								<inherited>true</inherited>
 								<configuration>
 									From Email address
-									<from>mroywyn@gmail.com</from>
+									<from></from>
 									Email subject
 									<subject>bn-web selenium test report</subject>
 									Fail the build if the mail doesn't reach
@@ -177,17 +181,17 @@
                                     ]]>
 									</htmlMessage>
 									host
-									 <mailhost>smtp.gmail.com</mailhost> 
+									 <mailhost></mailhost> 
 									 port of the host 
 									 <mailport>465</mailport> 
 									 <mailssl>true</mailssl> 
 									 <mailAltConfig>true</mailAltConfig> 
 										Email Authentication(Username and Password)
-									 <mailuser>mroywyn@gmail.com</mailuser> 
-									<mailpassword>gnomename8</mailpassword>
+									 <mailuser></mailuser> 
+									<mailpassword></mailpassword>
 									<receivers>
 										To Email address
-										<receiver>kolesar.mihal@gmail.com</receiver>
+										<receiver>mihajlo.kolesar@pbssolutions.net</receiver>
 									</receivers>
 									<fileSets>
 										<fileSet>

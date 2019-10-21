@@ -16,6 +16,7 @@ import AdjustmentsList from "./AdjustmentsList";
 import Bn from "bn-api-node";
 import EventListTable from "./EventListTable";
 import SingleEventSettlement from "./SingleEventSettlement";
+import splitByCamelCase from "../../../../../helpers/splitByCamelCase";
 
 const statusEnums = Bn.Enums.SETTLEMENT_STATUS;
 
@@ -30,7 +31,8 @@ const styles = theme => ({
 	title: {
 		fontFamily: fontFamilyDemiBold,
 		fontSize: 28,
-		marginBottom: theme.spacing.unit
+		marginBottom: theme.spacing.unit,
+		textDecoration: "capitalize"
 	},
 	subtitle: {
 		fontFamily: fontFamilyDemiBold,
@@ -87,6 +89,7 @@ class SettlementReport extends Component {
 				const { organizationTimezone } = this.props;
 
 				const dateFormat = "MMM D, YYYY z";
+				const dateFormatNoTimezone = "MMM D, YYYY";
 
 				const displayDateRange = `${moment
 					.utc(start_time)
@@ -95,6 +98,14 @@ class SettlementReport extends Component {
 					.utc(end_time)
 					.tz(organizationTimezone)
 					.format(dateFormat)}`;
+
+				const displayDateRangeNoTimezone = `${moment
+					.utc(start_time)
+					.tz(organizationTimezone)
+					.format(dateFormatNoTimezone)} - ${moment
+					.utc(end_time)
+					.tz(organizationTimezone)
+					.format(dateFormatNoTimezone)}`;
 
 				let adjustmentsInCents = 0;
 				let totalFaceInCents = 0;
@@ -143,13 +154,9 @@ class SettlementReport extends Component {
 				//Format dates in event_entries
 				event_entries.forEach(({ event }) => {
 					event.displayStartTime = moment
-						.utc(event.start_time)
+						.utc(event.event_start)
 						.tz(organizationTimezone)
-						.format(dateFormat);
-					event.displayEndTime = moment
-						.utc(event.end_time)
-						.tz(organizationTimezone)
-						.format(dateFormat);
+						.format(dateFormatNoTimezone);
 				});
 
 				const eventList = event_entries.map(({ event }) => event);
@@ -158,7 +165,11 @@ class SettlementReport extends Component {
 					{
 						adjustments,
 						event_entries,
-						settlement: { ...settlement, displayDateRange },
+						settlement: {
+							...settlement,
+							displayDateRange,
+							displayDateRangeNoTimezone
+						},
 						grandTotals,
 						eventList
 					},
@@ -229,7 +240,8 @@ class SettlementReport extends Component {
 			status,
 			start_time,
 			end_time,
-			displayDateRange
+			displayDateRange,
+			displayDateRangeNoTimezone
 		} = settlement;
 
 		return (
@@ -256,16 +268,18 @@ class SettlementReport extends Component {
 							</Typography>
 							<Typography>
 								Settlement type:{" "}
-								<span className={classes.boldText}>{settlement_type}</span>
+								<span className={classes.boldText}>
+									{splitByCamelCase(settlement_type)}
+								</span>
 							</Typography>
 							<Typography>
-								{only_finished_events ? "Events ended" : "Sales occurring"} from{" "}
+								{only_finished_events ? "Events" : "Sales occurring"} from{" "}
 								<span className={classes.boldText}>{displayDateRange}</span>
 							</Typography>
-							<Typography>
-								Status:{" "}
-								<span className={classes.boldText}>{statusEnums[status]}</span>
-							</Typography>
+							{/*<Typography>*/}
+							{/*	Status:{" "}*/}
+							{/*	<span className={classes.boldText}>{statusEnums[status]}</span>*/}
+							{/*</Typography>*/}
 						</div>
 
 						<span style={{ flex: 1 }}/>
@@ -285,31 +299,38 @@ class SettlementReport extends Component {
 						{...grandTotals}
 					/>
 
-					<AdjustmentsList adjustments={adjustments}/>
+					{adjustments && adjustments.length > 0 ? (
+						<React.Fragment>
+							<AdjustmentsList adjustments={adjustments}/> <br/>
+							<br/>
+						</React.Fragment>
+					) : null}
 
-					<br/>
-					<br/>
+					{eventList && eventList.length > 0 ? (
+						<React.Fragment>
+							<EventListTable
+								eventList={eventList}
+								displayDateRangeNoTimezone={displayDateRangeNoTimezone}
+								onlyFinishedEvents={only_finished_events}
+							/>
+							<br/>
+							<br/>
+						</React.Fragment>
+					) : null}
 
-					<EventListTable
-						eventList={eventList}
-						displayDateRange={displayDateRange}
-						onlyFinishedEvents={only_finished_events}
-					/>
+					<Typography className={classes.title}>Event summary</Typography>
 
-					<br/>
-					<br/>
-
-					<Typography className={classes.title}>
-						Event-by-event summary
-					</Typography>
-
-					{event_entries.map(({ event: eventDetails, entries }, index) => (
-						<SingleEventSettlement
-							key={index}
-							eventDetails={eventDetails}
-							entries={entries}
-						/>
-					))}
+					{!event_entries || event_entries.length === 0 ? (
+						<Typography>No events</Typography>
+					) : (
+						event_entries.map(({ event: eventDetails, entries }, index) => (
+							<SingleEventSettlement
+								key={index}
+								eventDetails={eventDetails}
+								entries={entries}
+							/>
+						))
+					)}
 				</div>
 			</Card>
 		);
