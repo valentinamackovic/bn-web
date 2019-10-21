@@ -6,16 +6,11 @@
     <parameter name="environment" value="chrome"/>
     <classes>
       <class name="test.ForgotPasswordStepsIT"/>
-      <class name="test.CreateOrganizationStepsIT"/>
       <class name="test.CreateEventStepsIT"/>
       <class name="test.PurchaseStepsIT"/>
       <class name="test.PurchaseWithTicketChangeStepsIT"/>
-      <class name="test.CancelEventStepsIT"/>
-      <class name="test.CreateEventWithAdditionalOptionsStepsIT"/>
-      <class name="test.CreateDraftEventStepsIT"/>
       <class name="test.EditEventInformationStepsIT"/>
       <class name="test.OrderManagmentSearchForOrdersStepsIT"/>
-      <class name="test.PublishEventWithDeleteEventIT"/>
       <class name="test.BoxOfficeSellTicketStepsIT"/>
       <class name="test.VenueStepsIT"/>
       <class name="test.FanManagementStepsIT"/>
@@ -26,16 +21,11 @@
     <parameter name="environment" value="firefox"/>
     <classes>
       <class name="test.ForgotPasswordStepsIT"/>
-      <class name="test.CreateOrganizationStepsIT"/>
-      <class name="test.CreateEventStepsIT"/>
+      <class name="test.CreateEventStepsIT"/> 
       <class name="test.PurchaseStepsIT"/> 
       <class name="test.PurchaseWithTicketChangeStepsIT"/>
-      <class name="test.CancelEventStepsIT"/>
-      <class name="test.CreateEventWithAdditionalOptionsStepsIT"/>
-      <class name="test.CreateDraftEventStepsIT"/>
       <class name="test.EditEventInformationStepsIT"/>
       <class name="test.OrderManagmentSearchForOrdersStepsIT"/>
-      <class name="test.PublishEventWithDeleteEventIT"/>
       <class name="test.BoxOfficeSellTicketStepsIT"/>
       <class name="test.VenueStepsIT"/>
       <class name="test.FanManagementStepsIT"/>

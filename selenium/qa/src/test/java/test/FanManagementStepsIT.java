@@ -34,7 +34,7 @@ public class FanManagementStepsIT extends BaseSteps {
 	 * @param orgAdmin
 	 */
 	@Test(dataProvider = "fan_profile_data", dependsOnMethods = {"predifinedDataUserPurchasesTickets"},
-			priority = 23, retryAnalyzer = utils.RetryAnalizer.class )
+			priority = 24, retryAnalyzer = utils.RetryAnalizer.class )
 	public void viewFanProfileAndEventsFiltering(User fan, User orgAdmin) {
 		
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
@@ -59,7 +59,7 @@ public class FanManagementStepsIT extends BaseSteps {
 	 * @param fan
 	 * @param orgAdmin
 	 */
-	@Test(dataProvider = "fan_profile_data", priority = 24, retryAnalyzer = utils.RetryAnalizer.class)
+	@Test(dataProvider = "fan_profile_data", priority = 25, retryAnalyzer = utils.RetryAnalizer.class)
 	public void fanProfileEventSummaryCardsContainData(User fan, User orgAdmin) {
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
 		AdminFanManagementFacade fanManagementFacade = new AdminFanManagementFacade(driver);
@@ -76,7 +76,7 @@ public class FanManagementStepsIT extends BaseSteps {
 	 * @param fan
 	 * @param orgAdmin
 	 */
-	@Test(dataProvider = "fan_profile_data", priority = 25, retryAnalyzer = utils.RetryAnalizer.class)
+	@Test(dataProvider = "fan_profile_data", priority = 26, retryAnalyzer = utils.RetryAnalizer.class)
 	public void fanProfilePurchasedActivityItems(User fan, User orgAdmin) {
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
 		AdminFanManagementFacade fanManagementFacade = new AdminFanManagementFacade(driver);
@@ -94,7 +94,7 @@ public class FanManagementStepsIT extends BaseSteps {
 	 * @param fan
 	 * @param orgAdmin
 	 */
-	@Test(dataProvider = "fan_profile_data", priority = 26, retryAnalyzer = utils.RetryAnalizer.class)
+	@Test(dataProvider = "fan_profile_data", priority = 27, retryAnalyzer = utils.RetryAnalizer.class)
 	public void fanProfileRefundedActivityItem(User fan, User orgAdmin) {
 		LoginStepsFacade loginFacade = new LoginStepsFacade(driver);
 		AdminFanManagementFacade fanManagementFacade = new AdminFanManagementFacade(driver);
@@ -139,7 +139,7 @@ public class FanManagementStepsIT extends BaseSteps {
 		return new Object[][] {{fan, orgAdmin}};
 	}
 	
-	@Test(dataProvider = "purchase_data", priority = 23)
+	@Test(dataProvider = "purchase_data", priority = 24)
 	public void predifinedDataUserPurchasesTickets(User fan, Purchase purchas) throws Exception {
 		maximizeWindow();
 		EventStepsFacade eventsFacade = new EventStepsFacade(driver);
