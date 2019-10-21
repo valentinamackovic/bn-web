@@ -76,6 +76,11 @@ export default (input, to) => {
 		for (let i = 0; i < states.length; i++) {
 			if (states[i][1] === input) {
 				state = states[i][0];
+			} else {
+				input = input.replace(/\w\S*/g, function(txt) {
+					return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();
+				});
+				state = input;
 			}
 		}
 	}
