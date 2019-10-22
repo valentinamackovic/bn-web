@@ -162,6 +162,12 @@ class SettlementReport extends Component {
 						.utc(event.event_start)
 						.tz(organizationTimezone)
 						.format(dateFormatNoTimezone);
+					event.displayEndTime = !event.event_end
+						? "-"
+						: moment
+							.utc(event.event_end)
+							.tz(organizationTimezone)
+							.format(dateFormatNoTimezone);
 				});
 
 				const eventList = event_entries.map(({ event }) => event);
