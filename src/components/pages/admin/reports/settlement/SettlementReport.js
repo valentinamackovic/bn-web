@@ -94,6 +94,7 @@ class SettlementReport extends Component {
 				const { organizationTimezone } = this.props;
 
 				const dateFormat = "MMM D, YYYY z";
+				const dateTimeFormat = "MMM D, YYYY, h:mm A";
 				const dateFormatNoTimezone = "MMM D, YYYY";
 
 				const displayDateRange = `${moment
@@ -161,13 +162,7 @@ class SettlementReport extends Component {
 					event.displayStartTime = moment
 						.utc(event.event_start)
 						.tz(organizationTimezone)
-						.format(dateFormatNoTimezone);
-					event.displayEndTime = !event.event_end
-						? "-"
-						: moment
-							.utc(event.event_end)
-							.tz(organizationTimezone)
-							.format(dateFormatNoTimezone);
+						.format(dateTimeFormat);
 				});
 
 				const eventList = event_entries.map(({ event }) => event);
@@ -289,8 +284,8 @@ class SettlementReport extends Component {
 		]);
 
 		eventList.forEach(event => {
-			const { displayEndTime, displayStartTime, venue, name } = event;
-			csvRows.push([displayStartTime, displayEndTime, venue.name, name]);
+			const { displayStartTime, venue, name } = event;
+			csvRows.push([displayStartTime, venue.name, name]);
 		});
 
 		csvRows.push([]);
