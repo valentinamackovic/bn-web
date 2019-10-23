@@ -349,7 +349,7 @@ class CheckoutConfirmation extends Component {
 
 		const { cartSummary, formattedExpiryTime, cartExpired } = cart;
 
-		const { event, artists, id, venue } = selectedEvent;
+		const { event, artists, id, venue, organization } = selectedEvent;
 		const eventIsCancelled = !!(event && event.cancelled_at);
 
 		if (event === null) {
@@ -373,6 +373,8 @@ class CheckoutConfirmation extends Component {
 			promo_image_url,
 			organization_id,
 			additional_info,
+			displayDoorTime,
+			displayShowTime,
 			tracking_keys
 		} = event;
 
@@ -435,16 +437,30 @@ class CheckoutConfirmation extends Component {
 		return (
 			<div className={classes.root}>
 				<OrgAnalytics trackingKeys={tracking_keys}/>
-				<Meta {...event} venue={venue} artists={artists} type={"checkout"}/>
+				<Meta
+					{...event}
+					venue={venue}
+					artists={artists}
+					additional_info={additional_info}
+					organization={organization}
+					doorTime={displayDoorTime}
+					showTime={displayShowTime}
+					type={"checkout"}
+				/>
 
 				{/*DESKTOP*/}
 				<Hidden smDown>
-					<EventHeaderImage {...event} artists={artists}/>
+					<EventHeaderImage
+						{...event}
+						artists={artists}
+						organization={organization}
+						venue={venue}
+					/>
 					<TwoColumnLayout
 						containerClass={classes.desktopContent}
 						containerStyle={{ minHeight: overlayCardHeightAdjustment }}
 						col1={(
-							<EventDescriptionBody artists={artists}>
+							<EventDescriptionBody organization={organization} artists={artists}>
 								{additional_info}
 							</EventDescriptionBody>
 						)}

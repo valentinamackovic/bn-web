@@ -10,7 +10,7 @@ import utils.DataConstants;
 import utils.DataReader;
 import utils.ProjectUtils;
 
-public class User extends TestModel implements Serializable {
+public class User extends Model implements Serializable {
 
 	private static final long serialVersionUID = 8184904779942132639L;
 	@JsonProperty("email_address")
@@ -80,6 +80,10 @@ public class User extends TestModel implements Serializable {
 		String[] fields = { this.emailAddress, this.firstName, this.lastName, this.pass, this.passConfirm };
 		ProjectUtils.appendFields(fields, sb);
 		return sb.toString();
+	}
+	
+	public String getFullNameFL() {
+		return getFirstName() + " " + getLastName();
 	}
 
 	public static TypeReference<List<User>> getListTypeReference() {

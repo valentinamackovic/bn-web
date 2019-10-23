@@ -625,15 +625,30 @@ class CheckoutSelection extends Component {
 		return (
 			<div>
 				<OrgAnalytics trackingKeys={tracking_keys}/>
-				<Meta {...event} venue={venue} artists={artists} type={"selection"}/>
+				<Meta
+					{...event}
+					venue={venue}
+					artists={artists}
+					additional_info={additional_info}
+					organization={organization}
+					doorTime={displayDoorTime}
+					showTime={displayShowTime}
+					type={"selection"}
+				/>
 				{/*DESKTOP*/}
 				<Hidden smDown>
-					<EventHeaderImage {...event} artists={artists}/>
+					<EventHeaderImage
+						{...event}
+						artists={artists}
+						organization={organization}
+						venue={venue}
+					/>
 					<TwoColumnLayout
 						containerClass={classes.desktopContent}
 						containerStyle={{ minHeight: overlayCardHeightAdjustment }}
 						col1={(
 							<EventDescriptionBody
+								organization={organization}
 								eventIsCancelled={eventIsCancelled}
 								artists={artists}
 							>

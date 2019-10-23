@@ -12,8 +12,8 @@ import model.User;
 import pages.admin.boxoffice.GuestPage;
 import pages.admin.boxoffice.SellPage;
 import pages.components.admin.AdminBoxOfficeSideBar;
+import pages.components.admin.events.TicketTypeRowComponent;
 import utils.ProjectUtils;
-import pages.components.admin.TicketTypeRowComponent;
 import pages.components.dialogs.BoxOfficeSellCheckoutDialog;
 import pages.components.dialogs.BoxOfficeSellOrderCompleteDialog;
 
@@ -178,11 +178,11 @@ public class AdminBoxOfficeFacade extends BaseFacadeSteps {
 		this.sellPage.isAtPage();
 	}
 
-	private void setData(String key, Object value) {
+	protected void setData(String key, Object value) {
 		dataMap.put(key, value);
 	}
 
-	private Object getData(String key) {
+	protected Object getData(String key) {
 		return dataMap.get(key);
 	}
 
