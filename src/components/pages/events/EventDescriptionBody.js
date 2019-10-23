@@ -72,7 +72,7 @@ const EventDescriptionBody = props => {
 					<span className={classes.boldSpan}>
 						Looking for events similar to {headliner} tickets?
 					</span>{" "}
-					Browse all concert & events at this venue on&nbsp;
+					Browse all concerts & events at this venue on&nbsp;
 					<Link to={`/organizations/${organization.slug}`} className={classes.bnLink}>
 						Big Neon
 					</Link>
