@@ -648,6 +648,7 @@ class CheckoutSelection extends Component {
 						containerStyle={{ minHeight: overlayCardHeightAdjustment }}
 						col1={(
 							<EventDescriptionBody
+								organization={organization}
 								eventIsCancelled={eventIsCancelled}
 								artists={artists}
 							>

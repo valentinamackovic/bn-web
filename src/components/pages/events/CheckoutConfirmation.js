@@ -460,7 +460,7 @@ class CheckoutConfirmation extends Component {
 						containerClass={classes.desktopContent}
 						containerStyle={{ minHeight: overlayCardHeightAdjustment }}
 						col1={(
-							<EventDescriptionBody artists={artists}>
+							<EventDescriptionBody organization={organization} artists={artists}>
 								{additional_info}
 							</EventDescriptionBody>
 						)}
