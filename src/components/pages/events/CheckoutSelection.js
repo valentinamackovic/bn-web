@@ -29,6 +29,7 @@ import getUrlParam from "../../../helpers/getUrlParam";
 import analytics from "../../../helpers/analytics";
 import getAllUrlParams from "../../../helpers/getAllUrlParams";
 import ellipsis from "../../../helpers/ellipsis";
+import FormattedAdditionalInfo from "./FormattedAdditionalInfo";
 
 const AUTO_SELECT_TICKET_AMOUNT = 2;
 
@@ -652,7 +653,9 @@ class CheckoutSelection extends Component {
 								eventIsCancelled={eventIsCancelled}
 								artists={artists}
 							>
-								{additional_info}
+								<FormattedAdditionalInfo>
+									{additional_info}
+								</FormattedAdditionalInfo>
 							</EventDescriptionBody>
 						)}
 						col2={(
