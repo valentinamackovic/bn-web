@@ -34,6 +34,7 @@ import TwoColumnLayout from "./TwoColumnLayout";
 import EventDescriptionBody from "./EventDescriptionBody";
 import analytics from "../../../helpers/analytics";
 import getAllUrlParams from "../../../helpers/getAllUrlParams";
+import FormattedAdditionalInfo from "./FormattedAdditionalInfo";
 
 const styles = theme => ({
 	root: {
@@ -461,7 +462,9 @@ class CheckoutConfirmation extends Component {
 						containerStyle={{ minHeight: overlayCardHeightAdjustment }}
 						col1={(
 							<EventDescriptionBody organization={organization} artists={artists}>
-								{additional_info}
+								<FormattedAdditionalInfo>
+									{additional_info}
+								</FormattedAdditionalInfo>
 							</EventDescriptionBody>
 						)}
 						col2={(
