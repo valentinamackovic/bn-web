@@ -94,6 +94,7 @@ class FacebookEvents extends Component {
 						</p>
 						{isFacebookLinked ? (
 							<div>
+								<p>Select Facebook Page</p>
 								<SelectGroup
 									items={pages.map(page => ({
 										value: page.id,
@@ -102,7 +103,7 @@ class FacebookEvents extends Component {
 									value={pageId}
 									onChange={e => this.setState({ pageId: e.target.value })}
 								/>
-
+								<p>Facebook Event Category</p>
 								<SelectGroup
 									items={[{ value: "MUSIC_EVENT", name: "Music Event" }]}
 									value={facebookCategory}
@@ -123,7 +124,7 @@ class FacebookEvents extends Component {
 						) : (
 							<div>
 								<FacebookButton
-									scopes={["manage_pages", "publish_pages", "create_event"]}
+									scopes={["manage_pages", "publish_pages"]}
 									linkToUser={true}
 									onSuccess={this.onFacebookLogin.bind(this)}
 								/>
