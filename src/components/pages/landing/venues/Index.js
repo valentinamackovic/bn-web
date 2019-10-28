@@ -29,6 +29,12 @@ const styles = theme => ({
 			letterSpacing: "-0.15px",
 			lineHeight: "21px"
 		}
+	},
+	cardContainer: {
+		[theme.breakpoints.down("sm")]: {
+			maxWidth: "100%",
+			padding: theme.spacing.unit * 2
+		}
 	}
 });
 
@@ -114,11 +120,11 @@ class VenueLanding extends Component {
 					justify="center"
 					style={{ maxWidth: 1600, margin: "0 auto" }}
 				>
-					<Grid item xs={11} sm={11} lg={10}>
+					<Grid item xs={12} sm={11} lg={10}>
 						{slugResults.isLoading ? (
 							<Loader>Finding events...</Loader>
 						) : (
-							<div>
+							<div className={classes.cardContainer}>
 								<Typography variant={"title"} className={classes.heading}>
 									Upcoming Events at {slugResults.venueInfo.name}
 								</Typography>

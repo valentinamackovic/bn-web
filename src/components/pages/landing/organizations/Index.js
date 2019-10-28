@@ -28,6 +28,12 @@ const styles = theme => ({
 			letterSpacing: "-0.15px",
 			lineHeight: "21px"
 		}
+	},
+	cardContainer: {
+		[theme.breakpoints.down("sm")]: {
+			maxWidth: "100%",
+			padding: theme.spacing.unit * 2
+		}
 	}
 });
 
@@ -107,7 +113,7 @@ class OrganizationLanding extends Component {
 						{slugResults.isLoading ? (
 							<Loader>Finding events...</Loader>
 						) : (
-							<div>
+							<div className={classes.cardContainer}>
 								<Typography variant={"title"} className={classes.heading}>
 									Upcoming Events at {slugResults.orgInfo.name}
 								</Typography>
