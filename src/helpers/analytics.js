@@ -33,7 +33,8 @@ const ga = {
 				ReactGA.pageview(uri, ["secondaryKey"]);
 			}, 500);
 		}
-
+		// Load the enhanced ecommerce plugin
+		ReactGA.plugin.require("ec");
 		this.enabled = true;
 
 		if (window[`ga-disable-${key}`]) {
@@ -70,6 +71,69 @@ const ga = {
 		if (this.secondaryKey) {
 			ReactGA.ga("secondaryKey.send", "event", category, action, data);
 		}
+	},
+
+	viewContent(ids, urlParams, eventName, organizationId, category) {
+		ids.forEach(id => {
+			ReactGA.plugin.execute("ec", "addProduct", {
+				id: id,
+				name: eventName,
+				brand: organizationId,
+				category: category
+			});
+		});
+
+		ReactGA.plugin.execute("ec", "setAction", "detail");
+
+		ReactGA.ga("send", "pageview");
+	},
+
+	addImpressions(eventList, listName) {
+		eventList.forEach((eventInfo, index) => {
+			ReactGA.plugin.execute("ec", "addImpression", {
+				id: eventInfo.id,
+				name: eventInfo.name,
+				category: eventInfo.event_type,
+				brand: eventInfo.organization_id,
+				list: listName,
+				position: index + 1
+			});
+		});
+
+		ReactGA.ga("send", "pageview");
+	},
+
+	eventClick(id, name, category, organizationId, listPosition, list) {
+		ReactGA.plugin.execute("ec", "addProduct", {
+			id: id,
+			name: name,
+			category: category,
+			brand: organizationId,
+			position: listPosition
+		});
+
+		ReactGA.plugin.execute("ec", "setAction", "click", {
+			list: list
+		});
+
+		ReactGA.ga("send", "event", "UX", "click", "Results");
+	},
+
+	initiateCheckout(ids, urlParams, currency, items, value) {
+		items.forEach(item => {
+			ReactGA.plugin.execute("ec", "addProduct", {
+				id: item.id,
+				name: item.name,
+				category: item.category,
+				brand: item.organizationId,
+				variant: item.ticketTypeName,
+				price: item.price,
+				quantity: item.quantity
+			});
+		});
+
+		ReactGA.plugin.execute("ec", "setAction", "checkout", { step: 1 });
+		ReactGA.ga("send", "pageview");
 	},
 
 	identify(user) {
@@ -180,11 +244,11 @@ const facebook = {
 		});
 	},
 
-	initiateCheckout(ids, urlParams, currency, numItems, value) {
+	initiateCheckout(ids, urlParams, currency, items, value) {
 		this.track("InitiateCheckout", {
 			content_ids: ids,
 			currency,
-			num_items: numItems,
+			num_items: items.length,
 			value,
 			content_type: "product",
 			eventref: urlParams["fb_oea"]
@@ -406,19 +470,38 @@ const trackPageLoadTime = milliseconds => {
 	);
 };
 
-const viewContent = (ids, urlParams) => {
+const addImpressions = (eventList, listName) => {
 	const enabledProviders = providers.filter(p => p.enabled);
 	enabledProviders.forEach(p => {
-		if (p.viewContent) {
-			p.viewContent(ids, urlParams);
+		if (p.addImpressions) {
+			p.addImpressions(eventList, listName);
 		}
 	});
 };
-const initiateCheckout = (ids, urlParams, currency, numItems, value) => {
+
+const eventClick = (id, name, category, organizationId, listPosition, list) => {
+	const enabledProviders = providers.filter(p => p.enabled);
+	enabledProviders.forEach(p => {
+		if (p.eventClick) {
+			p.eventClick(id, name, category, organizationId, listPosition, list);
+		}
+	});
+};
+
+const viewContent = (ids, urlParams, eventName, organizationName, category) => {
+	const enabledProviders = providers.filter(p => p.enabled);
+	enabledProviders.forEach(p => {
+		if (p.viewContent) {
+			p.viewContent(ids, urlParams, eventName, organizationName, category);
+		}
+	});
+};
+
+const initiateCheckout = (ids, urlParams, currency, items, value) => {
 	const enabledProviders = providers.filter(p => p.enabled);
 	enabledProviders.forEach(p => {
 		if (p.initiateCheckout) {
-			p.initiateCheckout(ids, urlParams, currency, numItems, value);
+			p.initiateCheckout(ids, urlParams, currency, items, value);
 		}
 	});
 };
@@ -434,6 +517,8 @@ const purchaseCompleted = (ids, urlParams, currency, numItems, value) => {
 export default {
 	init,
 	addTrackingKey,
+	addImpressions,
+	eventClick,
 	getProvider,
 	removeTrackingKey,
 	page,
