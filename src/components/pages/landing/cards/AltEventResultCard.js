@@ -309,14 +309,14 @@ class AltEventResultCard extends Component {
 												{displayShowTime}
 											</Typography>
 										</div>
-										<div>
-											<Typography className={classes.valueTitle}>
-												Ends
-											</Typography>
-											<Typography className={classes.date}>
-												{displayShowEndTime}
-											</Typography>
-										</div>
+										{/*<div>*/}
+										{/*	<Typography className={classes.valueTitle}>*/}
+										{/*		Ends*/}
+										{/*	</Typography>*/}
+										{/*	<Typography className={classes.date}>*/}
+										{/*		{displayShowEndTime}*/}
+										{/*	</Typography>*/}
+										{/*</div>*/}
 									</div>
 									<CustomButton variant={"secondary"}>Get Tickets</CustomButton>
 								</div>
@@ -393,14 +393,14 @@ class AltEventResultCard extends Component {
 												{displayShowTime}
 											</Typography>
 										</div>
-										<div>
-											<Typography className={classes.valueTitle}>
-												Ends
-											</Typography>
-											<Typography className={classes.date}>
-												{displayShowEndTime}
-											</Typography>
-										</div>
+										{/*<div>*/}
+										{/*	<Typography className={classes.valueTitle}>*/}
+										{/*		Ends*/}
+										{/*	</Typography>*/}
+										{/*	<Typography className={classes.date}>*/}
+										{/*		{displayShowEndTime}*/}
+										{/*	</Typography>*/}
+										{/*</div>*/}
 									</div>
 								</div>
 								<div className={classes.divider}/>
