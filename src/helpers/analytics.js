@@ -136,6 +136,22 @@ const ga = {
 		ReactGA.ga("send", "pageview");
 	},
 
+	purchaseCompleted(ids, urlParams, currency, items, value) {
+		items.forEach(item => {
+			ReactGA.plugin.execute("ec", "addProduct", {
+				id: item.id,
+				name: item.name,
+				category: item.category,
+				brand: item.organizationId,
+				variant: item.ticketTypeName,
+				price: item.price,
+				quantity: item.quantity
+			});
+		});
+
+		ReactGA.plugin.execute("ec", "setAction", "purchase", {});
+	},
+
 	identify(user) {
 		// https://developers.google.com/analytics/devguides/collection/analyticsjs/cookies-user-id#user_id
 		ReactGA.set("userId", user.id);
@@ -255,11 +271,11 @@ const facebook = {
 		});
 	},
 
-	purchaseCompleted(ids, urlParams, currency, numItems, value) {
+	purchaseCompleted(ids, urlParams, currency, items, value) {
 		this.track("Purchase", {
 			content_ids: ids,
 			currency,
-			num_items: numItems,
+			num_items: items.length,
 			value,
 			content_type: "product",
 			eventref: urlParams["fb_oea"]
@@ -506,11 +522,11 @@ const initiateCheckout = (ids, urlParams, currency, items, value) => {
 	});
 };
 
-const purchaseCompleted = (ids, urlParams, currency, numItems, value) => {
+const purchaseCompleted = (ids, urlParams, currency, items, value) => {
 	const enabledProviders = providers.filter(p => p.enabled);
 	enabledProviders.forEach(p => {
 		if (p.purchaseCompleted) {
-			p.purchaseCompleted(ids, urlParams, currency, numItems, value);
+			p.purchaseCompleted(ids, urlParams, currency, items, value);
 		}
 	});
 };
