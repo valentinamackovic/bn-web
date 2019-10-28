@@ -10,6 +10,9 @@ const showFooterRoutes = [
 	"/events",
 	"/tickets/transfers",
 	"/public/ticket",
+	"/cities",
+	"/venues",
+	"/organizations",
 	"/tickets"
 ];
 const removePaddingRoutes = [
