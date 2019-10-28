@@ -21,7 +21,13 @@ const styles = theme => ({
 		fontFamily: fontFamilyDemiBold,
 		lineHeight: "41px",
 		marginTop: theme.spacing.unit * 5,
-		marginBottom: theme.spacing.unit * 3
+		marginBottom: theme.spacing.unit * 3,
+		[theme.breakpoints.down("sm")]: {
+			color: "#3C383F",
+			fontSize: 18,
+			letterSpacing: "-0.15px",
+			lineHeight: "21px"
+		}
 	}
 });
 
@@ -97,7 +103,7 @@ class OrganizationLanding extends Component {
 					justify="center"
 					style={{ maxWidth: 1600, margin: "0 auto" }}
 				>
-					<Grid item xs={11} sm={11} lg={10}>
+					<Grid item xs={12} sm={11} lg={10}>
 						{slugResults.isLoading ? (
 							<Loader>Finding events...</Loader>
 						) : (

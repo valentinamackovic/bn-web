@@ -22,7 +22,13 @@ const styles = theme => ({
 		fontFamily: fontFamilyDemiBold,
 		lineHeight: "41px",
 		marginTop: theme.spacing.unit * 5,
-		marginBottom: theme.spacing.unit * 3
+		marginBottom: theme.spacing.unit * 3,
+		[theme.breakpoints.down("sm")]: {
+			color: "#3C383F",
+			fontSize: 18,
+			letterSpacing: "-0.15px",
+			lineHeight: "21px"
+		}
 	}
 });
 

@@ -104,11 +104,12 @@ class AltResults extends Component {
 					const headliner = headlineArtist ? headlineArtist.artist.name : null;
 
 					return (
-						<Grid item xs={12} sm={12} lg={12} key={event.id}>
+						<Grid item xs={11} sm={12} lg={12} key={event.id}>
 							<AltEventResultCard
 								venueTimezone={timezone}
 								venueName={name}
 								city={city}
+								supportingArtists={artists}
 								imgAlt={headliner}
 								state={state}
 								{...event}
