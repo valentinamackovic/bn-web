@@ -171,7 +171,13 @@ class CheckoutSelection extends Component {
 			return 0;
 		}
 
-		const { increment, limit_per_person, available } = ticketTypes[index];
+		const { increment, limit_per_person, available, status } = ticketTypes[index];
+
+		//Check that the status of the ticket we
+		if (status !== "Published") {
+			return 0;
+		}
+
 		let quantity = AUTO_SELECT_TICKET_AMOUNT;
 
 		//If the default auto select amount is NOT divisible by the increment amount, rather auto select the first increment
