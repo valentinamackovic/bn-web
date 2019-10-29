@@ -52,23 +52,32 @@ class SettlementReportList extends Component {
 				const { data, paging } = response.data; //TODO pagination
 				const reports = [];
 
-				data.forEach(({ created_at, start_time, end_time, ...rest }) => {
-					const displayDateRange = reportDateRangeHeading(
-						moment.utc(start_time).tz(organizationTimezone),
-						moment.utc(end_time).tz(organizationTimezone)
-					);
+				data.forEach(
+					({
+						created_at,
+						start_time,
+						end_time,
+						only_finished_events,
+						...rest
+					}) => {
+						const displayDateRange = reportDateRangeHeading(
+							moment.utc(start_time).tz(organizationTimezone),
+							moment.utc(end_time).tz(organizationTimezone)
+						);
 
-					const createdAtMoment = moment
-						.utc(created_at)
-						.tz(organizationTimezone);
+						const createdAtMoment = moment
+							.utc(created_at)
+							.tz(organizationTimezone);
 
-					reports.push({
-						...rest,
-						createdAtMoment,
-						displayCreatedAt: createdAtMoment.format(dateFormat),
-						displayDateRange
-					});
-				});
+						reports.push({
+							...rest,
+							createdAtMoment,
+							displayCreatedAt: createdAtMoment.format(dateFormat),
+							displayDateRange,
+							isPostEventSettlement: only_finished_events
+						});
+					}
+				);
 
 				reports.sort((a, b) => {
 					if (a.createdAtMoment.diff(b.createdAtMoment) < 0) {
@@ -104,7 +113,7 @@ class SettlementReportList extends Component {
 						id,
 						displayCreatedAt,
 						displayDateRange,
-						only_finished_events,
+						isPostEventSettlement,
 						status
 					} = report;
 
@@ -118,7 +127,7 @@ class SettlementReportList extends Component {
 												{displayCreatedAt}
 											</Typography>
 											<Typography>
-												{only_finished_events ? "Events" : "Tickets sold"}{" "}
+												{isPostEventSettlement ? "Events" : "Tickets sold"}{" "}
 												{displayDateRange}
 												{/*({statusEnums[status]})*/}
 											</Typography>

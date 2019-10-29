@@ -54,7 +54,6 @@ class SettlementReport extends Component {
 
 		this.state = {
 			orgName: "",
-			settlement_type: "",
 			adjustments: null,
 			event_entries: null,
 			settlement: null,
@@ -174,7 +173,8 @@ class SettlementReport extends Component {
 						settlement: {
 							...settlement,
 							displayDateRange,
-							displayDateRangeNoTimezone
+							displayDateRangeNoTimezone,
+							isPostEventSettlement: settlement.only_finished_events
 						},
 						grandTotals,
 						eventList
@@ -197,9 +197,9 @@ class SettlementReport extends Component {
 		Bigneon()
 			.organizations.read({ id: organizationId })
 			.then(response => {
-				const { name: orgName, settlement_type, ...rest } = response.data;
+				const { name: orgName, ...rest } = response.data;
 
-				this.setState({ orgName, settlement_type });
+				this.setState({ orgName });
 			})
 			.catch(error => {
 				console.error(error);
@@ -213,7 +213,6 @@ class SettlementReport extends Component {
 	exportToCsv() {
 		const {
 			orgName,
-			settlement_type,
 			settlement,
 			grandTotals,
 			adjustments,
@@ -222,17 +221,19 @@ class SettlementReport extends Component {
 		} = this.state;
 		const {
 			displayDateRange,
-			only_finished_events,
+			isPostEventSettlement,
 			displayDateRangeNoTimezone
 		} = settlement;
 
 		const csvRows = [];
 
 		csvRows.push([orgName, "Settlement Report"]);
-		csvRows.push([`Settlement type: ${splitByCamelCase(settlement_type)}`]);
+		csvRows.push([
+			`Settlement type: ${isPostEventSettlement ? "Post Event" : "Rolling"}`
+		]);
 		csvRows.push([
 			`${
-				only_finished_events ? "Events" : "Sales occurring"
+				isPostEventSettlement ? "Events" : "Sales occurring"
 			} from ${displayDateRange}`
 		]);
 
@@ -273,7 +274,7 @@ class SettlementReport extends Component {
 		csvRows.push([]);
 		csvRows.push([
 			`${
-				only_finished_events ? "Events" : "Sales occurring"
+				isPostEventSettlement ? "Events" : "Sales occurring"
 			} from ${displayDateRangeNoTimezone}`
 		]);
 		csvRows.push([
@@ -380,9 +381,9 @@ class SettlementReport extends Component {
 	renderTitleSection() {
 		const { classes } = this.props;
 
-		const { settlement_type, settlement } = this.state;
+		const { settlement } = this.state;
 
-		const { displayDateRange, only_finished_events } = settlement;
+		const { displayDateRange, isPostEventSettlement } = settlement;
 
 		return (
 			<div>
@@ -390,11 +391,11 @@ class SettlementReport extends Component {
 				<Typography>
 					Settlement type:{" "}
 					<span className={classes.boldText}>
-						{splitByCamelCase(settlement_type)}
+						{isPostEventSettlement ? "Post Event" : "Rolling"}
 					</span>
 				</Typography>
 				<Typography>
-					{only_finished_events ? "Events" : "Sales occurring"} from{" "}
+					{isPostEventSettlement ? "Events" : "Sales occurring"} from{" "}
 					<span className={classes.boldText}>{displayDateRange}</span>
 				</Typography>
 				{/*<Typography>*/}
@@ -416,7 +417,7 @@ class SettlementReport extends Component {
 			eventList
 		} = this.state;
 
-		const { only_finished_events, displayDateRangeNoTimezone } = settlement;
+		const { isPostEventSettlement, displayDateRangeNoTimezone } = settlement;
 
 		let onAddAdjustment = null;
 		if (!printVersion) {
@@ -439,7 +440,7 @@ class SettlementReport extends Component {
 						<EventListTable
 							eventList={eventList}
 							displayDateRangeNoTimezone={displayDateRangeNoTimezone}
-							onlyFinishedEvents={only_finished_events}
+							isPostEventSettlement={isPostEventSettlement}
 						/>
 						<br/>
 						<br/>
