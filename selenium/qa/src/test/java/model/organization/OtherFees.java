@@ -1,13 +1,16 @@
 package model.organization;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import enums.SettlementType;
 
-public class OtherFees {
-	
+public class OtherFees implements Serializable {
+
+	private static final long serialVersionUID = -8204980862351531684L;
+
 	@JsonProperty("settlement_type")
 	private SettlementType settlementType;
 	
@@ -50,5 +53,30 @@ public class OtherFees {
 
 	public void setCreditCardFee(BigDecimal creditCardFee) {
 		this.creditCardFee = creditCardFee;
+	}
+	
+	public BigDecimal getFixedFeesSum() {
+		BigDecimal retVal = new BigDecimal(0);
+		retVal = getPerOrderClientFee() != null ? retVal.add(getPerOrderClientFee()) : new BigDecimal(0);
+		retVal = getPerOrderBigNeonFee() != null ? retVal.add(getPerOrderBigNeonFee()) : new BigDecimal(0);
+		return retVal;
+	}
+	
+	public BigDecimal getTotalWithFees(BigDecimal orderTotal) {
+		BigDecimal fixedFees = getFixedFeesSum();
+		orderTotal = orderTotal.add(fixedFees);
+		orderTotal = applyCreditCardFee(orderTotal);
+		return orderTotal;
+	}
+	
+	public BigDecimal applyCreditCardFee(BigDecimal orderTotal) {
+		if (getCreditCardFee() != null) {
+			BigDecimal decimalCreditCardFeePercent = getCreditCardFee().divide(new BigDecimal(100));
+			BigDecimal orderTotalPercent = orderTotal.multiply(decimalCreditCardFeePercent);
+			BigDecimal retVal =  orderTotal.add(orderTotalPercent);
+			return retVal;
+		} else {
+			return orderTotal;
+		}
 	}
 }

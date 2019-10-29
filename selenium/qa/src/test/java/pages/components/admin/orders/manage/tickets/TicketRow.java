@@ -1,5 +1,7 @@
 package pages.components.admin.orders.manage.tickets;
 
+import java.math.BigDecimal;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -13,6 +15,8 @@ public class TicketRow extends BaseComponent {
 	private WebElement row;
 
 	private String relativeCheckBoxXpath = "./div/div/div[1]/div/div";
+	
+	private String relativeCheckedBoxXpath = relativeCheckBoxXpath + "/img";
 
 	private String relativeAttendeLinkXpath = "./div/div/div[2]/a";
 
@@ -21,6 +25,8 @@ public class TicketRow extends BaseComponent {
 	private String relativeQuantityXpath = "./div/div[1]/p[1]";
 
 	private String relativeTotalXpath = "./div/div/p[2]";
+	
+	private String relativeTotalPerTicketFee = "./div/div[2]/p";
 
 	private String relativeStatusXpath = "./div/div/p[3]";
 
@@ -31,7 +37,9 @@ public class TicketRow extends BaseComponent {
 
 	public void clickOnCheckoutBoxInTicket() {
 		WebElement el = getCheckboxElement();
-		explicitWaitForVisibilityAndClickableWithClick(el);
+		SeleniumUtils.jsScrollIntoView(el, driver);
+		waitVisibilityAndBrowserCheckClick(el);
+		waitForTime(1000);
 	}
 
 	/**
@@ -47,22 +55,44 @@ public class TicketRow extends BaseComponent {
 	}
 
 	public boolean isTicketPurchased() {
-		WebElement purchasedEl = getStatusElement();
-		String text = purchasedEl.getText();
-		TicketStatus status = TicketStatus.getTicketStatus(text);
+		TicketStatus status = getTicketStatus();
 		return status.equals(TicketStatus.PURCHASED);
 	}
-
+	
+	public boolean isTicketRefunded() {
+		TicketStatus status = getTicketStatus();
+		return status.equals(TicketStatus.REFUNDED);
+	}
+	
+	public boolean isChecked() {
+		return getAccessUtils().isChildElementVisibleFromParentLocatedBy(row, By.xpath(relativeCheckedBoxXpath), 3);
+	}
+	
+	private TicketStatus getTicketStatus() {
+		WebElement purchasedEl = getStatusElement();
+		String text = purchasedEl.getText();
+		return TicketStatus.getTicketStatus(text);
+	}
+	
+	public BigDecimal getTicketTotalAmount() {
+		Double dAmount = SeleniumUtils.getDoubleAmount(row, relativeTotalXpath, driver);
+		return new BigDecimal(dAmount);
+	}
+	
+	public BigDecimal getPerTicketFeeAmount() {
+		Double dAmount = SeleniumUtils.getDoubleAmount(row, relativeTotalPerTicketFee, driver);
+		return new BigDecimal(dAmount);
+	}
+	
 	private WebElement getCheckboxElement() {
-		return SeleniumUtils.getChildElementFromParentLocatedBy(row, By.xpath(relativeCheckBoxXpath), driver);
+		return getAccessUtils().getChildElementFromParentLocatedBy(row, By.xpath(relativeCheckBoxXpath));
 	}
 
 	private WebElement getAttendeeElement() {
-		return SeleniumUtils.getChildElementFromParentLocatedBy(row, By.xpath(relativeAttendeLinkXpath), driver);
+		return getAccessUtils().getChildElementFromParentLocatedBy(row, By.xpath(relativeAttendeLinkXpath));
 	}
 
 	private WebElement getStatusElement() {
-		return SeleniumUtils.getChildElementFromParentLocatedBy(row, By.xpath(relativeStatusXpath), driver);
+		return getAccessUtils().getChildElementFromParentLocatedBy(row, By.xpath(relativeStatusXpath));
 	}
-
 }

@@ -457,7 +457,7 @@ class Team extends Component {
 					autoComplete="off"
 					onSubmit={this.inviteUser.bind(this)}
 				>
-					<Grid direction="row" container>
+					<Grid direction="row" container spacing={24}>
 						<Grid item xs={12} md={6}>
 							<InputGroup
 								error={errors.email}
