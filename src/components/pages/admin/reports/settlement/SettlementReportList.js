@@ -44,7 +44,8 @@ class SettlementReportList extends Component {
 
 	componentDidMount() {
 		const { organizationId, organizationTimezone } = this.props;
-		const dateFormat = "ddd, MMMM Do YYYY, z";
+		const dateFormat = "ddd, MMM Do YYYY";
+		const rangeDateFormat = "MMM DD, YYYY";
 
 		Bigneon()
 			.organizations.settlements.index({ organization_id: organizationId })
@@ -53,10 +54,13 @@ class SettlementReportList extends Component {
 				const reports = [];
 
 				data.forEach(({ created_at, start_time, end_time, ...rest }) => {
-					const displayDateRange = reportDateRangeHeading(
-						moment.utc(start_time).tz(organizationTimezone),
-						moment.utc(end_time).tz(organizationTimezone)
-					);
+					const displayDateRange = `${moment
+						.utc(start_time)
+						.tz(organizationTimezone)
+						.format(rangeDateFormat)} to ${moment
+						.utc(end_time)
+						.tz(organizationTimezone)
+						.format(rangeDateFormat)}`;
 
 					const createdAtMoment = moment
 						.utc(created_at)
@@ -118,7 +122,7 @@ class SettlementReportList extends Component {
 												{displayCreatedAt}
 											</Typography>
 											<Typography>
-												{only_finished_events ? "Events" : "Tickets sold"}{" "}
+												{only_finished_events ? "Events" : "Tickets sold"} from{" "}
 												{displayDateRange}
 												{/*({statusEnums[status]})*/}
 											</Typography>

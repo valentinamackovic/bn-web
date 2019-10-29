@@ -9,13 +9,8 @@ import { fontFamilyDemiBold, secondaryHex } from "../../../../../config/theme";
 
 const styles = theme => ({
 	root: {
-		marginBottom: theme.spacing.unit * 4
-	},
-	heading: {
-		fontFamily: fontFamilyDemiBold,
-		fontSize: theme.typography.fontSize * 1.3,
-		marginBottom: 10,
-		textTransform: "capitalize"
+		marginBottom: theme.spacing.unit * 4,
+		maxWidth: 400
 	},
 	boldText: {
 		fontFamily: fontFamilyDemiBold
@@ -42,34 +37,43 @@ const GrandTotalsTable = props => {
 		totalSettlementInCents
 	} = props;
 
+	const columnStyles = [
+		{ flex: 3, textAlign: "left" },
+		{ flex: 3, textAlign: "right" },
+		{ flex: 0 }
+	];
+
 	return (
 		<div className={classes.root}>
-			<Typography className={classes.heading}>Grand totals</Typography>
-
-			<TotalsRow heading>{["Total", ""]}</TotalsRow>
-
-			<TotalsRow>{["Total face", dollars(totalFaceInCents)]}</TotalsRow>
-
-			<TotalsRow gray>
-				{["Total revenue share", dollars(totalRevenueShareInCents)]}
+			<TotalsRow columnStyles={columnStyles} heading>
+				{["Total", "", ""]}
 			</TotalsRow>
 
-			<TotalsRow>
+			<TotalsRow columnStyles={columnStyles}>
+				{["Total face", dollars(totalFaceInCents), ""]}
+			</TotalsRow>
+
+			<TotalsRow columnStyles={columnStyles} gray>
+				{["Total revenue share", dollars(totalRevenueShareInCents), ""]}
+			</TotalsRow>
+
+			<TotalsRow columnStyles={columnStyles}>
 				{[
 					<span key={"adjustments"} className={classes.adjustmentText}>
 						Adjustments&nbsp;
 						{onAddAdjustment ? (
 							<span className={classes.editText} onClick={onAddAdjustment}>
-								Add adjustments
+								Add Adjustments
 							</span>
 						) : null}
 					</span>,
-					dollars(adjustmentsInCents)
+					dollars(adjustmentsInCents),
+					""
 				]}
 			</TotalsRow>
 
-			<TotalsRow total>
-				{["Total settlement", dollars(totalSettlementInCents)]}
+			<TotalsRow columnStyles={columnStyles} total>
+				{["Total settlement", dollars(totalSettlementInCents), ""]}
 			</TotalsRow>
 		</div>
 	);

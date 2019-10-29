@@ -33,11 +33,14 @@ const styles = theme => ({
 	boldText: {
 		fontFamily: fontFamilyDemiBold
 	},
+	titleSection: {
+		marginBottom: 25
+	},
 	title: {
 		fontFamily: fontFamilyDemiBold,
 		fontSize: 28,
 		marginBottom: theme.spacing.unit,
-		textDecoration: "capitalize"
+		textTransform: "capitalize"
 	},
 	subtitle: {
 		fontFamily: fontFamilyDemiBold,
@@ -93,25 +96,16 @@ class SettlementReport extends Component {
 
 				const { organizationTimezone } = this.props;
 
-				const dateFormat = "MMM D, YYYY z";
-				const dateTimeFormat = "MMM D, YYYY, h:mm A";
-				const dateFormatNoTimezone = "MMM D, YYYY";
+				const dateFormat = "MMM D, YYYY";
+				const dateTimeFormat = "MMM D, YYYY, h:mm A z";
 
 				const displayDateRange = `${moment
 					.utc(start_time)
 					.tz(organizationTimezone)
-					.format(dateFormat)} - ${moment
+					.format(dateFormat)} to ${moment
 					.utc(end_time)
 					.tz(organizationTimezone)
 					.format(dateFormat)}`;
-
-				const displayDateRangeNoTimezone = `${moment
-					.utc(start_time)
-					.tz(organizationTimezone)
-					.format(dateFormatNoTimezone)} - ${moment
-					.utc(end_time)
-					.tz(organizationTimezone)
-					.format(dateFormatNoTimezone)}`;
 
 				let adjustmentsInCents = 0;
 				let totalFaceInCents = 0;
@@ -173,8 +167,7 @@ class SettlementReport extends Component {
 						event_entries,
 						settlement: {
 							...settlement,
-							displayDateRange,
-							displayDateRangeNoTimezone
+							displayDateRange
 						},
 						grandTotals,
 						eventList
@@ -220,11 +213,7 @@ class SettlementReport extends Component {
 			eventList,
 			event_entries
 		} = this.state;
-		const {
-			displayDateRange,
-			only_finished_events,
-			displayDateRangeNoTimezone
-		} = settlement;
+		const { displayDateRange, only_finished_events } = settlement;
 
 		const csvRows = [];
 
@@ -270,23 +259,23 @@ class SettlementReport extends Component {
 			]);
 		});
 
-		csvRows.push([]);
-		csvRows.push([
-			`${
-				only_finished_events ? "Events" : "Sales occurring"
-			} from ${displayDateRangeNoTimezone}`
-		]);
-		csvRows.push([
-			"Event start Date/Time",
-			"Event End Date/Time",
-			"Venue",
-			"Event Name"
-		]);
-
-		eventList.forEach(event => {
-			const { displayStartTime, venue, name } = event;
-			csvRows.push([displayStartTime, venue.name, name]);
-		});
+		// csvRows.push([]);
+		// csvRows.push([
+		// 	`${
+		// 		only_finished_events ? "Events" : "Sales occurring"
+		// 	} from ${displayDateRange}`
+		// ]);
+		// csvRows.push([
+		// 	"Event start Date/Time",
+		// 	"Event End Date/Time",
+		// 	"Venue",
+		// 	"Event Name"
+		// ]);
+		//
+		// eventList.forEach(event => {
+		// 	const { displayStartTime, venue, name } = event;
+		// 	csvRows.push([displayStartTime, venue.name, name]);
+		// });
 
 		csvRows.push([]);
 		csvRows.push(["Event summary"]);
@@ -385,7 +374,7 @@ class SettlementReport extends Component {
 		const { displayDateRange, only_finished_events } = settlement;
 
 		return (
-			<div>
+			<div className={classes.titleSection}>
 				<Typography className={classes.subtitle}>Settlement report</Typography>
 				<Typography>
 					Settlement type:{" "}
@@ -416,7 +405,7 @@ class SettlementReport extends Component {
 			eventList
 		} = this.state;
 
-		const { only_finished_events, displayDateRangeNoTimezone } = settlement;
+		const { only_finished_events, displayDateRange } = settlement;
 
 		let onAddAdjustment = null;
 		if (!printVersion) {
@@ -425,6 +414,7 @@ class SettlementReport extends Component {
 
 		return (
 			<React.Fragment>
+				<Typography className={classes.title}>Grand totals</Typography>
 				<GrandTotalsTable onAddAdjustment={onAddAdjustment} {...grandTotals}/>
 
 				{adjustments && adjustments.length > 0 ? (
@@ -434,17 +424,17 @@ class SettlementReport extends Component {
 					</React.Fragment>
 				) : null}
 
-				{eventList && eventList.length > 0 ? (
-					<React.Fragment>
-						<EventListTable
-							eventList={eventList}
-							displayDateRangeNoTimezone={displayDateRangeNoTimezone}
-							onlyFinishedEvents={only_finished_events}
-						/>
-						<br/>
-						<br/>
-					</React.Fragment>
-				) : null}
+				{/*{eventList && eventList.length > 0 ? (*/}
+				{/*	<React.Fragment>*/}
+				{/*		<EventListTable*/}
+				{/*			eventList={eventList}*/}
+				{/*			displayDateRange={displayDateRange}*/}
+				{/*			onlyFinishedEvents={only_finished_events}*/}
+				{/*		/>*/}
+				{/*		<br/>*/}
+				{/*		<br/>*/}
+				{/*	</React.Fragment>*/}
+				{/*) : null}*/}
 
 				<Typography className={classes.title}>Event summary</Typography>
 

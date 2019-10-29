@@ -33,7 +33,8 @@ const styles = theme => {
 		},
 		headingText: {
 			fontSize: theme.typography.fontSize * 0.8,
-			color: "#FFFFFF"
+			color: "#FFFFFF",
+			textTransform: "capitalize"
 		},
 		total: {
 			backgroundColor: primaryHex,
