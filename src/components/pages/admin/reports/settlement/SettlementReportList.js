@@ -44,7 +44,8 @@ class SettlementReportList extends Component {
 
 	componentDidMount() {
 		const { organizationId, organizationTimezone } = this.props;
-		const dateFormat = "ddd, MMMM Do YYYY, z";
+		const dateFormat = "ddd, MMM Do YYYY";
+		const rangeDateFormat = "MMM DD, YYYY";
 
 		Bigneon()
 			.organizations.settlements.index({ organization_id: organizationId })
@@ -52,32 +53,27 @@ class SettlementReportList extends Component {
 				const { data, paging } = response.data; //TODO pagination
 				const reports = [];
 
-				data.forEach(
-					({
-						created_at,
-						start_time,
-						end_time,
-						only_finished_events,
-						...rest
-					}) => {
-						const displayDateRange = reportDateRangeHeading(
-							moment.utc(start_time).tz(organizationTimezone),
-							moment.utc(end_time).tz(organizationTimezone)
-						);
+				data.forEach(({ created_at, start_time, end_time, only_finished_events, ...rest }) => {
+					const displayDateRange = `${moment
+						.utc(start_time)
+						.tz(organizationTimezone)
+						.format(rangeDateFormat)} to ${moment
+						.utc(end_time)
+						.tz(organizationTimezone)
+						.format(rangeDateFormat)}`;
 
-						const createdAtMoment = moment
-							.utc(created_at)
-							.tz(organizationTimezone);
+					const createdAtMoment = moment
+						.utc(created_at)
+						.tz(organizationTimezone);
 
-						reports.push({
-							...rest,
-							createdAtMoment,
-							displayCreatedAt: createdAtMoment.format(dateFormat),
-							displayDateRange,
-							isPostEventSettlement: only_finished_events
-						});
-					}
-				);
+					reports.push({
+						...rest,
+						createdAtMoment,
+						displayCreatedAt: createdAtMoment.format(dateFormat),
+						displayDateRange,
+						isPostEventSettlement: only_finished_events
+					});
+				});
 
 				reports.sort((a, b) => {
 					if (a.createdAtMoment.diff(b.createdAtMoment) < 0) {
@@ -127,7 +123,7 @@ class SettlementReportList extends Component {
 												{displayCreatedAt}
 											</Typography>
 											<Typography>
-												{isPostEventSettlement ? "Events" : "Tickets sold"}{" "}
+												{isPostEventSettlement ? "Events" : "Tickets sold"} from{" "}
 												{displayDateRange}
 												{/*({statusEnums[status]})*/}
 											</Typography>
