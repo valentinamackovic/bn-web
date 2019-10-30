@@ -31,8 +31,10 @@ import getPhoneOS from "../../../helpers/getPhoneOS";
 import servedImage from "../../../helpers/imagePathHelper";
 import Settings from "../../../config/settings";
 import OrgAnalytics from "../../common/OrgAnalytics";
+import Bigneon from "../../../helpers/bigneon";
+import moment from "moment-timezone";
 
-const heroHeight = 800;
+const heroHeight = 586;
 
 const iPhone5MediaQuery = "@media (max-width:321px)";
 
@@ -151,7 +153,8 @@ const styles = theme => {
 		},
 		desktopHeroTopLine: {
 			color: "#FFFFFF",
-			fontSize: theme.typography.fontSize * 1.25,
+			fontSize: 26,
+			lineHeight: "30px",
 			fontFamily: fontFamilyBold
 		},
 		desktopHeroTitle: {
@@ -234,14 +237,14 @@ const EventDetail = ({ classes, children, iconUrl }) => (
 	</div>
 );
 
-const Hero = ({ classes, order_id }) => {
+const Hero = ({ classes, order_id, firstName }) => {
 	return (
 		<div className={classes.desktopCoverImage}>
 			<TwoColumnLayout
 				col1={(
 					<div className={classes.desktopHeroContent}>
 						<Typography className={classes.desktopHeroTopLine}>
-							Almost done...
+							{firstName}, <br/> Your Big Neon order is confirmed!
 						</Typography>
 						<Typography className={classes.desktopHeroTitle}>
 							Get your tickets!
@@ -290,6 +293,7 @@ class CheckoutSuccess extends Component {
 			mobileDialogOpen: true,
 			mobileCardSlideIn: true,
 			order_id: null,
+			order: null,
 			phoneOS: getPhoneOS()
 		};
 	}
@@ -312,12 +316,53 @@ class CheckoutSuccess extends Component {
 			});
 
 			const order_id = getUrlParam("order_id");
+
 			if (order_id) {
-				this.setState({ order_id });
+				this.setState({ order_id }, () => {
+					this.getOrderInformation();
+				});
 			}
 		} else {
 			//TODO return 404
 		}
+	}
+
+	getOrderInformation() {
+		const { order_id } = this.state;
+
+		Bigneon()
+			.orders.read({ id: order_id })
+			.then(response => {
+				const { data } = response;
+				const { date, is_box_office, items, user_id } = data;
+
+				const { timezone } = this.props;
+
+				const platform = is_box_office ? "Box office" : data.platform || "";
+
+				let fees_in_cents = 0;
+				items.forEach(({ item_type, unit_price_in_cents, quantity }) => {
+					//Only include fee type items
+					if (
+						["CreditCardFees", "PerUnitFees", "EventFees"].indexOf(item_type) >
+						-1
+					) {
+						fees_in_cents += unit_price_in_cents * quantity;
+					}
+				});
+
+				this.setState({
+					order: { ...data, platform, fees_in_cents }
+				});
+			})
+			.catch(error => {
+				console.error(error);
+
+				notifications.showFromErrorResponse({
+					defaultMessage: "Loading order failed.",
+					error
+				});
+			});
 	}
 
 	goHome() {
@@ -334,8 +379,8 @@ class CheckoutSuccess extends Component {
 
 	render() {
 		const { classes } = this.props;
-
 		const { event, venue, artists, organization } = selectedEvent;
+		const firstName = user.firstName;
 
 		if (event === null) {
 			return (
@@ -386,16 +431,17 @@ class CheckoutSuccess extends Component {
 				{/*DESKTOP*/}
 				<Hidden smDown>
 					<div style={{ height: heroHeight * 1.2 }}>
-						<Hero order_id={order_id} classes={classes}/>
+						<Hero order_id={order_id} firstName={firstName} classes={classes}/>
 						<TwoColumnLayout
-							containerClass={classes.desktopContent}
+							containerClass={classes.desktopHeroContent}
 							containerStyle={{ minHeight: heroHeight }}
 							col1={null}
 							col2={(
 								<EventDetailsOverlayCard
+									// className={classes.desktopHeroContent}
 									style={{
 										width: "100%",
-										top: 150,
+										// top: 150,
 										position: "relative"
 									}}
 									header={(
