@@ -10,6 +10,7 @@ import selectedEvent from "../../../stores/selectedEvent";
 import cart from "../../../stores/cart";
 import EventDetailsOverlayCard from "../../elements/event/EventDetailsOverlayCard";
 import {
+	fontFamily,
 	fontFamilyBold,
 	fontFamilyDemiBold,
 	secondaryHex,
@@ -33,6 +34,7 @@ import Settings from "../../../config/settings";
 import OrgAnalytics from "../../common/OrgAnalytics";
 import Bigneon from "../../../helpers/bigneon";
 import moment from "moment-timezone";
+import MaintainAspectRatio from "../../elements/MaintainAspectRatio";
 
 const heroHeight = 586;
 
@@ -46,7 +48,7 @@ const styles = theme => {
 		mobileContent: {
 			flex: 1,
 			flexDirection: "column",
-			background: "linear-gradient(-135deg, #9C2D82 0%, #3965A6 100%)",
+			background: "linear-gradient(180deg, #9C2D82 0%, #3965A6 100%)",
 			display: "flex"
 		},
 		mobileTopContent: {
@@ -137,6 +139,15 @@ const styles = theme => {
 			paddingBottom: theme.spacing.unit * 2,
 			height: heroHeight
 		},
+		desktopEventPromoImg: {
+			height: "140px",
+			width: "273px",
+			borderRadius: "3px",
+			backgroundImage: "linear-gradient(255deg, #e53d96, #5491cc)",
+			backgroundRepeat: "no-repeat",
+			backgroundSize: "cover",
+			backgroundPosition: "center"
+		},
 		desktopCardContent: {
 			paddingRight: theme.spacing.unit * 4,
 			paddingLeft: theme.spacing.unit * 4,
@@ -149,6 +160,7 @@ const styles = theme => {
 			backgroundSize: "cover",
 			backgroundPosition: "center",
 			position: "absolute",
+			marginBottom: theme.spacing.unit * 2,
 			backgroundImage: "linear-gradient(-135deg, #E53D96 0%, #5491CC 100%)"
 		},
 		desktopHeroTopLine: {
@@ -157,17 +169,13 @@ const styles = theme => {
 			lineHeight: "30px",
 			fontFamily: fontFamilyBold
 		},
-		desktopHeroTitle: {
+		desktopHeroOrderTag: {
+			marginTop: theme.spacing.unit * 2,
+			marginBottom: theme.spacing.unit * 2,
 			color: "#FFFFFF",
-			fontSize: theme.typography.fontSize * 3.15,
-			fontFamily: fontFamilyBold
-		},
-		underlinedSpacer: {
-			borderBottom: "solid",
-			borderBottomColor: secondaryHex,
-			borderBottomWidth: 4,
-			width: 41,
-			marginBottom: 31
+			fontSize: 15,
+			lineHeight: "23px",
+			fontFamily: fontFamily
 		},
 		desktopOverlayCardHeader: {
 			background: "linear-gradient(-135deg, #9C2D82 0%, #3965A6 100%)",
@@ -186,7 +194,9 @@ const styles = theme => {
 			paddingTop: 4
 		},
 		desktopEventDetailText: {
-			color: "#FFFFFF"
+			color: "#FFFFFF",
+			fontSize: 15,
+			lineHeight: "18px"
 		},
 		desktopEventDetailsRow: {
 			display: "flex",
@@ -201,7 +211,9 @@ const styles = theme => {
 			height: "auto"
 		},
 		boldText: {
-			fontFamily: fontFamilyDemiBold
+			fontFamily: fontFamilyDemiBold,
+			fontSize: 17,
+			lineHeight: "19px"
 		},
 		link: {
 			color: secondaryHex
@@ -223,6 +235,14 @@ const styles = theme => {
 			paddingRight: 82,
 			paddingLeft: 82,
 			textAlign: "center"
+		},
+		greyTitleBold: {
+			color: "#8885B8",
+			textTransform: "uppercase",
+			fontFamily: fontFamilyBold,
+			fontSize: 15,
+			marginTop: "25px",
+			lineHeight: "18px"
 		}
 	};
 };
@@ -237,7 +257,19 @@ const EventDetail = ({ classes, children, iconUrl }) => (
 	</div>
 );
 
-const Hero = ({ classes, order_id, firstName }) => {
+const Hero = ({
+	classes,
+	event,
+	order,
+	firstName,
+	promoImg,
+	displayEventStartDate
+}) => {
+	const ticketItem = order.items.find(item => item.item_type === "Tickets");
+	const promoImageStyle = {};
+	if (promoImg) {
+		promoImageStyle.backgroundImage = `url(${promoImg})`;
+	}
 	return (
 		<div className={classes.desktopCoverImage}>
 			<TwoColumnLayout
@@ -246,36 +278,24 @@ const Hero = ({ classes, order_id, firstName }) => {
 						<Typography className={classes.desktopHeroTopLine}>
 							{firstName}, <br/> Your Big Neon order is confirmed!
 						</Typography>
-						<Typography className={classes.desktopHeroTitle}>
-							Get your tickets!
+						<Typography className={classes.desktopHeroOrderTag}>
+							Order #{order.order_number} | {ticketItem.quantity} Tickets
+							{order.items.find(item_type => item_type === "Tickets")}
 						</Typography>
 
-						<span className={classes.underlinedSpacer}/>
+						{promoImg ? (
+							<div
+								className={classes.desktopEventPromoImg}
+								style={promoImageStyle}
+							/>
+						) : null}
+
+						<Typography className={classes.greyTitleBold}>Event</Typography>
 
 						<Typography className={classes.desktopEventDetailText}>
-							To enhance your experience and protect you against counterfeit
-							ticket sales,
+							<span className={classes.boldText}>{event.name}</span>
 							<br/>
-							<span className={classes.boldText}>
-								tickets are accessible through the Big Neon App.
-							</span>
-						</Typography>
-
-						<br/>
-						<br/>
-
-						<Typography className={classes.desktopEventDetailText}>
-							{order_id ? (
-								<span>
-									Order{" "}
-									<span className={classes.boldText}>
-										#{order_id.slice(-8)}
-									</span>
-									<br/>
-								</span>
-							) : null}
-							We’ve also sent your receipt to:{" "}
-							<span className={classes.boldText}>{user.email}</span>
+							{displayEventStartDate}
 						</Typography>
 					</div>
 				)}
@@ -381,8 +401,15 @@ class CheckoutSuccess extends Component {
 		const { classes } = this.props;
 		const { event, venue, artists, organization } = selectedEvent;
 		const firstName = user.firstName;
+		const {
+			mobileDialogOpen,
+			mobileCardSlideIn,
+			order,
+			order_id,
+			phoneOS
+		} = this.state;
 
-		if (event === null) {
+		if (event === null || order === null) {
 			return (
 				<div>
 					<PrivateEventDialog/>
@@ -407,13 +434,10 @@ class CheckoutSuccess extends Component {
 			tracking_keys
 		} = event;
 
-		const {
-			mobileDialogOpen,
-			mobileCardSlideIn,
-			order_id,
-			phoneOS
-		} = this.state;
-
+		const eventDateFormatted = moment
+			.utc(eventStartDateMoment)
+			.tz(venue.timezone)
+			.format("llll z");
 		return (
 			<div className={classes.root}>
 				<OrgAnalytics trackingKeys={tracking_keys}/>
@@ -431,7 +455,15 @@ class CheckoutSuccess extends Component {
 				{/*DESKTOP*/}
 				<Hidden smDown>
 					<div style={{ height: heroHeight * 1.2 }}>
-						<Hero order_id={order_id} firstName={firstName} classes={classes}/>
+						<Hero
+							order_id={order_id}
+							order={order}
+							promoImg={promo_image_url}
+							firstName={firstName}
+							classes={classes}
+							displayEventStartDate={eventDateFormatted}
+							event={event}
+						/>
 						<TwoColumnLayout
 							containerClass={classes.desktopHeroContent}
 							containerStyle={{ minHeight: heroHeight }}
