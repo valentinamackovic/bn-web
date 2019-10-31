@@ -211,7 +211,7 @@ class FacebookEvents extends Component {
 						) : (
 							<div>
 								<FacebookButton
-									scopes={["manage_pages", "publish_pages"]}
+									scopes={["manage_pages", "publish_pages", "create_event"]}
 									linkToUser={true}
 									onSuccess={this.onFacebookLogin.bind(this)}
 								/>
