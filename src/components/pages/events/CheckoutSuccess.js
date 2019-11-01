@@ -161,7 +161,7 @@ const styles = theme => {
 			backgroundPosition: "center",
 			position: "absolute",
 			marginBottom: theme.spacing.unit * 2,
-			backgroundImage: "linear-gradient(-135deg, #E53D96 0%, #5491CC 100%)"
+			background: "linear-gradient(180deg, #9C2D82 0%, #3965A6 100%)"
 		},
 		desktopHeroTopLine: {
 			color: "#FFFFFF",
@@ -213,7 +213,7 @@ const styles = theme => {
 		boldText: {
 			fontFamily: fontFamilyDemiBold,
 			fontSize: 17,
-			lineHeight: "19px"
+			lineHeight: "21px"
 		},
 		link: {
 			color: secondaryHex
@@ -228,7 +228,10 @@ const styles = theme => {
 			}
 		},
 		desktopFooterText: {
-			color: textColorPrimary
+			color: "#3C383F",
+			fontSize: 17,
+			lineHeight: "20px",
+			fontFamily: fontFamilyDemiBold
 		},
 		desktopCardFooterContainer: {
 			padding: 28,
@@ -243,6 +246,47 @@ const styles = theme => {
 			fontSize: 15,
 			marginTop: "25px",
 			lineHeight: "18px"
+		},
+		iconText: {
+			display: "flex",
+			flexDirection: "row",
+			alignItems: "center",
+			justifyContent: "flex-start"
+		},
+		iconHolder: {
+			width: 26,
+			marginRight: theme.spacing.unit * 2
+		},
+		icon: {
+			maxWidth: 24
+		},
+		heartLogo: {
+			height: 55,
+			width: 53,
+			marginTop: theme.spacing.unit * 2,
+			marginBottom: theme.spacing.unit * 2
+		},
+		cardLargeText: {
+			color: "#3C383F",
+			fontSize: 24,
+			fontFamily: fontFamilyBold,
+			lineHeight: "28px"
+		},
+		cardMedText: {
+			color: "#3C383F",
+			fontSize: 18,
+			fontFamily: fontFamilyBold,
+			lineHeight: "21px",
+			marginTop: theme.spacing.unit * 2,
+			marginBottom: theme.spacing.unit * 2
+		},
+		btnContainer: {
+			display: "flex",
+			flexDirection: "row",
+			alignItems: "center",
+			justifyContent: "space-between",
+			marginTop: theme.spacing.unit * 2,
+			marginBottom: theme.spacing.unit * 2
 		}
 	};
 };
@@ -260,6 +304,7 @@ const EventDetail = ({ classes, children, iconUrl }) => (
 const Hero = ({
 	classes,
 	event,
+	venue,
 	order,
 	firstName,
 	promoImg,
@@ -296,6 +341,14 @@ const Hero = ({
 							<span className={classes.boldText}>{event.name}</span>
 							<br/>
 							{displayEventStartDate}
+						</Typography>
+
+						<Typography className={classes.greyTitleBold}>Location</Typography>
+
+						<Typography className={classes.desktopEventDetailText}>
+							<span className={classes.boldText}>{venue.name}</span>
+							<br/>
+							{venue.address}
 						</Typography>
 					</div>
 				)}
@@ -459,6 +512,7 @@ class CheckoutSuccess extends Component {
 							order_id={order_id}
 							order={order}
 							promoImg={promo_image_url}
+							venue={venue}
 							firstName={firstName}
 							classes={classes}
 							displayEventStartDate={eventDateFormatted}
@@ -476,30 +530,85 @@ class CheckoutSuccess extends Component {
 										// top: 150,
 										position: "relative"
 									}}
-									header={(
-										<div className={classes.desktopOverlayCardHeader}>
-											<Typography className={classes.desktopSuccessTitle}>
-												Download the Big Neon App.
-												<br/>
-												Get your tickets.
-												<br/>
-												Simple.
-											</Typography>
-										</div>
-									)}
 								>
 									<div>
 										<div className={classes.desktopCardContent}>
-											<SMSLinkForm/>
+											<img
+												alt="Bigneon Logo"
+												className={classes.heartLogo}
+												src={servedImage(
+													"/site/images/big-neon-heart-logo.png"
+												)}
+											/>
+											<Typography className={classes.cardLargeText}>
+												Get your tickets now by downloading the Big Neon App
+											</Typography>
+											<div className={classes.btnContainer}>
+												<AppButton
+													color="pinkBackground"
+													variant="ios"
+													href={process.env.REACT_APP_STORE_IOS}
+													style={{ marginRight: 5 }}
+												>
+													APP STORE
+												</AppButton>
+												<AppButton
+													color="pinkBackground"
+													variant="android"
+													href={process.env.REACT_APP_STORE_ANDROID}
+													style={{ marginRight: 5 }}
+												>
+													GOOGLE PLAY
+												</AppButton>
+											</div>
+											<Typography className={classes.cardMedText}>
+												(or just bring your photo ID to the door)
+											</Typography>
 										</div>
 
 										<Divider/>
 
 										<div className={classes.desktopCardFooterContainer}>
 											<Typography className={classes.desktopFooterText}>
-												No app? No sweat. Bring your ID and credit card to the
-												will call line to get checked in.
+												You’ll need the Big Neon App to:
 											</Typography>
+											<br/>
+											<div className={classes.iconText}>
+												<div className={classes.iconHolder}>
+													<img
+														alt="Emoji Icon"
+														className={classes.icon}
+														src={servedImage("/icons/dance-emoji-icon.png")}
+													/>
+												</div>
+												<Typography className={classes.desktopFooterText}>
+													Transfer tickets to friends
+												</Typography>
+											</div>
+											<div className={classes.iconText}>
+												<div className={classes.iconHolder}>
+													<img
+														alt="Emoji Icon"
+														className={classes.icon}
+														src={servedImage("/icons/envelope-emoji-icon.png")}
+													/>
+												</div>
+												<Typography className={classes.desktopFooterText}>
+													Get pre-sale access to future events
+												</Typography>
+											</div>
+											<div className={classes.iconText}>
+												<div className={classes.iconHolder}>
+													<img
+														alt="Emoji Icon"
+														className={classes.icon}
+														src={servedImage("/icons/drink-emoji-icon.png")}
+													/>
+												</div>
+												<Typography className={classes.desktopFooterText}>
+													Receive special perks at event
+												</Typography>
+											</div>
 										</div>
 									</div>
 								</EventDetailsOverlayCard>

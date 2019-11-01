@@ -27,6 +27,9 @@ const styles = theme => {
 		blackBackground: {
 			backgroundColor: "#000000"
 		},
+		pinkBackground: {
+			backgroundColor: "#FF22B2"
+		},
 		black: {
 			border: `solid 0.5px #000000`
 		},
@@ -56,6 +59,11 @@ const styles = theme => {
 		blackBackgroundLabel: {
 			color: "#FFFFFF",
 			textTransform: "capitalize"
+		},
+		pinkBackgroundLabel: {
+			color: "#FFFFFF",
+			textTransform: "capitalize",
+			fontFamily: fontFamilyDemiBold
 		},
 		callToActionLabel: {
 			color: "#FFFFFF",
@@ -88,7 +96,11 @@ const AppButton = props => {
 	const { classes, children, variant, color, ...rest } = props;
 
 	const iconColor =
-		color === "blackBackground" || color === "callToAction" ? "white" : color;
+		color === "blackBackground" ||
+		color === "pinkBackground" ||
+		color === "callToAction"
+			? "white"
+			: color;
 
 	const iconUrl = variant ? `/icons/${variant}-${iconColor}.svg` : null;
 
@@ -128,7 +140,13 @@ AppButton.defaultProps = {
 };
 
 AppButton.propTypes = {
-	color: PropTypes.oneOf(["white", "black", "blackBackground", "callToAction"]),
+	color: PropTypes.oneOf([
+		"white",
+		"black",
+		"blackBackground",
+		"pinkBackground",
+		"callToAction"
+	]),
 	classes: PropTypes.object.isRequired,
 	variant: PropTypes.oneOf(["ios", "android", false]),
 	children: PropTypes.oneOfType([
