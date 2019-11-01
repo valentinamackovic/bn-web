@@ -35,6 +35,7 @@ import OrgAnalytics from "../../common/OrgAnalytics";
 import Bigneon from "../../../helpers/bigneon";
 import moment from "moment-timezone";
 import MaintainAspectRatio from "../../elements/MaintainAspectRatio";
+import { dollars } from "../../../helpers/money";
 
 const heroHeight = 586;
 
@@ -314,11 +315,30 @@ const styles = theme => {
 			fontSize: 15,
 			lineHeight: "18px"
 		},
+		purchaseTicketText: {
+			color: "#3C383F",
+			fontSize: 17,
+			lineHeight: "19px",
+			fontFamily: fontFamilyDemiBold,
+			textAlign: "right"
+		},
 		divider: {
 			height: 1,
 			width: "100%",
 			opacity: "0.2",
-			backgroundColor: "rgba(0,0,0,0.3)"
+			backgroundColor: "rgba(0,0,0,0.3)",
+			marginTop: theme.spacing.unit * 2,
+			marginBottom: theme.spacing.unit * 2
+		},
+		leftColumn: {
+			display: "flex",
+			width: "45%"
+		},
+		rightColumn: {
+			display: "flex",
+			flexDirection: "row",
+			justifyContent: "space-between",
+			width: "55%"
 		}
 	};
 };
@@ -342,10 +362,16 @@ const Hero = ({
 	promoImg,
 	displayEventStartDate
 }) => {
-	const ticketItem = order.items.find(item => item.item_type === "Tickets");
+	const ticketItem = order.items.filter(item => item.item_type === "Tickets");
 	const promoImageStyle = {};
 	if (promoImg) {
 		promoImageStyle.backgroundImage = `url(${promoImg})`;
+	}
+	let qty = 0;
+	if (ticketItem.length > 0) {
+		for (let i = 0; i < ticketItem.length; i++) {
+			qty = qty + ticketItem[i].quantity;
+		}
 	}
 	return (
 		<div className={classes.desktopCoverImage}>
@@ -356,8 +382,7 @@ const Hero = ({
 							{firstName}, <br/> Your Big Neon order is confirmed!
 						</Typography>
 						<Typography className={classes.desktopHeroOrderTag}>
-							Order #{order.order_number} | {ticketItem.quantity} Tickets
-							{order.items.find(item_type => item_type === "Tickets")}
+							Order #{order.order_number} |&nbsp;{qty} Tickets
 						</Typography>
 
 						{promoImg ? (
@@ -396,6 +421,7 @@ const PurchaseDetails = ({
 	order,
 	displayEventStartDate
 }) => {
+	const items = order.items;
 	return (
 		<div className={classes.purchaseInfoBlock}>
 			<div className={classes.purchaseInfo}>
@@ -411,17 +437,57 @@ const PurchaseDetails = ({
 				<Typography className={classes.greyTitleDemiBold}>Order no.</Typography>
 			</div>
 			<br/>
-			<div className={classes.purchaseInfo}>
-				<Typography className={classes.boldText}>{venue.name}</Typography>
-			</div>
-			<div className={classes.purchaseInfo}>
-				<Typography className={classes.purchaseText}>
-					{venue.address}
-				</Typography>
-			</div>
+			<Typography className={classes.boldText}>{venue.name}</Typography>
+			<Typography className={classes.purchaseText}>{venue.address}</Typography>
 			<div className={classes.divider}/>
-			<div className={classes.purchaseInfo}>totals</div>
-			<div className={classes.purchaseInfo}>total</div>
+			<Typography className={classes.boldText}>
+				{user.firstName} {user.lastName}
+			</Typography>
+			<div className={classes.purchaseInfo}>{user.email}</div>
+			<br/>
+			<div className={classes.purchaseInfo}>
+				<div className={classes.leftColumn}>
+					<Typography className={classes.greyTitleDemiBold}>
+						Ticket type
+					</Typography>
+				</div>
+				<div className={classes.rightColumn}>
+					<Typography className={classes.greyTitleDemiBold}>
+						Ticket price
+					</Typography>{" "}
+					<Typography className={classes.greyTitleDemiBold}>Qty</Typography>{" "}
+					<Typography className={classes.greyTitleDemiBold}>
+						Ticket total
+					</Typography>
+				</div>
+			</div>
+			{items
+				? items.map((item, index) => {
+					if (item.item_type !== "Tickets") {
+						return null;
+					}
+					return (
+						<div className={classes.purchaseInfo} key={index}>
+							<div className={classes.leftColumn}>
+								<Typography className={classes.purchaseTicketText}>
+									{item.description}
+								</Typography>
+							</div>
+							<div className={classes.rightColumn}>
+								<Typography className={classes.purchaseTicketText}>
+									{dollars(item.unit_price_in_cents)}
+								</Typography>{" "}
+								<Typography className={classes.purchaseTicketText}>
+									{item.quantity}
+								</Typography>{" "}
+								<Typography className={classes.purchaseTicketText}>
+									{dollars(item.unit_price_in_cents * item.quantity)}
+								</Typography>
+							</div>
+						</div>
+					);
+				  })
+				: null}
 		</div>
 	);
 };
