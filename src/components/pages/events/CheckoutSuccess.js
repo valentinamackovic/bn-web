@@ -247,6 +247,13 @@ const styles = theme => {
 			marginTop: "25px",
 			lineHeight: "18px"
 		},
+		greyTitleDemiBold: {
+			color: "#6A7C94",
+			textTransform: "uppercase",
+			fontFamily: fontFamilyDemiBold,
+			fontSize: 15,
+			lineHeight: "18px"
+		},
 		iconText: {
 			display: "flex",
 			flexDirection: "row",
@@ -287,6 +294,31 @@ const styles = theme => {
 			justifyContent: "space-between",
 			marginTop: theme.spacing.unit * 2,
 			marginBottom: theme.spacing.unit * 2
+		},
+		purchaseInfoBlock: {
+			padding: theme.spacing.unit * 4,
+			maxWidth: 796,
+			borderRadius: 10,
+			backgroundColor: "rgba(89,83,155,0.05)",
+			display: "flex",
+			flexDirection: "column",
+			margin: "0 auto"
+		},
+		purchaseInfo: {
+			display: "flex",
+			flexDirection: "row",
+			justifyContent: "space-between"
+		},
+		purchaseText: {
+			color: "#000",
+			fontSize: 15,
+			lineHeight: "18px"
+		},
+		divider: {
+			height: 1,
+			width: "100%",
+			opacity: "0.2",
+			backgroundColor: "rgba(0,0,0,0.3)"
 		}
 	};
 };
@@ -353,6 +385,43 @@ const Hero = ({
 					</div>
 				)}
 			/>
+		</div>
+	);
+};
+
+const PurchaseDetails = ({
+	classes,
+	event,
+	venue,
+	order,
+	displayEventStartDate
+}) => {
+	return (
+		<div className={classes.purchaseInfoBlock}>
+			<div className={classes.purchaseInfo}>
+				<Typography className={classes.boldText}>{event.name}</Typography>
+				<Typography className={classes.boldText}>
+					{order.order_number}
+				</Typography>
+			</div>
+			<div className={classes.purchaseInfo}>
+				<Typography className={classes.purchaseText}>
+					{displayEventStartDate}
+				</Typography>
+				<Typography className={classes.greyTitleDemiBold}>Order no.</Typography>
+			</div>
+			<br/>
+			<div className={classes.purchaseInfo}>
+				<Typography className={classes.boldText}>{venue.name}</Typography>
+			</div>
+			<div className={classes.purchaseInfo}>
+				<Typography className={classes.purchaseText}>
+					{venue.address}
+				</Typography>
+			</div>
+			<div className={classes.divider}/>
+			<div className={classes.purchaseInfo}>totals</div>
+			<div className={classes.purchaseInfo}>total</div>
 		</div>
 	);
 };
@@ -615,6 +684,13 @@ class CheckoutSuccess extends Component {
 							)}
 						/>
 					</div>
+					<PurchaseDetails
+						displayEventStartDate={eventDateFormatted}
+						order={order}
+						event={event}
+						venue={venue}
+						classes={classes}
+					/>
 				</Hidden>
 
 				{/*MOBILE*/}
