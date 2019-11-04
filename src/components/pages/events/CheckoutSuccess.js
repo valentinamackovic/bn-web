@@ -2,9 +2,10 @@ import React, { Component } from "react";
 import { Dialog, Grid, Typography, withStyles } from "@material-ui/core";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import Hidden from "@material-ui/core/Hidden";
 import Slide from "@material-ui/core/Slide";
-
+import CustomButton from "../../elements/Button";
 import notifications from "../../../stores/notifications";
 import selectedEvent from "../../../stores/selectedEvent";
 import cart from "../../../stores/cart";
@@ -147,12 +148,18 @@ const styles = theme => {
 			backgroundImage: "linear-gradient(255deg, #e53d96, #5491cc)",
 			backgroundRepeat: "no-repeat",
 			backgroundSize: "cover",
+			boxShadow: "0 4px 15px 2px rgba(0,0,0,0.15)",
 			backgroundPosition: "center"
 		},
 		desktopCardContent: {
 			paddingRight: theme.spacing.unit * 4,
 			paddingLeft: theme.spacing.unit * 4,
 			textAlign: "center"
+		},
+		mobileCardContent: {
+			paddingRight: theme.spacing.unit,
+			paddingLeft: theme.spacing.unit,
+			textAlign: "left"
 		},
 		desktopCoverImage: {
 			height: heroHeight,
@@ -235,10 +242,13 @@ const styles = theme => {
 			fontFamily: fontFamilyDemiBold
 		},
 		desktopCardFooterContainer: {
-			padding: 28,
-			paddingRight: 82,
-			paddingLeft: 82,
-			textAlign: "center"
+			padding: 10,
+			paddingRight: 10,
+			paddingLeft: 10,
+			textAlign: "center",
+			[theme.breakpoints.down("md")]: {
+				textAlign: "left"
+			}
 		},
 		greyTitleBold: {
 			color: "#8885B8",
@@ -280,7 +290,12 @@ const styles = theme => {
 			color: "#3C383F",
 			fontSize: 24,
 			fontFamily: fontFamilyBold,
-			lineHeight: "28px"
+			lineHeight: "28px",
+			[theme.breakpoints.down("md")]: {
+				fontSize: 17,
+				fontFamily: fontFamilyBold,
+				lineHeight: "19px"
+			}
 		},
 		cardMedText: {
 			color: "#3C383F",
@@ -847,25 +862,101 @@ class CheckoutSuccess extends Component {
 								<Typography className={classes.mobileSuccessText}>
 									Order #{order.order_number} |&nbsp;{qty} Tickets
 								</Typography>
+								<br/>
+								{promoImageStyle ? (
+									<div
+										className={classes.desktopEventPromoImg}
+										style={promoImageStyle}
+									/>
+								) : null}
+
+								<Typography className={classes.greyTitleBold}>Event</Typography>
+
+								<Typography className={classes.desktopEventDetailText}>
+									<span className={classes.boldText}>{event.name}</span>
+									<br/>
+									{displayEventStartDate}
+								</Typography>
+
+								<Typography className={classes.greyTitleBold}>
+									Location
+								</Typography>
+
+								<Typography className={classes.desktopEventDetailText}>
+									<span className={classes.boldText}>{venue.name}</span>
+									<br/>
+									{venue.address}
+								</Typography>
 							</div>
 							<div>
 								<Slide direction="up" in={mobileCardSlideIn}>
 									<div className={classes.mobilePopupCard}>
-										<div className={classes.buttonContainer}>
-											<AppButton
-												href={Settings().genericAppDownloadLink}
-												variant={phoneOS}
-												color={"callToAction"}
-												style={{ width: "100%" }}
-											>
-												Get my tickets
-											</AppButton>
+										<div className={classes.mobileCardContent}>
+											<Typography className={classes.cardLargeText}>
+												Get your tickets now by downloading the Big Neon App
+											</Typography>
+											<div className={classes.btnContainer}>
+												<Link
+													to={
+														phoneOS === "ios"
+															? process.env.REACT_APP_STORE_IOS
+															: process.env.REACT_APP_STORE_ANDROID
+													}
+												>
+													<CustomButton variant="secondary">
+														Download the Big Neon App
+													</CustomButton>
+												</Link>
+											</div>
+											<Typography className={classes.cardMedText}>
+												(or just bring your photo ID to the door)
+											</Typography>
 										</div>
-										<div className={classes.cardSpacer}/>
-										<Typography className={classes.mobileFooterText}>
-											No app? No sweat. Bring your ID and credit card to the
-											will call line to get checked in.
-										</Typography>
+
+										<Divider/>
+
+										<div className={classes.desktopCardFooterContainer}>
+											<Typography className={classes.desktopFooterText}>
+												You’ll need the Big Neon App to:
+											</Typography>
+											<br/>
+											<div className={classes.iconText}>
+												<div className={classes.iconHolder}>
+													<img
+														alt="Emoji Icon"
+														className={classes.icon}
+														src={servedImage("/icons/dance-emoji-icon.png")}
+													/>
+												</div>
+												<Typography className={classes.desktopFooterText}>
+													Transfer tickets to friends
+												</Typography>
+											</div>
+											<div className={classes.iconText}>
+												<div className={classes.iconHolder}>
+													<img
+														alt="Emoji Icon"
+														className={classes.icon}
+														src={servedImage("/icons/envelope-emoji-icon.png")}
+													/>
+												</div>
+												<Typography className={classes.desktopFooterText}>
+													Get pre-sale access to future events
+												</Typography>
+											</div>
+											<div className={classes.iconText}>
+												<div className={classes.iconHolder}>
+													<img
+														alt="Emoji Icon"
+														className={classes.icon}
+														src={servedImage("/icons/drink-emoji-icon.png")}
+													/>
+												</div>
+												<Typography className={classes.desktopFooterText}>
+													Receive special perks at event
+												</Typography>
+											</div>
+										</div>
 									</div>
 								</Slide>
 							</div>
