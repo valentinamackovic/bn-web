@@ -86,8 +86,7 @@ const styles = theme => {
 			borderRadius: "15px 15px 0 0",
 			paddingTop: 35,
 			paddingBottom: 20,
-			textAlign: "center",
-
+			textAlign: "left",
 			paddingLeft: 22,
 			paddingRight: 22,
 			[iPhone5MediaQuery]: {
@@ -256,7 +255,12 @@ const styles = theme => {
 			fontFamily: fontFamilyBold,
 			fontSize: 15,
 			marginTop: "25px",
-			lineHeight: "18px"
+			lineHeight: "18px",
+			[theme.breakpoints.down("md")]: {
+				fontSize: 14,
+				fontFamily: fontFamilyDemiBold,
+				lineHeight: "16px"
+			}
 		},
 		greyTitleDemiBold: {
 			color: "#6A7C94",
@@ -265,7 +269,12 @@ const styles = theme => {
 			marginBottom: theme.spacing.unit,
 			fontSize: 15,
 			lineHeight: "18px",
-			opacity: "0.6"
+			opacity: "0.6",
+			[theme.breakpoints.down("md")]: {
+				fontSize: 14,
+				lineHeight: "16px",
+				marginBottom: 4
+			}
 		},
 		iconText: {
 			display: "flex",
@@ -337,7 +346,10 @@ const styles = theme => {
 			fontSize: 17,
 			lineHeight: "19px",
 			fontFamily: fontFamilyDemiBold,
-			textAlign: "right"
+			textAlign: "right",
+			[theme.breakpoints.down("md")]: {
+				textAlign: "left"
+			}
 		},
 		divider: {
 			height: 1,
@@ -368,6 +380,18 @@ const styles = theme => {
 			fontSize: 24,
 			fontFamily: fontFamilyDemiBold,
 			lineHeight: "24px"
+		},
+		mobiBoldOrder: {
+			color: "#6A7C94",
+			fontSize: 17,
+			fontFamily: fontFamilyBold,
+			lineHeight: "19px"
+		},
+		plainGreyText: {
+			opacity: " 0.4",
+			color: "#3C383F",
+			fontSize: 16,
+			lineHeight: "23px"
 		}
 	};
 };
@@ -453,18 +477,33 @@ const PurchaseDetails = ({
 	}
 	return (
 		<div className={classes.purchaseInfoBlock}>
-			<div className={classes.purchaseInfo}>
-				<Typography className={classes.boldText}>{event.name}</Typography>
-				<Typography className={classes.boldText}>
+			<Hidden mdDown>
+				<div className={classes.purchaseInfo}>
+					<Typography className={classes.boldText}>{event.name}</Typography>
+					<Typography className={classes.boldText}>
+						{order.order_number}
+					</Typography>
+				</div>
+				<div className={classes.purchaseInfo}>
+					<Typography className={classes.purchaseText}>
+						{displayEventStartDate}
+					</Typography>
+					<Typography className={classes.greyTitleDemiBold}>
+						Order no.
+					</Typography>
+				</div>
+			</Hidden>
+			<Hidden smUp>
+				<Typography className={classes.greyTitleDemiBold}>Order no.</Typography>
+				<Typography className={classes.mobiBoldOrder}>
 					{order.order_number}
 				</Typography>
-			</div>
-			<div className={classes.purchaseInfo}>
+				<br/>
+				<Typography className={classes.boldText}>{event.name}</Typography>
 				<Typography className={classes.purchaseText}>
 					{displayEventStartDate}
 				</Typography>
-				<Typography className={classes.greyTitleDemiBold}>Order no.</Typography>
-			</div>
+			</Hidden>
 			<br/>
 			<Typography className={classes.boldText}>{venue.name}</Typography>
 			<Typography className={classes.purchaseText}>{venue.address}</Typography>
@@ -475,22 +514,25 @@ const PurchaseDetails = ({
 			</Typography>
 			<div className={classes.purchaseInfo}>{user.email}</div>
 			<br/>
-			<div className={classes.purchaseInfo}>
-				<div className={classes.leftColumn}>
-					<Typography className={classes.greyTitleDemiBold}>
-						Ticket type
-					</Typography>
+			<Hidden mdDown>
+				<div className={classes.purchaseInfo}>
+					<div className={classes.leftColumn}>
+						<Typography className={classes.greyTitleDemiBold}>
+							Ticket type
+						</Typography>
+					</div>
+					<div className={classes.rightColumn}>
+						<Typography className={classes.greyTitleDemiBold}>
+							Ticket price
+						</Typography>
+						<Typography className={classes.greyTitleDemiBold}>Qty</Typography>{" "}
+						<Typography className={classes.greyTitleDemiBold}>
+							Ticket total
+						</Typography>
+					</div>
 				</div>
-				<div className={classes.rightColumn}>
-					<Typography className={classes.greyTitleDemiBold}>
-						Ticket price
-					</Typography>
-					<Typography className={classes.greyTitleDemiBold}>Qty</Typography>{" "}
-					<Typography className={classes.greyTitleDemiBold}>
-						Ticket total
-					</Typography>
-				</div>
-			</div>
+				<div className={classes.divider}/>
+			</Hidden>
 			{items
 				? items.map((item, index) => {
 					if (item.item_type !== "Tickets") {
@@ -498,28 +540,64 @@ const PurchaseDetails = ({
 					}
 					subTotal = subTotal + item.unit_price_in_cents * item.quantity;
 					return (
-						<div className={classes.purchaseInfo} key={index}>
-							<div className={classes.leftColumn}>
+						<div key={index}>
+							<Hidden mdDown>
+								<div className={classes.purchaseInfo}>
+									<div className={classes.leftColumn}>
+										<Typography className={classes.purchaseTicketText}>
+											{item.description}
+										</Typography>
+									</div>
+									<div className={classes.rightColumn}>
+										<Typography className={classes.purchaseTicketText}>
+											{dollars(item.unit_price_in_cents)}
+										</Typography>{" "}
+										<Typography className={classes.purchaseTicketText}>
+											{item.quantity}
+										</Typography>{" "}
+										<Typography className={classes.purchaseTicketText}>
+											{dollars(item.unit_price_in_cents * item.quantity)}
+										</Typography>
+									</div>
+								</div>
+							</Hidden>
+							<Hidden smUp>
+								<Typography className={classes.greyTitleDemiBold}>
+										Ticket type
+								</Typography>
 								<Typography className={classes.purchaseTicketText}>
 									{item.description}
 								</Typography>
-							</div>
-							<div className={classes.rightColumn}>
-								<Typography className={classes.purchaseTicketText}>
-									{dollars(item.unit_price_in_cents)}
-								</Typography>{" "}
-								<Typography className={classes.purchaseTicketText}>
-									{item.quantity}
-								</Typography>{" "}
-								<Typography className={classes.purchaseTicketText}>
-									{dollars(item.unit_price_in_cents * item.quantity)}
-								</Typography>
-							</div>
+								<br/>
+								<div className={classes.purchaseInfo}>
+									<Typography className={classes.greyTitleDemiBold}>
+											Ticket price
+									</Typography>
+									<Typography className={classes.greyTitleDemiBold}>
+											Qty
+									</Typography>
+									<Typography className={classes.greyTitleDemiBold}>
+											Ticket total
+									</Typography>
+								</div>
+								<div className={classes.purchaseInfo}>
+									<Typography className={classes.purchaseTicketText}>
+										{dollars(item.unit_price_in_cents)}
+									</Typography>{" "}
+									<Typography className={classes.purchaseTicketText}>
+										{item.quantity}
+									</Typography>{" "}
+									<Typography className={classes.purchaseTicketText}>
+										{dollars(item.unit_price_in_cents * item.quantity)}
+									</Typography>
+								</div>
+								<br/>
+								<div className={classes.divider}/>
+							</Hidden>
 						</div>
 					);
 				  })
 				: null}
-			<div className={classes.divider}/>
 			<div className={classes.purchaseInfo}>
 				<Typography className={classes.greyTitleDemiBold}>Subtotal</Typography>
 				<Typography className={classes.greyTitleDemiBold}>
@@ -903,7 +981,10 @@ class CheckoutSuccess extends Component {
 															: process.env.REACT_APP_STORE_ANDROID
 													}
 												>
-													<CustomButton variant="secondary">
+													<CustomButton
+														variant="secondary"
+														style={{ width: "80vw" }}
+													>
 														Download the Big Neon App
 													</CustomButton>
 												</Link>
@@ -957,6 +1038,16 @@ class CheckoutSuccess extends Component {
 												</Typography>
 											</div>
 										</div>
+										<PurchaseDetails
+											displayEventStartDate={eventDateFormatted}
+											order={order}
+											event={event}
+											venue={venue}
+											classes={classes}
+										/>
+										<Typography className={classes.plainGreyText}>
+											Receipt has been sent to {user.email}
+										</Typography>
 									</div>
 								</Slide>
 							</div>
