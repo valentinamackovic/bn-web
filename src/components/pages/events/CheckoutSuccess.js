@@ -14,8 +14,7 @@ import {
 	fontFamily,
 	fontFamilyBold,
 	fontFamilyDemiBold,
-	secondaryHex,
-	textColorPrimary
+	secondaryHex
 } from "../../../config/theme";
 import AppButton from "../../elements/AppButton";
 import Meta from "./Meta";
@@ -108,31 +107,6 @@ const styles = theme => {
 			fontSize: theme.typography.fontSize * 1.065,
 			color: "#FFFFFF"
 		},
-		mobileCardTitle: {
-			fontFamily: fontFamilyDemiBold,
-			fontSize: theme.typography.fontSize * 1.3125,
-			marginBottom: 28
-		},
-		mobileExplainerText: {
-			lineHeight: 0.95
-		},
-		cardSpacer: {
-			marginTop: 100,
-			[iPhone5MediaQuery]: {
-				marginTop: 80
-			}
-		},
-		highlightText: {
-			fontFamily: fontFamilyDemiBold,
-			color: secondaryHex
-		},
-		buttonContainer: {
-			marginTop: 27,
-			marginBottom: 27
-		},
-		mobileFooterText: {
-			color: textColorPrimary
-		},
 		desktopHeroContent: {
 			display: "flex",
 			flexDirection: "column",
@@ -201,33 +175,15 @@ const styles = theme => {
 				paddingRight: 25
 			}
 		},
-		desktopEventDetailContainer: {
-			paddingTop: 4
-		},
 		desktopEventDetailText: {
 			color: "#FFFFFF",
 			fontSize: 15,
 			lineHeight: "18px"
 		},
-		desktopEventDetailsRow: {
-			display: "flex",
-			justifyContent: "flex-start",
-			marginBottom: 30
-		},
-		desktopIconContainer: {
-			marginRight: 12
-		},
-		desktopIcon: {
-			width: 22,
-			height: "auto"
-		},
 		boldText: {
 			fontFamily: fontFamilyDemiBold,
 			fontSize: 17,
 			lineHeight: "21px"
-		},
-		link: {
-			color: secondaryHex
 		},
 		desktopSuccessTitle: {
 			fontFamily: fontFamilyDemiBold,
@@ -267,7 +223,7 @@ const styles = theme => {
 			}
 		},
 		greyTitleDemiBold: {
-			color: "#6A7C94",
+			color: "#3C383F",
 			textTransform: "uppercase",
 			fontFamily: fontFamilyDemiBold,
 			marginBottom: theme.spacing.unit,
