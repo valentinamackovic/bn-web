@@ -20,6 +20,9 @@ const styles = theme => {
 			borderRadius: 8,
 			[theme.breakpoints.down("xs")]: {
 				minWidth: 120
+			},
+			[theme.breakpoints.down("sm")]: {
+				minWidth: 150
 			}
 			// WebkitBorderImage:
 			// 	"-webkit-gradient(linear, left top, left bottom, from(#00abeb), to(#fff), color-stop(0.5, #fff), color-stop(0.5, #66cc00)) 21 30 30 21 repeat repeat"
@@ -43,7 +46,7 @@ const styles = theme => {
 			backgroundRepeat: "no-repeat"
 		},
 		leftIcon: {
-			marginRight: theme.spacing.unit,
+			marginRight: 5,
 			marginBottom: 2,
 			width: "auto",
 			height: "100%"

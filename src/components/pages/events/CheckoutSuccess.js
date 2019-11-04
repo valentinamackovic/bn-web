@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Dialog, Typography, withStyles } from "@material-ui/core";
+import { Dialog, Grid, Typography, withStyles } from "@material-ui/core";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import Hidden from "@material-ui/core/Hidden";
@@ -95,7 +95,7 @@ const styles = theme => {
 			}
 		},
 		mobileSuccessHeading: {
-			fontSize: theme.typography.fontSize * 1.75,
+			fontSize: 22,
 			color: "#FFFFFF",
 			lineHeight: 1,
 			fontFamily: fontFamilyDemiBold,
@@ -104,7 +104,7 @@ const styles = theme => {
 			}
 		},
 		mobileSuccessText: {
-			marginTop: 12,
+			marginTop: 8,
 			fontSize: theme.typography.fontSize * 1.065,
 			color: "#FFFFFF"
 		},
@@ -373,20 +373,10 @@ const Hero = ({
 	venue,
 	order,
 	firstName,
-	promoImg,
+	qty,
+	promoImgStyle,
 	displayEventStartDate
 }) => {
-	const ticketItem = order.items.filter(item => item.item_type === "Tickets");
-	const promoImageStyle = {};
-	if (promoImg) {
-		promoImageStyle.backgroundImage = `url(${promoImg})`;
-	}
-	let qty = 0;
-	if (ticketItem.length > 0) {
-		for (let i = 0; i < ticketItem.length; i++) {
-			qty = qty + ticketItem[i].quantity;
-		}
-	}
 	return (
 		<div className={classes.desktopCoverImage}>
 			<TwoColumnLayout
@@ -399,10 +389,10 @@ const Hero = ({
 							Order #{order.order_number} |&nbsp;{qty} Tickets
 						</Typography>
 
-						{promoImg ? (
+						{promoImgStyle ? (
 							<div
 								className={classes.desktopEventPromoImg}
-								style={promoImageStyle}
+								style={promoImgStyle}
 							/>
 						) : null}
 
@@ -675,6 +665,19 @@ class CheckoutSuccess extends Component {
 			.utc(eventStartDateMoment)
 			.tz(venue.timezone)
 			.format("llll z");
+
+		const ticketItem = order.items.filter(item => item.item_type === "Tickets");
+		const promoImageStyle = {};
+		if (promo_image_url) {
+			promoImageStyle.backgroundImage = `url(${promo_image_url})`;
+		}
+		let qty = 0;
+		if (ticketItem.length > 0) {
+			for (let i = 0; i < ticketItem.length; i++) {
+				qty = qty + ticketItem[i].quantity;
+			}
+		}
+
 		return (
 			<div className={classes.root}>
 				<OrgAnalytics trackingKeys={tracking_keys}/>
@@ -698,19 +701,22 @@ class CheckoutSuccess extends Component {
 							promoImg={promo_image_url}
 							venue={venue}
 							firstName={firstName}
+							qty={qty}
 							classes={classes}
+							promoImgStyle={promoImageStyle}
 							displayEventStartDate={eventDateFormatted}
 							event={event}
 						/>
 						<TwoColumnLayout
 							containerClass={classes.desktopHeroContent}
 							containerStyle={{ minHeight: heroHeight }}
+							style={{ maxWidth: 1600, margin: "0 auto" }}
 							col1={null}
 							col2={(
 								<EventDetailsOverlayCard
 									// className={classes.desktopHeroContent}
 									style={{
-										width: "100%",
+										minWidth: "390px",
 										// top: 150,
 										position: "relative"
 									}}
@@ -835,20 +841,11 @@ class CheckoutSuccess extends Component {
 
 							<div className={classes.mobileTopContent}>
 								<Typography className={classes.mobileSuccessHeading}>
-									Download the Big Neon App.
-									<br/>
-									Get your tickets.
-									<br/>
-									Simple.
+									{user.firstName},<br/>
+									Your Big Neon order is confirmed!
 								</Typography>
-
 								<Typography className={classes.mobileSuccessText}>
-									To enhance your experience and protect you against counterfeit
-									ticket sales,
-									<span className={classes.boldText}>
-										{" "}
-										tickets are accessible through the Big Neon App.
-									</span>
+									Order #{order.order_number} |&nbsp;{qty} Tickets
 								</Typography>
 							</div>
 							<div>
