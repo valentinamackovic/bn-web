@@ -252,8 +252,10 @@ const styles = theme => {
 			color: "#6A7C94",
 			textTransform: "uppercase",
 			fontFamily: fontFamilyDemiBold,
+			marginBottom: theme.spacing.unit,
 			fontSize: 15,
-			lineHeight: "18px"
+			lineHeight: "18px",
+			opacity: "0.6"
 		},
 		iconText: {
 			display: "flex",
@@ -440,6 +442,7 @@ const PurchaseDetails = ({
 			<Typography className={classes.boldText}>{venue.name}</Typography>
 			<Typography className={classes.purchaseText}>{venue.address}</Typography>
 			<div className={classes.divider}/>
+			<Typography className={classes.greyTitleDemiBold}>Puchaser</Typography>
 			<Typography className={classes.boldText}>
 				{user.firstName} {user.lastName}
 			</Typography>
@@ -454,7 +457,7 @@ const PurchaseDetails = ({
 				<div className={classes.rightColumn}>
 					<Typography className={classes.greyTitleDemiBold}>
 						Ticket price
-					</Typography>{" "}
+					</Typography>
 					<Typography className={classes.greyTitleDemiBold}>Qty</Typography>{" "}
 					<Typography className={classes.greyTitleDemiBold}>
 						Ticket total
@@ -488,6 +491,13 @@ const PurchaseDetails = ({
 					);
 				  })
 				: null}
+			<div className={classes.divider}/>
+			<div className={classes.purchaseInfo}>
+				<Typography className={classes.greyTitleDemiBold}>
+					Subtotal
+				</Typography>
+				<Typography className={classes.greyTitleDemiBold}>Order no.</Typography>
+			</div>
 		</div>
 	);
 };
