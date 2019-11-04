@@ -392,6 +392,25 @@ const styles = theme => {
 			color: "#3C383F",
 			fontSize: 16,
 			lineHeight: "23px"
+		},
+		questionsText: {
+			fontSize: 17,
+			color: "#3C383F",
+			fontFamily: fontFamilyDemiBold,
+			lineHeight: "19px",
+			maxWidth: 420,
+			margin: "-80px auto 20px auto",
+			[theme.breakpoints.down("md")]: {
+				marginTop: theme.spacing.unit * 2,
+				marginBottom: theme.spacing.unit * 2
+			}
+		},
+		pinkSpan: {
+			color: secondaryHex,
+			fontSize: 17,
+			fontFamily: fontFamilyDemiBold,
+			textDecoration: "none",
+			lineHeight: "19px"
 		}
 	};
 };
@@ -898,6 +917,26 @@ class CheckoutSuccess extends Component {
 							)}
 						/>
 					</div>
+					<Typography className={classes.questionsText}>
+						Questions about your purchase? Please contact&nbsp;
+						<span>
+							<a
+								className={classes.pinkSpan}
+								href="https://support.bigneon.com/hc/en-us/requests/new"
+							>
+								Big Neon Customer Support
+							</a>
+						</span>
+						&nbsp; or&nbsp;
+						<span>
+							<a
+								className={classes.pinkSpan}
+								href="https://support.bigneon.com/hc/en-us/sections/360003586272-Frequently-Asked-Questions"
+							>
+								see our FAQ
+							</a>
+						</span>
+					</Typography>
 					<PurchaseDetails
 						displayEventStartDate={eventDateFormatted}
 						order={order}
@@ -1038,6 +1077,28 @@ class CheckoutSuccess extends Component {
 												</Typography>
 											</div>
 										</div>
+										<Divider/>
+
+										<Typography className={classes.questionsText}>
+											Questions about your purchase? Please contact&nbsp;
+											<span>
+												<a
+													className={classes.pinkSpan}
+													href="https://support.bigneon.com/hc/en-us/requests/new"
+												>
+													Big Neon Customer Support
+												</a>
+											</span>
+											&nbsp; or&nbsp;
+											<span>
+												<a
+													className={classes.pinkSpan}
+													href="https://support.bigneon.com/hc/en-us/sections/360003586272-Frequently-Asked-Questions"
+												>
+													see our FAQ
+												</a>
+											</span>
+										</Typography>
 										<PurchaseDetails
 											displayEventStartDate={eventDateFormatted}
 											order={order}
