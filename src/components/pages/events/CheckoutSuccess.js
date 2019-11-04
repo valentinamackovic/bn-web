@@ -341,6 +341,18 @@ const styles = theme => {
 			flexDirection: "row",
 			justifyContent: "space-between",
 			width: "55%"
+		},
+		orderTotalTitle: {
+			color: "#3C383F",
+			fontSize: 17,
+			fontFamily: fontFamilyBold,
+			lineHeight: "19px"
+		},
+		orderTotalValue: {
+			color: "#3C383F",
+			fontSize: 24,
+			fontFamily: fontFamilyDemiBold,
+			lineHeight: "24px"
 		}
 	};
 };
@@ -431,7 +443,7 @@ const PurchaseDetails = ({
 			items[i].item_type === "PerUnitFees" ||
 			items[i].item_type === "EventFees"
 		) {
-			allFees = allFees + (items[i].unit_price_in_cents * items[i].quantity);
+			allFees = allFees + items[i].unit_price_in_cents * items[i].quantity;
 		}
 	}
 	return (
@@ -452,7 +464,7 @@ const PurchaseDetails = ({
 			<Typography className={classes.boldText}>{venue.name}</Typography>
 			<Typography className={classes.purchaseText}>{venue.address}</Typography>
 			<div className={classes.divider}/>
-			<Typography className={classes.greyTitleDemiBold}>Puchaser</Typography>
+			<Typography className={classes.greyTitleDemiBold}>Purchaser</Typography>
 			<Typography className={classes.boldText}>
 				{user.firstName} {user.lastName}
 			</Typography>
@@ -516,6 +528,13 @@ const PurchaseDetails = ({
 				</Typography>
 				<Typography className={classes.greyTitleDemiBold}>
 					{dollars(allFees)}
+				</Typography>
+			</div>
+			<div className={classes.divider}/>
+			<div className={classes.purchaseInfo}>
+				<Typography className={classes.orderTotalTitle}>Order Total</Typography>
+				<Typography className={classes.orderTotalValue}>
+					{dollars(order.total_in_cents)}
 				</Typography>
 			</div>
 		</div>
