@@ -424,6 +424,16 @@ const PurchaseDetails = ({
 	displayEventStartDate
 }) => {
 	const items = order.items;
+	let subTotal = 0;
+	let allFees = 0;
+	for (let i = 0; i < items.length; i++) {
+		if (
+			items[i].item_type === "PerUnitFees" ||
+			items[i].item_type === "EventFees"
+		) {
+			allFees = allFees + (items[i].unit_price_in_cents * items[i].quantity);
+		}
+	}
 	return (
 		<div className={classes.purchaseInfoBlock}>
 			<div className={classes.purchaseInfo}>
@@ -469,6 +479,7 @@ const PurchaseDetails = ({
 					if (item.item_type !== "Tickets") {
 						return null;
 					}
+					subTotal = subTotal + item.unit_price_in_cents * item.quantity;
 					return (
 						<div className={classes.purchaseInfo} key={index}>
 							<div className={classes.leftColumn}>
@@ -493,10 +504,19 @@ const PurchaseDetails = ({
 				: null}
 			<div className={classes.divider}/>
 			<div className={classes.purchaseInfo}>
+				<Typography className={classes.greyTitleDemiBold}>Subtotal</Typography>
 				<Typography className={classes.greyTitleDemiBold}>
-					Subtotal
+					{dollars(subTotal)}
 				</Typography>
-				<Typography className={classes.greyTitleDemiBold}>Order no.</Typography>
+			</div>
+			<br/>
+			<div className={classes.purchaseInfo}>
+				<Typography className={classes.greyTitleDemiBold}>
+					Fees Total
+				</Typography>
+				<Typography className={classes.greyTitleDemiBold}>
+					{dollars(allFees)}
+				</Typography>
 			</div>
 		</div>
 	);
