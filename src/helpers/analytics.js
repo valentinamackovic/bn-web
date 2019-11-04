@@ -177,6 +177,30 @@ const ga = {
 	}
 };
 
+const bigneon = {
+	name: "bigneon",
+	enabled: true,
+	addTrackingKey(baseUrl) {
+		this.baseUrl = baseUrl;
+	},
+	track(data) {
+		const uri = window.location.pathname + window.location.search;
+
+		const img = document.createElement("img");
+		img.src = this.baseUrl + `/analytics/track?url=${uri}&` + data;
+		document.body.insertBefore(img, document.body.firstChild);
+	},
+	eventClick(id, name, category, organizationId, listPosition, list) {
+		this.track("event_id=" + id);
+	},
+	pageView() {
+		// No tracking without an event id
+	},
+	viewContent(ids, urlParams, eventName, organizationId, category) {
+		this.track(`event_id=${ids}`);
+	}
+};
+
 const facebook = {
 	keys: [],
 	name: "facebook",
@@ -420,12 +444,13 @@ const segment = {
 	}
 };
 
-const providers = [facebook, ga, segment];
+const providers = [facebook, ga, segment, bigneon];
 
 const init = () => {
 	const providerOptions = {
 		ga: process.env.REACT_APP_GOOGLE_ANALYTICS_KEY,
-		segment: process.env.REACT_APP_SEGMENT_KEY
+		segment: process.env.REACT_APP_SEGMENT_KEY,
+		bigneon: process.env.REACT_APP_BIGNEON_ANALYTICS_URL
 	};
 
 	Object.keys(providerOptions).forEach(k => {
