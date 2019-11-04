@@ -399,10 +399,13 @@ const styles = theme => {
 			fontFamily: fontFamilyDemiBold,
 			lineHeight: "19px",
 			maxWidth: 420,
+			textAlign: "center",
 			margin: "-80px auto 20px auto",
 			[theme.breakpoints.down("md")]: {
 				marginTop: theme.spacing.unit * 2,
+				textAlign: "left",
 				marginBottom: theme.spacing.unit * 2
+
 			}
 		},
 		pinkSpan: {
