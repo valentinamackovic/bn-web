@@ -21,7 +21,7 @@ const styles = theme => {
 			[theme.breakpoints.down("xs")]: {
 				minWidth: 120
 			},
-			[theme.breakpoints.down("sm")]: {
+			[theme.breakpoints.down("md")]: {
 				minWidth: 150
 			}
 			// WebkitBorderImage:

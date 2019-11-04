@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Dialog, Grid, Typography, withStyles } from "@material-ui/core";
+import { Dialog, Typography, withStyles } from "@material-ui/core";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
@@ -17,26 +17,23 @@ import {
 	secondaryHex,
 	textColorPrimary
 } from "../../../config/theme";
-import Card from "../../elements/Card";
 import AppButton from "../../elements/AppButton";
-import SMSLinkForm from "../../elements/SMSLinkForm";
 import Meta from "./Meta";
 import Loader from "../../elements/loaders/Loader";
 import PrivateEventDialog from "./PrivateEventDialog";
 import NotFound from "../../common/NotFound";
 import TwoColumnLayout from "./TwoColumnLayout";
-import Button from "../../elements/Button";
 import Divider from "../../common/Divider";
 import user from "../../../stores/user";
 import getUrlParam from "../../../helpers/getUrlParam";
 import getPhoneOS from "../../../helpers/getPhoneOS";
 import servedImage from "../../../helpers/imagePathHelper";
-import Settings from "../../../config/settings";
 import OrgAnalytics from "../../common/OrgAnalytics";
 import Bigneon from "../../../helpers/bigneon";
 import moment from "moment-timezone";
-import MaintainAspectRatio from "../../elements/MaintainAspectRatio";
-import { dollars } from "../../../helpers/money";
+
+import PurchaseDetails from "./PurchaseDetails";
+import Hero from "./SuccessHero";
 
 const heroHeight = 586;
 
@@ -50,7 +47,7 @@ const styles = theme => {
 		mobileContent: {
 			flex: 1,
 			flexDirection: "column",
-			background: "linear-gradient(180deg, #9C2D82 0%, #3965A6 100%)",
+			background: "linear-gradient(180deg, #9C2D82 0%, #3965A6 40%)",
 			display: "flex"
 		},
 		mobileTopContent: {
@@ -151,7 +148,11 @@ const styles = theme => {
 			backgroundRepeat: "no-repeat",
 			backgroundSize: "cover",
 			boxShadow: "0 4px 15px 2px rgba(0,0,0,0.15)",
-			backgroundPosition: "center"
+			backgroundPosition: "center",
+			[theme.breakpoints.down("md")]: {
+				height: 170,
+				width: 332
+			}
 		},
 		desktopCardContent: {
 			paddingRight: theme.spacing.unit * 4,
@@ -395,10 +396,12 @@ const styles = theme => {
 			lineHeight: "19px"
 		},
 		plainGreyText: {
-			opacity: " 0.4",
+			opacity: "0.4",
 			color: "#3C383F",
 			fontSize: 16,
-			lineHeight: "23px"
+			lineHeight: "23px",
+			margin: "25px auto 0 auto",
+			textAlign: "center"
 		},
 		questionsText: {
 			fontSize: 17,
@@ -407,7 +410,7 @@ const styles = theme => {
 			lineHeight: "19px",
 			maxWidth: 420,
 			textAlign: "center",
-			margin: "-80px auto 20px auto",
+			margin: "-90px auto 30px auto",
 			[theme.breakpoints.down("md")]: {
 				marginTop: theme.spacing.unit * 2,
 				textAlign: "left",
@@ -422,234 +425,6 @@ const styles = theme => {
 			lineHeight: "19px"
 		}
 	};
-};
-
-const EventDetail = ({ classes, children, iconUrl }) => (
-	<div className={classes.desktopEventDetailsRow}>
-		<div className={classes.desktopIconContainer}>
-			<img className={classes.desktopIcon} src={servedImage(iconUrl)}/>
-		</div>
-
-		<div className={classes.desktopEventDetailContainer}>{children}</div>
-	</div>
-);
-
-const Hero = ({
-	classes,
-	event,
-	venue,
-	order,
-	firstName,
-	qty,
-	promoImgStyle,
-	displayEventStartDate
-}) => {
-	return (
-		<div className={classes.desktopCoverImage}>
-			<TwoColumnLayout
-				col1={(
-					<div className={classes.desktopHeroContent}>
-						<Typography className={classes.desktopHeroTopLine}>
-							{firstName}, <br/> Your Big Neon order is confirmed!
-						</Typography>
-						<Typography className={classes.desktopHeroOrderTag}>
-							Order #{order.order_number} |&nbsp;{qty} Tickets
-						</Typography>
-
-						{promoImgStyle ? (
-							<div
-								className={classes.desktopEventPromoImg}
-								style={promoImgStyle}
-							/>
-						) : null}
-
-						<Typography className={classes.greyTitleBold}>Event</Typography>
-
-						<Typography className={classes.desktopEventDetailText}>
-							<span className={classes.boldText}>{event.name}</span>
-							<br/>
-							{displayEventStartDate}
-						</Typography>
-
-						<Typography className={classes.greyTitleBold}>Location</Typography>
-
-						<Typography className={classes.desktopEventDetailText}>
-							<span className={classes.boldText}>{venue.name}</span>
-							<br/>
-							{venue.address}
-						</Typography>
-					</div>
-				)}
-			/>
-		</div>
-	);
-};
-
-const PurchaseDetails = ({
-	classes,
-	event,
-	venue,
-	order,
-	displayEventStartDate
-}) => {
-	const items = order.items;
-	let subTotal = 0;
-	let allFees = 0;
-	for (let i = 0; i < items.length; i++) {
-		if (
-			items[i].item_type === "PerUnitFees" ||
-			items[i].item_type === "EventFees"
-		) {
-			allFees = allFees + items[i].unit_price_in_cents * items[i].quantity;
-		}
-	}
-	return (
-		<div className={classes.purchaseInfoBlock}>
-			<Hidden mdDown>
-				<div className={classes.purchaseInfo}>
-					<Typography className={classes.boldText}>{event.name}</Typography>
-					<Typography className={classes.boldText}>
-						{order.order_number}
-					</Typography>
-				</div>
-				<div className={classes.purchaseInfo}>
-					<Typography className={classes.purchaseText}>
-						{displayEventStartDate}
-					</Typography>
-					<Typography className={classes.greyTitleDemiBold}>
-						Order no.
-					</Typography>
-				</div>
-			</Hidden>
-			<Hidden smUp>
-				<Typography className={classes.greyTitleDemiBold}>Order no.</Typography>
-				<Typography className={classes.mobiBoldOrder}>
-					{order.order_number}
-				</Typography>
-				<br/>
-				<Typography className={classes.boldText}>{event.name}</Typography>
-				<Typography className={classes.purchaseText}>
-					{displayEventStartDate}
-				</Typography>
-			</Hidden>
-			<br/>
-			<Typography className={classes.boldText}>{venue.name}</Typography>
-			<Typography className={classes.purchaseText}>{venue.address}</Typography>
-			<div className={classes.divider}/>
-			<Typography className={classes.greyTitleDemiBold}>Purchaser</Typography>
-			<Typography className={classes.boldText}>
-				{user.firstName} {user.lastName}
-			</Typography>
-			<div className={classes.purchaseInfo}>{user.email}</div>
-			<br/>
-			<Hidden mdDown>
-				<div className={classes.purchaseInfo}>
-					<div className={classes.leftColumn}>
-						<Typography className={classes.greyTitleDemiBold}>
-							Ticket type
-						</Typography>
-					</div>
-					<div className={classes.rightColumn}>
-						<Typography className={classes.greyTitleDemiBold}>
-							Ticket price
-						</Typography>
-						<Typography className={classes.greyTitleDemiBold}>Qty</Typography>{" "}
-						<Typography className={classes.greyTitleDemiBold}>
-							Ticket total
-						</Typography>
-					</div>
-				</div>
-				<div className={classes.divider}/>
-			</Hidden>
-			{items
-				? items.map((item, index) => {
-					if (item.item_type !== "Tickets") {
-						return null;
-					}
-					subTotal = subTotal + item.unit_price_in_cents * item.quantity;
-					return (
-						<div key={index}>
-							<Hidden mdDown>
-								<div className={classes.purchaseInfo}>
-									<div className={classes.leftColumn}>
-										<Typography className={classes.purchaseTicketText}>
-											{item.description}
-										</Typography>
-									</div>
-									<div className={classes.rightColumn}>
-										<Typography className={classes.purchaseTicketText}>
-											{dollars(item.unit_price_in_cents)}
-										</Typography>{" "}
-										<Typography className={classes.purchaseTicketText}>
-											{item.quantity}
-										</Typography>{" "}
-										<Typography className={classes.purchaseTicketText}>
-											{dollars(item.unit_price_in_cents * item.quantity)}
-										</Typography>
-									</div>
-								</div>
-							</Hidden>
-							<Hidden smUp>
-								<Typography className={classes.greyTitleDemiBold}>
-										Ticket type
-								</Typography>
-								<Typography className={classes.purchaseTicketText}>
-									{item.description}
-								</Typography>
-								<br/>
-								<div className={classes.purchaseInfo}>
-									<Typography className={classes.greyTitleDemiBold}>
-											Ticket price
-									</Typography>
-									<Typography className={classes.greyTitleDemiBold}>
-											Qty
-									</Typography>
-									<Typography className={classes.greyTitleDemiBold}>
-											Ticket total
-									</Typography>
-								</div>
-								<div className={classes.purchaseInfo}>
-									<Typography className={classes.purchaseTicketText}>
-										{dollars(item.unit_price_in_cents)}
-									</Typography>{" "}
-									<Typography className={classes.purchaseTicketText}>
-										{item.quantity}
-									</Typography>{" "}
-									<Typography className={classes.purchaseTicketText}>
-										{dollars(item.unit_price_in_cents * item.quantity)}
-									</Typography>
-								</div>
-								<br/>
-								<div className={classes.divider}/>
-							</Hidden>
-						</div>
-					);
-				  })
-				: null}
-			<div className={classes.purchaseInfo}>
-				<Typography className={classes.greyTitleDemiBold}>Subtotal</Typography>
-				<Typography className={classes.greyTitleDemiBold}>
-					{dollars(subTotal)}
-				</Typography>
-			</div>
-			<br/>
-			<div className={classes.purchaseInfo}>
-				<Typography className={classes.greyTitleDemiBold}>
-					Fees Total
-				</Typography>
-				<Typography className={classes.greyTitleDemiBold}>
-					{dollars(allFees)}
-				</Typography>
-			</div>
-			<div className={classes.divider}/>
-			<div className={classes.purchaseInfo}>
-				<Typography className={classes.orderTotalTitle}>Order Total</Typography>
-				<Typography className={classes.orderTotalValue}>
-					{dollars(order.total_in_cents)}
-				</Typography>
-			</div>
-		</div>
-	);
 };
 
 @observer
@@ -702,10 +477,7 @@ class CheckoutSuccess extends Component {
 			.orders.read({ id: order_id })
 			.then(response => {
 				const { data } = response;
-				const { date, is_box_office, items, user_id } = data;
-
-				const { timezone } = this.props;
-
+				const { is_box_office, items } = data;
 				const platform = is_box_office ? "Box office" : data.platform || "";
 
 				let fees_in_cents = 0;
@@ -771,10 +543,8 @@ class CheckoutSuccess extends Component {
 		}
 
 		const {
-			name,
 			displayEventStartDate,
 			additional_info,
-			top_line_info,
 			promo_image_url,
 			displayDoorTime,
 			displayShowTime,
@@ -831,14 +601,11 @@ class CheckoutSuccess extends Component {
 						<TwoColumnLayout
 							containerClass={classes.desktopHeroContent}
 							containerStyle={{ minHeight: heroHeight }}
-							style={{ maxWidth: 1600, margin: "0 auto" }}
 							col1={null}
 							col2={(
 								<EventDetailsOverlayCard
-									// className={classes.desktopHeroContent}
 									style={{
 										minWidth: "390px",
-										// top: 150,
 										position: "relative"
 									}}
 								>
@@ -953,6 +720,9 @@ class CheckoutSuccess extends Component {
 						venue={venue}
 						classes={classes}
 					/>
+					<Typography className={classes.plainGreyText}>
+						Receipt has been sent to {user.email}
+					</Typography>
 				</Hidden>
 
 				{/*MOBILE*/}
@@ -974,9 +744,6 @@ class CheckoutSuccess extends Component {
 										alt="close"
 										src={servedImage("/icons/close-white.svg")}
 									/>
-								</div>
-								<div>
-									{/*<img className={classes.mobileHeaderIcon} alt="share" src={servedImage("/icons/share-white.svg")}/>*/}
 								</div>
 							</div>
 
