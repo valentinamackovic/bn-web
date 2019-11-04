@@ -18,7 +18,7 @@ const EventListTable = props => {
 		classes,
 		eventList,
 		isPostEventSettlement,
-		displayDateRangeNoTimezone
+		displayDateRange
 	} = props;
 
 	const columnStyles = [
@@ -32,7 +32,7 @@ const EventListTable = props => {
 		<div>
 			<Typography className={classes.heading}>
 				{isPostEventSettlement ? "Events" : "Sales occurring"} from{" "}
-				{displayDateRangeNoTimezone}
+				{displayDateRange}
 			</Typography>
 
 			<TotalsRow columnStyles={columnStyles} heading>
@@ -64,7 +64,7 @@ EventListTable.propTypes = {
 	classes: PropTypes.object.isRequired,
 	eventList: PropTypes.array.isRequired,
 	isPostEventSettlement: PropTypes.bool.isRequired,
-	displayDateRangeNoTimezone: PropTypes.string.isRequired
+	displayDateRange: PropTypes.string.isRequired
 };
 
 export default withStyles(styles)(EventListTable);

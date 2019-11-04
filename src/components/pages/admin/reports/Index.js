@@ -98,7 +98,7 @@ class Reports extends Component {
 							}
 							to={`/admin/reports/settlement-list`}
 						>
-							Settlement reports
+							Settlement
 						</StyledLink>
 					</Typography>
 				) : null}
