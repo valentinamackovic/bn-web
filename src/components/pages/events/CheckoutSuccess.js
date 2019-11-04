@@ -283,7 +283,11 @@ const styles = theme => {
 			display: "flex",
 			flexDirection: "row",
 			alignItems: "center",
-			justifyContent: "flex-start"
+			justifyContent: "flex-start",
+			marginLeft: theme.spacing.unit * 6,
+			[theme.breakpoints.down("md")]: {
+				marginLeft: 0
+			}
 		},
 		iconHolder: {
 			width: 26,
