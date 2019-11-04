@@ -92,6 +92,9 @@ const styles = theme => {
 			[iPhone5MediaQuery]: {
 				paddingLeft: 16,
 				paddingRight: 16
+			},
+			[theme.breakpoints.down("md")]: {
+				marginTop: theme.spacing.unit * 2
 			}
 		},
 		mobileSuccessHeading: {
@@ -405,7 +408,6 @@ const styles = theme => {
 				marginTop: theme.spacing.unit * 2,
 				textAlign: "left",
 				marginBottom: theme.spacing.unit * 2
-
 			}
 		},
 		pinkSpan: {
