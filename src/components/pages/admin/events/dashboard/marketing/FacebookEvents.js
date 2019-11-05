@@ -29,8 +29,9 @@ class FacebookEvents extends Component {
 			eventName: null,
 			pages: [],
 			pageId: null,
-			facebookCategory: null,
+			facebookCategory: "MUSIC_EVENT",
 			isSubmitting: false,
+			facebookEventId: null,
 			isFacebookLinked: false,
 			description: "",
 			customAddress: null,
@@ -41,13 +42,14 @@ class FacebookEvents extends Component {
 	componentDidMount() {
 		const { eventId } = this.props;
 
-		this.refreshPages();
+		this.refreshPages(true);
 		Bigneon()
 			.events.read({ id: eventId })
 			.then(response => {
 				this.setState({
 					description: htmlToPlainText(response.data.additional_info || ""),
-					customAddress: response.data.venue.address
+					customAddress: response.data.venue.address,
+					facebookEventId: response.data.facebook_event_id
 				});
 			})
 			.catch(error => {
@@ -59,7 +61,7 @@ class FacebookEvents extends Component {
 		this.refreshPages();
 	}
 
-	refreshPages() {
+	refreshPages(ignoreErrors) {
 		this.setState({ isSubmitting: true });
 		Bigneon()
 			.external.facebook.pages()
@@ -67,16 +69,19 @@ class FacebookEvents extends Component {
 				this.setState({
 					pages: response.data,
 					isFacebookLinked: true,
-					isSubmitting: false
+					isSubmitting: false,
+					pageId: response.data[0].id
 				})
 			)
 			.catch(error => {
-				const { message, type } = error;
-				notification.show({
-					message,
-					variant: type === "validation_error" ? "warning" : "error"
-				});
-				this.setState({ isFacebookLinked: false, isSubmitting: false });
+				if (!ignoreErrors) {
+					const { message, type } = error;
+					notification.show({
+						message,
+						variant: type === "validation_error" ? "warning" : "error"
+					});
+					this.setState({ isFacebookLinked: false, isSubmitting: false });
+				}
 			});
 	}
 
@@ -126,6 +131,7 @@ class FacebookEvents extends Component {
 			facebookCategory,
 			isSubmitting,
 			isFacebookLinked,
+			facebookEventId,
 			description,
 			locationType,
 			customAddress
@@ -143,18 +149,24 @@ class FacebookEvents extends Component {
 						{isFacebookLinked ? (
 							<div>
 								<p>Select Facebook Page</p>
-								<SelectGroup
-									items={pages.map(page => ({
-										value: page.id,
-										name: page.name
-									}))}
-									value={pageId}
-									onChange={e => this.setState({ pageId: e.target.value })}
-								/>
+								{pages ? (
+									<SelectGroup
+										items={pages.map(page => ({
+											value: page.id,
+											name: page.name
+										}))}
+										value={pageId}
+										name="pageId"
+										onChange={e => this.setState({ pageId: e.target.value })}
+									/>
+								) : (
+									<span>Loading pages</span>
+								)}
 								<p>Facebook Event Category</p>
 								<SelectGroup
 									items={[{ value: "MUSIC_EVENT", name: "Music Event" }]}
 									value={facebookCategory}
+									name="facebookCategory"
 									onChange={e =>
 										this.setState({ facebookCategory: e.target.value })
 									}
@@ -184,6 +196,7 @@ class FacebookEvents extends Component {
 										{ name: "Custom address", value: "CustomAddress" }
 									]}
 									value={locationType}
+									name="locationType"
 									onChange={e =>
 										this.setState({ locationType: e.target.value })
 									}
@@ -211,7 +224,7 @@ class FacebookEvents extends Component {
 						) : (
 							<div>
 								<FacebookButton
-									scopes={["manage_pages", "publish_pages", "create_event"]}
+									scopes={["manage_pages"]}
 									linkToUser={true}
 									onSuccess={this.onFacebookLogin.bind(this)}
 								/>
@@ -222,7 +235,7 @@ class FacebookEvents extends Component {
 						<h2>Please Note:</h2>
 						<ul>
 							<li>
-								A user with admin priviledges for your Facebook page needs to
+								A user with admin privileges for your Facebook page needs to
 								give Big Neon permission to create the event
 							</li>
 							<li>
