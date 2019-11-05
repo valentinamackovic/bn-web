@@ -14,14 +14,11 @@ const PurchaseDetails = ({
 	const items = order.items;
 	let subTotal = 0;
 	let allFees = 0;
-	for (let i = 0; i < items.length; i++) {
-		if (
-			items[i].item_type === "PerUnitFees" ||
-			items[i].item_type === "EventFees"
-		) {
-			allFees = allFees + items[i].unit_price_in_cents * items[i].quantity;
+	items.forEach(item => {
+		if (item.item_type === "PerUnitFees" || item.item_type === "EventFees") {
+			allFees = allFees + item.unit_price_in_cents * item.quantity;
 		}
-	}
+	});
 	return (
 		<div className={classes.purchaseInfoBlock}>
 			<Hidden mdDown>

@@ -30,6 +30,7 @@ import servedImage from "../../../helpers/imagePathHelper";
 import OrgAnalytics from "../../common/OrgAnalytics";
 import Bigneon from "../../../helpers/bigneon";
 import moment from "moment-timezone";
+import Settings from "../../../config/settings";
 
 import PurchaseDetails from "./PurchaseDetails";
 import Hero from "./SuccessHero";
@@ -520,11 +521,10 @@ class CheckoutSuccess extends Component {
 		}
 		let qty = 0;
 		if (ticketItem.length > 0) {
-			for (let i = 0; i < ticketItem.length; i++) {
-				qty = qty + ticketItem[i].quantity;
-			}
+			ticketItem.forEach(item => {
+				qty = qty + item.quantity;
+			});
 		}
-
 		return (
 			<div className={classes.root}>
 				<OrgAnalytics trackingKeys={tracking_keys}/>
@@ -581,7 +581,7 @@ class CheckoutSuccess extends Component {
 												<AppButton
 													color="pinkBackground"
 													variant="ios"
-													href={process.env.REACT_APP_STORE_IOS}
+													href={Settings().appStoreIos}
 													style={{ marginRight: 5 }}
 												>
 													APP STORE
@@ -589,7 +589,7 @@ class CheckoutSuccess extends Component {
 												<AppButton
 													color="pinkBackground"
 													variant="android"
-													href={process.env.REACT_APP_STORE_ANDROID}
+													href={Settings().appStoreAndroid}
 													style={{ marginRight: 5 }}
 												>
 													GOOGLE PLAY
@@ -654,17 +654,14 @@ class CheckoutSuccess extends Component {
 						<span>
 							<a
 								className={classes.pinkSpan}
-								href="https://support.bigneon.com/hc/en-us/requests/new"
+								href={Settings().submitSupportLink}
 							>
 								Big Neon Customer Support
 							</a>
 						</span>
 						&nbsp; or&nbsp;
 						<span>
-							<a
-								className={classes.pinkSpan}
-								href="https://support.bigneon.com/hc/en-us/sections/360003586272-Frequently-Asked-Questions"
-							>
+							<a className={classes.pinkSpan} href={Settings().supportFAQLink}>
 								see our FAQ
 							</a>
 						</span>
@@ -748,8 +745,8 @@ class CheckoutSuccess extends Component {
 												<Link
 													to={
 														phoneOS === "ios"
-															? process.env.REACT_APP_STORE_IOS
-															: process.env.REACT_APP_STORE_ANDROID
+															? Settings().appStoreIos
+															: Settings().appStoreAndroid
 													}
 												>
 													<CustomButton
@@ -816,7 +813,7 @@ class CheckoutSuccess extends Component {
 											<span>
 												<a
 													className={classes.pinkSpan}
-													href="https://support.bigneon.com/hc/en-us/requests/new"
+													href={Settings().submitSupportLink}
 												>
 													Big Neon Customer Support
 												</a>
@@ -825,7 +822,7 @@ class CheckoutSuccess extends Component {
 											<span>
 												<a
 													className={classes.pinkSpan}
-													href="https://support.bigneon.com/hc/en-us/sections/360003586272-Frequently-Asked-Questions"
+													href={Settings().supportFAQLink}
 												>
 													see our FAQ
 												</a>
