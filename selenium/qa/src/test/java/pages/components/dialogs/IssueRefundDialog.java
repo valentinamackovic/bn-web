@@ -1,11 +1,14 @@
 package pages.components.dialogs;
 
+import java.math.BigDecimal;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import pages.components.GenericDropDown;
+import utils.SeleniumUtils;
 
 public class IssueRefundDialog extends DialogContainerComponent {
 
@@ -62,6 +65,9 @@ public class IssueRefundDialog extends DialogContainerComponent {
 
 	@FindBy(xpath = "//button[@type='button' and span[contains(text(),'Got it')]]")
 	private WebElement gotItButton;
+	
+	@FindBy(xpath = "//div[p[contains(text(),'Refund total')]]/p[2]")
+	private WebElement refundTotal;
 
 	public IssueRefundDialog(WebDriver driver) {
 		super(driver);
@@ -74,17 +80,19 @@ public class IssueRefundDialog extends DialogContainerComponent {
 				By.xpath(".//ul//li[contains(text(),'" + refundReason.getLabel() + "')]"), refundReason.getLabel());
 		waitForTime(1500);
 	}
-
+	
 	public void clickOnCancel() {
 		explicitWaitForVisibilityAndClickableWithClick(cancelButton);
 	}
 
 	public void clickOnContinue() {
+		waitForTime(1500);
 		explicitWaitForVisibilityAndClickableWithClick(confirmButton);
+		waitForTime(1500);
 	}
 
 	public void clickOnGotItButton() {
-		explicitWaitForVisibilityAndClickableWithClick(gotItButton);
+		waitVisibilityAndBrowserCheckClick(gotItButton, 20);
 		waitForTime(1500);
 	}
 
@@ -92,6 +100,11 @@ public class IssueRefundDialog extends DialogContainerComponent {
 		explicitWaitForVisiblity(purchaserInfoParagraph);
 		String text = purchaserInfoParagraph.getText();
 		return text;
+	}
+	
+	public BigDecimal getRefundTotalAmount() {
+		Double dAmount = SeleniumUtils.getDoubleAmount(refundTotal);
+		return new BigDecimal(dAmount);
 	}
 
 }

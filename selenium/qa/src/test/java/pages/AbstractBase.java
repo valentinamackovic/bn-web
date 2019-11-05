@@ -55,7 +55,13 @@ public class AbstractBase implements Serializable {
 	public <T,V> T explicitWaitForVisibilityBy(By by) {
 		return explicitWait(15, ExpectedConditions.visibilityOfElementLocated(by));
 	}
-
+	
+	public void explicitWaitForVisiblityAndClickableWithClick(WebElement element, int seconds) {
+		explicitWaitForVisiblity(element, seconds);
+		explicitWaitForClickable(element);
+		element.click();
+	}
+	
 	public void explicitWaitForVisibilityAndClickableWithClick(WebElement element) {
 		explicitWaitForVisiblity(element);
 		explicitWaitForClickable(element);
@@ -117,6 +123,15 @@ public class AbstractBase implements Serializable {
 		}
 		return retVal;
 	}
+	
+	public void waitVisibilityAndBrowserCheckClick(WebElement element, int seconds) {
+		if (isSafari()) {
+			waitForTime(seconds*1000);
+			SeleniumUtils.clickOnElement(element, driver);
+		} else {
+			explicitWaitForVisiblityAndClickableWithClick(element, seconds);
+		}
+	}
 
 	public void waitVisibilityAndBrowserCheckClick(WebElement element) {
 		if (isSafari()) {
@@ -139,6 +154,9 @@ public class AbstractBase implements Serializable {
 	}
 	
 	public void waitVisibilityAndClearFieldSendKeys(WebElement inputField, String value) {
+		if (value == null) {
+			return;
+		}
 		String text = inputField.getAttribute("value");
 	    inputField.clear();
 	    String newtext = inputField.getAttribute("value");
@@ -148,9 +166,20 @@ public class AbstractBase implements Serializable {
 			}
 	    }
 		waitVisibilityAndSendKeysSlow(inputField,value);
-//		inputField.sendKeys(Keys.TAB);
+
 	}
 
+	public void waitVisibilityAndClearFieldSendKeysF(WebElement inputField, String value) {
+		String text = inputField.getAttribute("value");
+	    inputField.clear();
+	    String newtext = inputField.getAttribute("value");
+	    if(!newtext.isEmpty()) {
+			for (int i = 0; i < text.length() + 4; i++) {
+				inputField.sendKeys(Keys.BACK_SPACE);
+			}
+	    }
+	    waitVisibilityAndSendKeys(inputField,value);
+	}
 	public void waitVisibilityAndSendKeys(WebElement element, String value) {
 		explicitWaitForVisiblity(element);
 		explicitWaitForClickable(element);
@@ -170,6 +199,10 @@ public class AbstractBase implements Serializable {
 		explicitWait(15, ExpectedConditions.and(ExpectedConditions.visibilityOf(element),
 				ExpectedConditions.elementToBeClickable(element)));
 		element.click();
+	}
+	
+	public <T, V> T explicitWaitForVisiblity(WebElement element, int seconds) {
+		return explicitWait(seconds, ExpectedConditions.visibilityOf(element));
 	}
 
 	public <T, V> T explicitWaitForVisiblity(WebElement element) {

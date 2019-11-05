@@ -1,5 +1,6 @@
 package pages.admin.orders.manage;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -15,6 +16,7 @@ import pages.components.admin.orders.manage.ActivityItem;
 import pages.components.admin.orders.manage.tickets.OrderDetails;
 import pages.components.admin.orders.manage.tickets.TicketRow;
 import utils.Constants;
+import utils.ProjectUtils;
 
 public class SelectedOrderPage extends BasePage {
 
@@ -30,6 +32,9 @@ public class SelectedOrderPage extends BasePage {
 	
 	@FindBy(xpath = "//button[@type='button' and span[contains(text(),'Refund')]]")
 	private WebElement refundButton;
+	
+	@FindBy(xpath = "//p[contains(text(),'Order total')]/span[contains(text(),'Refunded')]")
+	private WebElement totalRefundAmount;
 	
 	@FindBy(xpath = "//main//textarea[@name='note']")
 	private WebElement textArea;
@@ -69,17 +74,40 @@ public class SelectedOrderPage extends BasePage {
 		return retVal;
 	}
 	
+	public BigDecimal getRefundButtonMoneyAmount() {
+		String text = refundButton.getText();
+		String[] tokens = text.split(" ");
+		Double amount = ProjectUtils.getMoneyAmount(tokens[1]);
+		return new BigDecimal(amount);
+	}
+	
 	public void clickOnRefundButton() {
 		explicitWaitForVisibilityAndClickableWithClick(refundButton);
+	}
+	
+	public boolean isRefundButtonVisible() {
+		return isExplicitlyWaitVisible(5, refundButton);
+	}
+	
+	public OrderDetails getOrderDetails() {
+		return this.orderDetails;
 	}
 	
 	public TicketRow findTicketRow(Predicate<TicketRow> predicate) {
 		return this.orderDetails.findTicketRow(predicate);
 	}
 	
-	public OrderDetails getOrderDetails() {
-		return this.orderDetails;
+	public BigDecimal selectAllTicketRowsForRefundGetFeeSum() {
+		List<TicketRow> rows = orderDetails.findAllTicketRows();
+		BigDecimal total = new BigDecimal(0);
+		for(TicketRow row : rows) {
+			row.clickOnCheckoutBoxInTicket();
+			total = total.add(row.getTicketTotalAmount());
+			total = total.add(row.getPerTicketFeeAmount());
+		}
+		return total;
 	}
+	
 	
 	public ActivityItem getHistoryActivityItem(Predicate<ActivityItem> predicate) {
 		List<WebElement> historyItems = findOrderHistoryRows();
@@ -109,6 +137,15 @@ public class SelectedOrderPage extends BasePage {
 		return rows != null ? rows.size() : 0;
 	}
 	
+	public BigDecimal getOrderRefundTotalAmount() {
+		explicitWaitForVisiblity(totalRefundAmount);
+		String text = totalRefundAmount.getText();
+		String amount = text.replaceAll(".*.[\\($]|[\\)]", "");
+		Double parse = Double.parseDouble(amount);
+		return new BigDecimal(parse);
+	}
+	
+	
 	private List<WebElement> findOrderHistoryRows() {
 		List<WebElement> rows = explicitWaitForVisiblityForAllElements(
 				By.xpath("//main//p[contains(text(),'Order history')]/following-sibling::div[not(@class)]"));
@@ -120,5 +157,4 @@ public class SelectedOrderPage extends BasePage {
 				By.xpath("//main//p[contains(text(),'Order history')]/following-sibling::div[not(@class)]//p[span[contains(text(),'Show Details')]]"));
 		return rows;
 	}
-
 }

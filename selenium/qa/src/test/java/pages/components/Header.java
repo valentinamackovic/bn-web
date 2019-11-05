@@ -12,8 +12,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import pages.BaseComponent;
+import pages.TicketsConfirmationPage;
 import pages.user.MyEventsPage;
-import test.BoxOfficeSellTicketStepsIT;
 import utils.Constants;
 import utils.SeleniumUtils;
 
@@ -24,6 +24,9 @@ public class Header extends BaseComponent {
 
 	@FindBy(css = "header form input")
 	private WebElement searchEvents;
+	
+	@FindBy(xpath = "//header//a/img[@alt='Header logo']")
+	private WebElement headerLogo;
 
 	@FindBy(css = "header form img[alt='Search icon']")
 	private WebElement searchImage;
@@ -68,17 +71,21 @@ public class Header extends BaseComponent {
 	public boolean isVisible(int waitTime) {
 		return isExplicitlyWaitVisible(waitTime, header);
 	}
+	
+	public void clickOnHeaderLogo() {
+		waitVisibilityAndBrowserCheckClick(headerLogo);
+	}
 
 	public void searchEvents(String event) {
 		if (event == null) {
 			return;
 		}
-		if (isExplicitlyWaitVisible(4, searchEvents)) {
-			waitVisibilityAndSendKeys(searchEvents, event);
-			searchEvents.submit();
-		} else {
-			SearchAndSignInMainPageComponent searchComponent = new SearchAndSignInMainPageComponent(driver);
+		SearchAndSignInMainPageComponent searchComponent = new SearchAndSignInMainPageComponent(driver);
+		if (searchComponent.isSearchFieldVisible()) {
 			searchComponent.searchForEvents(event);
+		} else if (isExplicitlyWaitVisible(4, searchEvents)) {
+			waitVisibilityAndClearFieldSendKeysF(searchEvents, event);
+			searchEvents.submit();
 		}
 	}
 	
@@ -95,12 +102,12 @@ public class Header extends BaseComponent {
 		explicitWaitForVisiblity(boxOffice);
 		explicitWaitForClickable(boxOffice);
 		waitForTime(1000);
-		boxOffice.click();
+		waitVisibilityAndBrowserCheckClick(boxOffice);
 	}
 
 	public void clickOnToStudioLink() {
 		explicitWaitForVisiblity(toStudioButton);
-		toStudioButton.click();
+		waitVisibilityAndBrowserCheckClick(toStudioButton);
 	}
 
 	public void openProfileOptions() {
@@ -162,12 +169,12 @@ public class Header extends BaseComponent {
 		WebElement element = explicitWait(15,
 				ExpectedConditions.visibilityOfElementLocated(By.xpath("//body//div[@id='menu-appbar']")));
 		element.click();
-
+		
 		return retVal;
 	}
 
 	public boolean clickOnShoppingBasketIfPresent() {
-		boolean isPresent = isExplicitConditionTrue(4, ExpectedConditions.invisibilityOf(shoppingBasket));
+		boolean isPresent = isExplicitlyWaitVisible(4, shoppingBasket);
 		if (isPresent) {
 			String innerHtml = shoppingBasket.getAttribute("innerHTML");
 			Document document = Jsoup.parse(innerHtml);
@@ -175,12 +182,13 @@ public class Header extends BaseComponent {
 			String href = null;
 			for (Element paragraph : paragraphs) {
 				href = paragraph.attr("href");
-				break;
+				if(href.contains(TicketsConfirmationPage.partialPath)) {
+					String formatedPath = href.substring(1);
+					SeleniumUtils.openLink(Constants.getBaseUrlBigNeon() + formatedPath, driver);
+					return true;
+				}
 			}
-			String formatedPath = href.substring(1);
-			SeleniumUtils.openLink(Constants.getBaseUrlBigNeon() + formatedPath, driver);
-
-			return true;
+			
 		}
 		return false;
 	}
