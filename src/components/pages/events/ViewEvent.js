@@ -308,7 +308,7 @@ class ViewEvent extends Component {
 			);
 		} else {
 			return (
-				<Link to={`/events/${id}/tickets`}>
+				<Link to={`/tickets/${id}/tickets`}>
 					<Button
 						size={"mediumLarge"}
 						className={classes.callToAction}
