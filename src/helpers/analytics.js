@@ -187,7 +187,16 @@ const bigneon = {
 		const uri = window.location.pathname + window.location.search;
 
 		const img = document.createElement("img");
-		img.src = this.baseUrl + `/analytics/track?url=${uri}&` + data;
+		// Use Google analytics to get a unique id per
+		// client
+		const clientId = ReactGA.ga()
+			.getAll()[0]
+			.get("clientId");
+
+		img.src =
+			this.baseUrl +
+			`/analytics/track?url=${uri}&client_id=${clientId}&` +
+			data;
 		document.body.insertBefore(img, document.body.firstChild);
 	},
 	eventClick(id, name, category, organizationId, listPosition, list) {
@@ -500,7 +509,7 @@ const page = (...args) => {
 // @param user object {id, firstName, lastName, email, method}
 const identify = user => {
 	const enabledProviders = providers.filter(p => p.enabled);
-	enabledProviders.forEach(p => p.identify(user));
+	enabledProviders.forEach(p => (p.identify ? p.identify(user) : null));
 };
 
 //Track load times if a provider has the `trackLoadTime` function
