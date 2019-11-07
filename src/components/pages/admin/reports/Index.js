@@ -79,16 +79,16 @@ class Reports extends Component {
 					</Typography>
 				) : null}
 
-				{hasOrgReconciliationReport ? (
-					<Typography className={classes.menuText}>
-						<StyledLink
-							underlined={report === "reconciliation"}
-							to={`/admin/reports/reconciliation`}
-						>
-							Reconciliation
-						</StyledLink>
-					</Typography>
-				) : null}
+				{/*{hasOrgReconciliationReport ? (*/}
+				{/*	<Typography className={classes.menuText}>*/}
+				{/*		<StyledLink*/}
+				{/*			underlined={report === "reconciliation"}*/}
+				{/*			to={`/admin/reports/reconciliation`}*/}
+				{/*		>*/}
+				{/*			Reconciliation*/}
+				{/*		</StyledLink>*/}
+				{/*	</Typography>*/}
+				{/*) : null}*/}
 
 				{hasOrgEventSettlementReport ? (
 					<Typography className={classes.menuText}>
@@ -98,7 +98,7 @@ class Reports extends Component {
 							}
 							to={`/admin/reports/settlement-list`}
 						>
-							Settlement reports
+							Settlement
 						</StyledLink>
 					</Typography>
 				) : null}

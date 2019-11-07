@@ -171,7 +171,13 @@ class CheckoutSelection extends Component {
 			return 0;
 		}
 
-		const { increment, limit_per_person, available } = ticketTypes[index];
+		const { increment, limit_per_person, available, status } = ticketTypes[index];
+
+		//Check that the status of the ticket we
+		if (status !== "Published") {
+			return 0;
+		}
+
 		let quantity = AUTO_SELECT_TICKET_AMOUNT;
 
 		//If the default auto select amount is NOT divisible by the increment amount, rather auto select the first increment
@@ -397,10 +403,18 @@ class CheckoutSelection extends Component {
 			ticketSelection,
 			data => {
 				if (!emptySelection) {
-					let cartItems = 0;
+					const cartItems = [];
 					for (let i = 0; i < data.items.length; i++) {
 						if (data.items[i].item_type === "Tickets") {
-							cartItems += data.items[i].quantity;
+							cartItems.push({
+								eventId: event.id,
+								name: event.name,
+								category: event.event_type,
+								organizationId: event.organization_id,
+								ticketTypeName: data.items[i].description,
+								price: data.items[i].unit_price_in_cents / 100,
+								quantity: data.items[i].quantity
+							});
 						}
 					}
 					const total = data.total_in_cents / 100;

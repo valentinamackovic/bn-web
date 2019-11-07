@@ -14,7 +14,7 @@ const styles = theme => {
 			marginBottom: theme.spacing.unit * 8
 		},
 		heading: {
-			fontSize: theme.typography.fontSize * 1.6,
+			fontSize: theme.typography.fontSize * 1.3,
 			fontFamily: fontFamilyDemiBold
 		},
 		boldSpan: {
@@ -74,7 +74,7 @@ const SingleEventSettlement = props => {
 					totalRevShareInCents +
 					revenue_share_value_in_cents * fee_sold_quantity;
 				totalSalesInCents = totalSalesInCents + total_sales_in_cents;
-				
+
 				let description = ticket_type_name;
 				if (
 					!description &&

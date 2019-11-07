@@ -1,5 +1,9 @@
+const numberWithCommas = x => {
+	return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
 export const dollars = (cents, trimDecimalIfZero = false, prefix = "$") => {
-	if (!cents) {
+	if (!cents && cents !== 0) {
 		return `${prefix}0`;
 	}
 
@@ -12,8 +16,8 @@ export const dollars = (cents, trimDecimalIfZero = false, prefix = "$") => {
 	const dollars = cents / 100;
 
 	if (trimDecimalIfZero && dollars % 1 === 0) {
-		return `${prefix}${dollars.toFixed(0)}`;
+		return `${prefix}${numberWithCommas(dollars.toFixed(0))}`;
 	}
 
-	return `${prefix}${(cents / 100).toFixed(2)}`;
+	return `${prefix}${numberWithCommas((cents / 100).toFixed(2))}`;
 };

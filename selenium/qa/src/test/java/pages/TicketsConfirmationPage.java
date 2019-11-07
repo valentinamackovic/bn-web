@@ -13,22 +13,25 @@ import utils.SeleniumUtils;
 public class TicketsConfirmationPage extends BasePage {
 
 	@FindBy(xpath = "//main//a[contains(@href,'tickets')]")
-	public WebElement changeTicketLink;
+	private WebElement changeTicketLink;
 
 	@FindBy(xpath = "//main//button[span[contains(text(),'Purchase tickets')]]")
-	public WebElement purchaseTicketButton;
+	private WebElement purchaseTicketButton;
 
 	@FindBy(xpath = "//header//span/a[contains(@href,'tickets/confirmation')]/button/span[1]")
-	public WebElement shoppingBasket;
+	private WebElement shoppingBasket;
 
 	@FindBy(xpath = "//header//span/a[contains(@href,'tickets/confirmation')]/button/span[1]//span")
-	public WebElement shoppingBasketTime;
+	private WebElement shoppingBasketTime;
 
 	@FindBy(xpath = "//main//form//iframe")
 	private WebElement iframe;
 
 	@FindBy(xpath = "//form//div//img[contains(@src,'credit-card-gray.svg')]/..")
 	private WebElement paymentMethodCard;
+	
+	
+	public static final String partialPath = "tickets/confirmation";
 
 	public TicketsConfirmationPage(WebDriver driver) {
 		super(driver);
@@ -39,13 +42,13 @@ public class TicketsConfirmationPage extends BasePage {
 	}
 
 	public void ticketsConfirmationPageSteps(CreditCard card) {
-		isAtConfirmationPage();
+		isAtPage();
 		confirmPaymentMethod("card");
 		enterCreditCardDetails(card.getCardNumber(), card.getExpirationDate(), card.getCvc(), card.getZipCode());
 		clickOnPurchaseTicketButton();
 	}
-
-	public boolean isAtConfirmationPage() {
+	@Override
+	public boolean isAtPage() {
 		return explicitWait(15, ExpectedConditions.urlContains("tickets/confirmation"));
 	}
 

@@ -24,6 +24,7 @@ import LoginForm from "../../authentication/forms/LoginForm";
 import servedImage from "../../../../helpers/imagePathHelper";
 import SMSLinkForm from "../../../elements/SMSLinkForm";
 import optimizedImageUrl from "../../../../helpers/optimizedImageUrl";
+import settings from "../../../../config/settings";
 
 const styles = theme => ({
 	root: {
@@ -86,7 +87,7 @@ const styles = theme => ({
 		fontSize: 14,
 		textAlign: "center"
 	},
-	switchAuthTypeTextLink: {
+	textLink: {
 		cursor: "pointer",
 		fontFamily: fontFamilyDemiBold,
 		color: secondaryHex
@@ -182,7 +183,7 @@ class ReceiveTransfer extends Component {
 					transfer_address,
 					event_ids,
 					ticket_ids,
-					status, //Pending, Cancelled, Completed
+					status, //Pending, Cancelled, Completed, EventEnded
 					...rest
 				} = response.data;
 
@@ -288,7 +289,7 @@ class ReceiveTransfer extends Component {
 					<Typography className={classes.switchAuthTypeText}>
 						Already have an account?{" "}
 						<span
-							className={classes.switchAuthTypeTextLink}
+							className={classes.textLink}
 							onClick={() => this.setState({ signupOrLogin: "login" })}
 						>
 							Log in
@@ -303,7 +304,7 @@ class ReceiveTransfer extends Component {
 					<Typography className={classes.switchAuthTypeText}>
 						Don't have an account?{" "}
 						<span
-							className={classes.switchAuthTypeTextLink}
+							className={classes.textLink}
 							onClick={() => this.setState({ signupOrLogin: "signup" })}
 						>
 							Sign up
@@ -385,33 +386,78 @@ class ReceiveTransfer extends Component {
 		const { transferStatus } = this.state;
 		const { classes } = this.props;
 
-		let text =
-			"This ticket transfer has been cancelled or the transfer is no longer valid.";
+		let explainer = (
+			<Typography className={classes.backgroundText}>
+				This ticket transfer has been cancelled or the transfer is no longer
+				valid.
+			</Typography>
+		);
+
+		let buttonLink = (
+			<Link to={"/"}>
+				<Button
+					size={"mediumLarge"}
+					variant={"whiteCTA"}
+					style={{ width: "100%", marginTop: 40 }}
+				>
+					Find other events
+				</Button>
+			</Link>
+		);
 
 		if (transferStatus === "Completed") {
-			text = "This ticket transfer is no longer valid.";
-		} else if (transferStatus === "Cancelled") {
-			text = "This ticket transfer has been cancelled";
-		}
-
-		return (
-			<div className={classes.unavailableContainer}>
+			explainer = (
 				<div>
-					<Typography className={classes.backgroundText}>{text}</Typography>
+					<Typography className={classes.backgroundText}>
+						This ticket transfer is no longer valid.
+					</Typography>
 					<br/>
 					<Typography className={classes.backgroundTextSmall}>
 						Contact the sender if you believe there was a mistake.
 					</Typography>
 				</div>
-				<Link to={"/"}>
-					<Button
-						size={"mediumLarge"}
-						variant={"whiteCTA"}
-						style={{ width: "100%", marginTop: 40 }}
-					>
-						Find other events
-					</Button>
-				</Link>
+			);
+		} else if (transferStatus === "Cancelled") {
+			explainer = (
+				<div>
+					<Typography className={classes.backgroundText}>
+						This ticket transfer has been cancelled.
+					</Typography>
+					<br/>
+					<Typography className={classes.backgroundTextSmall}>
+						Contact the sender if you believe there was a mistake.
+					</Typography>
+				</div>
+			);
+		} else if (transferStatus === "EventEnded") {
+			explainer = (
+				<div>
+					<Typography className={classes.backgroundText}>
+						We're sorry - this event has ended.
+					</Typography>
+					<br/>
+					<Typography className={classes.backgroundTextSmall}>
+						If you think this is a mistake, please contact Big Neon Customer Support.
+					</Typography>
+				</div>
+			);
+
+			buttonLink = (
+				<Button
+					href={settings().submitSupportLink || settings().appSupportLink}
+					size={"mediumLarge"}
+					variant={"whiteCTA"}
+					style={{ width: "100%", marginTop: 40 }}
+				>
+					Support
+				</Button>
+			);
+		}
+
+		return (
+			<div className={classes.unavailableContainer}>
+				{explainer}
+				{buttonLink}
 			</div>
 		);
 	}
@@ -455,7 +501,11 @@ class ReceiveTransfer extends Component {
 			);
 		}
 
-		if (transferStatus === "Completed" || transferStatus === "Cancelled") {
+		if (
+			transferStatus === "Completed" ||
+			transferStatus === "Cancelled" ||
+			transferStatus === "EventEnded"
+		) {
 			return this.renderTransferUnavailable();
 		}
 

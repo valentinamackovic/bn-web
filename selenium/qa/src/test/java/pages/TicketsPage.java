@@ -12,7 +12,6 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import model.TicketType;
 import utils.MsgConstants;
-import utils.ProjectUtils;
 import utils.SeleniumUtils;
 
 public class TicketsPage extends BasePage {
@@ -66,35 +65,68 @@ public class TicketsPage extends BasePage {
 
 	@Override
 	public boolean isAtPage() {
-		return explicitWait(15, ExpectedConditions.urlMatches("tickets$"));
+		return explicitWait(15, ExpectedConditions.urlMatches("tickets/$"));
 	}
 	
-	public void selectTicketNumberAndClickOnContinue(int numberOfTickets, TicketType ticketType) {
-		addNumberOfTickets(numberOfTickets, ticketType);
-		clickOnContinue();
-	}
-
-	public void selectTicketNumberAndClickOnContinue(int numberOfTickets) {
-		addNumberOfTickets(numberOfTickets);
-		clickOnContinue();
-	}
-
 	public String getUrlPath() throws URISyntaxException {
 		return SeleniumUtils.getUrlPath(driver);
 	}
 	
-	private void addNumberOfTickets(int number, TicketType ticketType) {
+	public void addNumberOfTickets(int number, TicketType ticketType) {
 		for (int k = 0; k< number; k++) {
 			addTicketForTicketType(ticketType.getTicketTypeName());
 		}
 	}
+	
+	private void addTicketForTicketType(String ticketTypeName) {
+		if (verifyDifferentTicketTypesAreDisplayed()) {
+			WebElement incrementer = getIncreaseSpecificTicketTypeElement(ticketTypeName);
+			waitVisibilityAndBrowserCheckClick(incrementer);
+		}
+	}
 
-	private void addNumberOfTickets(int number) {
+	public void addNumberOfTickets(int number) {
 		for (int k = 0; k < number; k++) {
 			addTicketForLastType();
 		}
 	}
 	
+	private void addTicketForLastType() {
+		if (verifyDifferentTicketTypesAreDisplayed()) {
+			List<WebElement> list = getIncrementersForAllTicketTypes();
+			incrementTicketNumber(list.get(list.size() - 1));
+		} else {
+			throw new NotFoundException("No ticket types found");
+		}
+	}
+	
+	public void addNumberOfTicketsForEachType(int number) {
+		for (int k = 0; k < number; k++) {
+			addTicketForEachTicketType();
+		}
+	}
+	
+	private void addTicketForEachTicketType() {
+		if (verifyDifferentTicketTypesAreDisplayed()) {
+			List<WebElement> list = getIncrementersForAllTicketTypes();
+			for (WebElement incrementer : list) {
+				incrementTicketNumber(incrementer);
+			}
+		}
+	}
+	
+	public void checkIfTicketAreSelectedAndRemoveAllTickets() {
+		List<WebElement> list = getDecrementersForAllTicketTypes();
+		for (WebElement minus : list) {
+			Integer qty = SeleniumUtils.getIntegerAmount(minus, By.xpath(".//following-sibling::p"), driver);
+			if (qty.compareTo(new Integer(0)) > 0) {
+				for (int i = qty; i > 0; i--) {
+					waitVisibilityAndBrowserCheckClick(minus);
+				}
+			}
+		}
+	}
+
 	public void removeNumberOfTickets(int number, TicketType ticketType) {
 		WebElement decrementer = getDecreaseSpecificTicketTypeElement(ticketType.getTicketTypeName());
 		Integer qty = SeleniumUtils.getIntegerAmount(decrementer, By.xpath(".//following-sibling::p"), driver);
@@ -110,17 +142,13 @@ public class TicketsPage extends BasePage {
 		WebElement currentQuantityEl = lastTicketType.findElement(By.xpath(".//following-sibling::p"));
 		String text = currentQuantityEl.getText();
 		Integer currentQuantity = Integer.parseInt(text);
-		if (currentQuantity <= number && (currentQuantity - 1) > 0) {
-			number = currentQuantity - 1;
-		} else if (currentQuantity.equals(1)) {
-			number = 0;
-		}
+		number = calculateRemoveNumber(currentQuantity, number);
 		for (int k = 0; k < number; k++) {
 			removeTicketForLastType();
 		}
 	}
 	
-	private int calculateRemoveNumber (Integer currentQuantity, int intendedRemoveNumber) {
+	private int calculateRemoveNumber(Integer currentQuantity, int intendedRemoveNumber) {
 		if (currentQuantity <= intendedRemoveNumber && (currentQuantity - 1) > 0) {
 			intendedRemoveNumber = currentQuantity - 1;
 		} else if (currentQuantity.equals(1)) {
@@ -129,20 +157,10 @@ public class TicketsPage extends BasePage {
 		return intendedRemoveNumber;
 	}
 	
-
 	private void removeTicketForLastType() {
 		if (verifyDifferentTicketTypesAreDisplayed()) {
 			List<WebElement> list = getDecrementersForAllTicketTypes();
-			waitVisibilityAndClick(list.get(list.size() - 1));
-		} else {
-			throw new NotFoundException("No ticket types found");
-		}
-	}
-
-	private void addTicketForLastType() {
-		if (verifyDifferentTicketTypesAreDisplayed()) {
-			List<WebElement> list = getIncrementersForAllTicketTypes();
-			incrementTicketNumber(list.get(list.size() - 1));
+			waitVisibilityAndBrowserCheckClick(list.get(list.size() - 1));
 		} else {
 			throw new NotFoundException("No ticket types found");
 		}
@@ -154,14 +172,7 @@ public class TicketsPage extends BasePage {
 			waitVisibilityAndBrowserCheckClick(decrementer);
 		}
 	}
-	
-	private void addTicketForTicketType(String ticketTypeName) {
-		if (verifyDifferentTicketTypesAreDisplayed()) {
-			WebElement incrementer = getIncreaseSpecificTicketTypeElement(ticketTypeName);
-			waitVisibilityAndBrowserCheckClick(incrementer);
-		}
-	}
-	
+		
 	private boolean verifyDifferentTicketTypesAreDisplayed() {
 		List<WebElement> list = getIncrementersForAllTicketTypes();
 		if (list.size() == 0) {
@@ -172,12 +183,12 @@ public class TicketsPage extends BasePage {
 	}
 
 	private void incrementTicketNumber(WebElement element) {
-		waitVisibilityAndClick(element);
+		waitVisibilityAndBrowserCheckClick(element);
 	}
 
 	public void clickOnContinue() {
 		explicitWait(20, ExpectedConditions.visibilityOf(continueButton));
-		continueButton.click();
+		waitVisibilityAndBrowserCheckClick(continueButton);
 	}
 
 	public void clickOnAlreadyHaveAnAccount() {
@@ -185,7 +196,7 @@ public class TicketsPage extends BasePage {
 		explicitWaitForVisiblity(alreadyHaveAccountButton);
 		explicitWaitForClickable(alreadyHaveAccountButton);
 		waitForTime(1500);
-		alreadyHaveAccountButton.click();
+		waitVisibilityAndBrowserCheckClick(alreadyHaveAccountButton);
 	}
 
 	public void login(String username, String password) {
