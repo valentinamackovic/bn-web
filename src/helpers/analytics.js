@@ -184,20 +184,30 @@ const bigneon = {
 		this.baseUrl = baseUrl;
 	},
 	track(data) {
-		const uri = window.location.pathname + window.location.search;
+		const uri = encodeURIComponent(
+			window.location.pathname + window.location.search
+		);
 
 		const img = document.createElement("img");
+		img.height = 0;
+		img.width = 0;
+		img.style.display = "block";
 		// Use Google analytics to get a unique id per
 		// client
-		const clientId = ReactGA.ga()
-			.getAll()[0]
-			.get("clientId");
 
-		img.src =
-			this.baseUrl +
-			`/analytics/track?url=${uri}&client_id=${clientId}&` +
-			data;
-		document.body.insertBefore(img, document.body.firstChild);
+		const baseUrl = this.baseUrl;
+		ReactGA.ga()(function(tracker) {
+			const clientId = tracker.get("clientId") || "";
+			const source = tracker.get("source") || "";
+			const medium = tracker.get("medium") || "";
+			img.src =
+				baseUrl +
+				`/analytics/track?url=${uri}&client_id=${clientId}&source=${source}&medium=${medium}&${window.location.search.substr(
+					1
+				)}&` +
+				data;
+			document.body.insertBefore(img, document.body.firstChild);
+		});
 	},
 	eventClick(id, name, category, organizationId, listPosition, list) {
 		this.track("event_id=" + id);
