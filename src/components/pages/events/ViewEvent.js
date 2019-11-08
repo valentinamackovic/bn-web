@@ -160,7 +160,9 @@ class ViewEvent extends Component {
 					const {
 						id: selectedEventId,
 						slug,
-						organization_id: organizationId
+						organization_id: organizationId,
+						name,
+						event_type
 					} = selectedEvent.event;
 
 					//Replace the id in the URL with the slug if we have it and it isn't currently set
@@ -168,7 +170,13 @@ class ViewEvent extends Component {
 						replaceIdWithSlug(id, slug);
 					}
 
-					analytics.viewContent([selectedEventId], getAllUrlParams());
+					analytics.viewContent(
+						[selectedEventId],
+						getAllUrlParams(),
+						name,
+						selectedEvent.organization.id,
+						event_type
+					);
 					if (user.isAuthenticated) {
 						const { organizations } = user;
 						if (organizations.hasOwnProperty(organizationId)) {
@@ -295,7 +303,7 @@ class ViewEvent extends Component {
 			);
 		} else {
 			return (
-				<Link to={`/events/${id}/tickets`}>
+				<Link to={`/tickets/${id}/tickets`}>
 					<Button
 						size={"mediumLarge"}
 						className={classes.callToAction}
