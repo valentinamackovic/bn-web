@@ -10,12 +10,22 @@ import Button from "../../../../../elements/Button";
 import { FacebookButton } from "../../../../authentication/social/FacebookButton";
 import { Grid, Divider } from "@material-ui/core";
 import notification from "../../../../../../stores/notifications";
-import InputGroup from "../../../../../common/form/InputGroup";
 import {
+	fontFamily,
 	fontFamilyBold,
 	fontFamilyDemiBold,
 	secondaryHex
 } from "../../../../../../config/theme";
+import addressLineSplit from "../../../../../../helpers/addressLineSplit";
+import { Link } from "react-router-dom";
+import servedImage from "../../../../../../helpers/imagePathHelper";
+import EventDetail from "../../../../events/EventDetail";
+import { displayAgeLimit } from "../../../../../../helpers/ageLimit";
+import moment from "moment-timezone";
+import optimizedImageUrl from "../../../../../../helpers/optimizedImageUrl";
+import MaintainAspectRatio from "../../../../../elements/MaintainAspectRatio";
+import Settings from "../../../../../../config/settings";
+import Hidden from "@material-ui/core/Hidden";
 
 const styles = theme => ({
 	root: {},
@@ -28,6 +38,10 @@ const styles = theme => ({
 			paddingRight: theme.spacing.unit * 3
 		}
 	},
+	fbGrid: {
+		display: "flex",
+		flexDirection: "row"
+	},
 	pinkSpan: {
 		color: secondaryHex
 	},
@@ -36,7 +50,7 @@ const styles = theme => ({
 	},
 	text: {},
 	smallHeading: {
-		fontSize: 20,
+		fontSize: 22,
 		fontFamily: fontFamilyDemiBold
 	},
 	numberPoint: {
@@ -48,6 +62,17 @@ const styles = theme => ({
 		display: "flex",
 		alignItems: "center",
 		justifyContent: "center"
+	},
+	mobileHeaderImage: {
+		height: "100%",
+		width: "100%",
+		backgroundImage: "linear-gradient(255deg, #e53d96, #5491cc)",
+		backgroundRepeat: "no-repeat",
+		backgroundSize: "cover",
+		borderRadius: 5,
+		backgroundPosition: "center",
+		marginTop: theme.spacing.unit * 2,
+		marginBottom: theme.spacing.unit * 2
 	},
 	pointText: {
 		color: secondaryHex,
@@ -80,7 +105,38 @@ const styles = theme => ({
 	},
 	inputLabel: {
 		fontSize: 18,
-		fontFamily: fontFamilyDemiBold
+		fontFamily: fontFamily
+	},
+	eventDetailsRow: {
+		display: "flex",
+		marginTop: theme.spacing.unit * 2
+	},
+	iconContainer: {
+		flex: 1
+	},
+	icon: {
+		width: 22,
+		height: "auto"
+	},
+	eventDetailContainer: {
+		paddingTop: 4,
+		flex: 6
+	},
+	eventDetailText: {
+		color: "#3C383F"
+	},
+	eventDetailBoldText: {
+		font: "inherit",
+		fontFamily: fontFamilyBold
+	},
+	eventDetailLinkText: {
+		font: "inherit",
+		color: secondaryHex,
+		cursor: "pointer"
+	},
+	divider: {
+		marginTop: theme.spacing.unit,
+		marginBottom: theme.spacing.unit * 4
 	}
 });
 
@@ -106,7 +162,8 @@ class FacebookEvents extends Component {
 			title: "",
 			customAddress: null,
 			locationType: "UsePageLocation",
-			facebookResponseSuccess: null
+			facebookResponseSuccess: null,
+			event: null
 		};
 	}
 
@@ -118,6 +175,7 @@ class FacebookEvents extends Component {
 			.events.read({ id: eventId })
 			.then(response => {
 				this.setState({
+					event: response.data,
 					title: htmlToPlainText(response.data.name || ""),
 					description: htmlToPlainText(response.data.additional_info || ""),
 					customAddress: response.data.venue.address,
@@ -215,11 +273,33 @@ class FacebookEvents extends Component {
 			facebookResponseSuccess,
 			facebookEventId,
 			title,
+			event,
 			description
 		} = this.state;
 
 		const { classes } = this.props;
 
+		if (!event) {
+			return null;
+		}
+
+		const ageLimitText = displayAgeLimit(event.age_limit);
+		const displayEventStartDate = moment
+			.utc(event.event_start)
+			.tz(event.venue.timezone)
+			.format("dddd, MMMM Do YYYY");
+		const displayDoorTime = moment
+			.utc(event.door_time)
+			.tz(event.venue.timezone)
+			.format("h:mm A");
+		const promo_image_url = event.promo_image_url
+			? optimizedImageUrl(event.promo_image_url)
+			: null;
+
+		const mobilePromoImageStyle = {};
+		if (promo_image_url) {
+			mobilePromoImageStyle.backgroundImage = `url(${promo_image_url})`;
+		}
 		return (
 			<div>
 				<Grid container justify={"space-between"}>
@@ -287,11 +367,11 @@ class FacebookEvents extends Component {
 					<Grid item xs={12} sm={12} md={12} lg={12}>
 						<Divider style={{ marginTop: 20, marginBottom: 40 }}/>
 					</Grid>
-					<Grid item xs={12} sm={12} md={5} lg={5}>
-						{isFacebookLinked ? (
-							<div>
-								<p>Select Facebook Page</p>
-								{pages ? (
+					{isFacebookLinked ? (
+						<Grid item xs={12} sm={12} md={12} lg={12}>
+							<p>Select Facebook Page</p>
+							{pages ? (
+								<Grid item xs={12} sm={12} md={5} lg={5}>
 									<SelectGroup
 										items={pages.map(page => ({
 											value: page.id,
@@ -301,80 +381,133 @@ class FacebookEvents extends Component {
 										name="pageId"
 										onChange={e => this.setState({ pageId: e.target.value })}
 									/>
-								) : (
-									<span>Loading pages</span>
-								)}
-								<form action="">
-									<Typography className={classes.inputLabel}>
-										Facebook title <span className={classes.pinkSpan}>*</span>
+									<Divider style={{ marginTop: 20, marginBottom: 40 }}/>
+								</Grid>
+							) : (
+								<span>Loading pages</span>
+							)}
+							<Grid
+								item
+								justify={"space-between"}
+								xs={12}
+								sm={12}
+								md={12}
+								lg={12}
+								className={classes.fbGrid}
+							>
+								<Grid item xs={12} sm={12} md={5} lg={5}>
+									<Typography className={classes.smallHeading}>
+										Event Details:
 									</Typography>
-									<input
-										value={title}
-										name="title "
-										className={classes.inputStyle}
-										type="text"
-										onChange={e => this.setState({ title: e.target.value })}
-									/>
-									<Typography className={classes.inputLabel}>
-										Description <span className={classes.pinkSpan}>*</span>
-									</Typography>
-									<textarea
-										value={description}
-										name="description"
-										className={classes.inputStyle}
-										style={{ height: 200 }}
-										onChange={e =>
-											this.setState({ description: e.target.value })
-										}
-									/>
-									<Typography className={classes.inputLabel}>
-										Facebook Event Category
-									</Typography>
-									<SelectGroup
-										items={[{ value: "MUSIC_EVENT", name: "Music Event" }]}
-										value={this.state.facebookCategory}
-										name="facebookCategory"
-										onChange={e =>
-											this.setState({ facebookCategory: e.target.value })
-										}
-									/>
-								</form>
-								{facebookEventId || facebookResponseSuccess ? (
-									<a
-										target="_blank"
-										href={`https://www.facebook.com/${facebookEventId}`}
-									>
+									<form action="">
+										<Typography className={classes.inputLabel}>
+											Facebook title <span className={classes.pinkSpan}>*</span>
+										</Typography>
+										<input
+											value={title}
+											name="title "
+											className={classes.inputStyle}
+											type="text"
+											onChange={e => this.setState({ title: e.target.value })}
+										/>
+										<Typography className={classes.inputLabel}>
+											Description <span className={classes.pinkSpan}>*</span>
+										</Typography>
+										<textarea
+											value={description}
+											name="description"
+											className={classes.inputStyle}
+											style={{ height: 200 }}
+											onChange={e =>
+												this.setState({ description: e.target.value })
+											}
+										/>
+										<Typography className={classes.inputLabel}>
+											Facebook Event Category
+										</Typography>
+										<SelectGroup
+											items={[{ value: "MUSIC_EVENT", name: "Music Event" }]}
+											value={this.state.facebookCategory}
+											name="facebookCategory"
+											onChange={e =>
+												this.setState({ facebookCategory: e.target.value })
+											}
+										/>
+									</form>
+									{facebookEventId || facebookResponseSuccess ? (
+										<a
+											target="_blank"
+											href={`https://www.facebook.com/${facebookEventId}`}
+										>
+											<Button
+												size="large"
+												type="submit"
+												variant="callToAction"
+												disabled={isSubmitting}
+											>
+												View on Facebook
+											</Button>
+										</a>
+									) : (
 										<Button
 											size="large"
 											type="submit"
 											variant="callToAction"
+											onClick={this.onSubmit.bind(this)}
 											disabled={isSubmitting}
 										>
-											View on Facebook
+											Add event to Facebook
 										</Button>
-									</a>
-								) : (
-									<Button
-										size="large"
-										type="submit"
-										variant="callToAction"
-										onClick={this.onSubmit.bind(this)}
-										disabled={isSubmitting}
-									>
-										Add event to Facebook
-									</Button>
-								)}
-							</div>
-						) : (
-							<div>
-								<FacebookButton
-									scopes={["manage_pages"]}
-									linkToUser={true}
-									onSuccess={this.onFacebookLogin.bind(this)}
-								/>
-							</div>
-						)}
-					</Grid>
+									)}
+								</Grid>
+								{event ? (
+									<Grid item xs={12} sm={12} md={5} lg={5}>
+										<MaintainAspectRatio
+											aspectRatio={Settings().promoImageAspectRatio}
+										>
+											<div
+												className={classes.mobileHeaderImage}
+												style={mobilePromoImageStyle}
+											/>
+										</MaintainAspectRatio>
+										<EventDetail
+											classes={classes}
+											iconUrl={"/icons/events-black.svg"}
+										>
+											<Typography className={classes.eventDetailText}>
+												<span className={classes.eventDetailBoldText}>
+													{displayEventStartDate}
+												</span>
+												<br/>
+												Doors open at {displayDoorTime}
+												<br/>
+												{ageLimitText}
+											</Typography>
+										</EventDetail>
+										<EventDetail
+											classes={classes}
+											iconUrl={"/icons/location-black.svg"}
+										>
+											<Typography className={classes.eventDetailBoldText}>
+												{event.venue.name}
+												<br/>
+												{addressLineSplit(event.venue.address)}
+											</Typography>
+											<br/>
+										</EventDetail>
+									</Grid>
+								) : null}
+							</Grid>
+						</Grid>
+					) : (
+						<div>
+							<FacebookButton
+								scopes={["manage_pages"]}
+								linkToUser={true}
+								onSuccess={this.onFacebookLogin.bind(this)}
+							/>
+						</div>
+					)}
 				</Grid>
 			</div>
 		);
