@@ -77,6 +77,10 @@ const styles = theme => ({
 		fontSize: 19,
 		color: "#9DA3B4",
 		outline: "none"
+	},
+	inputLabel: {
+		fontSize: 18,
+		fontFamily: fontFamilyDemiBold
 	}
 });
 
@@ -101,7 +105,8 @@ class FacebookEvents extends Component {
 			description: "",
 			title: "",
 			customAddress: null,
-			locationType: "UsePageLocation"
+			locationType: "UsePageLocation",
+			facebookResponseSuccess: null
 		};
 	}
 
@@ -171,7 +176,16 @@ class FacebookEvents extends Component {
 				custom_address: customAddress ? customAddress : null
 			})
 			.then(response => {
-				this.setState({ isSubmitting: false, isFacebookLinked: true });
+				this.setState({
+					isSubmitting: false,
+					isFacebookLinked: true,
+					facebookEventId: response.data.facebook_event_id,
+					facebookResponseSuccess: true
+				});
+				notification.show({
+					message: "Event published to Facebook",
+					variant: "success"
+				});
 			})
 			.catch(error => {
 				let { message } = error;
@@ -198,11 +212,10 @@ class FacebookEvents extends Component {
 			facebookCategory,
 			isSubmitting,
 			isFacebookLinked,
+			facebookResponseSuccess,
 			facebookEventId,
 			title,
-			description,
-			locationType,
-			customAddress
+			description
 		} = this.state;
 
 		const { classes } = this.props;
@@ -292,16 +305,21 @@ class FacebookEvents extends Component {
 									<span>Loading pages</span>
 								)}
 								<form action="">
+									<Typography className={classes.inputLabel}>
+										Facebook title <span className={classes.pinkSpan}>*</span>
+									</Typography>
 									<input
-										value={this.state.title}
+										value={title}
 										name="title "
 										className={classes.inputStyle}
 										type="text"
 										onChange={e => this.setState({ title: e.target.value })}
 									/>
-
+									<Typography className={classes.inputLabel}>
+										Description <span className={classes.pinkSpan}>*</span>
+									</Typography>
 									<textarea
-										value={this.state.description}
+										value={description}
 										name="description"
 										className={classes.inputStyle}
 										style={{ height: 200 }}
@@ -309,7 +327,9 @@ class FacebookEvents extends Component {
 											this.setState({ description: e.target.value })
 										}
 									/>
-									<p>Facebook Event Category</p>
+									<Typography className={classes.inputLabel}>
+										Facebook Event Category
+									</Typography>
 									<SelectGroup
 										items={[{ value: "MUSIC_EVENT", name: "Music Event" }]}
 										value={this.state.facebookCategory}
@@ -319,15 +339,31 @@ class FacebookEvents extends Component {
 										}
 									/>
 								</form>
-								<Button
-									size="large"
-									type="submit"
-									variant="callToAction"
-									onClick={this.onSubmit.bind(this)}
-									disabled={isSubmitting}
-								>
-									Publish
-								</Button>
+								{facebookEventId || facebookResponseSuccess ? (
+									<a
+										target="_blank"
+										href={`https://www.facebook.com/${facebookEventId}`}
+									>
+										<Button
+											size="large"
+											type="submit"
+											variant="callToAction"
+											disabled={isSubmitting}
+										>
+											View on Facebook
+										</Button>
+									</a>
+								) : (
+									<Button
+										size="large"
+										type="submit"
+										variant="callToAction"
+										onClick={this.onSubmit.bind(this)}
+										disabled={isSubmitting}
+									>
+										Add event to Facebook
+									</Button>
+								)}
 							</div>
 						) : (
 							<div>
