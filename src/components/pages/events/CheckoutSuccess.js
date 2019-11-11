@@ -742,12 +742,13 @@ class CheckoutSuccess extends Component {
 												Get your tickets now by downloading the Big Neon App
 											</Typography>
 											<div className={classes.btnContainer}>
-												<Link
-													to={
+												<a
+													href={
 														phoneOS === "ios"
 															? Settings().appStoreIos
 															: Settings().appStoreAndroid
 													}
+													target="_blank"
 												>
 													<CustomButton
 														variant="secondary"
@@ -755,7 +756,7 @@ class CheckoutSuccess extends Component {
 													>
 														Download the Big Neon App
 													</CustomButton>
-												</Link>
+												</a>
 											</div>
 											<Typography className={classes.cardMedText}>
 												(or just bring your photo ID to the door)
