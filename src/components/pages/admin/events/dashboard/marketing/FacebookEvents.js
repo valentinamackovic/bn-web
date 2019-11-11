@@ -33,9 +33,8 @@ const styles = theme => ({
 		fontSize: 24,
 		fontFamily: fontFamilyDemiBold,
 		[theme.breakpoints.down("sm")]: {
-			fontSize: theme.typography.fontSize * 2.9,
-			paddingLeft: theme.spacing.unit * 3,
-			paddingRight: theme.spacing.unit * 3
+			fontSize: 20,
+			lineHeight: "22px"
 		}
 	},
 	fbGrid: {
@@ -127,7 +126,7 @@ const styles = theme => ({
 	},
 	eventDetailBoldText: {
 		font: "inherit",
-		fontFamily: fontFamilyBold
+		fontFamily: fontFamilyDemiBold
 	},
 	eventDetailLinkText: {
 		font: "inherit",
@@ -303,7 +302,7 @@ class FacebookEvents extends Component {
 		return (
 			<div>
 				<Grid container justify={"space-between"}>
-					<Grid item xs={12} sm={12} md={12} lg={12}>
+					<Grid item xs={11} sm={12} md={12} lg={12}>
 						<Typography
 							className={classNames({
 								[classes.pinkSpan]: true,
@@ -313,7 +312,7 @@ class FacebookEvents extends Component {
 							marketing
 						</Typography>
 					</Grid>
-					<Grid item xs={12} sm={6} md={5} lg={5}>
+					<Grid item xs={11} sm={6} md={5} lg={5}>
 						<Typography className={classes.heading}>
 							Create this Event on Facebook
 						</Typography>
@@ -331,7 +330,7 @@ class FacebookEvents extends Component {
 						</Typography>
 					</Grid>
 
-					<Grid item xs={12} sm={12} md={6} lg={6}>
+					<Grid item xs={11} sm={12} md={6} lg={6}>
 						<Typography className={classes.smallHeading}>
 							Please note:
 						</Typography>
@@ -364,38 +363,44 @@ class FacebookEvents extends Component {
 							</Typography>
 						</div>
 					</Grid>
-					<Grid item xs={12} sm={12} md={12} lg={12}>
-						<Divider style={{ marginTop: 20, marginBottom: 40 }}/>
-					</Grid>
-					{isFacebookLinked ? (
-						<Grid item xs={12} sm={12} md={12} lg={12}>
-							<p>Select Facebook Page</p>
+					{isFacebookLinked && !(facebookEventId || facebookResponseSuccess) ? (
+						<Grid item xs={11} sm={12} md={12} lg={12}>
+							<Grid item xs={11} sm={12} md={12} lg={12}>
+								<Divider style={{ marginTop: 20, marginBottom: 40 }}/>
+							</Grid>
+							<Typography className={classes.smallHeading}>
+								Select Facebook Page
+							</Typography>
 							{pages ? (
-								<Grid item xs={12} sm={12} md={5} lg={5}>
-									<SelectGroup
-										items={pages.map(page => ({
-											value: page.id,
-											name: page.name
-										}))}
-										value={pageId}
-										name="pageId"
-										onChange={e => this.setState({ pageId: e.target.value })}
-									/>
-									<Divider style={{ marginTop: 20, marginBottom: 40 }}/>
+								<Grid item xs={11} sm={12} md={12} lg={12}>
+									<Grid item xs={11} sm={12} md={6} lg={6}>
+										<SelectGroup
+											items={pages.map(page => ({
+												value: page.id,
+												name: page.name
+											}))}
+											value={pageId}
+											name="pageId"
+											onChange={e => this.setState({ pageId: e.target.value })}
+										/>
+									</Grid>
+									<Grid item xs={11} sm={12} md={12} lg={12}>
+										<Divider style={{ marginTop: 20, marginBottom: 40 }}/>
+									</Grid>
 								</Grid>
 							) : (
 								<span>Loading pages</span>
 							)}
 							<Grid
-								item
+								container
 								justify={"space-between"}
-								xs={12}
+								xs={11}
 								sm={12}
 								md={12}
 								lg={12}
 								className={classes.fbGrid}
 							>
-								<Grid item xs={12} sm={12} md={5} lg={5}>
+								<Grid item xs={11} sm={12} md={5} lg={5}>
 									<Typography className={classes.smallHeading}>
 										Event Details:
 									</Typography>
@@ -461,7 +466,13 @@ class FacebookEvents extends Component {
 									)}
 								</Grid>
 								{event ? (
-									<Grid item xs={12} sm={12} md={5} lg={5}>
+									<Grid item xs={11} sm={12} md={5} lg={5}>
+										<br/>
+										<br/>
+										<Typography className={classes.inputLabel}>
+											Event information{" "}
+											<span className={classes.pinkSpan}>*</span>
+										</Typography>
 										<MaintainAspectRatio
 											aspectRatio={Settings().promoImageAspectRatio}
 										>
@@ -499,6 +510,15 @@ class FacebookEvents extends Component {
 								) : null}
 							</Grid>
 						</Grid>
+					) : facebookEventId || facebookResponseSuccess ? (
+						<a
+							target="_blank"
+							href={`https://www.facebook.com/${facebookEventId}`}
+						>
+							<Button size="large" type="submit" variant="callToAction">
+								View on Facebook
+							</Button>
+						</a>
 					) : (
 						<div>
 							<FacebookButton
