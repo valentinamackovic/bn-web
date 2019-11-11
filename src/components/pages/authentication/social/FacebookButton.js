@@ -178,7 +178,7 @@ class FacebookButtonDisplay extends Component {
 			<div>
 				<Button
 					size="large"
-					style={{ ...style, width: "80%", marginTop: 20 }}
+					style={{ ...style, width: "100%", marginTop: 20 }}
 					onClick={onClick}
 					disabled={isAuthenticating}
 				>
