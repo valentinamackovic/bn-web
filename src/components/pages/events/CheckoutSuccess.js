@@ -515,14 +515,21 @@ class CheckoutSuccess extends Component {
 			.format("llll z");
 
 		const ticketItem = order.items.filter(item => item.item_type === "Tickets");
+		const discount = order.items.filter(item => item.item_type === "Discount");
 		const promoImageStyle = {};
 		if (promo_image_url) {
 			promoImageStyle.backgroundImage = `url(${promo_image_url})`;
 		}
 		let qty = 0;
+		let discountInCents = 0;
 		if (ticketItem.length > 0) {
 			ticketItem.forEach(item => {
 				qty = qty + item.quantity;
+			});
+		}
+		if (discount.length > 0) {
+			discount.forEach(item => {
+				discountInCents = item.unit_price_in_cents;
 			});
 		}
 		return (
@@ -669,6 +676,7 @@ class CheckoutSuccess extends Component {
 					<PurchaseDetails
 						displayEventStartDate={eventDateFormatted}
 						order={order}
+						discountInCents={discountInCents}
 						event={event}
 						venue={venue}
 						classes={classes}

@@ -8,6 +8,7 @@ const PurchaseDetails = ({
 	classes,
 	event,
 	venue,
+	discountInCents,
 	order,
 	displayEventStartDate
 }) => {
@@ -15,7 +16,11 @@ const PurchaseDetails = ({
 	let subTotal = 0;
 	let allFees = 0;
 	items.forEach(item => {
-		if (item.item_type === "PerUnitFees" || item.item_type === "EventFees") {
+		if (
+			item.item_type === "PerUnitFees" ||
+			item.item_type === "EventFees" ||
+			item.item_type === "CreditCardFees"
+		) {
 			allFees = allFees + item.unit_price_in_cents * item.quantity;
 		}
 	});
@@ -81,7 +86,11 @@ const PurchaseDetails = ({
 					if (item.item_type !== "Tickets") {
 						return null;
 					}
-					subTotal = subTotal + item.unit_price_in_cents * item.quantity;
+					let ticketPrice = item.unit_price_in_cents;
+					if (discountInCents) {
+						ticketPrice = item.unit_price_in_cents + discountInCents;
+					}
+					subTotal = subTotal + ticketPrice * item.quantity;
 					return (
 						<div key={index}>
 							<Hidden mdDown>
@@ -93,13 +102,13 @@ const PurchaseDetails = ({
 									</div>
 									<div className={classes.rightColumn}>
 										<Typography className={classes.purchaseTicketText}>
-											{dollars(item.unit_price_in_cents)}
+											{dollars(ticketPrice)}
 										</Typography>{" "}
 										<Typography className={classes.purchaseTicketText}>
 											{item.quantity}
 										</Typography>{" "}
 										<Typography className={classes.purchaseTicketText}>
-											{dollars(item.unit_price_in_cents * item.quantity)}
+											{dollars(subTotal)}
 										</Typography>
 									</div>
 								</div>
