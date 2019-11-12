@@ -34,6 +34,7 @@ import Settings from "../../../config/settings";
 
 import PurchaseDetails from "./PurchaseDetails";
 import Hero from "./SuccessHero";
+import removeCountryFromAddress from "../../../helpers/removeCountryFromAddress";
 
 const heroHeight = 586;
 
@@ -731,7 +732,7 @@ class CheckoutSuccess extends Component {
 								<Typography className={classes.desktopEventDetailText}>
 									<span className={classes.boldText}>{venue.name}</span>
 									<br/>
-									{venue.address}
+									{removeCountryFromAddress(venue.address)}
 								</Typography>
 							</div>
 							<div>
