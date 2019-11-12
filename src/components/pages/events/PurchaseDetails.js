@@ -4,6 +4,7 @@ import user from "../../../stores/user";
 import { dollars } from "../../../helpers/money";
 import React from "react";
 import cart from "../../../stores/cart";
+import removeCountryFromAddress from "../../../helpers/removeCountryFromAddress";
 
 const PurchaseDetails = ({
 	classes,
@@ -56,7 +57,9 @@ const PurchaseDetails = ({
 			</Hidden>
 			<br/>
 			<Typography className={classes.boldText}>{venue.name}</Typography>
-			<Typography className={classes.purchaseText}>{venue.address}</Typography>
+			<Typography className={classes.purchaseText}>
+				{removeCountryFromAddress(venue.address)}
+			</Typography>
 			<div className={classes.divider}/>
 			<Typography className={classes.greyTitleDemiBold}>Purchaser</Typography>
 			<Typography className={classes.boldText}>
