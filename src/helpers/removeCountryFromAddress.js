@@ -3,7 +3,7 @@ export default address => {
 		return null;
 	}
 
-	const removeThese = ["USA", "United States", "South Africa"];
+	const removeThese = ["USA", "United States"];
 	let noCountry = "";
 	let output = "";
 	removeThese.forEach(subStr => {
