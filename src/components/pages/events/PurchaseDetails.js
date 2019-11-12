@@ -103,13 +103,19 @@ const PurchaseDetails = ({
 					}
 					ticketSubTotal = ticketSubTotal + ticketPrice * item.quantity;
 					subTotal = subTotal + ticketSubTotal;
+
+					let ticketName = item.description;
+					if (ticketName.includes(event.name)) {
+						ticketName = ticketName.replace(`${event.name} - `, "");
+					}
+
 					return (
 						<div key={index}>
 							<Hidden mdDown>
 								<div className={classes.purchaseInfo}>
 									<div className={classes.leftColumn}>
 										<Typography className={classes.purchaseTicketText}>
-											{item.description}
+											{ticketName}
 										</Typography>
 									</div>
 									<div className={classes.rightColumn}>
@@ -130,7 +136,7 @@ const PurchaseDetails = ({
 										Ticket type
 								</Typography>
 								<Typography className={classes.purchaseTicketText}>
-									{item.description}
+									{ticketName}
 								</Typography>
 								<br/>
 								<div className={classes.purchaseInfo}>
