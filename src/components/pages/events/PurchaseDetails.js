@@ -3,18 +3,19 @@ import { Typography } from "@material-ui/core";
 import user from "../../../stores/user";
 import { dollars } from "../../../helpers/money";
 import React from "react";
+import cart from "../../../stores/cart";
 
 const PurchaseDetails = ({
 	classes,
 	event,
 	venue,
-	discountInCents,
 	order,
 	displayEventStartDate
 }) => {
 	const items = order.items;
-	let subTotal = 0;
 	let allFees = 0;
+	let subTotal = 0;
+	let discountForItem;
 	items.forEach(item => {
 		if (
 			item.item_type === "PerUnitFees" ||
@@ -83,14 +84,22 @@ const PurchaseDetails = ({
 			</Hidden>
 			{items
 				? items.map((item, index) => {
+					let ticketSubTotal = 0;
 					if (item.item_type !== "Tickets") {
 						return null;
 					}
 					let ticketPrice = item.unit_price_in_cents;
-					if (discountInCents) {
-						ticketPrice = item.unit_price_in_cents + discountInCents;
+					if (item.item_type === "Tickets") {
+						discountForItem = items.find(
+							disc =>
+								disc.item_type === "Discount" && disc.parent_id === item.id
+						);
 					}
-					subTotal = subTotal + ticketPrice * item.quantity;
+					if (discountForItem) {
+						ticketPrice = ticketPrice + discountForItem.unit_price_in_cents;
+					}
+					ticketSubTotal = ticketSubTotal + ticketPrice * item.quantity;
+					subTotal = subTotal + ticketSubTotal;
 					return (
 						<div key={index}>
 							<Hidden mdDown>
@@ -108,7 +117,7 @@ const PurchaseDetails = ({
 											{item.quantity}
 										</Typography>{" "}
 										<Typography className={classes.purchaseTicketText}>
-											{dollars(subTotal)}
+											{dollars(ticketSubTotal)}
 										</Typography>
 									</div>
 								</div>
@@ -134,13 +143,13 @@ const PurchaseDetails = ({
 								</div>
 								<div className={classes.purchaseInfo}>
 									<Typography className={classes.purchaseTicketText}>
-										{dollars(item.unit_price_in_cents)}
+										{dollars(ticketPrice)}
 									</Typography>{" "}
 									<Typography className={classes.purchaseTicketText}>
 										{item.quantity}
 									</Typography>{" "}
 									<Typography className={classes.purchaseTicketText}>
-										{dollars(item.unit_price_in_cents * item.quantity)}
+										{dollars(ticketSubTotal)}
 									</Typography>
 								</div>
 								<br/>
