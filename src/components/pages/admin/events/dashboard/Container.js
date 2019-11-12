@@ -256,20 +256,6 @@ class EventDashboardContainer extends Component {
 				) : (
 					<span/>
 				)}
-				{user.hasScope("event:write") ? (
-					<MenuItem onClick={this.openAffiliateLinkDialog.bind(this)}>
-						Affiliate Tracking Links
-					</MenuItem>
-				) : (
-					<span/>
-				)}
-				{user.hasScope("event:write") ? (
-					<MenuItem onClick={this.openFBPixelDialog.bind(this)}>
-						Facebook Pixel ID
-					</MenuItem>
-				) : (
-					<span/>
-				)}
 			</Menu>
 		);
 	}
@@ -438,6 +424,20 @@ class EventDashboardContainer extends Component {
 						Facebook events
 					</MenuItem>
 				</Link>
+			);
+		}
+		if (user.hasScope("event:write")) {
+			items.push(
+				<MenuItem onClick={this.openAffiliateLinkDialog.bind(this)}>
+					Affiliate Tracking Links
+				</MenuItem>
+			);
+		}
+		if (user.hasScope("event:write")) {
+			items.push(
+				<MenuItem onClick={this.openFBPixelDialog.bind(this)}>
+					Facebook Pixel ID
+				</MenuItem>
 			);
 		}
 
