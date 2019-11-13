@@ -492,7 +492,7 @@ class SettlementReport extends Component {
 						style={{
 							display: "flex",
 							minHeight: 40,
-							alignItems: "flex-end"
+							alignItems: "center"
 						}}
 					>
 						{this.renderTitleSection()}
