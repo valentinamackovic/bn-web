@@ -453,14 +453,14 @@ class EventDashboardContainer extends Component {
 		}
 		if (user.hasScope("event:write")) {
 			items.push(
-				<MenuItem onClick={this.openAffiliateLinkDialog.bind(this)}>
+				<MenuItem key="affiliate-link" onClick={this.openAffiliateLinkDialog.bind(this)}>
 					Affiliate Tracking Links
 				</MenuItem>
 			);
 		}
 		if (user.hasScope("event:write")) {
 			items.push(
-				<MenuItem onClick={this.openFBPixelDialog.bind(this)}>
+				<MenuItem key="pixel-id" onClick={this.openFBPixelDialog.bind(this)}>
 					Facebook Pixel ID
 				</MenuItem>
 			);
