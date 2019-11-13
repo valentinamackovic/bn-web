@@ -158,12 +158,14 @@ class FacebookEvents extends Component {
 			facebookEventId: null,
 			isFacebookLinked: false,
 			description: "",
+			notValid: true,
 			title: "",
 			customAddress: null,
 			locationType: "UsePageLocation",
 			facebookResponseSuccess: null,
 			event: null
 		};
+		this.checkValid = this.checkValid.bind(this);
 	}
 
 	componentDidMount() {
@@ -180,6 +182,7 @@ class FacebookEvents extends Component {
 					customAddress: response.data.venue.address,
 					facebookEventId: response.data.facebook_event_id
 				});
+				this.checkValid();
 			})
 			.catch(error => {
 				console.error(error);
@@ -262,6 +265,20 @@ class FacebookEvents extends Component {
 			});
 	}
 
+	checkValid() {
+		const { title, description } = this.state;
+		if (title.length > 0 && description.length > 0) {
+			this.setState({ notValid: false });
+		} else if (
+			title === null ||
+			title.length < 1 ||
+			description === null ||
+			description.length < 1
+		) {
+			this.setState({ notValid: true });
+		}
+	}
+
 	render() {
 		const {
 			pages,
@@ -273,7 +290,8 @@ class FacebookEvents extends Component {
 			facebookEventId,
 			title,
 			event,
-			description
+			description,
+			notValid
 		} = this.state;
 
 		const { classes } = this.props;
@@ -318,6 +336,11 @@ class FacebookEvents extends Component {
 			link: null
 		};
 
+		let bullet3 = {
+			label:
+				"Don't worry, we won't create the event on Facebook until you review the settings and publish the event."
+		};
+
 		if (facebookEventId || facebookResponseSuccess) {
 			pageSubTitle = {
 				label1: "Your Event has been successfully created on Facebook",
@@ -332,6 +355,7 @@ class FacebookEvents extends Component {
 				label: "Need to delete your Facebook event?",
 				link: `https://facebook.com/${facebookEventId}`
 			};
+			bullet3 = null;
 		}
 
 		return (
@@ -404,15 +428,14 @@ class FacebookEvents extends Component {
 								) : null}
 							</Typography>
 						</div>
-						<div className={classes.noteList}>
-							<div className={classes.numberPoint}>
-								<Typography className={classes.pointText}>3</Typography>
+						{bullet3 ? (
+							<div className={classes.noteList}>
+								<div className={classes.numberPoint}>
+									<Typography className={classes.pointText}>3</Typography>
+								</div>
+								<Typography>{bullet3.label}</Typography>
 							</div>
-							<Typography>
-								Facebook requires that your page has a physical street address
-								set in order to publish your event.
-							</Typography>
-						</div>
+						) : null}
 					</Grid>
 					{isFacebookLinked && !(facebookEventId || facebookResponseSuccess) ? (
 						<Grid item xs={11} sm={12} md={12} lg={12}>
@@ -445,10 +468,6 @@ class FacebookEvents extends Component {
 							<Grid
 								container
 								justify={"space-between"}
-								xs={11}
-								sm={12}
-								md={12}
-								lg={12}
 								className={classes.fbGrid}
 							>
 								<Grid item xs={11} sm={12} md={5} lg={5}>
@@ -464,7 +483,11 @@ class FacebookEvents extends Component {
 											name="title "
 											className={classes.inputStyle}
 											type="text"
-											onChange={e => this.setState({ title: e.target.value })}
+											onChange={e =>
+												this.setState({ title: e.target.value }, () =>
+													this.checkValid()
+												)
+											}
 										/>
 										<Typography className={classes.inputLabel}>
 											Description <span className={classes.pinkSpan}>*</span>
@@ -475,7 +498,9 @@ class FacebookEvents extends Component {
 											className={classes.inputStyle}
 											style={{ height: 200 }}
 											onChange={e =>
-												this.setState({ description: e.target.value })
+												this.setState({ description: e.target.value }, () =>
+													this.checkValid()
+												)
 											}
 										/>
 										<Typography className={classes.inputLabel}>
@@ -510,7 +535,7 @@ class FacebookEvents extends Component {
 											type="submit"
 											variant="callToAction"
 											onClick={this.onSubmit.bind(this)}
-											disabled={isSubmitting}
+											disabled={isSubmitting || notValid}
 										>
 											Add event to Facebook
 										</Button>
