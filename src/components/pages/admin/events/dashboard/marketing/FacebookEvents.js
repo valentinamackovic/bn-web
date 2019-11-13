@@ -99,7 +99,7 @@ const styles = theme => ({
 		marginBottom: theme.spacing.unit * 2,
 		border: "1px solid #8080802e",
 		fontSize: 19,
-		color: "#9DA3B4",
+		color: "#000",
 		outline: "none"
 	},
 	inputLabel: {
@@ -299,6 +299,41 @@ class FacebookEvents extends Component {
 		if (promo_image_url) {
 			mobilePromoImageStyle.backgroundImage = `url(${promo_image_url})`;
 		}
+
+		let pageSubTitle = [
+			{
+				label1: "Increase your event's reach by",
+				pinkSpan: "creating a Facebook event",
+				label2: ". It's easy!"
+			}
+		];
+		let bullet1 = {
+			label:
+				"A Facebook user with admin access to your Facebook page needs to give Big Neon permission to create the event.",
+			link: null
+		};
+		let bullet2 = {
+			label:
+				"Don't worry, we won't create the event on Facebook until you review the settings and publish the event.",
+			link: null
+		};
+
+		if (facebookEventId || facebookResponseSuccess) {
+			pageSubTitle = {
+				label1: "Your Event has been successfully created on Facebook",
+				pinkSpan: null,
+				label2: null
+			};
+			bullet1 = {
+				label: "Need to edit your Facebook event?",
+				link: `https://facebook.com/${facebookEventId}`
+			};
+			bullet2 = {
+				label: "Need to delete your Facebook event?",
+				link: `https://facebook.com/${facebookEventId}`
+			};
+		}
+
 		return (
 			<div>
 				<Grid container justify={"space-between"}>
@@ -317,16 +352,16 @@ class FacebookEvents extends Component {
 							Create this Event on Facebook
 						</Typography>
 						<Typography>
-							Increase your event's reach by{" "}
+							{pageSubTitle.label1}{" "}
 							<span
 								className={classNames({
 									[classes.pinkSpan]: true,
 									[classes.demiBoldSpan]: true
 								})}
 							>
-								creating a Facebook event
+								{pageSubTitle.pinkSpan}
 							</span>
-							. It's easy!
+							{pageSubTitle.label2}
 						</Typography>
 					</Grid>
 
@@ -340,8 +375,16 @@ class FacebookEvents extends Component {
 								<Typography className={classes.pointText}>1</Typography>
 							</div>
 							<Typography>
-								A Facebook user with admin access to your Facebook page needs to
-								give Big Neon permission to create the event.
+								{bullet1.label}&nbsp;
+								{bullet1.link ? (
+									<a
+										className={classes.pinkSpan}
+										target="_blank"
+										href={bullet1.link}
+									>
+										Edit it on Facebook
+									</a>
+								) : null}
 							</Typography>
 						</div>
 						<div className={classes.noteList}>
@@ -349,8 +392,16 @@ class FacebookEvents extends Component {
 								<Typography className={classes.pointText}>2</Typography>
 							</div>
 							<Typography>
-								Don't worry, we won't create the event until you review the
-								settings and publish the event.
+								{bullet2.label}&nbsp;
+								{bullet2.link ? (
+									<a
+										className={classes.pinkSpan}
+										target="_blank"
+										href={bullet2.link}
+									>
+										Delete your Event on Facebook
+									</a>
+								) : null}
 							</Typography>
 						</div>
 						<div className={classes.noteList}>
@@ -358,8 +409,8 @@ class FacebookEvents extends Component {
 								<Typography className={classes.pointText}>3</Typography>
 							</div>
 							<Typography>
-								You must have set up a street address on your Facebook page to
-								use it as a location
+								Facebook requires that your page has a physical street address
+								set in order to publish your event.
 							</Typography>
 						</div>
 					</Grid>
@@ -470,8 +521,7 @@ class FacebookEvents extends Component {
 										<br/>
 										<br/>
 										<Typography className={classes.inputLabel}>
-											Event information{" "}
-											<span className={classes.pinkSpan}>*</span>
+											Event information
 										</Typography>
 										<MaintainAspectRatio
 											aspectRatio={Settings().promoImageAspectRatio}
