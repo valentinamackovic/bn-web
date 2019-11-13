@@ -10,6 +10,8 @@ export default address => {
 		if (address.includes(subStr)) {
 			noCountry = address.substring(0, address.indexOf(subStr));
 			output = noCountry.replace(/,\s*$/, "");
+		} else {
+			output = address;
 		}
 	});
 
