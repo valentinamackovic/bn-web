@@ -45,7 +45,7 @@ public class EventsPage extends BasePage {
 	public boolean isEventPresent(String eventName) {
 		boolean retVal = false;
 		try {
-			if (findEvent(eventName) != null) {
+			if (findWithSearchEvent(eventName) != null) {
 				retVal = true;
 			}
 		} catch (Exception e) {
@@ -54,7 +54,7 @@ public class EventsPage extends BasePage {
 		return retVal;
 	}
 
-	public WebElement findEvent(String eventName) {
+	public WebElement findWithSearchEvent(String eventName) {
 		getHeader().searchEvents(eventName);
 		WebElement event = findEventOnPage(eventName);
 		return event;
@@ -68,8 +68,8 @@ public class EventsPage extends BasePage {
 		return event;
 	}
 
-	public void clickOnEvent(String eventName) {
-		WebElement event = findEvent(eventName);
+	public void searchAndClickOnEvent(String eventName) {
+		WebElement event = findWithSearchEvent(eventName);
 		waitVisibilityAndBrowserCheckClick(event);
 	}
 
