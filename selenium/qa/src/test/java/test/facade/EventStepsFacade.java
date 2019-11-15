@@ -58,7 +58,7 @@ public class EventStepsFacade extends BaseFacadeSteps {
 				loginPage.login(user);
 			}
 			
-			eventsPage.navigate();
+			homePage.navigate();
 			driver.navigate().refresh();
 		}
 	}
@@ -115,6 +115,15 @@ public class EventStepsFacade extends BaseFacadeSteps {
 		whenUserClicksOnPurchaseTicketLink();
 	}
 	
+	public void whenUserDoesThePurchses(Purchase purchase, User customer) throws Exception {
+		whenUserExecutesEventPagesStepsWithoutMapView(purchase.getEvent());
+		whenUserSelectsNumberOfTicketsAndClicksOnContinue(purchase);
+		whenUserLogsInOnTicketsPage(customer);
+		thenUserIsAtConfirmationPage();
+		whenUserEntersCreditCardDetailsAndClicksOnPurchase(purchase.getCreditCard());
+		thenUserIsAtTicketPurchaseSuccessPage();
+	}
+	
 	public void whenUserExecutesEventPagesStepsWithoutMapView(Event event) throws Exception {
 		whenUserSearchesAndClicksOnEvent(event);
 		whenUserClicksOnPurchaseTicketLink();
@@ -136,11 +145,11 @@ public class EventStepsFacade extends BaseFacadeSteps {
 			ticketPage.clickOnContinue();
 		}
 	}
-
+	
 	public void whenSearchingForEventByEventArtistName(Purchase purchase) {
 		eventsPage.getHeader().searchEvents(purchase.getEvent().getArtistName());
 	}
-	
+
 	public void whenSearchingForEvent(Event event) {
 		eventsPage.getHeader().searchEvents(event.getEventName());
 	}

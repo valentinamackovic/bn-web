@@ -101,6 +101,15 @@ public class CreateVenuePage extends BasePage {
 		return By.xpath(".//ul//li[contains(text(),'" + value + "')]");
 	}
 
+	public void enterVenueLocation(String location) {
+		SeleniumUtils.clearInputField(locationAutoSearchField, driver);
+		SeleniumUtils.jsScrollIntoView(locationAutoSearchField, driver);
+		waitForTime(1000);
+		AutoCompleteInputField inputField = new AutoCompleteInputField(driver, locationAutoSearchField);
+		inputField.selectFromAutocomplete(location);
+		checkIfCoordinatesArePresent();
+	}
+	
 	public boolean checkIfCoordinatesArePresent() {
 		waitForTime(1500);
 		clickOnEnterAddressManually();
@@ -108,22 +117,12 @@ public class CreateVenuePage extends BasePage {
 		return addressComponent.checkIfCoordinatesAreFilled();
 	}
 	
-	private void clickOnEnterAddressManually() {
+	public void clickOnEnterAddressManually() {
 		waitVisibilityAndBrowserCheckClick(enterAddressManuallyButton);
 	}
 	
-	public void enterVenueLocation(String location) {
-		SeleniumUtils.clearInputField(locationAutoSearchField, driver);
-		waitForTime(1000);
-		AutoCompleteInputField inputField = new AutoCompleteInputField(driver, locationAutoSearchField);
-		inputField.selectFirstSuggestion(location);
-	}
-	
-	
-	
 	private ManualAddressEntryComponent getManualAddressComponent() {
-		WebElement container = explicitWaitForVisibilityBy(By.xpath(ManualAddressEntryComponent.containerXpath));
-		ManualAddressEntryComponent addressComponent = new ManualAddressEntryComponent(driver, container);
+		ManualAddressEntryComponent addressComponent = new ManualAddressEntryComponent(driver);
 		return addressComponent;
 	}
 
