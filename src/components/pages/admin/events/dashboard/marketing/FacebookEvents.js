@@ -337,7 +337,7 @@ class FacebookEvents extends Component {
 
 		let bullet3 = {
 			label:
-				"Don't worry, we won't create the event on Facebook until you review the settings and publish the event."
+				"Facebook requires that your page has a physical street address set in order to publish your event."
 		};
 
 		if (facebookEventId || facebookResponseSuccess) {
