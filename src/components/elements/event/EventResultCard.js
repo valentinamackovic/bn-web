@@ -13,10 +13,11 @@ import getPhoneOS from "../../../helpers/getPhoneOS";
 import HoldRow from "../../pages/admin/events/dashboard/holds/children/ChildRow";
 import analytics from "../../../helpers/analytics";
 import stateToAbbr from "../../../helpers/stateToAbbr";
+import lowerCaseTime from "../../../helpers/lowerCaseTime";
 
 const styles = theme => ({
 	card: {
-		maxWidth: 400,
+		maxWidth: 450,
 		boxShadow: "0 2px 7.5px 1px rgba(112, 124, 237, 0.07)"
 	},
 	media: {
@@ -198,9 +199,11 @@ class EventResultCard extends Component {
 		const displayEventStartDate = eventStartDateMoment
 			.tz(newVenueTimezone)
 			.format("MMM D");
-		const displayShowTime = moment(eventStartDateMoment)
-			.tz(newVenueTimezone)
-			.format("ddd, h:mm A");
+		const displayShowTime = lowerCaseTime(
+			moment(eventStartDateMoment)
+				.tz(newVenueTimezone)
+				.format("ddd, h:mmA")
+		);
 
 		return (
 			<Link

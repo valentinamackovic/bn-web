@@ -21,7 +21,7 @@ const styles = theme => ({
 		minHeight: 500,
 		[theme.breakpoints.down("sm")]: {
 			flexDirection: "column",
-			minHeight: 310
+			minHeight: 210
 		}
 	},
 	headingContainer: {
@@ -52,16 +52,17 @@ const styles = theme => ({
 		fontFamily: fontFamilyBold,
 		marginTop: theme.spacing.unit * 4,
 		[theme.breakpoints.down("sm")]: {
-			fontSize: theme.typography.fontSize * 2.9,
 			paddingLeft: theme.spacing.unit * 3,
-			paddingRight: theme.spacing.unit * 3
+			fontSize: 32,
+			paddingRight: theme.spacing.unit * 3,
+			marginTop: theme.spacing.unit * 2
 		}
 	},
 	subHeading: {
 		fontSize: 21,
 		lineSpace: 1,
 		[theme.breakpoints.down("sm")]: {
-			fontSize: theme.typography.fontSize * 1.4
+			fontSize: 15
 		}
 	},
 	iconHolder: {
@@ -96,7 +97,7 @@ const styles = theme => ({
 		padding: theme.spacing.unit * 2,
 		justifyContent: "flex-start",
 		alignItems: "center",
-		marginTop: 25,
+		marginTop: 30,
 		boxShadow: "10px 10px 40px 0 rgba(13,10,43,0.50)",
 		[theme.breakpoints.up("sm")]: {
 			justifyContent: "flex-center"
