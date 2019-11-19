@@ -348,7 +348,6 @@ class ViewEvent extends Component {
 			ticket_types,
 			hasAvailableTickets
 		} = selectedEvent;
-
 		if (event === null) {
 			return (
 				<div>

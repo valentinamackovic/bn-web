@@ -1,4 +1,3 @@
-//testing netlify
 import React, { Component } from "react";
 import { Typography, withStyles } from "@material-ui/core";
 import Grid from "@material-ui/core/Grid";
@@ -9,15 +8,16 @@ import Card from "@material-ui/core/Card";
 import moment from "moment-timezone";
 
 import InputGroup from "../../../common/form/InputGroup";
+import LocationInputGroup from "../../../common/form/LocationInputGroup";
 import SelectGroup from "../../../common/form/SelectGroup";
 import Button from "../../../elements/Button";
 import notifications from "../../../../stores/notifications";
 import Bigneon from "../../../../helpers/bigneon";
+import addressTypeFromGoogleResult from "../../../../helpers/addressTypeFromGoogleResult";
 import { validPhone } from "../../../../validators";
 import PageHeading from "../../../elements/PageHeading";
 import removePhoneFormatting from "../../../../helpers/removePhoneFormatting";
 import cloudinaryWidget from "../../../../helpers/cloudinaryWidget";
-import Settings from "../../../../config/settings";
 
 const styles = theme => ({
 	paper: {
@@ -33,7 +33,7 @@ const styles = theme => ({
 	}
 });
 
-class Venue extends Component {
+class VenueOld extends Component {
 	constructor(props) {
 		super(props);
 
@@ -61,8 +61,7 @@ class Venue extends Component {
 			isSubmitting: false,
 			showManualEntry: false,
 			regionOptions: null,
-			regionId: "none",
-			states: []
+			regionId: "none"
 		};
 	}
 
@@ -145,33 +144,6 @@ class Venue extends Component {
 					error
 				});
 			});
-
-		fetch(Settings().webUrl + "/countries.json")
-			.then(response => response.json())
-			.then(
-				(result) => {
-					const states = [];
-					result.forEach(country => {
-						if (country.name === "United States") {
-							Object.keys(country.province_codes).forEach(code => {
-								states.push({
-									value: country.province_codes[code],
-									label: code + " (" + country.province_codes[code] + ")"
-								});
-							});
-						}
-					});
-					this.setState({ states });
-				},
-				(error) => {
-					console.error(error);
-
-					notifications.showFromErrorResponse({
-						defaultMessage: "Loading states failed.",
-						error
-					});
-				}
-			);
 	}
 
 	uploadWidget() {
@@ -196,6 +168,60 @@ class Venue extends Component {
 				cropping_aspect_ratio: 2.0
 			}
 		);
+	}
+
+	validateFields() {
+		//Don't validate every field if the user has not tried to submit at least once
+		if (!this.submitAttempted) {
+			return null;
+		}
+
+		const { organizationId, venueId } = this.state;
+		const phone = removePhoneFormatting(this.state.phone);
+
+		const errors = {};
+		const required = [
+			"name",
+			"address",
+			"city",
+			"state",
+			"country",
+			"postal_code",
+			"timezone"
+		];
+		required.forEach(field => {
+			if (!this.state[field]) {
+				errors[field] = `Missing ${field}.`;
+			}
+		});
+
+		// if (!name) {
+		// 	errors.name = "Missing venue name.";
+		// }
+		//
+		// if (!address) {
+		// 	errors.address = "Missing address.";
+		// }
+
+		if (!venueId) {
+			if (!organizationId) {
+				errors.organizationId = "Select an organization.";
+			}
+		}
+
+		if (!phone) {
+			errors.phone = "Missing phone number.";
+		} else if (!validPhone(phone)) {
+			errors.phone = "Invalid phone number.";
+		}
+
+		this.setState({ errors });
+
+		if (Object.keys(errors).length > 0) {
+			return false;
+		}
+
+		return true;
 	}
 
 	createNewVenue(params, onSuccess) {
@@ -322,6 +348,24 @@ class Venue extends Component {
 		);
 	}
 
+	renderTimezones() {
+		const { timezone, errors } = this.state;
+		const timezones = moment.tz.names().map(name => ({
+			value: name,
+			label: name
+		}));
+		return (
+			<SelectGroup
+				value={timezone}
+				items={timezones}
+				error={errors.timezone}
+				name={"timezone"}
+				label={"Timezone *"}
+				onChange={e => this.setState({ timezone: e.target.value })}
+			/>
+		);
+	}
+
 	renderOrganizations() {
 		const { organizationId, organizations, errors } = this.state;
 		if (organizations === null) {
@@ -339,27 +383,8 @@ class Venue extends Component {
 				items={organizationOptions}
 				error={errors.organizationId}
 				name={"organization"}
-				label={"Organization *"}
+				label={"Organization"}
 				onChange={e => this.setState({ organizationId: e.target.value })}
-			/>
-		);
-	}
-
-	renderTimezones() {
-		const { timezone, errors } = this.state;
-		const timezones = moment.tz.names().map(name => ({
-			value: name,
-			label: name
-		}));
-		return (
-			<SelectGroup
-				value={timezone}
-				items={timezones}
-				error={errors.timezone}
-				name={"timezone"}
-				label={"Timezone *"}
-				onBlur={this.validateFields.bind(this)}
-				onChange={e => this.setState({ timezone: e.target.value })}
 			/>
 		);
 	}
@@ -383,82 +408,41 @@ class Venue extends Component {
 		);
 	}
 
-	renderStates() {
-		const { state, states, errors } = this.state;
-
-		return (
-			<SelectGroup
-				value={state}
-				items={states}
-				error={errors.state}
-				name={"state"}
-				label={"State *"}
-				onChange={e => this.setState({ state: e.target.value })}
-			/>
-		);
-	}
-
-	validateFields() {
-		//Don't validate every field if the user has not tried to submit at least once
-		if (!this.submitAttempted) {
-			return null;
-		}
-
-		const { organizationId, venueId } = this.state;
-		const phone = removePhoneFormatting(this.state.phone);
-
-		const errors = {};
-		const required = [
-			"name",
-			"address",
-			"city",
-			"state",
-			"postal_code",
-			"timezone",
-			"phone"
-		];
-		required.forEach(field => {
-			if (!this.state[field]) {
-				errors[field] = `Missing ${field}.`;
-			}
-		});
-
-		if (!venueId) {
-			if (!organizationId) {
-				errors.organizationId = "Select an organization.";
-			}
-		}
-
-		if(phone){
-			if (!validPhone(phone)) {
-				errors.phone = "Invalid phone number.";
-			}
-		}
-
-		this.setState({ errors });
-
-		return Object.keys(errors).length <= 0;
-	}
-
 	render() {
 		const {
 			venueId,
+			regionId,
 			imageUrl,
 			name,
 			phone,
+			organizations,
 			errors,
 			isSubmitting,
 			address = "",
 			city = "",
-			postal_code = ""
+			state = "",
+			country = "",
+			postal_code = "",
+			latitude = null,
+			longitude = null,
+			showManualEntry
 		} = this.state;
 
-		const { classes } = this.props;
+		const addressBlock = {
+			address,
+			city,
+			state,
+			country,
+			postal_code,
+			latitude,
+			longitude
+		};
 
+		const { classes } = this.props;
 		return (
 			<div>
 				<PageHeading iconUrl="/icons/venues-active.svg">
-					Venue details
+					{venueId ? "Update" : "New"} venue
 				</PageHeading>
 
 				<Grid container spacing={24}>
@@ -470,18 +454,19 @@ class Venue extends Component {
 								onSubmit={this.onSubmit.bind(this)}
 							>
 								<CardContent>
-									<CardMedia
-										className={classes.venueImage}
-										image={imageUrl || "/icons/venues-gray.svg"}
-										title={name}
-									/>
-									<Button
-										style={{ width: "100%" }}
-										onClick={this.uploadWidget.bind(this)}
-									>
-										Upload image
-									</Button>
-
+									<Grid item xs={12} sm={4} lg={4}>
+										<CardMedia
+											className={classes.venueImage}
+											image={imageUrl || "/icons/venues-gray.svg"}
+											title={name}
+										/>
+										<Button
+											style={{ width: "100%" }}
+											onClick={this.uploadWidget.bind(this)}
+										>
+											Upload image
+										</Button>
+									</Grid>
 									<InputGroup
 										error={errors.name}
 										value={name}
@@ -491,6 +476,7 @@ class Venue extends Component {
 										onChange={e => this.setState({ name: e.target.value })}
 										onBlur={this.validateFields.bind(this)}
 									/>
+
 									{!venueId ? this.renderOrganizations() : null}
 									{this.renderTimezones()}
 									{this.renderRegions()}
@@ -503,42 +489,57 @@ class Venue extends Component {
 										onChange={e => this.setState({ phone: e.target.value })}
 										onBlur={this.validateFields.bind(this)}
 									/>
-									<InputGroup
+
+									<LocationInputGroup
 										error={errors.address}
-										value={address}
-										name="address"
-										label="Address *"
-										type="text"
-										onChange={e => this.setState({ address: e.target.value })}
-										onBlur={this.validateFields.bind(this)}
+										errors={errors}
+										label="Venue location"
+										address={address}
+										addressBlock={addressBlock}
+										showManualEntry={showManualEntry}
+										onError={error => {
+											this.setState({ showManualEntry: true });
+											notifications.show({
+												message: `Google API error: ${error}`, //TODO add more details here
+												variant: "error"
+											});
+										}}
+										onAddressChange={address => this.setState({ address })}
+										onLatLngResult={latLng => {
+											this.setState({
+												latitude: latLng.lat,
+												longitude: latLng.lng
+											});
+										}}
+										onFullResult={result => {
+											const { place_id } = result;
+											const city = addressTypeFromGoogleResult(
+												result,
+												"locality"
+											);
+											const state = addressTypeFromGoogleResult(
+												result,
+												"administrative_area_level_1"
+											);
+											const country = addressTypeFromGoogleResult(
+												result,
+												"country"
+											);
+
+											const postal_code = addressTypeFromGoogleResult(
+												result,
+												"postal_code"
+											);
+
+											this.setState({
+												city,
+												state,
+												country,
+												postal_code,
+												place_id
+											});
+										}}
 									/>
-									<Grid container spacing={24}>
-										<Grid item xs={12} sm={4}>
-											<InputGroup
-												error={errors.city}
-												value={city}
-												name="city"
-												label="City *"
-												type="text"
-												onChange={e => this.setState({ city: e.target.value })}
-												onBlur={this.validateFields.bind(this)}
-											/>
-										</Grid>
-										<Grid item xs={12} sm={4}>
-											<InputGroup
-												error={errors.postal_code}
-												value={postal_code}
-												name="postal_code"
-												label="Zip *"
-												type="text"
-												onChange={e => this.setState({ postal_code: e.target.value })}
-												onBlur={this.validateFields.bind(this)}
-											/>
-										</Grid>
-										<Grid item xs={12} sm={4}>
-											{this.renderStates()}
-										</Grid>
-									</Grid>
 								</CardContent>
 
 								<CardActions>
@@ -565,4 +566,4 @@ class Venue extends Component {
 	}
 }
 
-export default withStyles(styles)(Venue);
+export default withStyles(styles)(VenueOld);
