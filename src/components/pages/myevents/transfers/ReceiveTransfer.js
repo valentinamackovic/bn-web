@@ -129,6 +129,16 @@ const styles = theme => ({
 			padding: 35,
 			paddingTop: "40%"
 		}
+	},
+	additionalText: {
+		paddingLeft: theme.spacing.unit * 2,
+		paddingTop: theme.spacing.unit * 2
+	},
+	noAppText: {
+		color: "#fff",
+		fontFamily: fontFamilyDemiBold,
+		textAlign: "center",
+		margin: "30px auto 0 auto"
 	}
 });
 
@@ -235,7 +245,6 @@ class ReceiveTransfer extends Component {
 
 	receiveTransfer() {
 		const { transferAuth } = this.state;
-
 		this.setState({ isClaiming: true });
 
 		Bigneon()
@@ -260,7 +269,7 @@ class ReceiveTransfer extends Component {
 
 		const senderName = "A user"; //TODO get this from the api when it comes
 
-		let text = `${senderName} has sent you a ticket... get it!`;
+		let text = `Get your tickets now!`;
 
 		if (ticketCount !== null) {
 			if (ticketCount > 1) {
@@ -270,6 +279,11 @@ class ReceiveTransfer extends Component {
 
 		return text;
 	}
+
+	handleOnSuccess = () => {
+		this.refreshUser.bind(this);
+		this.receiveTransfer();
+	};
 
 	renderAuthenticationOptions() {
 		const { signupOrLogin } = this.state;
@@ -282,10 +296,7 @@ class ReceiveTransfer extends Component {
 			content = (
 				<div className={classes.authContainer}>
 					<Typography className={classes.authenticateTitle}>Sign Up</Typography>
-					<SignupForm
-						hideTermsAndConditions
-						onSuccess={this.refreshUser.bind(this)}
-					/>
+					<SignupForm hideTermsAndConditions onSuccess={this.handleOnSuccess}/>
 					<Typography className={classes.switchAuthTypeText}>
 						Already have an account?{" "}
 						<span
@@ -300,7 +311,7 @@ class ReceiveTransfer extends Component {
 		} else if (signupOrLogin === "login") {
 			content = (
 				<div className={classes.authContainer}>
-					<LoginForm onSuccess={this.refreshUser.bind(this)}/>
+					<LoginForm onSuccess={this.handleOnSuccess}/>
 					<Typography className={classes.switchAuthTypeText}>
 						Don't have an account?{" "}
 						<span
@@ -317,10 +328,10 @@ class ReceiveTransfer extends Component {
 				<React.Fragment>
 					<div className={classes.optionsContainer}>
 						<Typography className={classes.authenticateTitle}>
-							Log in or Sign up to Big Neon to claim your tickets!
+							To get your tickets create a Big Neon Account
 						</Typography>
 
-						<FacebookButton onSuccess={this.refreshUser.bind(this)}/>
+						<FacebookButton onSuccess={this.handleOnSuccess}/>
 
 						<Button
 							size={"mediumLarge"}
@@ -331,7 +342,16 @@ class ReceiveTransfer extends Component {
 							Continue with email
 						</Button>
 					</div>
-
+					<Typography className={classes.switchAuthTypeText}>
+						Already have an account?{" "}
+						<span
+							className={classes.textLink}
+							onClick={() => this.setState({ signupOrLogin: "login" })}
+						>
+							Log in
+						</span>
+					</Typography>
+					<br/>
 					<TermsAndConditionsLinks/>
 				</React.Fragment>
 			);
@@ -437,7 +457,8 @@ class ReceiveTransfer extends Component {
 					</Typography>
 					<br/>
 					<Typography className={classes.backgroundTextSmall}>
-						If you think this is a mistake, please contact Big Neon Customer Support.
+						If you think this is a mistake, please contact Big Neon Customer
+						Support.
 					</Typography>
 				</div>
 			);
@@ -489,15 +510,25 @@ class ReceiveTransfer extends Component {
 
 		if (receiveSuccess) {
 			return (
-				<EventCardContainer
-					title={"Nice! Almost done..."}
-					name={"Download the Big Neon App."}
-					imageUrl={eventImageUrl}
-					address={eventAddress}
-					displayDate={eventDisplayTime}
-				>
-					<SMSLinkForm/>
-				</EventCardContainer>
+				<div>
+					<EventCardContainer
+						title={"Transfer Accepted! Login to the app to view your tickets."}
+						name={"Download the Big Neon App."}
+						imageUrl={eventImageUrl}
+						address={eventAddress}
+						displayDate={eventDisplayTime}
+					>
+						<Typography className={classes.additionalText}>
+							To receive a link to download the app enter your mobile number
+							below.
+						</Typography>
+						<SMSLinkForm/>
+					</EventCardContainer>
+					<br/>
+					<Typography className={classes.noAppText}>
+						No app? No problem. Just show your ID at the door.
+					</Typography>
+				</div>
 			);
 		}
 
@@ -509,6 +540,32 @@ class ReceiveTransfer extends Component {
 			return this.renderTransferUnavailable();
 		}
 
+		if (isAuthenticated === false) {
+			return (
+				<EventCardContainer
+					title={this.title}
+					name={eventName}
+					imageUrl={eventImageUrl}
+					address={eventAddress}
+					displayDate={eventDisplayTime}
+				>
+					{this.renderAuthenticationOptions()}
+				</EventCardContainer>
+			);
+		} else if (isAuthenticated === true && receiveSuccess === false) {
+			return (
+				<EventCardContainer
+					title={this.title}
+					name={eventName}
+					imageUrl={eventImageUrl}
+					address={eventAddress}
+					displayDate={eventDisplayTime}
+				>
+					{this.renderCallToAction()}
+				</EventCardContainer>
+			);
+		}
+
 		return (
 			<EventCardContainer
 				title={this.title}
@@ -517,9 +574,7 @@ class ReceiveTransfer extends Component {
 				address={eventAddress}
 				displayDate={eventDisplayTime}
 			>
-				{isAuthenticated === false
-					? this.renderAuthenticationOptions()
-					: this.renderCallToAction()}
+				<Loader/>
 			</EventCardContainer>
 		);
 	}
