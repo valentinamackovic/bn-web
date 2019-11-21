@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Typography, withStyles } from "@material-ui/core";
+import { Hidden, Typography, withStyles } from "@material-ui/core";
 import moment from "moment-timezone";
 import { Link } from "react-router-dom";
 
@@ -24,7 +24,7 @@ import LoginForm from "../../authentication/forms/LoginForm";
 import servedImage from "../../../../helpers/imagePathHelper";
 import SMSLinkForm from "../../../elements/SMSLinkForm";
 import optimizedImageUrl from "../../../../helpers/optimizedImageUrl";
-import settings from "../../../../config/settings";
+import Settings from "../../../../config/settings";
 
 const styles = theme => ({
 	root: {
@@ -154,7 +154,8 @@ class ReceiveTransfer extends Component {
 			signupOrLogin: null,
 			receiveSuccess: false,
 			isClaiming: false,
-			transferStatus: null
+			transferStatus: null,
+			openedAppLink: false
 		};
 	}
 
@@ -285,6 +286,12 @@ class ReceiveTransfer extends Component {
 		this.receiveTransfer();
 	};
 
+	handleAcceptClick = () => {
+		this.receiveTransfer();
+		window.open(Settings().genericAppDownloadLink, "_blank");
+		this.setState({ openedAppLink: true });
+	};
+
 	renderAuthenticationOptions() {
 		const { signupOrLogin } = this.state;
 
@@ -388,16 +395,30 @@ class ReceiveTransfer extends Component {
 					Not you? Click here.
 				</Typography>
 
-				<div className={classes.optionsContainer}>
-					<Button
-						variant={"secondary"}
-						style={{ width: "100%" }}
-						onClick={this.receiveTransfer.bind(this)}
-						disabled={isClaiming}
-					>
-						{isClaiming ? "Claiming..." : "Let's do this"}
-					</Button>
-				</div>
+				<Hidden smUp>
+					<div className={classes.optionsContainer}>
+						<Button
+							variant={"secondary"}
+							style={{ width: "100%" }}
+							onClick={this.handleAcceptClick}
+							disabled={isClaiming}
+						>
+							{isClaiming ? "Claiming..." : "Accept tickets"}
+						</Button>
+					</div>
+				</Hidden>
+				<Hidden smDown>
+					<div className={classes.optionsContainer}>
+						<Button
+							variant={"secondary"}
+							style={{ width: "100%" }}
+							onClick={this.receiveTransfer.bind(this)}
+							disabled={isClaiming}
+						>
+							{isClaiming ? "Claiming..." : "Accept tickets"}
+						</Button>
+					</div>
+				</Hidden>
 			</div>
 		);
 	}
@@ -465,7 +486,7 @@ class ReceiveTransfer extends Component {
 
 			buttonLink = (
 				<Button
-					href={settings().submitSupportLink || settings().appSupportLink}
+					href={Settings().submitSupportLink || Settings().appSupportLink}
 					size={"mediumLarge"}
 					variant={"whiteCTA"}
 					style={{ width: "100%", marginTop: 40 }}
@@ -505,29 +526,57 @@ class ReceiveTransfer extends Component {
 			eventAddress,
 			eventDisplayTime,
 			receiveSuccess,
+			openedAppLink,
 			transferStatus
 		} = this.state;
 
 		if (receiveSuccess) {
 			return (
 				<div>
-					<EventCardContainer
-						title={"Transfer Accepted! Login to the app to view your tickets."}
-						name={"Download the Big Neon App."}
-						imageUrl={eventImageUrl}
-						address={eventAddress}
-						displayDate={eventDisplayTime}
-					>
-						<Typography className={classes.additionalText}>
-							To receive a link to download the app enter your mobile number
-							below.
+					<Hidden smDown>
+						<EventCardContainer
+							title={
+								"Transfer Accepted! Login to the app to view your tickets."
+							}
+							name={"Download the Big Neon App."}
+							imageUrl={eventImageUrl}
+							address={eventAddress}
+							displayDate={eventDisplayTime}
+						>
+							<Typography className={classes.additionalText}>
+								To receive a link to download the app enter your mobile number
+								below.
+							</Typography>
+							<SMSLinkForm/>
+						</EventCardContainer>
+						<br/>
+						<Typography className={classes.noAppText}>
+							No app? No problem. Just show your ID at the door.
 						</Typography>
-						<SMSLinkForm/>
-					</EventCardContainer>
-					<br/>
-					<Typography className={classes.noAppText}>
-						No app? No problem. Just show your ID at the door.
-					</Typography>
+					</Hidden>
+					<Hidden smUp>
+						<EventCardContainer
+							title={
+								"Transfer Accepted! Login to the app to view your tickets."
+							}
+							name={eventName}
+							imageUrl={eventImageUrl}
+							address={eventAddress}
+							displayDate={eventDisplayTime}
+						>
+							<Button
+								variant={"secondary"}
+								style={{ width: "100%" }}
+								onClick={Settings().genericAppDownloadLink}
+							>
+								View tickets
+							</Button>
+						</EventCardContainer>
+						<br/>
+						<Typography className={classes.noAppText}>
+							No app? No problem. Just show your ID at the door.
+						</Typography>
+					</Hidden>
 				</div>
 			);
 		}
@@ -566,17 +615,27 @@ class ReceiveTransfer extends Component {
 			);
 		}
 
-		return (
-			<EventCardContainer
-				title={this.title}
-				name={eventName}
-				imageUrl={eventImageUrl}
-				address={eventAddress}
-				displayDate={eventDisplayTime}
-			>
-				<Loader/>
-			</EventCardContainer>
-		);
+		if (openedAppLink === true && receiveSuccess === true)
+			return (
+				<EventCardContainer
+					title={"Transfer Accepted! Login to the app to view your tickets."}
+					name={eventName}
+					imageUrl={eventImageUrl}
+					address={eventAddress}
+					displayDate={eventDisplayTime}
+				>
+					<Link to={"/"}>
+						<Button
+							size={"mediumLarge"}
+							variant={"whiteCTA"}
+							style={{ width: "100%", marginTop: 40 }}
+						>
+							Find other events
+						</Button>
+					</Link>
+					<SMSLinkForm/>
+				</EventCardContainer>
+			);
 	}
 
 	render() {
