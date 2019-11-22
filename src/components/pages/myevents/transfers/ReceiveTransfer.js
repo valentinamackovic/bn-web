@@ -16,7 +16,10 @@ import {
 	secondaryHex
 } from "../../../../config/theme";
 import EventCardContainer from "./EventCardContainer";
-import { FacebookButton } from "../../authentication/social/FacebookButton";
+import {
+	FacebookButton,
+	logoutFB
+} from "../../authentication/social/FacebookButton";
 import Button from "../../../elements/Button";
 import TermsAndConditionsLinks from "../../authentication/TermsAndConditionsLinks";
 import SignupForm from "../../authentication/forms/SignupForm";
@@ -34,7 +37,7 @@ const styles = theme => ({
 		flexDirection: "column",
 		minHeight: "90%",
 		paddingBottom: 50,
-
+		height: "100%",
 		[theme.breakpoints.down("xs")]: {
 			paddingTop: 20
 			// justifyContent: null
@@ -157,6 +160,7 @@ class ReceiveTransfer extends Component {
 			transferStatus: null,
 			openedAppLink: false
 		};
+		this.scrollRef = React.createRef();
 	}
 
 	componentDidMount() {
@@ -173,10 +177,21 @@ class ReceiveTransfer extends Component {
 		);
 
 		this.refreshUser();
+		this.handleScrollToTop();
 	}
+
+	handleScrollToTop() {
+		window.scrollTo(0, 0);
+
+		if (this.scrollRef.current) {
+			this.scrollRef.current.scrollTop = 0;
+		}
+	}
+	// window.scrollTo(0, scrollPos);
 
 	refreshUser() {
 		//If we just landed on this page, make sure the user is logged in first
+
 		user.refreshUser(
 			() => this.setState({ isAuthenticated: true }),
 			() => this.setState({ isAuthenticated: false })
@@ -284,12 +299,22 @@ class ReceiveTransfer extends Component {
 	handleOnSuccess = () => {
 		this.refreshUser.bind(this);
 		this.receiveTransfer();
+		this.handleScrollToTop();
 	};
 
 	handleAcceptClick = () => {
 		this.receiveTransfer();
 		window.open(Settings().genericAppDownloadLink, "_blank");
 		this.setState({ openedAppLink: true });
+	};
+
+	handleViewTicketsClick = () => {
+		window.open(Settings().genericAppDownloadLink, "_blank");
+	};
+
+	handleNotYouClick = () => {
+		user.onLogout(() => this.refreshUser());
+		logoutFB(() => this.refreshUser());
 	};
 
 	renderAuthenticationOptions() {
@@ -390,7 +415,7 @@ class ReceiveTransfer extends Component {
 
 				<Typography
 					className={classes.logoutText}
-					onClick={() => user.onLogout(() => this.refreshUser())}
+					onClick={this.handleNotYouClick}
 				>
 					Not you? Click here.
 				</Typography>
@@ -536,7 +561,9 @@ class ReceiveTransfer extends Component {
 					<Hidden smDown>
 						<EventCardContainer
 							title={
-								"Transfer Accepted! Login to the app to view your tickets."
+								"Transfer Accepted!" +
+								"\n" +
+								"Login to the app to view your tickets."
 							}
 							name={"Download the Big Neon App."}
 							imageUrl={eventImageUrl}
@@ -557,7 +584,9 @@ class ReceiveTransfer extends Component {
 					<Hidden smUp>
 						<EventCardContainer
 							title={
-								"Transfer Accepted! Login to the app to view your tickets."
+								"Transfer Accepted!" +
+								"\n" +
+								"Login to the app to view your tickets."
 							}
 							name={eventName}
 							imageUrl={eventImageUrl}
@@ -566,8 +595,12 @@ class ReceiveTransfer extends Component {
 						>
 							<Button
 								variant={"secondary"}
-								style={{ width: "100%" }}
-								onClick={Settings().genericAppDownloadLink}
+								style={{
+									width: "80%",
+									margin: "20px auto",
+									display: "flex"
+								}}
+								onClick={this.handleViewTicketsClick}
 							>
 								View tickets
 							</Button>
@@ -618,7 +651,11 @@ class ReceiveTransfer extends Component {
 		if (openedAppLink === true && receiveSuccess === true)
 			return (
 				<EventCardContainer
-					title={"Transfer Accepted! Login to the app to view your tickets."}
+					title={
+						"Transfer Accepted!" +
+						"\n" +
+						"Login to the app to view your tickets."
+					}
 					name={eventName}
 					imageUrl={eventImageUrl}
 					address={eventAddress}
@@ -643,7 +680,9 @@ class ReceiveTransfer extends Component {
 
 		return (
 			<TransferContainer>
-				<div className={classes.root}>{this.renderContents()}</div>
+				<div ref={this.scrollRef} className={classes.root}>
+					{this.renderContents()}
+				</div>
 			</TransferContainer>
 		);
 	}
