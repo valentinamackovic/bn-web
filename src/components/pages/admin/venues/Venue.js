@@ -50,7 +50,7 @@ class Venue extends Component {
 			address: "",
 			city: "",
 			state: "",
-			country: "",
+			country: "United States",
 			postal_code: "",
 			place_id: "",
 			phone: "",
@@ -414,8 +414,7 @@ class Venue extends Component {
 			"city",
 			"state",
 			"postal_code",
-			"timezone",
-			"phone"
+			"timezone"
 		];
 		required.forEach(field => {
 			if (!this.state[field]) {
@@ -450,7 +449,8 @@ class Venue extends Component {
 			isSubmitting,
 			address = "",
 			city = "",
-			postal_code = ""
+			postal_code = "",
+			country = ""
 		} = this.state;
 
 		const { classes } = this.props;
@@ -498,7 +498,7 @@ class Venue extends Component {
 										error={errors.phone}
 										value={phone}
 										name="phone"
-										label="Phone number *"
+										label="Phone number"
 										type="phone"
 										onChange={e => this.setState({ phone: e.target.value })}
 										onBlur={this.validateFields.bind(this)}
@@ -513,7 +513,7 @@ class Venue extends Component {
 										onBlur={this.validateFields.bind(this)}
 									/>
 									<Grid container spacing={24}>
-										<Grid item xs={12} sm={4}>
+										<Grid item xs={12} sm={3}>
 											<InputGroup
 												error={errors.city}
 												value={city}
@@ -524,7 +524,7 @@ class Venue extends Component {
 												onBlur={this.validateFields.bind(this)}
 											/>
 										</Grid>
-										<Grid item xs={12} sm={4}>
+										<Grid item xs={12} sm={3}>
 											<InputGroup
 												error={errors.postal_code}
 												value={postal_code}
@@ -535,8 +535,19 @@ class Venue extends Component {
 												onBlur={this.validateFields.bind(this)}
 											/>
 										</Grid>
-										<Grid item xs={12} sm={4}>
+										<Grid item xs={12} sm={3}>
 											{this.renderStates()}
+										</Grid>
+										<Grid item xs={12} sm={3}>
+											<InputGroup
+												error={errors.country}
+												value={country}
+												name="country"
+												label="Country *"
+												type="text"
+												onChange={e => this.setState({ country: e.target.value })}
+												onBlur={this.validateFields.bind(this)}
+											/>
 										</Grid>
 									</Grid>
 								</CardContent>
