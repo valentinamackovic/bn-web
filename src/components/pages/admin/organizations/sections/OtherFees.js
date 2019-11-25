@@ -133,10 +133,10 @@ class OtherFees extends Component {
 		const orgDetails = {
 			client_event_fee_in_cents: Math.ceil(Number(clientEventFee) * 100),
 			company_event_fee_in_cents: Math.ceil(Number(companyEventFee) * 100),
-			cc_fee_percent: Math.ceil(Number(creditCardFee)),
+			cc_fee_percent: Math.ceil(Number(creditCardFee) * 100) / 100,
 			settlement_type
 		};
-
+		
 		Bigneon()
 			.organizations.update({ id: organizationId, ...orgDetails })
 			.then(() => {
