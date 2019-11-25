@@ -60,6 +60,21 @@ class Announcements extends Component {
 
 	componentDidMount() {
 		Bigneon()
+			.events.ticketHolderCount({ id: this.eventId })
+			.then(response => {
+				this.setState({
+					numberOfRecipients: response.data
+				});
+			})
+			.catch(error => {
+				console.error(error);
+				notifications.showFromErrorResponse({
+					error,
+					defaultMessage: "Loading ticket holders failed."
+				});
+			});
+
+		Bigneon()
 			.events.read({ id: this.eventId })
 			.then(response => {
 				const { venue } = response.data;
@@ -68,7 +83,7 @@ class Announcements extends Component {
 				// this.setState({
 				// 	numberOfRecipients: event.sold_held + event.sold_unreserved
 				// });
-				
+
 				this.timezone = venue.timezone;
 
 				this.loadEventHistory();
