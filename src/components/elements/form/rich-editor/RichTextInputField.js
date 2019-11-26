@@ -3,8 +3,7 @@ import {
 	Editor,
 	EditorState,
 	RichUtils,
-	getDefaultKeyBinding,
-	ContentState
+	getDefaultKeyBinding
 } from "draft-js";
 import { convertToHTML, convertFromHTML } from "draft-convert";
 import { withStyles } from "@material-ui/core";
@@ -60,6 +59,8 @@ const getBlockStyle = block => {
 	switch (block.getType()) {
 		case "blockquote":
 			return "RichEditor-blockquote";
+		case "unstyled":
+			return "RichEditor-block";
 		default:
 			return null;
 	}
@@ -210,6 +211,18 @@ class RichTextInputField extends Component {
 				);
 				if (newEditorState !== this.state.editorState) {
 					this.onChange(newEditorState);
+				}
+				break;
+			}
+			case 13: {
+				// SHIFT + RETURN <br/>
+				if(e.shiftKey) {
+					const newEditorState = RichUtils.insertSoftNewline(this.state.editorState);
+					if (newEditorState !== this.state.editorState) {
+						this.onChange(newEditorState);
+					}
+				} else {
+					return getDefaultKeyBinding(e);
 				}
 				break;
 			}
