@@ -448,12 +448,18 @@ class ViewEvent extends Component {
 							<span className={classes.eventDetailLinkText}>{venue.name}</span>{" "}
 						</Link>
 					</Typography>
-					<Typography className={classes.eventDetailText}>
-						More Events in{" "}
-						<Link to={`/cities/${venue.city_slug}`}>
-							<span className={classes.eventDetailLinkText}>{venue.city}</span>
-						</Link>
-					</Typography>
+					{
+						venue.city_slug ?
+							(
+								<Typography className={classes.eventDetailText}>
+									More Events in{" "}
+									<Link to={`/cities/${venue.city_slug}`}>
+										<span className={classes.eventDetailLinkText}>{venue.city}</span>
+									</Link>
+								</Typography>
+							)
+							: null
+					}
 				</EventDetail>
 			</div>
 		);
