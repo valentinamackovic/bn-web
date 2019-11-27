@@ -441,11 +441,13 @@ class ViewEvent extends Component {
 						{venue.name}
 						<br/>
 						{addressLineSplit(venue.address)}
+						<br/>
+						{venue.city}, {venue.state}
 					</Typography>
 					{venue.googleMapsLink ? (
 						<a target="_blank" href={venue.googleMapsLink}>
 							<span className={classes.eventDetailLinkText}>
-								Get Directions
+								View map
 							</span>
 						</a>
 					) : null}
