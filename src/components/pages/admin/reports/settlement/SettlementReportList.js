@@ -65,7 +65,7 @@ class SettlementReportList extends Component {
 						const endDate = moment.utc(end_time).tz(organizationTimezone);
 
 						//Back one day if needed for display
-						if (startDate.diff(endDate, "days") > 1) {
+						if (endDate.diff(startDate, "days") > 1) {
 							endDate.add("d", -1);
 						}
 
@@ -73,14 +73,14 @@ class SettlementReportList extends Component {
 							rangeDateFormat
 						)} to ${endDate.format(rangeDateFormat)}`;
 
-						// const createdAtMoment = moment
-						// 	.utc(created_at)
-						// 	.tz(organizationTimezone);
+						const createdAtMoment = moment
+							.utc(created_at)
+							.tz(organizationTimezone);
 
 						reports.push({
 							...rest,
-							createdAtMoment: endDate, //Order by the date the report ends for
-							displayCreatedAt: endDate.format(dateFormat),
+							createdAtMoment: createdAtMoment, //Order by the date the report ends for
+							displayCreatedAt: createdAtMoment.format(dateFormat),
 							displayDateRange,
 							isPostEventSettlement: only_finished_events
 						});

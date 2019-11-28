@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Typography, withStyles } from "@material-ui/core";
 import PropTypes from "prop-types";
 import moment from "moment-timezone";
+import { observer } from "mobx-react";
 
 import Button from "../../../../elements/Button";
 import { fontFamilyDemiBold, secondaryHex } from "../../../../../config/theme";
@@ -14,13 +15,11 @@ import getUrlParam from "../../../../../helpers/getUrlParam";
 import AdjustmentDialog from "./AdjustmentDialog";
 import AdjustmentsList from "./AdjustmentsList";
 import Bn from "bn-api-node";
-import EventListTable from "./EventListTable";
 import SingleEventSettlement from "./SingleEventSettlement";
 import splitByCamelCase from "../../../../../helpers/splitByCamelCase";
 import downloadCSV from "../../../../../helpers/downloadCSV";
-import TotalsRow from "./TotalsRow";
 import { dollars } from "../../../../../helpers/money";
-import EventSettlementRow from "./EventSettlementRow";
+import user from "../../../../../stores/user";
 
 const statusEnums = Bn.Enums.SETTLEMENT_STATUS;
 const typeEnums = Bn.Enums.ADJUSTMENT_TYPES;
@@ -51,6 +50,7 @@ const styles = theme => ({
 	}
 });
 
+@observer
 class SettlementReport extends Component {
 	constructor(props) {
 		super(props);
@@ -102,7 +102,7 @@ class SettlementReport extends Component {
 				const endDate = moment.utc(end_time).tz(organizationTimezone);
 
 				//Back one day if needed for display
-				if (startDate.diff(endDate, "days") > 1) {
+				if (endDate.diff(startDate, "days") > 1) {
 					endDate.add("d", -1);
 				}
 
@@ -419,7 +419,7 @@ class SettlementReport extends Component {
 		const { isPostEventSettlement, displayDateRange } = settlement;
 
 		let onAddAdjustment = null;
-		if (!printVersion) {
+		if (!printVersion && user.isAdmin) {
 			onAddAdjustment = () => this.setState({ showAdjustmentDialog: true });
 		}
 
