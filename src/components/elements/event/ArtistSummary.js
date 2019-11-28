@@ -74,9 +74,9 @@ const styles = theme => ({
 	nameHeading: {
 		marginBottom: 5,
 		marginTop: 5,
-		[theme.breakpoints.down("sm")]: {
-			fontSize: 15
-		}
+		fontFamily: "TTCommons-DemiBold",
+		fontSize: "1rem",
+		fontWeight: 400
 	},
 	headline: {
 		color: "#B1B5C3",
@@ -89,6 +89,9 @@ const styles = theme => ({
 	socialGrid: {
 		[theme.breakpoints.up("md")]: {
 			justifyContent: "flex-end"
+		},
+		[theme.breakpoints.down("md")]: {
+			marginTop: 10
 		}
 	}
 });
@@ -124,7 +127,7 @@ class ArtistSummary extends Component {
 				  className={classes.socialGrid}
 			>
 				{facebook_username ? (
-					<Grid item xs={2} md={3} lg={2}>
+					<Grid item xs={2} md={3}>
 						<SocialIconLink
 							style={{ marginLeft: 6 }}
 							icon={"facebook"}
@@ -136,7 +139,7 @@ class ArtistSummary extends Component {
 				) : null}
 
 				{instagram_username ? (
-					<Grid item xs={2} md={3} lg={2}>
+					<Grid item xs={2} md={3}>
 						<SocialIconLink
 							style={{ marginLeft: 6 }}
 							icon={"instagram"}
@@ -147,7 +150,7 @@ class ArtistSummary extends Component {
 					</Grid>
 				) : null}
 				{snapchat_username ? (
-					<Grid item xs={2} md={3} lg={2}>
+					<Grid item xs={2} md={3}>
 						<SocialIconLink
 							style={{ marginLeft: 6 }}
 							icon={"snapchat"}
@@ -159,7 +162,7 @@ class ArtistSummary extends Component {
 				) : null}
 
 				{soundcloud_username ? (
-					<Grid item xs={2} md={3} lg={2}>
+					<Grid item xs={2} md={3}>
 						<SocialIconLink
 							style={{ marginLeft: 6 }}
 							icon={"soundcloud"}
@@ -171,7 +174,7 @@ class ArtistSummary extends Component {
 				) : null}
 
 				{bandcamp_username ? (
-					<Grid item xs={2} md={3} lg={2}>
+					<Grid item xs={2} md={3}>
 						<SocialIconLink
 							style={{ marginLeft: 6 }}
 							icon={"bandcamp"}
@@ -183,7 +186,7 @@ class ArtistSummary extends Component {
 				) : null}
 
 				{website_url ? (
-					<Grid item xs={2} md={3} lg={2}>
+					<Grid item xs={2} md={3}>
 						<SocialIconLink
 							style={{ marginLeft: 6 }}
 							icon={"website"}
@@ -195,7 +198,7 @@ class ArtistSummary extends Component {
 				) : null}
 
 				{spotify_id ? (
-					<Grid item xs={2} md={3} lg={2}>
+					<Grid item xs={2} md={3}>
 						<SocialIconLink
 							style={{ marginLeft: 6 }}
 							icon={"spotify"}
@@ -210,7 +213,7 @@ class ArtistSummary extends Component {
 
 		return (
 			<div>
-				<Grid container spacing={24}>
+				<Grid container>
 					<Grid item xs={3}>
 						<div
 							className={classes.media}
@@ -224,12 +227,14 @@ class ArtistSummary extends Component {
 						<Grid container
 							  alignItems="center"
 						>
-							<Grid item xs={12} sm={3} m={12} lg={3}>
+							<Grid item xs>
 								{ headliner ? <h6 className={classes.headline}>HEADLINER</h6> : "" }
-								<h3 className={classes.nameHeading}>{name}</h3>
+								<Typography className={classes.nameHeading}>
+									{name}
+								</Typography>
 							</Grid>
 							<Hidden smDown>
-								<Grid item xs={12} sm={9} m={12} lg={9}>
+								<Grid item xs>
 									{artistSocial}
 								</Grid>
 							</Hidden>

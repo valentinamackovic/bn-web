@@ -50,8 +50,11 @@ const styles = theme => ({
 		textDecoration: "underline"
 	},
 	artistsPerforming: {
-		marginBottom: 0,
-		marginTop: 0
+		marginBottom: 30,
+		marginTop: 0,
+		fontFamily: "TTCommons-DemiBold",
+		fontSize: "1rem",
+		fontWeight: 400
 	},
 	divider: {
 		marginTop: 30,
@@ -91,14 +94,15 @@ const EventDescriptionBody = props => {
 			{artists && artists.length !== 0 ? (
 				<Grid
 					className={classes.artistsContainer}
-					spacing={32}
 					container
 					direction="row"
 					justify="flex-start"
 					alignItems="flex-start"
 				>
 					<Grid item xs={12} style={{ paddingBottom: 0, paddingTop: 0 }}>
-						<h3 className={classes.artistsPerforming}>Artists Performing</h3>
+						<Typography className={classes.artistsPerforming}>
+							Artists Performing
+						</Typography>
 					</Grid>
 					{artists.map(({ artist, importance }, index) => (
 						<Grid item xs={12} key={index}>

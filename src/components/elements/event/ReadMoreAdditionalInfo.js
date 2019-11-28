@@ -70,6 +70,15 @@ class ReadMoreAdditionalInfo extends Component {
 
 		const linkifiedText = linkifyHtml(children, options);
 
+		const artistBio = (
+			<span
+				className={classes.readMoreLink}
+				onClick={this.showHideMoreAdditionalInfo.bind(this)}
+			>
+				{showAllAdditionalInfo ? " Read less" : " Read more"}
+			</span>
+		);
+
 		return (
 			<div className={classes.root}>
 				<span
@@ -83,12 +92,7 @@ class ReadMoreAdditionalInfo extends Component {
 					/>
 				</span>
 
-				<span
-					className={classes.readMoreLink}
-					onClick={this.showHideMoreAdditionalInfo.bind(this)}
-				>
-					{showAllAdditionalInfo ? " Read less" : " Read more"}
-				</span>
+				{(linkifiedText.length > 184 ? artistBio : "")}
 			</div>
 		);
 	}

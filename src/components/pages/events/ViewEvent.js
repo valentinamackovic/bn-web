@@ -131,8 +131,15 @@ const styles = theme => {
 			paddingTop: theme.spacing.unit * 5
 		},
 		artistsPerforming: {
-			marginBottom: 0,
+			marginBottom: 30,
 			marginTop: 0
+		},
+		dividerMobile: {
+			marginTop: 30,
+			marginBottom: 30,
+			[theme.breakpoints.up("md")]: {
+				display: "none"
+			}
 		}
 	};
 };
@@ -602,7 +609,6 @@ class ViewEvent extends Component {
 						{artists && artists.length !== 0 ? (
 							<Grid
 								className={classes.artistsContainer}
-								spacing={32}
 								container
 								direction="row"
 								justify="flex-start"
@@ -614,6 +620,7 @@ class ViewEvent extends Component {
 								{artists.map(({ artist, importance }, index) => (
 									<Grid item xs={12} key={index}>
 										<ArtistSummary headliner={importance === 0} {...artist}/>
+										<Divider className={classes.divider}/>
 									</Grid>
 								))}
 							</Grid>
