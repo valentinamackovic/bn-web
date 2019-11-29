@@ -413,6 +413,7 @@ class Venue extends Component {
 			"address",
 			"city",
 			"state",
+			"country",
 			"postal_code",
 			"timezone"
 		];
