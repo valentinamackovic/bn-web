@@ -57,6 +57,7 @@ const styles = theme => {
 			display: "flex",
 			flexDirection: "column",
 			justifyContent: "center",
+			alignItems: "center",
 			minHeight: "70vh",
 			paddingLeft: 22,
 			paddingRight: 22,
@@ -191,7 +192,10 @@ const styles = theme => {
 		desktopEventDetailText: {
 			color: "#FFFFFF",
 			fontSize: 15,
-			lineHeight: "18px"
+			lineHeight: "18px",
+			[theme.breakpoints.down("md")]: {
+				textAlign: "center"
+			}
 		},
 		boldText: {
 			fontFamily: fontFamilyDemiBold,
