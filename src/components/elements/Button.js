@@ -47,7 +47,8 @@ const styles = theme => {
 			height: 42,
 			width: 134,
 			border: " 1px solid #979797",
-			borderRadius: 3
+			borderRadius: 3,
+			padding: 10
 		},
 		default: {
 			background: `linear-gradient(45deg, #FFF 10%, #FFF 90%)`,
@@ -154,7 +155,7 @@ const CustomButton = props => {
 	}
 
 	const useThinLabel =
-		variant === "additional" || variant === "text" || variant === "default";
+		variant === "additional" || variant === "text" || variant === "default" || variant === "plainWhite" ;
 
 	return (
 		<Button

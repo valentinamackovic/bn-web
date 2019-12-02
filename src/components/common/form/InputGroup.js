@@ -79,11 +79,15 @@ class InputGroup extends Component {
 	handleWheel = e => e.preventDefault();
 
 	componentDidMount() {
-		ReactDOM.findDOMNode(this).addEventListener("wheel", this.handleWheel);
+		if (this.props.type === "number") {
+			ReactDOM.findDOMNode(this).addEventListener("wheel", this.handleWheel);
+		}
 	}
 
 	componentWillUnmount() {
-		ReactDOM.findDOMNode(this).removeEventListener("wheel", this.handleWheel);
+		if (this.props.type === "number") {
+			ReactDOM.findDOMNode(this).removeEventListener("wheel", this.handleWheel);
+		}
 	}
 
 	render() {
