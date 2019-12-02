@@ -49,6 +49,9 @@ class EventUpdate {
 	ticketTypeActiveIndex = null;
 
 	@observable
+	artistTypeActiveIndex = null;
+
+	@observable
 	timezone = "";
 
 	@action
@@ -111,6 +114,32 @@ class EventUpdate {
 		});
 
 		this.ticketTypes = ticketTypes;
+	}
+
+	@action
+	moveOrderArtist(fromIndex, direction) {
+		//TODO this will be redone
+		const artists = this.artists;
+
+		if (direction === "up") {
+			if (fromIndex < 1) {
+				return;
+			}
+
+			artists.splice(fromIndex - 1, 0, artists.splice(fromIndex, 1)[0]);
+		} else if (direction === "down") {
+			if (fromIndex + 1 >= this.artists.length) {
+				return;
+			}
+
+			artists.splice(fromIndex + 1, 0, artists.splice(fromIndex, 1)[0]);
+		}
+
+		artists.forEach((tt, i) => {
+			artists[i].rank = i;
+		});
+
+		this.artists = artists;
 	}
 
 	@action
@@ -194,6 +223,11 @@ class EventUpdate {
 	@action
 	ticketTypeActivate(index) {
 		this.ticketTypeActiveIndex = index;
+	}
+
+	@action
+	artistActivate(index) {
+		this.artistTypeActiveIndex = index;
 	}
 
 	@action
