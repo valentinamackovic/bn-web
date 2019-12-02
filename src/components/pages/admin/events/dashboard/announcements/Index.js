@@ -161,11 +161,6 @@ class Announcements extends Component {
 					previewIsSending: false,
 					previewIsSent: true
 				});
-
-				notifications.show({
-					message: "Preview queued for sending.",
-					variant: "success"
-				});
 			})
 			.catch(error => {
 				notifications.showFromErrorResponse({
@@ -232,11 +227,6 @@ class Announcements extends Component {
 					isSent: true,
 					subject: "",
 					htmlBodyString: ""
-				});
-
-				notifications.show({
-					message: "Notification triggered!",
-					variant: "success"
 				});
 			})
 			.catch(error => {

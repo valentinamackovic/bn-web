@@ -8,7 +8,7 @@ import {
 	secondaryHex
 } from "../../../../../../config/theme";
 import Card from "../../../../../elements/Card";
-import { Collapse } from "@material-ui/core";
+import { Collapse, Hidden } from "@material-ui/core";
 import Divider from "../../../../../common/Divider";
 import splitByCamelCase from "../../../../../../helpers/splitByCamelCase";
 
@@ -64,39 +64,78 @@ const SentEmailCard = ({
 		...rest
 	} = email;
 
+	const sentAt = sendAtDisplay || splitByCamelCase(status);
+
+	const emailBody = (
+		<Typography
+			className={classes.text}
+			dangerouslySetInnerHTML={{ __html: message }}
+		/>
+	);
+
 	return (
 		<Card variant={"raisedLight"} className={classes.root}>
-			<div className={classes.row}>
-				<Typography className={classes.dateText} style={colStyles[0]}>
-					{sendAtDisplay || splitByCamelCase(status)}
-				</Typography>
-				<Typography className={classes.text} style={colStyles[1]}>
-					{name}
-				</Typography>
-				<Typography className={classes.text} style={colStyles[2]}>
-					{sent_quantity}
-				</Typography>
+			{/*DESKTOP*/}
+			<Hidden smDown>
+				<div className={classes.row}>
+					<Typography className={classes.dateText} style={colStyles[0]}>
+						{sentAt}
+					</Typography>
+					<Typography className={classes.text} style={colStyles[1]}>
+						{name}
+					</Typography>
+					<Typography className={classes.text} style={colStyles[2]}>
+						{sent_quantity}
+					</Typography>
+					<Typography
+						className={classes.expandText}
+						style={colStyles[3]}
+						onClick={() => onSelectToggle(id)}
+					>
+						{isExpanded ? "Hide details" : "Show details"}
+					</Typography>
+				</div>
+
+				<Collapse in={isExpanded}>
+					<div>
+						<Hidden smDown>
+							<Divider/>
+						</Hidden>
+						<br/>
+						<Typography className={classes.title}>Body message</Typography>
+						<br/>
+						{emailBody}
+					</div>
+				</Collapse>
+			</Hidden>
+
+			{/*MOBILE*/}
+			<Hidden mdUp>
+				<Typography className={classes.title}>Date Sent</Typography>
+				<Typography className={classes.dateText}>{sentAt}</Typography>
+				<br/>
+				<Typography className={classes.title}>Subject</Typography>
+				<Typography>{name}</Typography>
+				<br/>
+				<Typography className={classes.title}>Recipients</Typography>
+				<Typography>{sent_quantity}</Typography>
+				<br/>
+
+				<Collapse in={isExpanded}>
+					<div>
+						<Typography className={classes.title}>Body message</Typography>
+						<br/>
+						{emailBody}
+					</div>
+				</Collapse>
+
 				<Typography
 					className={classes.expandText}
-					style={colStyles[3]}
 					onClick={() => onSelectToggle(id)}
 				>
 					{isExpanded ? "Hide details" : "Show details"}
 				</Typography>
-			</div>
-			<Collapse in={isExpanded}>
-				<div>
-					<Divider/>
-					<br/>
-					<Typography className={classes.title}>Body message</Typography>
-					<br/>
-
-					<Typography
-						className={classes.text}
-						dangerouslySetInnerHTML={{ __html: message }}
-					/>
-				</div>
-			</Collapse>
+			</Hidden>
 		</Card>
 	);
 };
