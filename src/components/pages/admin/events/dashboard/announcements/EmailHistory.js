@@ -45,10 +45,10 @@ class EmailHistory extends React.Component {
 		const { emails, classes } = this.props;
 
 		const colStyles = [
-			{ flex: 1 },
-			{ flex: 4 },
-			{ flex: 1 },
-			{ flex: 1, textAlign: "right" }
+			{ flex: 2 },
+			{ flex: 5 },
+			{ flex: 2 },
+			{ flex: 2, textAlign: "right" }
 		];
 
 		return (

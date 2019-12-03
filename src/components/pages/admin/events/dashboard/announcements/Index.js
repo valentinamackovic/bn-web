@@ -114,7 +114,10 @@ class Announcements extends Component {
 					} = email;
 					if (notification_type === "Custom" && !preview_email) {
 						email.sendAtDisplay = send_at
-							? moment.utc(send_at).tz(this.timezone || user.currentOrgTimezone)
+							? moment
+								.utc(send_at)
+								.tz(this.timezone || user.currentOrgTimezone)
+								.format("MM/DD/YY hh:mm A z")
 							: null;
 
 						emailHistory.push(email);
