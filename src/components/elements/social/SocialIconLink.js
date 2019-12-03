@@ -3,6 +3,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import servedImage from "../../../helpers/imagePathHelper";
+import classnames from "classnames";
 
 import {
 	textColorPrimary,
@@ -27,7 +28,7 @@ const styles = theme => {
 };
 
 const SocialIconLink = props => {
-	const { classes, userName, onClick, href, icon, style, size, color } = props;
+	const { classes, className, userName, onClick, href, icon, style, size, color } = props;
 
 	let src = "";
 	let socialLink = "";
@@ -77,7 +78,10 @@ const SocialIconLink = props => {
 
 	return (
 		<a
-			className={classes.container}
+			className={classnames({
+				[classes. container]: true,
+				[className]: !!className
+			})}
 			onClick={onClick}
 			target={toLink ? "_blank" : null}
 			href={toLink ? toLink : null}
@@ -100,6 +104,7 @@ SocialIconLink.defaultProps = {
 
 SocialIconLink.propTypes = {
 	classes: PropTypes.object.isRequired,
+	className: PropTypes.string,
 	onClick: PropTypes.func,
 	href: PropTypes.string,
 	icon: PropTypes.oneOf([

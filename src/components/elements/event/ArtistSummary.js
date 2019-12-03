@@ -35,7 +35,7 @@ const styles = theme => ({
 			width: 70,
 			height: 70
 		},
-		[theme.breakpoints.only("lg")]: {
+		[theme.breakpoints.up("lg")]: {
 			width: 100,
 			height: 100
 		}
@@ -88,6 +88,9 @@ const styles = theme => ({
 	},
 	socialGrid: {
 		marginTop: 20
+	},
+	socialMargin: {
+		marginRight: 10
 	}
 });
 
@@ -115,93 +118,81 @@ class ArtistSummary extends Component {
 		imageSrc = optimizedImageUrl(imageSrc);
 
 		const artistSocial = (
-			<Grid container
-				  direction="row"
-				  alignItems="center"
-				  spacing={4}
-				  className={classes.socialGrid}
-			>
+			<div className={classes.socialGrid}>
 				{facebook_username ? (
-					<Grid item xs={2}>
-						<SocialIconLink
-							icon={"facebook"}
-							userName={facebook_username}
-							size={40}
-							color={"neon"}
-						/>
-					</Grid>
+					<SocialIconLink
+						className={classes.socialMargin}
+						icon={"facebook"}
+						userName={facebook_username}
+						size={40}
+						color={"neon"}
+					/>
 				) : null}
 
 				{instagram_username ? (
-					<Grid item xs={2}>
-						<SocialIconLink
-							icon={"instagram"}
-							userName={instagram_username}
-							size={40}
-							color={"neon"}
-						/>
-					</Grid>
+					<SocialIconLink
+						className={classes.socialMargin}
+						icon={"instagram"}
+						userName={instagram_username}
+						size={40}
+						color={"neon"}
+					/>
 				) : null}
 				{snapchat_username ? (
-					<Grid item xs={2}>
-						<SocialIconLink
-							icon={"snapchat"}
-							userName={snapchat_username}
-							size={40}
-							color={"neon"}
-						/>
-					</Grid>
+					<SocialIconLink
+						className={classes.socialMargin}
+						icon={"snapchat"}
+						userName={snapchat_username}
+						size={40}
+						color={"neon"}
+					/>
 				) : null}
 
 				{soundcloud_username ? (
-					<Grid item xs={2}>
-						<SocialIconLink
-							icon={"soundcloud"}
-							userName={soundcloud_username}
-							size={40}
-							color={"neon"}
-						/>
-					</Grid>
+					<SocialIconLink
+						className={classes.socialMargin}
+						icon={"soundcloud"}
+						userName={soundcloud_username}
+						size={40}
+						color={"neon"}
+					/>
 				) : null}
 
 				{bandcamp_username ? (
-					<Grid item xs={2}>
-						<SocialIconLink
-							icon={"bandcamp"}
-							userName={bandcamp_username}
-							size={40}
-							color={"neon"}
-						/>
-					</Grid>
+					<SocialIconLink
+						className={classes.socialMargin}
+						icon={"bandcamp"}
+						userName={bandcamp_username}
+						size={40}
+						color={"neon"}
+					/>
 				) : null}
 
 				{website_url ? (
-					<Grid item xs={2}>
-						<SocialIconLink
-							icon={"website"}
-							href={website_url}
-							size={40}
-							color={"neon"}
-						/>
-					</Grid>
+					<SocialIconLink
+						className={classes.socialMargin}
+						icon={"website"}
+						href={website_url}
+						size={40}
+						color={"neon"}
+					/>
 				) : null}
 
 				{spotify_id ? (
-					<Grid item xs={2}>
-						<SocialIconLink
-							icon={"spotify"}
-							userName={spotify_id}
-							size={40}
-							color={"neon"}
-						/>
-					</Grid>
+					<SocialIconLink
+						className={classes.socialMargin}
+						icon={"spotify"}
+						userName={spotify_id}
+						size={40}
+						color={"neon"}
+					/>
 				) : null}
-			</Grid>
+			</div>
 		);
 
 		return (
 			<div>
-				<Grid container>
+				<Grid container spacing={8}>
 					<Grid item xs={3}>
 						<div
 							className={classes.media}

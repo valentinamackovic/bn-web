@@ -15,14 +15,10 @@ const styles = theme => ({
 		font: "inherit",
 		color: secondaryHex,
 		cursor: "pointer",
-		fontSize: 18,
 		marginTop: 10,
 		marginBottom: 10,
 		display: "block",
-		[theme.breakpoints.down("md")]: {
-			fontSize: 13,
-			fontWeight: "bold"
-		}
+		fontWeight: 100
 	},
 	shortenedTextBlock: {
 		overflow: "hidden",
