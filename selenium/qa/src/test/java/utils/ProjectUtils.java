@@ -13,6 +13,8 @@ import java.time.temporal.ChronoField;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebElement;
@@ -26,6 +28,7 @@ public class ProjectUtils {
 	public static final String CONCATINATED_DATE_FORMAT = "MMddyyyy";
 	public static final String ADMIN_EVENT_DATE_TIME_FORMAT = "EEEE, MMMM d yyyy h:mm a";
 	public static final String ADMIN_EVENT_MANAGE_ORDERS_ORDER_ROW = "MM/dd/yyyy h:mm a";
+	public static final String SUCCESS_PURCHASE_PAGE_DATE_FORMAT = "EEE, MMM dd, yyyy h:mm a z";
 	public static final String MANAGE_ORDER_HISTORY_ITEM_DATE_FORMAT = "EEE, MMM d, yyyy h:mm a";
 	public static final String REPORTS_BOX_OFFICE_TITLE_DATE_FORMAT = "MMM dd, yyyy";
 	public static final String REPORTS_BOX_OFFICE_OPERATOR_TABLE_DATE = "MM/dd/yyyy h:mm a, z";
@@ -67,6 +70,17 @@ public class ProjectUtils {
 	public static String formatDate(String pattern, LocalDate date) {
 		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(DATE_FORMAT);
 		return formatter.format(date);
+	}
+	
+	public static LocalDateTime parseDateTimeWithoutYear(String pattern, String dateTimeWithOutYear) {
+		return parseDateTimeWithoutYear(pattern, dateTimeWithOutYear, LocalDate.now().getYear());
+	}
+	
+	public static LocalDateTime parseDateTimeWithoutYear(String pattern, String dateTimeWithOutYear, Integer year) {
+		DateTimeFormatter formatter = new DateTimeFormatterBuilder().appendPattern(pattern)
+				.parseDefaulting(ChronoField.YEAR, year).toFormatter();
+		LocalDateTime time = LocalDateTime.parse(dateTimeWithOutYear, formatter);
+		return time;
 	}
 
 	public static LocalDateTime parseDateTime(String pattern, String dateTime) {
@@ -178,17 +192,19 @@ public class ProjectUtils {
 	}
 
 	public static Double getMoneyAmount(String textSeq) {
+		textSeq = textSeq.trim();
 		String replaced = textSeq.replace("$", "");
 		return Double.parseDouble(replaced.trim());
 	}
 
 	public static BigDecimal getBigDecimalMoneyAmount(String textSeq) {
+		textSeq = textSeq.trim();
 		String replaced = textSeq.replace("$", "");
 		return new BigDecimal(replaced.trim());
 	}
 
 	public static String getTextForElementAndReplace(WebElement element, String oldChar, String newChar) {
-		String text = element.getText();
+		String text = element.getText().trim();
 		return text.replace(oldChar, newChar);
 
 	}
@@ -251,5 +267,19 @@ public class ProjectUtils {
 	 */
 	public static boolean isStringValid(String value) {
 		return value != null && !value.isEmpty();
+	}
+	
+	public static String getImageUrlFromStyleAttribute(WebElement element) {
+		String text = element.getAttribute("style");
+		Pattern pattern = Pattern.compile("url\\(*.*\\)");
+		Matcher matcher = pattern.matcher(text);
+		String retVal = "";
+		if(matcher.find()) {
+			retVal = matcher.group();
+			retVal = retVal.replace("url(\"", "");
+			retVal = retVal.replace("\")","");
+		}
+		
+		return retVal;
 	}
 }
