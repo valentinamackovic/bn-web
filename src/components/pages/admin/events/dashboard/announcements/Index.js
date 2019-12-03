@@ -105,8 +105,14 @@ class Announcements extends Component {
 				const emailHistory = [];
 
 				data.forEach(email => {
-					const { id, notification_type, send_at, status } = email;
-					if (notification_type === "Custom") {
+					const {
+						id,
+						notification_type,
+						send_at,
+						status,
+						preview_email
+					} = email;
+					if (notification_type === "Custom" && !preview_email) {
 						email.sendAtDisplay = send_at
 							? moment.utc(send_at).tz(this.timezone || user.currentOrgTimezone)
 							: null;
