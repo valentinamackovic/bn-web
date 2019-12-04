@@ -181,8 +181,6 @@ class Announcements extends Component {
 				preview_email: email
 			})
 			.then(response => {
-				this.loadEventHistory();
-
 				this.setState({
 					previewIsSending: false,
 					previewIsSent: true
@@ -246,7 +244,7 @@ class Announcements extends Component {
 				notification_type: "Custom"
 			})
 			.then(response => {
-				this.loadEventHistory();
+				setTimeout(() => this.loadEventHistory(), 1000);
 
 				this.setState({
 					isSending: false,
