@@ -181,7 +181,7 @@ class Routes extends Component {
 			analytics.trackPageLoadTime(Date.now() - startLoadTime);
 		}
 		// store url params data for campaign tracking
-		user.setCampaignTrackingData(getAllUrlParams());
+		user.setCampaignTrackingData({ referrer: document.referrer});
 	}
 
 	componentDidCatch(error, errorInfo) {

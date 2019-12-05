@@ -319,7 +319,7 @@ class ViewEvent extends Component {
 			);
 		} else {
 			return (
-				<Link to={`/tickets/${id}/tickets`}>
+				<Link to={`/tickets/${id}/tickets${window.location.search}`}>
 					<Button
 						size={"mediumLarge"}
 						className={classes.callToAction}
