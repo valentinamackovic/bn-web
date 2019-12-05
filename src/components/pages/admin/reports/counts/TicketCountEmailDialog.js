@@ -319,7 +319,7 @@ class TicketCountEmailDialog extends Component {
 							autoFocus
 							error={errors.email}
 							name="email"
-							placeholder="admin@subscriber.comNEW"
+							placeholder="admin@subscriber.com"
 							type="text"
 							onChange={e => {
 								this.setState({ newSubscriberEmail: e.target.value });
