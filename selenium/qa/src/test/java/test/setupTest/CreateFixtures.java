@@ -43,7 +43,7 @@ public class CreateFixtures extends BaseSteps {
 		fp.getLoginFacade().givenAdminUserIsLogedIn(user);
 		fp.getVenueFacade().givenUserIsOnVenuesPage();
 		if (fp.getVenueFacade().isVenueAlreadyCreated(venue)) {
-			fp.getVenueFacade().venueUpdateSteps(venue);
+			fp.getVenueFacade().venueUpdateSteps(venue, false);
 		} else {
 			fp.getVenueFacade().venueCreateSteps(venue);
 		}
