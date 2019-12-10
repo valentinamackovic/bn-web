@@ -45,7 +45,7 @@ public class VenueStepsIT extends BaseSteps {
 
 	@DataProvider(name = "create_venue_data")
 	private static Object[][] createVenueData() {
-		Venue venue = Venue.generateVenueFromJson(DataConstants.VENUE_STANDARD_KEY);
+		Venue venue = Venue.generateVenueFromJson(DataConstants.VENUE_CREATIONAL_KEY);
 		User superuser = User.generateSuperUser();
 		return new Object[][] { { venue, superuser } };
 	}
@@ -66,7 +66,7 @@ public class VenueStepsIT extends BaseSteps {
 
 	@DataProvider(name = "edit_venue_data")
 	private static Object[][] editVenueData() {
-		Venue venue = Venue.generateVenueFromJson(DataConstants.VENUE_STANDARD_KEY);
+		Venue venue = Venue.generateVenueFromJson(DataConstants.VENUE_CREATIONAL_KEY);
 		User superuser = User.generateSuperUser();
 		return new Object[][] { { venue, superuser } };
 	}
