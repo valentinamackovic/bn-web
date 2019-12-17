@@ -16,6 +16,9 @@ import optimizedImageUrl from "../../../../../helpers/optimizedImageUrl";
 import { fontFamilyDemiBold } from "../../../../../config/theme";
 import EventSummaryCard from "../EventSummaryCard";
 import moment from "../List";
+import Card from "../../../../elements/Card";
+import ArtistsOverview from "./ArtistsOverview";
+import ArtistSummary from "../../../../elements/event/ArtistSummary";
 
 const styles = theme => ({
 	paper: {
@@ -99,6 +102,29 @@ const styles = theme => ({
 		flexDirection: "row",
 		justifyContent: "space-between",
 		alignItems: "center"
+	},
+	eventAllDetailsContainer: {
+		marginTop: 20,
+		padding: "65px"
+	},
+	eventAllDetailsTitle: {
+		color: "#2C3136",
+		fontSize: 28,
+		fontFamily: fontFamilyDemiBold,
+		lineHeight: "32px"
+	},
+	artistImage: {
+		width: 61,
+		height: 56,
+		backgroundRepeat: "no-repeat",
+		backgroundSize: "cover",
+		backgroundPosition: "center",
+		borderRadius: 3
+	},
+	artistsOverviewCard: {
+		padding: "22px 30px",
+		marginBottom: 10,
+		boxShadow: "0 4px 15px 2px rgba(112,124,237,0.13)"
 	}
 });
 
@@ -196,6 +222,24 @@ class EventOverview extends Component {
 					artists={artists}
 					venue={venue}
 				/>
+				<Card className={classes.eventAllDetailsContainer}>
+					i am cat
+					{artists ? (
+						<div>
+							<Typography className={classes.eventAllDetailsTitle}>
+								Artists
+							</Typography>
+							{artists.map(({ artist, importance }, index) => (
+								<ArtistsOverview
+									key={index}
+									classes={classes}
+									headliner={importance === 0}
+									artist={artist}
+								/>
+							))}
+						</div>
+					) : null}
+				</Card>
 			</div>
 		);
 	}
