@@ -14,6 +14,8 @@ import NotFound from "../../../../common/NotFound";
 import OverviewHeader from "./OverviewHeader";
 import optimizedImageUrl from "../../../../../helpers/optimizedImageUrl";
 import { fontFamilyDemiBold } from "../../../../../config/theme";
+import EventSummaryCard from "../EventSummaryCard";
+import moment from "../List";
 
 const styles = theme => ({
 	paper: {
@@ -72,7 +74,8 @@ const styles = theme => ({
 	},
 	headerEventDateInfo: {
 		display: "flex",
-		flexDirection: "row"
+		flexDirection: "row",
+		marginTop: theme.spacing.unit
 	},
 	icon: {
 		width: 17.65,
@@ -90,6 +93,12 @@ const styles = theme => ({
 		color: "#979797",
 		fontSize: 15,
 		lineHeight: "18px"
+	},
+	justifyBetween: {
+		display: "flex",
+		flexDirection: "row",
+		justifyContent: "space-between",
+		alignItems: "center"
 	}
 });
 
@@ -172,21 +181,7 @@ class EventOverview extends Component {
 		if (event === false) {
 			return <NotFound>Event not found.</NotFound>;
 		}
-		const {
-			name,
-			displayEventStartDate,
-			additional_info,
-			top_line_info,
-			age_limit,
-			displayDoorTime,
-			displayShowTime,
-			eventStartDateMoment,
-			is_external,
-			tracking_keys,
-			external_url,
-			min_ticket_price,
-			max_ticket_price
-		} = event;
+		const { name } = event;
 
 		const promo_image_url = event.promo_image_url
 			? optimizedImageUrl(event.promo_image_url)
@@ -195,7 +190,12 @@ class EventOverview extends Component {
 		return (
 			<div>
 				<PageHeading iconUrl="/icons/events-multi.svg">{name}</PageHeading>
-				<OverviewHeader event={event} classes={classes} artists={artists}/>
+				<OverviewHeader
+					event={event}
+					classes={classes}
+					artists={artists}
+					venue={venue}
+				/>
 			</div>
 		);
 	}
