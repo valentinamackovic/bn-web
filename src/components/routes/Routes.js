@@ -54,9 +54,7 @@ const AdminOrganization = asyncComponent(() =>
 const AdminVenuesList = asyncComponent(() =>
 	import("../pages/admin/venues/List")
 );
-const AdminVenue = asyncComponent(() =>
-	import("../pages/admin/venues/Venue")
-);
+const AdminVenue = asyncComponent(() => import("../pages/admin/venues/Venue"));
 const AdminRegionsList = asyncComponent(() =>
 	import("../pages/admin/regions/List")
 );
@@ -71,6 +69,9 @@ const AdminEventsList = asyncComponent(() =>
 );
 const AdminEventDashboardSummary = asyncComponent(() =>
 	import("../pages/admin/events/dashboard/Summary")
+);
+const EventOverview = asyncComponent(() =>
+	import("../pages/admin/events/EventOverview/index")
 );
 const AdminEventDashboardHolds = asyncComponent(() =>
 	import("../pages/admin/events/dashboard/holds/List")
@@ -433,6 +434,12 @@ class Routes extends Component {
 									exact
 									path="/admin/events/:id/dashboard"
 									component={AdminEventDashboardSummary}
+									isAuthenticated={isAuthenticated}
+								/>
+								<PrivateRoute
+									exact
+									path="/admin/events/:id/event-overview"
+									component={EventOverview}
 									isAuthenticated={isAuthenticated}
 								/>
 								<PrivateRoute

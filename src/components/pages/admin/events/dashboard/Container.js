@@ -462,7 +462,10 @@ class EventDashboardContainer extends Component {
 		}
 		if (user.hasScope("event:write")) {
 			items.push(
-				<MenuItem key="affiliate-link" onClick={this.openAffiliateLinkDialog.bind(this)}>
+				<MenuItem
+					key="affiliate-link"
+					onClick={this.openAffiliateLinkDialog.bind(this)}
+				>
 					Affiliate Tracking Links
 				</MenuItem>
 			);

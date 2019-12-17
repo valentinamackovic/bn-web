@@ -196,6 +196,15 @@ class EventsList extends Component {
 						MenuOptionIcon: ViewIcon
 					},
 					{
+						text: "Event overview",
+						disabled: !user.hasScope("event:write"),
+						onClick: () =>
+							this.props.history.push(
+								`/admin/events/${eventMenuSelected}/event-overview`
+							),
+						MenuOptionIcon: EditIcon
+					},
+					{
 						text: "Cancel event",
 						disabled:
 							!user.hasScope("event:write") || this.cancelMenuItemDisabled,
