@@ -111,6 +111,7 @@ const styles = theme => ({
 		color: "#2C3136",
 		fontSize: 28,
 		fontFamily: fontFamilyDemiBold,
+		marginBottom: 25,
 		lineHeight: "32px"
 	},
 	artistImage: {
