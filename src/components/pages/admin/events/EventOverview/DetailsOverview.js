@@ -4,6 +4,7 @@ import { Typography } from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
 import FormattedAdditionalInfo from "../../../events/FormattedAdditionalInfo";
 import lineBreakHtmlToPlainText from "../../../../../helpers/lineBreakHtmlToPlainText";
+import moment from "moment-timezone";
 
 const DetailsOverview = ({
 	classes,
@@ -12,7 +13,11 @@ const DetailsOverview = ({
 	displayEventStart,
 	displayEventEnd,
 	timezoneAbbr,
-	displayEventEndTime
+	displayEventEndTime,
+	age_limit,
+	event_type,
+	private_access_code,
+	status
 }) => {
 	const {
 		name,
@@ -42,6 +47,7 @@ const DetailsOverview = ({
 		`End date (${timezoneAbbr})`,
 		`End time (${timezoneAbbr})`
 	];
+
 	const dateValues = [
 		displayEventStart,
 		displayShowTime,
@@ -49,6 +55,16 @@ const DetailsOverview = ({
 		displayEventEnd,
 		displayEventEndTime
 	];
+
+	const infoHeadings = [
+		"Age limit",
+		"Event type",
+		"Private access code",
+		"event status",
+		""
+	];
+
+	const infoValues = [age_limit, event_type, private_access_code, status, " "];
 
 	return (
 		<Card variant={"form"} className={classes.detailsCardStyle}>
@@ -95,6 +111,30 @@ const DetailsOverview = ({
 			</div>
 			<div className={classes.detailsTopRow}>
 				{dateValues.map((value, index) => (
+					<Typography
+						key={index}
+						style={dateColStyles[index]}
+						className={classes.smallTitle}
+					>
+						{value ? value : "-"}
+					</Typography>
+				))}
+			</div>
+
+			<Divider className={classes.dividerStyle}/>
+			<div className={classes.detailsTopRow}>
+				{infoHeadings.map((heading, index) => (
+					<Typography
+						key={index}
+						style={dateColStyles[index]}
+						className={classes.smallGreyCapTitle}
+					>
+						{heading}
+					</Typography>
+				))}
+			</div>
+			<div className={classes.detailsTopRow}>
+				{infoValues.map((value, index) => (
 					<Typography
 						key={index}
 						style={dateColStyles[index]}
