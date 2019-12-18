@@ -19,6 +19,7 @@ import moment from "moment-timezone";
 import ArtistsOverview from "./ArtistsOverview";
 import DetailsOverview from "./DetailsOverview";
 import TicketingOverview from "./TicketingOverview";
+import Bigneon from "../../../../../helpers/bigneon";
 
 const styles = theme => ({
 	paper: {
@@ -160,7 +161,8 @@ class EventOverview extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			venueTimezone: null
+			venueTimezone: null,
+			ticket_types_info: []
 		};
 		this.formatDateL = this.formatDateL.bind(this);
 	}
@@ -182,6 +184,8 @@ class EventOverview extends Component {
 					});
 				},
 				() => {
+					this.getTickets(selectedEvent.event.id);
+
 					const {
 						id: selectedEventId,
 						slug,
@@ -189,7 +193,6 @@ class EventOverview extends Component {
 						name,
 						event_type
 					} = selectedEvent.event;
-
 					//Replace the id in the URL with the slug if we have it and it isn't currently set
 					if (id === selectedEventId && slug) {
 						replaceIdWithSlug(id, slug);
@@ -215,6 +218,17 @@ class EventOverview extends Component {
 		}
 	}
 
+	getTickets(event_id) {
+		Bigneon()
+			.events.ticketTypes.index({ event_id })
+			.then(response => {
+				this.setState({ ticket_types_info: response.data.data });
+			})
+			.catch(error => {
+				console.error(error);
+			});
+	}
+
 	formatDateL(date, tz) {
 		return moment
 			.utc(date)
@@ -224,6 +238,7 @@ class EventOverview extends Component {
 
 	render() {
 		const { classes } = this.props;
+		const { ticket_types_info } = this.state;
 		const { event, venue, artists, ticket_types } = selectedEvent;
 
 		if (event === null) {
@@ -297,12 +312,12 @@ class EventOverview extends Component {
 						timezoneAbbr={timezoneAbbr}
 					/>
 
-					{ticket_types ? (
+					{ticket_types_info ? (
 						<div>
 							<Typography className={classes.eventAllDetailsTitle}>
 								Ticketing
 							</Typography>
-							{ticket_types.map((ticket_type, index) => (
+							{ticket_types_info.map((ticket_type, index) => (
 								<TicketingOverview
 									key={index}
 									classes={classes}
