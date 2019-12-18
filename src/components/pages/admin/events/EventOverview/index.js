@@ -12,7 +12,11 @@ import Loader from "../../../../elements/loaders/Loader";
 import NotFound from "../../../../common/NotFound";
 import OverviewHeader from "./OverviewHeader";
 import optimizedImageUrl from "../../../../../helpers/optimizedImageUrl";
-import { fontFamilyDemiBold } from "../../../../../config/theme";
+import {
+	fontFamily,
+	fontFamilyBold,
+	fontFamilyDemiBold
+} from "../../../../../config/theme";
 import Card from "../../../../elements/Card";
 import moment from "moment-timezone";
 
@@ -147,7 +151,8 @@ const styles = theme => ({
 		marginBottom: 10
 	},
 	smallTitle: {
-		fontFamily: fontFamilyDemiBold,
+		fontFamily: fontFamily,
+		fontWeight: 500,
 		color: "#000000",
 		fontSize: 16,
 		lineHeight: "18px"

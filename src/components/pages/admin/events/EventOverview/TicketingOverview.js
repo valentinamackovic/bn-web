@@ -189,6 +189,7 @@ const TicketingOverview = ({
 						return (
 							<Card
 								key={index}
+								style={{ marginTop: 20 }}
 								variant={"form"}
 								className={classes.detailsCardStyle}
 							>
