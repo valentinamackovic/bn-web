@@ -8,17 +8,15 @@ import replaceIdWithSlug from "../../../../../helpers/replaceIdWithSlug";
 import analytics from "../../../../../helpers/analytics";
 import getAllUrlParams from "../../../../../helpers/getAllUrlParams";
 import user from "../../../../../stores/user";
-import PrivateEventDialog from "../../../events/PrivateEventDialog";
 import Loader from "../../../../elements/loaders/Loader";
 import NotFound from "../../../../common/NotFound";
 import OverviewHeader from "./OverviewHeader";
 import optimizedImageUrl from "../../../../../helpers/optimizedImageUrl";
 import { fontFamilyDemiBold } from "../../../../../config/theme";
-import EventSummaryCard from "../EventSummaryCard";
-import moment from "../List";
 import Card from "../../../../elements/Card";
+import moment from "moment-timezone";
+
 import ArtistsOverview from "./ArtistsOverview";
-import ArtistSummary from "../../../../elements/event/ArtistSummary";
 import DetailsOverview from "./DetailsOverview";
 
 const styles = theme => ({
@@ -159,7 +157,10 @@ const styles = theme => ({
 class EventOverview extends Component {
 	constructor(props) {
 		super(props);
-		this.state = {};
+		this.state = {
+			venueTimezone: null
+		};
+		this.formatDateL = this.formatDateL.bind(this);
 	}
 
 	componentDidMount() {
@@ -212,17 +213,17 @@ class EventOverview extends Component {
 		}
 	}
 
+	formatDateL(date, tz) {
+		return moment
+			.utc(date)
+			.tz(tz)
+			.format("L");
+	}
+
 	render() {
 		const { classes } = this.props;
-		const {
-			event,
-			venue,
-			artists,
-			organization,
-			id,
-			ticket_types,
-			hasAvailableTickets
-		} = selectedEvent;
+		const { event, venue, artists } = selectedEvent;
+
 		if (event === null) {
 			return (
 				<div>
@@ -234,11 +235,21 @@ class EventOverview extends Component {
 		if (event === false) {
 			return <NotFound>Event not found.</NotFound>;
 		}
-		const { name } = event;
+
+		const { name, event_start, event_end } = event;
+
+		const displayEventStart = this.formatDateL(event_start, venue.timezone);
+		const displayEventEnd = this.formatDateL(event_end, venue.timezone);
+		const displayEventEndTime = moment
+			.utc(event_end)
+			.tz(venue.timezone)
+			.format("hh:mm A");
 
 		const promo_image_url = event.promo_image_url
 			? optimizedImageUrl(event.promo_image_url)
 			: null;
+
+		const timezoneAbbr = moment.utc(event_start).tz(venue.timezone).format("z");
 
 		return (
 			<div>
@@ -272,7 +283,15 @@ class EventOverview extends Component {
 					<Typography className={classes.eventAllDetailsTitle}>
 						Event Details
 					</Typography>
-					<DetailsOverview classes={classes} venue={venue} event={event}/>
+					<DetailsOverview
+						classes={classes}
+						venue={venue}
+						event={event}
+						displayEventStart={displayEventStart}
+						displayEventEnd={displayEventEnd}
+						displayEventEndTime={displayEventEndTime}
+						timezoneAbbr={timezoneAbbr}
+					/>
 				</Card>
 			</div>
 		);
