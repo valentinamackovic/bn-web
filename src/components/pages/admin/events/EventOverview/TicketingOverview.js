@@ -5,6 +5,7 @@ import classnames from "classnames";
 import moment from "moment-timezone";
 import Divider from "@material-ui/core/Divider";
 import { dollars } from "../../../../../helpers/money";
+import splitByCamelCase from "../../../../../helpers/splitByCamelCase";
 
 const TicketingOverview = ({
 	classes,
@@ -21,6 +22,7 @@ const TicketingOverview = ({
 		description,
 		increment,
 		additional_fee_in_cents,
+		price_in_cents,
 		visibility,
 		limit_per_person
 	} = ticket_type;
@@ -48,9 +50,9 @@ const TicketingOverview = ({
 
 	//General ticket info columns
 	const colStyles = [
+		{ flex: 3 },
 		{ flex: 2 },
-		{ flex: 2 },
-		{ flex: 2 },
+		{ flex: 1 },
 		{ flex: 2 },
 		{ flex: 2 },
 		{ flex: 2 },
@@ -69,7 +71,7 @@ const TicketingOverview = ({
 	const values = [
 		name,
 		available,
-		dollars(ticket_pricing.price_in_cents),
+		dollars(price_in_cents),
 		displayStartDate,
 		displayStartTime,
 		displayEndDate,
@@ -87,9 +89,27 @@ const TicketingOverview = ({
 
 	const infoValues = [
 		limit_per_person,
-		visibility,
+		splitByCamelCase(visibility),
 		increment,
 		dollars(additional_fee_in_cents)
+	];
+
+	//Scheduled price change  cols
+	const priceChangeColStyles = [
+		{ flex: 1 },
+		{ flex: 2 },
+		{ flex: 2 },
+		{ flex: 2 },
+		{ flex: 2 },
+		{ flex: 2 }
+	];
+	const priceChangeHeadings = [
+		"Price Name",
+		`On sale date ${timezoneAbbr}`,
+		`On sale time ${timezoneAbbr}`,
+		`End sale date ${timezoneAbbr}`,
+		`End sale time ${timezoneAbbr}`,
+		"price"
 	];
 
 	return (
@@ -143,13 +163,62 @@ const TicketingOverview = ({
 				{infoValues.map((value, index) => (
 					<Typography
 						key={index}
-						style={colStyles[index]}
+						style={infoColStyles[index]}
 						className={classes.smallTitle}
 					>
 						{value ? value : "-"}
 					</Typography>
 				))}
 			</div>
+			<Divider className={classes.dividerStyle}/>
+			{ticket_pricing.length > 0 ? (
+				<div>
+					<Typography className={classes.headerTitle}>
+						Scheduled Price Change
+					</Typography>
+
+					{ticket_pricing.map((ticket, index) => {
+						const priceChangeValues = [
+							ticket.name,
+							ticket.start_date,
+							ticket.start_date,
+							ticket.end_date,
+							ticket.end_date_type,
+							dollars(price_in_cents)
+						];
+						return (
+							<Card
+								key={index}
+								variant={"form"}
+								className={classes.detailsCardStyle}
+							>
+								<div className={classes.detailsTopRow}>
+									{priceChangeHeadings.map((heading, index) => (
+										<Typography
+											key={index}
+											style={priceChangeColStyles[index]}
+											className={classes.smallGreyCapTitle}
+										>
+											{heading}
+										</Typography>
+									))}
+								</div>
+								<div className={classes.detailsTopRow}>
+									{priceChangeValues.map((value, index) => (
+										<Typography
+											key={index}
+											style={infoColStyles[index]}
+											className={classes.smallTitle}
+										>
+											{value ? value : "-"}
+										</Typography>
+									))}
+								</div>
+							</Card>
+						);
+					})}
+				</div>
+			) : null}
 		</Card>
 	);
 };

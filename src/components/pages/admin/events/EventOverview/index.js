@@ -20,6 +20,7 @@ import ArtistsOverview from "./ArtistsOverview";
 import DetailsOverview from "./DetailsOverview";
 import TicketingOverview from "./TicketingOverview";
 import Bigneon from "../../../../../helpers/bigneon";
+import PublishedOverview from "./PublishedOverview";
 
 const styles = theme => ({
 	paper: {
@@ -328,6 +329,10 @@ class EventOverview extends Component {
 							))}
 						</div>
 					) : null}
+					<Typography className={classes.eventAllDetailsTitle}>
+						Publish Options
+					</Typography>
+					<PublishedOverview classes={classes} event={event}/>
 				</Card>
 			</div>
 		);
