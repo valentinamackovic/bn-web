@@ -120,12 +120,31 @@ const styles = theme => ({
 		backgroundRepeat: "no-repeat",
 		backgroundSize: "cover",
 		backgroundPosition: "center",
-		borderRadius: 3
+		borderRadius: 3,
+		marginRight: 20
 	},
 	artistsOverviewCard: {
 		padding: "22px 30px",
 		marginBottom: 10,
-		boxShadow: "0 4px 15px 2px rgba(112,124,237,0.13)"
+		boxShadow: "0 4px 15px 2px rgba(112,124,237,0.13)",
+		display: "flex",
+		flexDirection: "row",
+		alignItems: "center"
+	},
+	smallGreyCapTitle: {
+		opacity: 0.2,
+		color: "#000000",
+		fontSize: 12,
+		fontFamily: fontFamilyDemiBold,
+		lineHeight: "14px",
+		textTransform: "uppercase",
+		marginBottom: 10
+	},
+	smallTitle: {
+		fontFamily: fontFamilyDemiBold,
+		color: "#000000",
+		fontSize: 16,
+		lineHeight: "18px"
 	}
 });
 

@@ -1,9 +1,7 @@
 import React from "react";
 import Card from "../../../../elements/Card";
-import Grid from "@material-ui/core/Grid";
-import ArtistSummary from "../../../../elements/event/ArtistSummary";
-import Divider from "../../../../common/Divider";
 import optimizedImageUrl from "../../../../../helpers/optimizedImageUrl";
+import { Typography } from "@material-ui/core";
 
 const ArtistsOverview = ({ classes, artist }) => {
 	const { thumb_image_url, image_url } = artist;
@@ -19,6 +17,12 @@ const ArtistsOverview = ({ classes, artist }) => {
 					backgroundImage: `url(${imageSrc})`
 				}}
 			/>
+			<div>
+				<Typography className={classes.smallGreyCapTitle}>
+					{artist.importance === 0 ? "Headline " : "Supporting "}act
+				</Typography>
+				<Typography className={classes.smallTitle}>{artist.name}</Typography>
+			</div>
 		</Card>
 	);
 };
