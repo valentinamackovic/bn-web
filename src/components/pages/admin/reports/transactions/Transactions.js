@@ -159,12 +159,15 @@ class Transactions extends Component {
 
 				items.forEach(item => {
 					const {
-						client_fee_in_cents,
 						company_fee_in_cents,
 						event_fee_gross_in_cents,
 						event_fee_company_in_cents,
 						event_fee_client_in_cents,
 						event_id,
+						client_fee_in_cents,
+						client_fee_in_cents_total,
+						face_price_in_cents,
+						face_price_in_cents_total,
 						event_name,
 						gross,
 						order_id,
@@ -213,11 +216,7 @@ class Transactions extends Component {
 						quantity - refunded_quantity,
 						dollars(unit_price_in_cents),
 						dollars((quantity - refunded_quantity) * unit_price_in_cents), //Face value
-						dollars(
-							event_fee_gross_in_cents_total +
-								gross_fee_in_cents_total +
-								credit_card_fee_gross_in_cents_total
-						),
+						dollars(client_fee_in_cents_total),
 						dollars(promo_quantity * promo_discount_value_in_cents),
 						dollars(gross),
 						source,
