@@ -19,6 +19,7 @@ import moment from "../List";
 import Card from "../../../../elements/Card";
 import ArtistsOverview from "./ArtistsOverview";
 import ArtistSummary from "../../../../elements/event/ArtistSummary";
+import DetailsOverview from "./DetailsOverview";
 
 const styles = theme => ({
 	paper: {
@@ -112,6 +113,7 @@ const styles = theme => ({
 		fontSize: 28,
 		fontFamily: fontFamilyDemiBold,
 		marginBottom: 25,
+		marginTop: 50,
 		lineHeight: "32px"
 	},
 	artistImage: {
@@ -123,10 +125,12 @@ const styles = theme => ({
 		borderRadius: 3,
 		marginRight: 20
 	},
-	artistsOverviewCard: {
+	detailsCardStyle: {
 		padding: "22px 30px",
 		marginBottom: 10,
-		boxShadow: "0 4px 15px 2px rgba(112,124,237,0.13)",
+		boxShadow: "0 4px 15px 2px rgba(112,124,237,0.13)"
+	},
+	artistsOverviewCard: {
 		display: "flex",
 		flexDirection: "row",
 		alignItems: "center"
@@ -145,6 +149,9 @@ const styles = theme => ({
 		color: "#000000",
 		fontSize: 16,
 		lineHeight: "18px"
+	},
+	detailsTopRow: {
+		display: "flex"
 	}
 });
 
@@ -243,10 +250,12 @@ class EventOverview extends Component {
 					venue={venue}
 				/>
 				<Card className={classes.eventAllDetailsContainer}>
-					i am cat
 					{artists ? (
 						<div>
-							<Typography className={classes.eventAllDetailsTitle}>
+							<Typography
+								style={{ marginTop: 0 }}
+								className={classes.eventAllDetailsTitle}
+							>
 								Artists
 							</Typography>
 							{artists.map(({ artist, importance }, index) => (
@@ -259,6 +268,11 @@ class EventOverview extends Component {
 							))}
 						</div>
 					) : null}
+
+					<Typography className={classes.eventAllDetailsTitle}>
+						Event Details
+					</Typography>
+					<DetailsOverview classes={classes} venue={venue} event={event}/>
 				</Card>
 			</div>
 		);
