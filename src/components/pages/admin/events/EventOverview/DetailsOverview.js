@@ -4,7 +4,6 @@ import { Typography } from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
 import FormattedAdditionalInfo from "../../../events/FormattedAdditionalInfo";
 import lineBreakHtmlToPlainText from "../../../../../helpers/lineBreakHtmlToPlainText";
-import moment from "moment-timezone";
 
 const DetailsOverview = ({
 	classes,

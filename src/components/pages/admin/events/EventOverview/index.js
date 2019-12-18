@@ -18,6 +18,7 @@ import moment from "moment-timezone";
 
 import ArtistsOverview from "./ArtistsOverview";
 import DetailsOverview from "./DetailsOverview";
+import TicketingOverview from "./TicketingOverview";
 
 const styles = theme => ({
 	paper: {
@@ -56,7 +57,8 @@ const styles = theme => ({
 		borderRadius: 3
 	},
 	dividerStyle: {
-		margin: "20px 0"
+		margin: "20px 0",
+		backgroundColor: "#DEE2E8"
 	},
 	headerTitle: {
 		fontSize: 22,
@@ -222,7 +224,7 @@ class EventOverview extends Component {
 
 	render() {
 		const { classes } = this.props;
-		const { event, venue, artists } = selectedEvent;
+		const { event, venue, artists, ticket_types } = selectedEvent;
 
 		if (event === null) {
 			return (
@@ -249,7 +251,10 @@ class EventOverview extends Component {
 			? optimizedImageUrl(event.promo_image_url)
 			: null;
 
-		const timezoneAbbr = moment.utc(event_start).tz(venue.timezone).format("z");
+		const timezoneAbbr = moment
+			.utc(event_start)
+			.tz(venue.timezone)
+			.format("z");
 
 		return (
 			<div>
@@ -273,7 +278,6 @@ class EventOverview extends Component {
 								<ArtistsOverview
 									key={index}
 									classes={classes}
-									headliner={importance === 0}
 									artist={artist}
 								/>
 							))}
@@ -292,6 +296,23 @@ class EventOverview extends Component {
 						displayEventEndTime={displayEventEndTime}
 						timezoneAbbr={timezoneAbbr}
 					/>
+
+					{ticket_types ? (
+						<div>
+							<Typography className={classes.eventAllDetailsTitle}>
+								Ticketing
+							</Typography>
+							{ticket_types.map((ticket_type, index) => (
+								<TicketingOverview
+									key={index}
+									classes={classes}
+									ticket_type={ticket_type}
+									timezoneAbbr={timezoneAbbr}
+									timezone={venue.timezone}
+								/>
+							))}
+						</div>
+					) : null}
 				</Card>
 			</div>
 		);
