@@ -275,15 +275,27 @@ class Transactions extends Component {
 			organizationId,
 			onLoad,
 			printVersion,
+			startUtc,
+			endUtc,
+			isPDFExport,
 			venueTimeZone
 		} = this.props;
 
 		const limit = printVersion ? UNLIMITED_LINE_LIMIT : LINE_LIMIT_PER_PAGE;
 
+		if (isPDFExport) {
+			if (startUtc) {
+				this.setState({ start_utc: startUtc });
+			}
+			if (endUtc) {
+				this.setState({ end_utc: endUtc });
+			}
+		}
+
 		let queryParams = {
 			organization_id: organizationId,
-			start_utc,
-			end_utc,
+			start_utc: startUtc ? startUtc : start_utc,
+			end_utc: endUtc ? endUtc : end_utc,
 			page,
 			limit,
 			query: searchQuery
@@ -294,7 +306,6 @@ class Transactions extends Component {
 		}
 
 		this.setState({ startDate, endDate, items: null, isLoading: true });
-
 		const timezone = venueTimeZone || user.currentOrgTimezone;
 
 		Bigneon()
@@ -452,7 +463,13 @@ class Transactions extends Component {
 			return this.renderList();
 		}
 
-		const { isLoading, paging, isExportingCSV } = this.state;
+		const {
+			isLoading,
+			paging,
+			isExportingCSV,
+			end_utc,
+			start_utc
+		} = this.state;
 
 		const timezone = venueTimeZone || user.currentOrgTimezone;
 
@@ -498,6 +515,8 @@ class Transactions extends Component {
 						<Button
 							href={`/exports/reports/?type=transactions${
 								eventId ? `&event_id=${eventId}` : ""
+							}${start_utc ? `&start_utc=${start_utc}` : ""}${
+								end_utc ? `&end_utc=${end_utc}` : ""
 							}`}
 							target={"_blank"}
 							iconUrl="/icons/pdf-active.svg"
@@ -538,6 +557,8 @@ Transactions.propTypes = {
 	classes: PropTypes.object.isRequired,
 	organizationId: PropTypes.string.isRequired,
 	eventId: PropTypes.string,
+	startUtc: PropTypes.string,
+	endUtc: PropTypes.string,
 	eventName: PropTypes.string,
 	printVersion: PropTypes.bool,
 	onLoad: PropTypes.func,
