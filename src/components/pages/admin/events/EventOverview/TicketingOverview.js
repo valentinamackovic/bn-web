@@ -24,23 +24,28 @@ const TicketingOverview = ({
 		additional_fee_in_cents,
 		price_in_cents,
 		visibility,
-		limit_per_person
+		limit_per_person,
+		end_date_type
 	} = ticket_type;
 
-	const displayStartDate = moment
-		.utc(start_date)
-		.tz(timezone)
-		.format("L");
-	const displayStartTime = moment
-		.utc(start_date)
-		.tz(timezone)
-		.format("hh:mm A");
+	const displayStartDate = start_date
+		? moment
+			.utc(start_date)
+			.tz(timezone)
+			.format("L")
+		: "Immediately";
+	const displayStartTime = start_date
+		? moment
+			.utc(start_date)
+			.tz(timezone)
+			.format("hh:mm A")
+		: null;
 	const displayEndDate = end_date
 		? moment
 			.utc(end_date)
 			.tz(timezone)
 			.format("L")
-		: null;
+		: splitByCamelCase(end_date_type);
 	const displayEndTime = end_date
 		? moment
 			.utc(start_date)
@@ -52,10 +57,10 @@ const TicketingOverview = ({
 	const colStyles = [
 		{ flex: 3 },
 		{ flex: 2 },
-		{ flex: 1 },
 		{ flex: 2 },
 		{ flex: 2 },
 		{ flex: 2 },
+		start_date ? { flex: 2 } : { flex: 4 },
 		{ flex: 2 }
 	];
 	const headings = [
@@ -63,9 +68,9 @@ const TicketingOverview = ({
 		"Quantity",
 		"Price",
 		"Sales start",
-		`start time ${timezoneAbbr}`,
+		start_date ? `start time ${timezoneAbbr}` : null,
 		"sales end",
-		`end time ${timezoneAbbr}`
+		end_date ? `end time ${timezoneAbbr}` : null
 	];
 
 	const values = [
@@ -115,26 +120,30 @@ const TicketingOverview = ({
 	return (
 		<Card variant={"form"} className={classes.detailsCardStyle}>
 			<div className={classes.detailsTopRow}>
-				{headings.map((heading, index) => (
-					<Typography
-						key={index}
-						style={colStyles[index]}
-						className={classes.smallGreyCapTitle}
-					>
-						{heading}
-					</Typography>
-				))}
+				{headings.map((heading, index) =>
+					heading ? (
+						<Typography
+							key={index}
+							style={colStyles[index]}
+							className={classes.smallGreyCapTitle}
+						>
+							{heading}
+						</Typography>
+					) : null
+				)}
 			</div>
 			<div className={classes.detailsTopRow}>
-				{values.map((value, index) => (
-					<Typography
-						key={index}
-						style={colStyles[index]}
-						className={classes.smallTitle}
-					>
-						{value ? value : "-"}
-					</Typography>
-				))}
+				{values.map((value, index) =>
+					value ? (
+						<Typography
+							key={index}
+							style={colStyles[index]}
+							className={classes.smallTitle}
+						>
+							{value}
+						</Typography>
+					) : null
+				)}
 			</div>
 			{description ? (
 				<div>
@@ -149,26 +158,30 @@ const TicketingOverview = ({
 			<Divider className={classes.dividerStyle}/>
 
 			<div className={classes.detailsTopRow}>
-				{infoHeadings.map((heading, index) => (
-					<Typography
-						key={index}
-						style={infoColStyles[index]}
-						className={classes.smallGreyCapTitle}
-					>
-						{heading}
-					</Typography>
-				))}
+				{infoHeadings.map((heading, index) =>
+					heading ? (
+						<Typography
+							key={index}
+							style={infoColStyles[index]}
+							className={classes.smallGreyCapTitle}
+						>
+							{heading}
+						</Typography>
+					) : null
+				)}
 			</div>
 			<div className={classes.detailsTopRow}>
-				{infoValues.map((value, index) => (
-					<Typography
-						key={index}
-						style={infoColStyles[index]}
-						className={classes.smallTitle}
-					>
-						{value ? value : "-"}
-					</Typography>
-				))}
+				{infoValues.map((value, index) =>
+					value ? (
+						<Typography
+							key={index}
+							style={infoColStyles[index]}
+							className={classes.smallTitle}
+						>
+							{value}
+						</Typography>
+					) : null
+				)}
 			</div>
 			<Divider className={classes.dividerStyle}/>
 			{ticket_pricing.length > 0 ? (
