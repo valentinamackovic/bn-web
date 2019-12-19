@@ -27,7 +27,6 @@ const TicketingOverview = ({
 		limit_per_person,
 		end_date_type
 	} = ticket_type;
-
 	const displayStartDate = start_date
 		? moment
 			.utc(start_date)
@@ -49,7 +48,7 @@ const TicketingOverview = ({
 	const displayEndTime = end_date
 		? moment
 			.utc(start_date)
-			.tz(end_date)
+			.tz(timezone)
 			.format("hh:mm A")
 		: null;
 
@@ -93,7 +92,7 @@ const TicketingOverview = ({
 	];
 
 	const infoValues = [
-		limit_per_person,
+		limit_per_person === 0 ? "None" : limit_per_person,
 		splitByCamelCase(visibility),
 		increment,
 		dollars(additional_fee_in_cents)
@@ -101,12 +100,12 @@ const TicketingOverview = ({
 
 	//Scheduled price change  cols
 	const priceChangeColStyles = [
-		{ flex: 1 },
 		{ flex: 2 },
 		{ flex: 2 },
 		{ flex: 2 },
 		{ flex: 2 },
-		{ flex: 2 }
+		{ flex: 2 },
+		{ flex: 1 }
 	];
 	const priceChangeHeadings = [
 		"Price Name",
@@ -189,14 +188,37 @@ const TicketingOverview = ({
 					<Typography className={classes.headerTitle}>
 						Scheduled Price Change
 					</Typography>
-
 					{ticket_pricing.map((ticket, index) => {
+						const displayStartDate = ticket.start_date
+							? moment
+								.utc(ticket.start_date)
+								.tz(timezone)
+								.format("L")
+							: "Immediately";
+						const displayStartTime = ticket.start_date
+							? moment
+								.utc(ticket.start_date)
+								.tz(timezone)
+								.format("hh:mm A")
+							: null;
+						const displayEndDate = ticket.end_date
+							? moment
+								.utc(ticket.end_date)
+								.tz(timezone)
+								.format("L")
+							: splitByCamelCase(ticket.end_date_type);
+						const displayEndTime = ticket.end_date
+							? moment
+								.utc(ticket.start_date)
+								.tz(timezone)
+								.format("hh:mm A")
+							: null;
 						const priceChangeValues = [
 							ticket.name,
-							ticket.start_date,
-							ticket.start_date,
-							ticket.end_date,
-							ticket.end_date_type,
+							displayStartDate,
+							displayStartTime,
+							displayEndDate,
+							displayEndTime,
 							dollars(price_in_cents)
 						];
 						return (
@@ -221,7 +243,7 @@ const TicketingOverview = ({
 									{priceChangeValues.map((value, index) => (
 										<Typography
 											key={index}
-											style={infoColStyles[index]}
+											style={priceChangeColStyles[index]}
 											className={classes.smallTitle}
 										>
 											{value ? value : "-"}
