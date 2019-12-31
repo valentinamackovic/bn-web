@@ -389,7 +389,7 @@ class EventOverview extends Component {
 					<Typography className={classes.eventAllDetailsTitle}>
 						Publish Options
 					</Typography>
-					<PublishedOverview classes={classes} event={event}/>
+					<PublishedOverview classes={classes} event={event} timezoneAbbr={timezoneAbbr}/>
 				</Card>
 			</div>
 		);

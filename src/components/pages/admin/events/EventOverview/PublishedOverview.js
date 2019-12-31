@@ -6,13 +6,13 @@ import FormattedAdditionalInfo from "../../../events/FormattedAdditionalInfo";
 import lineBreakHtmlToPlainText from "../../../../../helpers/lineBreakHtmlToPlainText";
 import moment from "moment-timezone";
 
-const PublishedOverview = ({ classes, event }) => {
+const PublishedOverview = ({ classes, event, timezoneAbbr }) => {
 	const { name, top_line_info, additional_info, status, created_at } = event;
 
 	// Top Line col styles
 	const colStyles = [{ flex: 1 }, { flex: 4 }];
 	const headings = ["Status", "Published on"];
-	const values = [status, created_at];
+	const values = [status, moment(created_at, "YYYY-MM-DD HH:mm ZZ").format("DD/MM/YYYY HH:mm A") + " " + timezoneAbbr];
 
 	return (
 		<Card variant={"form"} className={classes.detailsCardStyle}>
@@ -36,7 +36,7 @@ const PublishedOverview = ({ classes, event }) => {
 							style={colStyles[index]}
 							className={classes.smallTitle}
 						>
-							{value ? moment(value).utc(value).format("MM/DD/YYYY h:mm A z") : "-"}
+							{value ?  value + " " : "-"}
 						</Typography>
 					))}
 				</div>
@@ -45,7 +45,7 @@ const PublishedOverview = ({ classes, event }) => {
 			<Hidden mdUp>
 				<Grid container>
 					{headings.map((heading, index) => (
-						<Grid key={index} xs={(index === 0) ? 4 : 8}>
+						<Grid item key={index} xs={(index === 0) ? 4 : 8}>
 							<Typography
 								key={index}
 								className={classes.smallGreyCapTitle}
@@ -56,7 +56,7 @@ const PublishedOverview = ({ classes, event }) => {
 								key={index}
 								className={classes.smallTitle}
 							>
-								{values[index] ? values[index] : "-"}
+								{values[index] ? values[index] + " " : "-"}
 							</Typography>
 						</Grid>
 					))}

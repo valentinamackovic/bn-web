@@ -147,7 +147,7 @@ const DetailsOverview = ({
 				</div>
 			</Hidden>
 			{/*MOBILE*/}
-			<Hidden mdUp> 
+			<Hidden mdUp>
 				<div className={classes.detailsContainer}>
 					<Typography
 						className={classes.smallGreyCapTitle}
