@@ -1,6 +1,15 @@
 import React, { Component } from "react";
 import { observer } from "mobx-react";
-import { Divider, withStyles, Typography } from "@material-ui/core";
+import {
+	withStyles,
+	Typography,
+	Grid,
+	IconButton,
+	MenuItem,
+	Menu,
+	ListItemIcon,
+	ListItemText
+} from "@material-ui/core";
 import PageHeading from "../../../../elements/PageHeading";
 import selectedEvent from "../../../../../stores/selectedEvent";
 import notifications from "../../../../../stores/notifications";
@@ -25,6 +34,13 @@ import DetailsOverview from "./DetailsOverview";
 import TicketingOverview from "./TicketingOverview";
 import Bigneon from "../../../../../helpers/bigneon";
 import PublishedOverview from "./PublishedOverview";
+import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
+import DashboardIcon from "@material-ui/icons/Dashboard";
+import EditIcon from "@material-ui/icons/Edit";
+import ViewIcon from "@material-ui/icons/Link";
+import CancelIcon from "@material-ui/icons/Cancel";
+import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
+import Button from "../../../../elements/Button";
 
 const styles = theme => ({
 	paper: {
@@ -211,6 +227,14 @@ const styles = theme => ({
 	},
 	detailsContainer: {
 		marginBottom: 10
+	},
+	menuButton: {
+		float: "right",
+		marginBottom: 15,
+		[theme.breakpoints.down("sm")]: {
+			float: "none",
+			width: "100%"
+		}
 	}
 });
 
@@ -220,7 +244,9 @@ class EventOverview extends Component {
 		super(props);
 		this.state = {
 			venueTimezone: null,
-			ticket_types_info: []
+			ticket_types_info: [],
+			optionsAnchorEl: null,
+			eventMenuSelected: this.props.match.params.id
 		};
 		this.formatDateL = this.formatDateL.bind(this);
 	}
@@ -294,6 +320,14 @@ class EventOverview extends Component {
 			.format("L");
 	}
 
+	handleMenuClick = event => {
+		this.setState({ optionsAnchorEl: event.currentTarget });
+	};
+
+	handleOptionsClose = () => {
+		this.setState({ optionsAnchorEl: null });
+	};
+
 	render() {
 		const { classes } = this.props;
 		const { ticket_types_info } = this.state;
@@ -329,9 +363,113 @@ class EventOverview extends Component {
 			.tz(venue.timezone)
 			.format("z");
 
+		const { optionsAnchorEl, eventMenuSelected } = this.state;
+
+		const eventOptions = [
+			{
+				text: "Dashboard",
+				onClick: () =>
+					this.props.history.push(
+						`/admin/events/${eventMenuSelected}/dashboard`
+					),
+				MenuOptionIcon: DashboardIcon
+			},
+			{
+				text: "Edit event",
+				onClick: () =>
+					this.props.history.push(
+						`/admin/events/${eventMenuSelected}/edit`
+					),
+				MenuOptionIcon: EditIcon
+			},
+			{
+				text: "View event",
+				onClick: () =>
+					this.props.history.push(`/tickets/${eventMenuSelected}`),
+				// onClick: () =>
+				// 	this.props.history.push(`/events/${eventMenuSelected}`),
+				MenuOptionIcon: ViewIcon
+			},
+			{
+				text: "Event overview",
+				disabled: !user.hasScope("event:write"),
+				onClick: () =>
+					this.props.history.push(
+						`/admin/events/${eventMenuSelected}/event-overview`
+					),
+				MenuOptionIcon: EditIcon
+			},
+			{
+				text: "Cancel event",
+				disabled:
+					!user.hasScope("event:write") || this.cancelMenuItemDisabled,
+				onClick: () =>
+					this.setState({
+						deleteCancelEventId: eventMenuSelected,
+						isDelete: false
+					}),
+				MenuOptionIcon: CancelIcon
+			},
+			{
+				text: "Delete event",
+				disabled: !user.hasScope("event:write"),
+				onClick: () =>
+					this.setState({
+						deleteCancelEventId: eventMenuSelected,
+						isDelete: true
+					}),
+				MenuOptionIcon: CancelIcon
+			}
+		];
+
 		return (
 			<div style={{ padding: 10 }}>
-				<PageHeading iconUrl="/icons/events-multi.svg">{name}</PageHeading>
+				<Grid container>
+					<Grid item xs={12} md={9}>
+						<PageHeading iconUrl="/icons/events-multi.svg">{name}</PageHeading>
+					</Grid>
+					<Grid item xs={12} md={3}>
+						<div>
+							<Button
+								className={classes.menuButton}
+								onClick={e => {
+									this.setState({ eventMenuSelected: eventMenuSelected });
+									this.handleMenuClick(e);
+								}}
+								variant="callToAction"
+							>
+								Event <KeyboardArrowDownIcon/>
+							</Button>
+
+							<Menu
+								id="long-menu"
+								anchorEl={optionsAnchorEl}
+								open={Boolean(optionsAnchorEl)}
+								onClose={this.handleOptionsClose}
+							>
+								{eventOptions.map(
+									({ text, onClick, MenuOptionIcon, disabled }) => {
+										return (
+											<MenuItem
+												key={text}
+												onClick={() => {
+													this.handleOptionsClose();
+													onClick();
+												}}
+												disabled={disabled}
+											>
+												<ListItemIcon>
+													<MenuOptionIcon/>
+												</ListItemIcon>
+												<ListItemText inset primary={text}/>
+											</MenuItem>
+										);
+									}
+								)}
+							</Menu>
+						</div>
+					</Grid>
+				</Grid>
 				<OverviewHeader
 					event={event}
 					classes={classes}
