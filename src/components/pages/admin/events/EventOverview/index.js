@@ -45,13 +45,20 @@ const styles = theme => ({
 	eventHeaderInfo: {
 		padding: "45px 50px",
 		display: "flex",
-		flexDirection: "row"
+		flexDirection: "row",
+		[theme.breakpoints.down("sm")]: {
+			padding: 0,
+			display: "block"
+		}
 	},
 	headerInfo: {
 		display: "flex",
 		flexDirection: "column",
 		width: "100%",
-		paddingLeft: 25
+		paddingLeft: 25,
+		[theme.breakpoints.down("sm")]: {
+			padding: "25px 25px 5px 25px"
+		}
 	},
 	headerImage: {
 		width: 240,
@@ -60,10 +67,18 @@ const styles = theme => ({
 		backgroundRepeat: "no-repeat",
 		backgroundSize: "cover",
 		backgroundPosition: "center",
-		borderRadius: 3
+		borderRadius: 3,
+		[theme.breakpoints.down("sm")]: {
+			width: "100%"
+		}
+	},
+	statusContainer: {
+		[theme.breakpoints.down("sm")]: {
+			paddingTop: 20
+		}
 	},
 	dividerStyle: {
-		margin: "20px 0",
+		margin: "25px 0",
 		backgroundColor: "#DEE2E8"
 	},
 	headerTitle: {
@@ -80,12 +95,19 @@ const styles = theme => ({
 	},
 	dateInfoContainer: {
 		display: "flex",
-		flexDirection: "row"
+		flexDirection: "row",
+		[theme.breakpoints.down("sm")]: {
+			marginBottom: 25
+		}
 	},
 	headerEventDateInfo: {
 		display: "flex",
 		flexDirection: "row",
-		marginTop: theme.spacing.unit
+		marginTop: theme.spacing.unit,
+		[theme.breakpoints.down("sm")]: {
+			display: "block",
+			marginTop: 0
+		}
 	},
 	icon: {
 		width: 17.65,
@@ -108,11 +130,21 @@ const styles = theme => ({
 		display: "flex",
 		flexDirection: "row",
 		justifyContent: "space-between",
-		alignItems: "center"
+		alignItems: "center",
+		[theme.breakpoints.down("sm")]: {
+			display: "block",
+			paddingTop: 5
+		}
 	},
 	eventAllDetailsContainer: {
 		marginTop: 20,
-		padding: "65px"
+		padding: "65px",
+		[theme.breakpoints.down("sm")]: {
+			padding: "0px",
+			border: 0,
+			background: "none",
+			boxShadow: "none"
+		}
 	},
 	eventAllDetailsTitle: {
 		color: "#2C3136",
@@ -129,15 +161,29 @@ const styles = theme => ({
 		backgroundSize: "cover",
 		backgroundPosition: "center",
 		borderRadius: 3,
-		marginRight: 20
+		marginRight: 20,
+		float: "left",
+		[theme.breakpoints.down("sm")]: {
+			width: 60
+		}
 	},
 	detailsCardStyle: {
+		padding: "22px 30px",
+		marginBottom: 10,
+		boxShadow: "0 4px 15px 2px rgba(112,124,237,0.13)",
+		[theme.breakpoints.down("sm")]: {
+			boxShadow: "none",
+			border: "1px solid #DEE2E8",
+			borderRadius: 6,
+			padding: "25px 26px"
+		}
+	},
+	ticketsCardStyle: {
 		padding: "22px 30px",
 		marginBottom: 10,
 		boxShadow: "0 4px 15px 2px rgba(112,124,237,0.13)"
 	},
 	artistsOverviewCard: {
-		display: "flex",
 		flexDirection: "row",
 		alignItems: "center"
 	},
@@ -155,10 +201,16 @@ const styles = theme => ({
 		fontWeight: 500,
 		color: "#000000",
 		fontSize: 16,
-		lineHeight: "18px"
+		lineHeight: "18px",
+		[theme.breakpoints.down("sm")]: {
+			marginBottom: 15
+		}
 	},
 	detailsTopRow: {
 		display: "flex"
+	},
+	detailsContainer: {
+		marginBottom: 10
 	}
 });
 
@@ -278,7 +330,7 @@ class EventOverview extends Component {
 			.format("z");
 
 		return (
-			<div>
+			<div style={{ padding: 10 }}>
 				<PageHeading iconUrl="/icons/events-multi.svg">{name}</PageHeading>
 				<OverviewHeader
 					event={event}

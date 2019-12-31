@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Typography, Hidden } from "@material-ui/core";
 import React from "react";
 import Card from "../../../../elements/Card";
 import optimizedImageUrl from "../../../../../helpers/optimizedImageUrl";
@@ -49,7 +49,7 @@ const OverviewHeader = ({ classes, event, artists, venue }) => {
 		tags = (
 			<div className={classes.statusContainer}>
 				<ColorTag
-					style={{ marginRight: 10 }}
+					style={{ marginRight: 10, borderRadius: 3 }}
 					variant={isPublished ? "secondary" : "disabled"}
 				>
 					{isPublished ? "Published" : "Draft"}

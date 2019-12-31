@@ -1,9 +1,9 @@
 import React from "react";
 import Card from "../../../../elements/Card";
-import { Typography } from "@material-ui/core";
+import { Typography, Hidden, Grid } from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
-import FormattedAdditionalInfo from "../../../events/FormattedAdditionalInfo";
 import lineBreakHtmlToPlainText from "../../../../../helpers/lineBreakHtmlToPlainText";
+import ReadMoreAdditionalInfo from "../../../../elements/event/ReadMoreAdditionalInfo";
 
 const DetailsOverview = ({
 	classes,
@@ -67,82 +67,169 @@ const DetailsOverview = ({
 
 	return (
 		<Card variant={"form"} className={classes.detailsCardStyle}>
-			<div className={classes.detailsTopRow}>
-				{headings.map((heading, index) => (
-					<Typography
-						key={index}
-						style={colStyles[index]}
-						className={classes.smallGreyCapTitle}
-					>
-						{heading}
-					</Typography>
-				))}
-			</div>
-			<div className={classes.detailsTopRow}>
-				{values.map((value, index) => (
-					<Typography
-						key={index}
-						style={colStyles[index]}
-						className={classes.smallTitle}
-					>
-						{value ? value : "-"}
-					</Typography>
-				))}
-			</div>
-			<Divider className={classes.dividerStyle}/>
-			<Typography className={classes.smallGreyCapTitle}>
-				Additional Event info
-			</Typography>
-			<FormattedAdditionalInfo>
-				{lineBreakHtmlToPlainText(additional_info)}
-			</FormattedAdditionalInfo>
-			<Divider className={classes.dividerStyle}/>
-			<div className={classes.detailsTopRow}>
-				{dateHeadings.map((heading, index) => (
-					<Typography
-						key={index}
-						style={dateColStyles[index]}
-						className={classes.smallGreyCapTitle}
-					>
-						{heading}
-					</Typography>
-				))}
-			</div>
-			<div className={classes.detailsTopRow}>
-				{dateValues.map((value, index) => (
-					<Typography
-						key={index}
-						style={dateColStyles[index]}
-						className={classes.smallTitle}
-					>
-						{value ? value : "-"}
-					</Typography>
-				))}
-			</div>
+			{/*DESKTOP*/}
+			<Hidden smDown>
+				<div className={classes.detailsTopRow}>
+					{headings.map((heading, index) => (
+						<Typography
+							key={index}
+							style={colStyles[index]}
+							className={classes.smallGreyCapTitle}
+						>
+							{heading}
+						</Typography>
+					))}
+				</div>
+				<div className={classes.detailsTopRow}>
+					{values.map((value, index) => (
+						<Typography
+							key={index}
+							style={colStyles[index]}
+							className={classes.smallTitle}
+						>
+							{value ? value : "-"}
+						</Typography>
+					))}
+				</div>
+				<Divider className={classes.dividerStyle}/>
+				<Typography className={classes.smallGreyCapTitle}>
+					Additional Event info
+				</Typography>
+				<ReadMoreAdditionalInfo readMoreText="View full description" readLessText="Hide full description">
+					{additional_info ? lineBreakHtmlToPlainText(additional_info) : ""}
+				</ReadMoreAdditionalInfo>
+				<Divider className={classes.dividerStyle}/>
+				<div className={classes.detailsTopRow}>
+					{dateHeadings.map((heading, index) => (
+						<Typography
+							key={index}
+							style={dateColStyles[index]}
+							className={classes.smallGreyCapTitle}
+						>
+							{heading}
+						</Typography>
+					))}
+				</div>
+				<div className={classes.detailsTopRow}>
+					{dateValues.map((value, index) => (
+						<Typography
+							key={index}
+							style={dateColStyles[index]}
+							className={classes.smallTitle}
+						>
+							{value ? value : "-"}
+						</Typography>
+					))}
+				</div>
 
-			<Divider className={classes.dividerStyle}/>
-			<div className={classes.detailsTopRow}>
-				{infoHeadings.map((heading, index) => (
+				<Divider className={classes.dividerStyle}/>
+				<div className={classes.detailsTopRow}>
+					{infoHeadings.map((heading, index) => (
+						<Typography
+							key={index}
+							style={dateColStyles[index]}
+							className={classes.smallGreyCapTitle}
+						>
+							{heading}
+						</Typography>
+					))}
+				</div>
+				<div className={classes.detailsTopRow}>
+					{infoValues.map((value, index) => (
+						<Typography
+							key={index}
+							style={dateColStyles[index]}
+							className={classes.smallTitle}
+						>
+							{value ? value : "-"}
+						</Typography>
+					))}
+				</div>
+			</Hidden>
+			{/*MOBILE*/}
+			<Hidden mdUp> 
+				<div className={classes.detailsContainer}>
 					<Typography
-						key={index}
-						style={dateColStyles[index]}
 						className={classes.smallGreyCapTitle}
 					>
-						{heading}
+						Event Name
 					</Typography>
-				))}
-			</div>
-			<div className={classes.detailsTopRow}>
-				{infoValues.map((value, index) => (
 					<Typography
-						key={index}
-						style={dateColStyles[index]}
 						className={classes.smallTitle}
 					>
-						{value ? value : "-"}
+						{values[0] ? values[0] : "-"}
 					</Typography>
-				))}
-			</div>
+				</div>
+				<div className={classes.detailsContainer}>
+					<Typography
+						className={classes.smallGreyCapTitle}
+					>
+						Venue
+					</Typography>
+					<Typography
+						className={classes.smallTitle}
+					>
+						{values[1] ? values[1] : "-"}
+					</Typography>
+				</div>
+				<div className={classes.detailsContainer}>
+					<Typography
+						className={classes.smallGreyCapTitle}
+					>
+						Top Line Info
+					</Typography>
+					<Typography
+						className={classes.smallTitle}
+					>
+						{values[2] ? values[2] : "-"}
+					</Typography>
+				</div>
+				<Divider className={classes.dividerStyle}/>
+				<Typography className={classes.smallGreyCapTitle}>
+					Additional Event info
+				</Typography>
+				<ReadMoreAdditionalInfo readMoreText="View full description" readLessText="Hide full description">
+					{additional_info ? lineBreakHtmlToPlainText(additional_info) : ""}
+				</ReadMoreAdditionalInfo>
+				<Divider className={classes.dividerStyle}/>
+				<Grid container>
+					{dateHeadings.map((heading, index) => (
+						<Grid item xs={6} key={index}>
+							<div className={classes.detailsContainer}>
+								<Typography
+									className={classes.smallGreyCapTitle}
+								>
+									{heading}
+								</Typography>
+								<Typography
+									className={classes.smallTitle}
+								>
+									{dateValues[index] ? dateValues[index] : "-"}
+								</Typography>
+							</div>
+						</Grid>
+					))}
+				</Grid>
+				<Divider className={classes.dividerStyle}/>
+				<Grid container>
+					{infoHeadings.map((heading, index) => (
+						<Grid item xs={6} key={index}>
+							<div className={classes.detailsContainer}>
+								<Typography
+									className={classes.smallGreyCapTitle}
+								>
+									{heading}
+								</Typography>
+								<Typography
+									className={classes.smallTitle}
+								>
+									{infoValues[index] ? infoValues[index] : "-"}
+								</Typography>
+							</div>
+						</Grid>
+					))}
+				</Grid>
+			</Hidden>
 		</Card>
 	);
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import Card from "../../../../elements/Card";
-import { Typography } from "@material-ui/core";
+import { Typography, Hidden, Grid } from "@material-ui/core";
 import classnames from "classnames";
 import moment from "moment-timezone";
 import Divider from "@material-ui/core/Divider";
@@ -118,143 +118,259 @@ const TicketingOverview = ({
 
 	return (
 		<Card variant={"form"} className={classes.detailsCardStyle}>
-			<div className={classes.detailsTopRow}>
-				{headings.map((heading, index) =>
-					heading ? (
-						<Typography
-							key={index}
-							style={colStyles[index]}
-							className={classes.smallGreyCapTitle}
-						>
-							{heading}
-						</Typography>
-					) : null
-				)}
-			</div>
-			<div className={classes.detailsTopRow}>
-				{values.map((value, index) =>
-					value ? (
-						<Typography
-							key={index}
-							style={colStyles[index]}
-							className={classes.smallTitle}
-						>
-							{value}
-						</Typography>
-					) : null
-				)}
-			</div>
-			{description ? (
-				<div>
-					<Divider className={classes.dividerStyle}/>
-					<Typography className={classes.smallGreyCapTitle}>
-						Ticket description
-					</Typography>
-					<Typography className={classes.smallTitle}>{description}</Typography>
-				</div>
-			) : null}
-
-			<Divider className={classes.dividerStyle}/>
-
-			<div className={classes.detailsTopRow}>
-				{infoHeadings.map((heading, index) =>
-					heading ? (
-						<Typography
-							key={index}
-							style={infoColStyles[index]}
-							className={classes.smallGreyCapTitle}
-						>
-							{heading}
-						</Typography>
-					) : null
-				)}
-			</div>
-			<div className={classes.detailsTopRow}>
-				{infoValues.map((value, index) =>
-					value ? (
-						<Typography
-							key={index}
-							style={infoColStyles[index]}
-							className={classes.smallTitle}
-						>
-							{value}
-						</Typography>
-					) : null
-				)}
-			</div>
-			<Divider className={classes.dividerStyle}/>
-			{ticket_pricing.length > 0 ? (
-				<div>
-					<Typography className={classes.headerTitle}>
-						Scheduled Price Change
-					</Typography>
-					{ticket_pricing.map((ticket, index) => {
-						const displayStartDate = ticket.start_date
-							? moment
-								.utc(ticket.start_date)
-								.tz(timezone)
-								.format("L")
-							: "Immediately";
-						const displayStartTime = ticket.start_date
-							? moment
-								.utc(ticket.start_date)
-								.tz(timezone)
-								.format("hh:mm A")
-							: null;
-						const displayEndDate = ticket.end_date
-							? moment
-								.utc(ticket.end_date)
-								.tz(timezone)
-								.format("L")
-							: splitByCamelCase(ticket.end_date_type);
-						const displayEndTime = ticket.end_date
-							? moment
-								.utc(ticket.start_date)
-								.tz(timezone)
-								.format("hh:mm A")
-							: null;
-						const priceChangeValues = [
-							ticket.name,
-							displayStartDate,
-							displayStartTime,
-							displayEndDate,
-							displayEndTime,
-							dollars(price_in_cents)
-						];
-						return (
-							<Card
+			{/*DESKTOP*/}
+			<Hidden smDown>
+				<div className={classes.detailsTopRow}>
+					{headings.map((heading, index) =>
+						heading ? (
+							<Typography
 								key={index}
-								style={{ marginTop: 20 }}
-								variant={"form"}
-								className={classes.detailsCardStyle}
+								style={colStyles[index]}
+								className={classes.smallGreyCapTitle}
 							>
-								<div className={classes.detailsTopRow}>
-									{priceChangeHeadings.map((heading, index) => (
-										<Typography
-											key={index}
-											style={priceChangeColStyles[index]}
-											className={classes.smallGreyCapTitle}
-										>
-											{heading}
-										</Typography>
-									))}
-								</div>
-								<div className={classes.detailsTopRow}>
-									{priceChangeValues.map((value, index) => (
-										<Typography
-											key={index}
-											style={priceChangeColStyles[index]}
-											className={classes.smallTitle}
-										>
-											{value ? value : "-"}
-										</Typography>
-									))}
-								</div>
-							</Card>
-						);
-					})}
+								{heading}
+							</Typography>
+						) : null
+					)}
 				</div>
-			) : null}
+				<div className={classes.detailsTopRow}>
+					{values.map((value, index) =>
+						value ? (
+							<Typography
+								key={index}
+								style={colStyles[index]}
+								className={classes.smallTitle}
+							>
+								{value}
+							</Typography>
+						) : null
+					)}
+				</div>
+				{description ? (
+					<div>
+						<Divider className={classes.dividerStyle}/>
+						<Typography className={classes.smallGreyCapTitle}>
+							Ticket description
+						</Typography>
+						<Typography className={classes.smallTitle}>{description}</Typography>
+					</div>
+				) : null}
+
+				<Divider className={classes.dividerStyle}/>
+
+				<div className={classes.detailsTopRow}>
+					{infoHeadings.map((heading, index) =>
+						heading ? (
+							<Typography
+								key={index}
+								style={infoColStyles[index]}
+								className={classes.smallGreyCapTitle}
+							>
+								{heading}
+							</Typography>
+						) : null
+					)}
+				</div>
+				<div className={classes.detailsTopRow}>
+					{infoValues.map((value, index) =>
+						value ? (
+							<Typography
+								key={index}
+								style={infoColStyles[index]}
+								className={classes.smallTitle}
+							>
+								{value}
+							</Typography>
+						) : null
+					)}
+				</div>
+				<Divider className={classes.dividerStyle}/>
+				{ticket_pricing.length > 0 ? (
+					<div>
+						<Typography className={classes.headerTitle}>
+							Scheduled Price Change
+						</Typography>
+						{ticket_pricing.map((ticket, index) => {
+							const displayStartDate = ticket.start_date
+								? moment
+									.utc(ticket.start_date)
+									.tz(timezone)
+									.format("L")
+								: "Immediately";
+							const displayStartTime = ticket.start_date
+								? moment
+									.utc(ticket.start_date)
+									.tz(timezone)
+									.format("hh:mm A")
+								: null;
+							const displayEndDate = ticket.end_date
+								? moment
+									.utc(ticket.end_date)
+									.tz(timezone)
+									.format("L")
+								: splitByCamelCase(ticket.end_date_type);
+							const displayEndTime = ticket.end_date
+								? moment
+									.utc(ticket.start_date)
+									.tz(timezone)
+									.format("hh:mm A")
+								: null;
+							const priceChangeValues = [
+								ticket.name,
+								displayStartDate,
+								displayStartTime,
+								displayEndDate,
+								displayEndTime,
+								dollars(price_in_cents)
+							];
+							return (
+								<Card
+									key={index}
+									style={{ marginTop: 20 }}
+									variant={"form"}
+									className={classes.detailsCardStyle}
+								>
+									<div className={classes.detailsTopRow}>
+										{priceChangeHeadings.map((heading, index) => (
+											<Typography
+												key={index}
+												style={priceChangeColStyles[index]}
+												className={classes.smallGreyCapTitle}
+											>
+												{heading}
+											</Typography>
+										))}
+									</div>
+									<div className={classes.detailsTopRow}>
+										{priceChangeValues.map((value, index) => (
+											<Typography
+												key={index}
+												style={priceChangeColStyles[index]}
+												className={classes.smallTitle}
+											>
+												{value ? value : "-"}
+											</Typography>
+										))}
+									</div>
+								</Card>
+							);
+						})}
+					</div>
+				) : null}
+			</Hidden>
+			{/*MOBILE*/}
+			<Hidden mdUp>
+				<Grid container>
+					{headings.map((heading, index) =>
+						heading ? (
+							<Grid key={index} xs={(index === 0) ? 12 : 6}>
+								<Typography
+									className={classes.smallGreyCapTitle}
+								>
+									{heading}
+								</Typography>
+								<Typography
+									className={classes.smallTitle}
+								>
+									{values[index]}
+								</Typography>
+							</Grid>
+						) : null
+					)}
+					{description ? (
+						<Grid xs={12}>
+							<Divider className={classes.dividerStyle}/>
+							<Typography className={classes.smallGreyCapTitle}>
+								Ticket description
+							</Typography>
+							<Typography className={classes.smallTitle}>{description}</Typography>
+						</Grid>
+					) : null}
+					<Grid xs={12}>
+						<Divider className={classes.dividerStyle}/>
+					</Grid>
+					{infoHeadings.map((heading, index) =>
+						heading ? (
+							<Grid key={index} xs={12}>
+								<Typography
+									className={classes.smallGreyCapTitle}
+								>
+									{heading}
+								</Typography>
+								<Typography
+									className={classes.smallTitle}
+								>
+									{infoValues[index]}
+								</Typography>
+							</Grid>
+						) : null
+					)}
+					<Grid xs={12}>
+						<Divider className={classes.dividerStyle}/>
+					</Grid>
+					<Grid xs={12}>
+						<Typography className={classes.headerTitle}>
+							Scheduled Price Change
+						</Typography>
+						{ticket_pricing.map((ticket, index) => {
+							const displayStartDate = ticket.start_date
+								? moment
+									.utc(ticket.start_date)
+									.tz(timezone)
+									.format("L")
+								: "Immediately";
+							const displayStartTime = ticket.start_date
+								? moment
+									.utc(ticket.start_date)
+									.tz(timezone)
+									.format("hh:mm A")
+								: null;
+							const displayEndDate = ticket.end_date
+								? moment
+									.utc(ticket.end_date)
+									.tz(timezone)
+									.format("L")
+								: splitByCamelCase(ticket.end_date_type);
+							const displayEndTime = ticket.end_date
+								? moment
+									.utc(ticket.start_date)
+									.tz(timezone)
+									.format("hh:mm A")
+								: null;
+							const priceChangeValues = [
+								ticket.name,
+								displayStartDate,
+								displayStartTime,
+								displayEndDate,
+								displayEndTime,
+								dollars(price_in_cents)
+							];
+							return (
+								<Grid
+									container
+									style={{ marginTop: 20 }}
+									className={classes.ticketsCardStyle}
+								>
+									{priceChangeHeadings.map((heading, index) => (
+										<Grid key={index} xs={(index === 0) ? 12 : 6}>
+											<Typography
+												className={classes.smallGreyCapTitle}
+											>
+												{heading}
+											</Typography>
+											<Typography
+												className={classes.smallTitle}
+											>
+												{values[index] ? values[index] : "-"}
+											</Typography>
+										</Grid>
+									))}
+								</Grid>
+							);
+						})}
+					</Grid>
+				</Grid>
+			</Hidden>
 		</Card>
 	);
 };

@@ -1,9 +1,10 @@
 import React from "react";
 import Card from "../../../../elements/Card";
-import { Typography } from "@material-ui/core";
+import { Typography, Grid, Hidden } from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
 import FormattedAdditionalInfo from "../../../events/FormattedAdditionalInfo";
 import lineBreakHtmlToPlainText from "../../../../../helpers/lineBreakHtmlToPlainText";
+import moment from "moment-timezone";
 
 const PublishedOverview = ({ classes, event }) => {
 	const { name, top_line_info, additional_info, status, created_at } = event;
@@ -15,28 +16,52 @@ const PublishedOverview = ({ classes, event }) => {
 
 	return (
 		<Card variant={"form"} className={classes.detailsCardStyle}>
-			<div className={classes.detailsTopRow}>
-				{headings.map((heading, index) => (
-					<Typography
-						key={index}
-						style={colStyles[index]}
-						className={classes.smallGreyCapTitle}
-					>
-						{heading}
-					</Typography>
-				))}
-			</div>
-			<div className={classes.detailsTopRow}>
-				{values.map((value, index) => (
-					<Typography
-						key={index}
-						style={colStyles[index]}
-						className={classes.smallTitle}
-					>
-						{value ? value : "-"}
-					</Typography>
-				))}
-			</div>
+			{/*DESKTOP*/}
+			<Hidden smDown>
+				<div className={classes.detailsTopRow}>
+					{headings.map((heading, index) => (
+						<Typography
+							key={index}
+							style={colStyles[index]}
+							className={classes.smallGreyCapTitle}
+						>
+							{heading}
+						</Typography>
+					))}
+				</div>
+				<div className={classes.detailsTopRow}>
+					{values.map((value, index) => (
+						<Typography
+							key={index}
+							style={colStyles[index]}
+							className={classes.smallTitle}
+						>
+							{value ? moment(value).utc(value).format("MM/DD/YYYY h:mm A z") : "-"}
+						</Typography>
+					))}
+				</div>
+			</Hidden>
+			{/*MOBILE*/}
+			<Hidden mdUp>
+				<Grid container>
+					{headings.map((heading, index) => (
+						<Grid key={index} xs={(index === 0) ? 4 : 8}>
+							<Typography
+								key={index}
+								className={classes.smallGreyCapTitle}
+							>
+								{heading}
+							</Typography>
+							<Typography
+								key={index}
+								className={classes.smallTitle}
+							>
+								{values[index] ? values[index] : "-"}
+							</Typography>
+						</Grid>
+					))}
+				</Grid>
+			</Hidden>
 		</Card>
 	);
 };
