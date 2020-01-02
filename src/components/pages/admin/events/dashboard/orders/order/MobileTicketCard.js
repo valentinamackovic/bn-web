@@ -154,21 +154,21 @@ const MobileTicketCard = ({
 						</div>
 					</div>
 					<div className={classes.row3}>
-						<div style={{ flex: 8 }}>
-							<Typography className={classes.heading}>Code</Typography>
-							<Typography className={classes.valueText}>
-								{code || "-"}
-								{discount_price_in_cents ? (
-									<span className={classes.discountValueText}>
-										&nbsp;/&nbsp;{dollars(discount_price_in_cents * -1, true)}
-									</span>
-								) : null}
-							</Typography>
-							<Typography className={classes.subText}>
-								{code_type || ""}
-							</Typography>
-						</div>
-						<div style={{ flex: 3 }}>
+						{/*<div style={{ flex: 8 }}>*/}
+						{/*	<Typography className={classes.heading}>Code</Typography>*/}
+						{/*	<Typography className={classes.valueText}>*/}
+						{/*		{code || "-"}*/}
+						{/*		{discount_price_in_cents ? (*/}
+						{/*			<span className={classes.discountValueText}>*/}
+						{/*				&nbsp;/&nbsp;{dollars(discount_price_in_cents * -1, true)}*/}
+						{/*			</span>*/}
+						{/*		) : null}*/}
+						{/*	</Typography>*/}
+						{/*	<Typography className={classes.subText}>*/}
+						{/*		{code_type || ""}*/}
+						{/*	</Typography>*/}
+						{/*</div>*/}
+						<div style={{ flex: 11 }}>
 							<Typography className={classes.heading}>QTY</Typography>
 							<Typography className={classes.valueText}>1</Typography>
 						</div>

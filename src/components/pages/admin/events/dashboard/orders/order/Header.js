@@ -40,6 +40,9 @@ const styles = theme => ({
 		fontFamily: fontFamilyDemiBold,
 		fontSize: 17,
 		color: secondaryHex
+	},
+	demiBoldSpan: {
+		fontFamily: fontFamilyDemiBold
 	}
 });
 
@@ -56,7 +59,7 @@ const Header = ({
 	fees_in_cents,
 	total_refunded_in_cents
 }) => {
-	const { first_name, last_name, id: userId } = on_behalf_of_user
+	const { first_name, last_name, id: userId, email } = on_behalf_of_user
 		? on_behalf_of_user
 		: user;
 
@@ -75,11 +78,17 @@ const Header = ({
 						{first_name} {last_name}
 					</span>
 				</Link>{" "}
-				on {displayDate}
+				- {email}
 			</Typography>
 
 			<Typography className={classes.headerText}>
-				Paid {payment_method ? `by ${payment_method}` : ""}{" "}
+				<span className={classes.demiBoldSpan}>Date of Purchase:</span>{" "}
+				{displayDate}
+			</Typography>
+
+			<Typography className={classes.headerText}>
+				<span className={classes.demiBoldSpan}>Method of Payment:</span>{" "}
+				{payment_method ? `${payment_method}` : ""}{" "}
 				{payment_provider ? `(${payment_provider})` : ""}{" "}
 				{platform ? `via ${platform}` : ""}
 				{on_behalf_of_user ? ` - ${user.first_name} ${user.last_name}` : ""}

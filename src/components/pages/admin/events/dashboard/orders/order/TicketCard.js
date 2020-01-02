@@ -79,7 +79,7 @@ const TicketCard = ({
 		<CheckBox
 			style={checkboxStyle}
 			size={"small"}
-			variant={"white"}
+			variant={"whiteDarkerBorder"}
 			active={isChecked}
 			onClick={onCheck}
 			disabled={!refundable}
@@ -111,44 +111,44 @@ const TicketCard = ({
 							</Typography>
 						</Link>
 						<Typography className={classes.subText}>
-							{ellipsis(attendee_email)}
+							{ellipsis(attendee_email, 30)}
 						</Typography>
 					</div>
 					<div style={colStyles[2]}>
 						<ColorTag variant={"green"}>
-							{ellipsis(ticket_type_name, 6)}
+							{ellipsis(ticket_type_name, 30)}
 						</ColorTag>
 					</div>
+					{/*{showAllDetails ? (*/}
+					{/*	<div style={colStyles[3]}>*/}
+					{/*		{code ? (*/}
+					{/*			<div>*/}
+					{/*				<Typography>*/}
+					{/*					{code}*/}
+					{/*					{discount_price_in_cents ? (*/}
+					{/*						<span className={classes.discountValueText}>*/}
+					{/*							&nbsp;/&nbsp;*/}
+					{/*							{dollars(discount_price_in_cents * -1, true)}*/}
+					{/*						</span>*/}
+					{/*					) : null}*/}
+					{/*				</Typography>*/}
+					{/*				<Typography className={classes.subText}>*/}
+					{/*					{code_type}*/}
+					{/*				</Typography>*/}
+					{/*			</div>*/}
+					{/*		) : (*/}
+					{/*			<Typography>-</Typography>*/}
+					{/*		)}*/}
+					{/*	</div>*/}
+					{/*) : null}*/}
 					{showAllDetails ? (
-						<div style={colStyles[3]}>
-							{code ? (
-								<div>
-									<Typography>
-										{code}
-										{discount_price_in_cents ? (
-											<span className={classes.discountValueText}>
-												&nbsp;/&nbsp;
-												{dollars(discount_price_in_cents * -1, true)}
-											</span>
-										) : null}
-									</Typography>
-									<Typography className={classes.subText}>
-										{code_type}
-									</Typography>
-								</div>
-							) : (
-								<Typography>-</Typography>
-							)}
-						</div>
+						<Typography style={colStyles[3]}>1</Typography>
 					) : null}
-					{showAllDetails ? (
-						<Typography style={colStyles[4]}>1</Typography>
-					) : null}
-					<Typography style={colStyles[5]}>
+					<Typography style={colStyles[4]}>
 						{dollars(ticketFacePriceInCents)}
 					</Typography>
 					{showAllDetails ? (
-						<Typography style={colStyles[6]} className={classes.statusText}>
+						<Typography style={colStyles[5]} className={classes.statusText}>
 							{status}
 						</Typography>
 					) : null}
@@ -182,7 +182,7 @@ const TicketCard = ({
 		<div className={classes.detailsRow}>
 			<div style={colStyles[0]} className={classes.col1}>
 				{checkbox}
-				<Typography className={classes.boldText}>{ description }</Typography>
+				<Typography className={classes.boldText}>{description}</Typography>
 			</div>
 
 			<span style={colStyles[1]}/>

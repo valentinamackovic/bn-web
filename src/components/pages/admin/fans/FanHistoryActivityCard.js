@@ -21,6 +21,7 @@ import Button from "../../../elements/Button";
 import CancelTransferDialog from "./CancelTransferDialog";
 import nl2br from "../../../../helpers/nl2br";
 import user from "../../../../stores/user";
+import ellipsis from "../../../../helpers/ellipsis";
 
 const styles = theme => ({
 	root: {
@@ -1427,7 +1428,7 @@ class FanHistoryActivityCard extends Component {
 													{initiated_by !== null ? initiated_by.full_name : "-"}
 												</span>
 												<br/>
-												<span className={classes.mobiSmallGreyText}>
+												<span className={classes.greySubtitle}>
 													{occurredAt}
 												</span>
 											</Typography>
@@ -1439,7 +1440,7 @@ class FanHistoryActivityCard extends Component {
 													Transfer Address:
 												</Typography>
 												<Typography className={classes.darkGreySubtitle}>
-													{destination_addresses}
+													{ellipsis(destination_addresses, 18)}
 												</Typography>
 											</div>
 											<div className={classes.halfFlexItem}>

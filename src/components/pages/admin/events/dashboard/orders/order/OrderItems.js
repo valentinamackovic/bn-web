@@ -201,13 +201,12 @@ class OrderItems extends Component {
 			selectedRefundOrderItem[id] = !selectedRefundOrderItem[id];
 			return { selectedRefundOrderItem };
 		}, this.setRefundAmount.bind(this));
-
 	}
 
 	setRefundAmount() {
 		const { items } = this.props;
 		const { selectedRefundOrderItem } = this.state;
-		
+
 		let refundAmountInCents = 0;
 		if (items) {
 			items.forEach((item, index) => {
@@ -223,7 +222,7 @@ class OrderItems extends Component {
 
 	orderRefundable() {
 		const { items } = this.props;
-		
+
 		let result = false;
 		if (items) {
 			items.forEach(i => {
@@ -280,10 +279,10 @@ class OrderItems extends Component {
 		const { selectedRefundOrderItem } = this.state;
 
 		const colStyles = [
-			{ flex: 4 },
 			{ flex: 3 },
 			{ flex: 3 },
 			{ flex: 3 },
+			// { flex: 3 },
 			{ flex: 1 },
 			{ flex: 2 },
 			{ flex: 2 }
@@ -296,7 +295,7 @@ class OrderItems extends Component {
 						"Ticket #",
 						"Attendee",
 						"Ticket type",
-						"Code",
+						// "Code",
 						"QTY",
 						"Total",
 						"Status"
@@ -421,7 +420,8 @@ class OrderItems extends Component {
 				<span/>
 			);
 
-		const venueDisplayName = `${venue.name}, ${venue.address}, ${venue.city}`;
+		// const venueDisplayName = `${venue.name}, ${venue.address}, ${venue.city}`;
+		const venueDisplayName = `${venue.name}`;
 
 		return (
 			<React.Fragment>
