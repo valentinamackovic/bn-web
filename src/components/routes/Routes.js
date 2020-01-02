@@ -54,9 +54,7 @@ const AdminOrganization = asyncComponent(() =>
 const AdminVenuesList = asyncComponent(() =>
 	import("../pages/admin/venues/List")
 );
-const AdminVenue = asyncComponent(() =>
-	import("../pages/admin/venues/Venue")
-);
+const AdminVenue = asyncComponent(() => import("../pages/admin/venues/Venue"));
 const AdminRegionsList = asyncComponent(() =>
 	import("../pages/admin/regions/List")
 );
@@ -71,6 +69,9 @@ const AdminEventsList = asyncComponent(() =>
 );
 const AdminEventDashboardSummary = asyncComponent(() =>
 	import("../pages/admin/events/dashboard/Summary")
+);
+const AdminEventDashboardSummaryV2 = asyncComponent(() =>
+	import("../pages/admin/events/dashboard/Summary_V2")
 );
 const AdminEventDashboardHolds = asyncComponent(() =>
 	import("../pages/admin/events/dashboard/holds/List")
@@ -181,7 +182,10 @@ class Routes extends Component {
 			analytics.trackPageLoadTime(Date.now() - startLoadTime);
 		}
 		// store url params data for campaign tracking
-		user.setCampaignTrackingData(getAllUrlParams());
+		user.setCampaignTrackingData({
+			referrer: document.referrer,
+			...getAllUrlParams()
+		});
 	}
 
 	componentDidCatch(error, errorInfo) {
@@ -433,6 +437,12 @@ class Routes extends Component {
 									exact
 									path="/admin/events/:id/dashboard"
 									component={AdminEventDashboardSummary}
+									isAuthenticated={isAuthenticated}
+								/>
+								<PrivateRoute
+									exact
+									path="/admin/events/:id/dashboard_v2"
+									component={AdminEventDashboardSummaryV2}
 									isAuthenticated={isAuthenticated}
 								/>
 								<PrivateRoute

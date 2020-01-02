@@ -32,16 +32,27 @@ const HorizontalBreakdownBar = props => {
 
 	return (
 		<div className={classes.root}>
-			<Typography className={classes.title}>{title}</Typography>
+			{title ? (
+				<Typography className={classes.title}>{title}</Typography>
+			) : null}
 			<div className={classes.bar}>
 				{values.map(({ label, value }, index) => {
+					let marginRight = 0;
+
+					//Dont add spacing to last element and if next value is a zero value
+					const nextEntry = values[index + 1];
+					if (value && nextEntry && nextEntry.value > 0) {
+						marginRight = 4;
+					}
+
 					return (
 						<Tooltip key={index} title={`${value}`} text={label}>
 							<div
 								className={classes.section}
 								style={{
 									flex: value,
-									backgroundColor: colors[index]
+									backgroundColor: colors[index],
+									marginRight
 								}}
 							/>
 						</Tooltip>

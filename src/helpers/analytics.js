@@ -1,4 +1,5 @@
 import ReactGA from "react-ga";
+import user from "../stores/user";
 
 const ga = {
 	name: "ga",
@@ -203,14 +204,14 @@ const bigneon = {
 
 		if (ReactGA && ReactGA.ga()) {
 			ReactGA.ga()(function(tracker) {
+				const trackingData = user.getCampaignTrackingData();
 				const clientId = tracker.get("clientId") || "";
-				const source = tracker.get("source") || "";
-				const medium = tracker.get("medium") || "";
+				const source = trackingData["utm_source"] || tracker.get("source") || "";
+				const medium = trackingData["utm_medium"] || tracker.get("medium") || "";
+				const referrer = trackingData.referrer || document.referrer;
 				img.src =
 					baseUrl +
-					`/analytics/track?url=${uri}&client_id=${clientId}&source=${source}&medium=${medium}&${window.location.search.substr(
-						1
-					)}&` +
+					`/analytics/track?url=${uri}&client_id=${clientId}&source=${source}&medium=${medium}&referrer=${referrer}&` +
 					data;
 				document.body.insertBefore(img, document.body.firstChild);
 			});
