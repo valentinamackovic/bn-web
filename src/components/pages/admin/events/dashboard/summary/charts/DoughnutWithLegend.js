@@ -107,13 +107,13 @@ const DoughnutRender = ({ resultSet }) => {
 	return <Doughnut height={100} width={100} data={data} options={options}/>;
 };
 
-const ChartContainer = ({ children, resultSet, classes }) => {
+const ChartContainer = ({ children, resultSet, classes, title }) => {
 	const { loadResponse } = resultSet;
 	if (!loadResponse) {
 		return null;
 	}
 
-	const { data } = loadResponse;
+	const { data, query } = loadResponse;
 
 	if (!data) {
 		return null;
@@ -140,7 +140,7 @@ const ChartContainer = ({ children, resultSet, classes }) => {
 		<div className={classes.root}>
 			<div className={classes.pieContainer}>{children}</div>
 			<div className={classes.legendContainer}>
-				<Typography className={classes.legendTitle}>Legend title</Typography>
+				<Typography className={classes.legendTitle}>{title}</Typography>
 				{entries.map((entry, index) => {
 					const { label, value, color } = entry;
 
@@ -171,8 +171,10 @@ const ChartContainer = ({ children, resultSet, classes }) => {
 	);
 };
 
-const DoughnutWithLegend = Component => ({ resultSet, error }) => {
-	const ChartContainerWithStyles = withStyles(styles)(ChartContainer);
+const DoughnutWithLegend = Component => ({ resultSet, error, title }) => {
+	const ChartContainerWithStyles = withStyles(styles)(props => (
+		<ChartContainer {...props} title={title}/>
+	));
 
 	return (
 		(resultSet && (

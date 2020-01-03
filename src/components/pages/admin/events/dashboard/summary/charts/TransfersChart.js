@@ -27,7 +27,9 @@ class TransfersChart extends Component {
 					filters: []
 				}}
 				cubejsApi={cubeJsApi}
-				render={DoughnutWithLegend}
+				render={props => (
+					<DoughnutWithLegend {...props} title={"Transfer Activity"}/>
+				)}
 			/>
 		);
 	}

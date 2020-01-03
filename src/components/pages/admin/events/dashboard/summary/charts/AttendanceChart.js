@@ -26,7 +26,9 @@ class AttendanceChart extends Component {
 					filters: []
 				}}
 				cubejsApi={cubeJsApi}
-				render={DoughnutWithLegend}
+				render={props => (
+					<DoughnutWithLegend {...props} title={"Scanning & Attendance"}/>
+				)}
 			/>
 		);
 	}
