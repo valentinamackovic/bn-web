@@ -16,5 +16,5 @@ npm install --only=dev
 npm run build
 if test ! -z "$BUILD_OUTPUT"
 then
-	mv build "$BUILD_OUTPUT"
+	cp -r build "$BUILD_OUTPUT"
 fi
