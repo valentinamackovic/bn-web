@@ -194,9 +194,21 @@ const styles = theme => ({
 			padding: "25px 26px"
 		}
 	},
+	expandIconRow: {
+		cursor: "pointer",
+		paddingBottom: theme.spacing.unit * 2,
+		paddingRight: theme.spacing.unit * 2,
+		position: "absolute",
+		right: 20,
+		zIndex: 500
+	},
+	expandIcon: {
+		width: 20
+	},
 	ticketsCardStyle: {
 		padding: "22px 30px",
-		marginBottom: 10,
+		margin: 5,
+		width: "95%",
 		boxShadow: "0 4px 15px 2px rgba(112,124,237,0.13)"
 	},
 	artistsOverviewCard: {
@@ -246,9 +258,11 @@ class EventOverview extends Component {
 			venueTimezone: null,
 			ticket_types_info: [],
 			optionsAnchorEl: null,
-			eventMenuSelected: this.props.match.params.id
+			eventMenuSelected: this.props.match.params.id,
+			expandedCardId: null
 		};
 		this.formatDateL = this.formatDateL.bind(this);
+		this.handleExpandTicketCard = this.handleExpandTicketCard.bind(this);
 	}
 
 	componentDidMount() {
@@ -328,9 +342,13 @@ class EventOverview extends Component {
 		this.setState({ optionsAnchorEl: null });
 	};
 
+	handleExpandTicketCard(expandedCardId) {
+		this.setState({ expandedCardId: expandedCardId });
+	}
+
 	render() {
 		const { classes } = this.props;
-		const { ticket_types_info } = this.state;
+		const { ticket_types_info, expandedCardId } = this.state;
 		const { event, venue, artists, ticket_types } = selectedEvent;
 
 		if (event === null) {
@@ -377,15 +395,12 @@ class EventOverview extends Component {
 			{
 				text: "Edit event",
 				onClick: () =>
-					this.props.history.push(
-						`/admin/events/${eventMenuSelected}/edit`
-					),
+					this.props.history.push(`/admin/events/${eventMenuSelected}/edit`),
 				MenuOptionIcon: EditIcon
 			},
 			{
 				text: "View event",
-				onClick: () =>
-					this.props.history.push(`/tickets/${eventMenuSelected}`),
+				onClick: () => this.props.history.push(`/tickets/${eventMenuSelected}`),
 				// onClick: () =>
 				// 	this.props.history.push(`/events/${eventMenuSelected}`),
 				MenuOptionIcon: ViewIcon
@@ -401,8 +416,7 @@ class EventOverview extends Component {
 			},
 			{
 				text: "Cancel event",
-				disabled:
-					!user.hasScope("event:write") || this.cancelMenuItemDisabled,
+				disabled: !user.hasScope("event:write") || this.cancelMenuItemDisabled,
 				onClick: () =>
 					this.setState({
 						deleteCancelEventId: eventMenuSelected,
@@ -521,6 +535,8 @@ class EventOverview extends Component {
 									ticket_type={ticket_type}
 									timezoneAbbr={timezoneAbbr}
 									timezone={venue.timezone}
+									isExpanded={expandedCardId === ticket_type.id}
+									onExpandClick={this.handleExpandTicketCard}
 								/>
 							))}
 						</div>
@@ -528,7 +544,11 @@ class EventOverview extends Component {
 					<Typography className={classes.eventAllDetailsTitle}>
 						Publish Options
 					</Typography>
-					<PublishedOverview classes={classes} event={event} timezoneAbbr={timezoneAbbr}/>
+					<PublishedOverview
+						classes={classes}
+						event={event}
+						timezoneAbbr={timezoneAbbr}
+					/>
 				</Card>
 			</div>
 		);

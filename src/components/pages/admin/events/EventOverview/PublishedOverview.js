@@ -47,13 +47,11 @@ const PublishedOverview = ({ classes, event, timezoneAbbr }) => {
 					{headings.map((heading, index) => (
 						<Grid item key={index} xs={(index === 0) ? 4 : 8}>
 							<Typography
-								key={index}
 								className={classes.smallGreyCapTitle}
 							>
 								{heading}
 							</Typography>
 							<Typography
-								key={index}
 								className={classes.smallTitle}
 							>
 								{values[index] ? values[index] + " " : "-"}
