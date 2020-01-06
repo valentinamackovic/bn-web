@@ -12,20 +12,19 @@ const DetailsOverview = ({
 	displayEventStart,
 	displayEventEnd,
 	timezoneAbbr,
-	displayEventEndTime,
-	age_limit,
-	event_type,
-	private_access_code,
-	status
+	displayEventEndTime
 }) => {
 	const {
 		name,
 		top_line_info,
 		additional_info,
 		displayShowTime,
-		displayDoorTime
+		displayDoorTime,
+		age_limit,
+		event_type,
+		private_access_code,
+		status
 	} = event;
-
 	// Top Line col styles
 	const colStyles = [{ flex: 3 }, { flex: 2 }, { flex: 4 }];
 	const headings = ["Event name", "Venue", "Top Line Info"];
@@ -95,7 +94,10 @@ const DetailsOverview = ({
 				<Typography className={classes.smallGreyCapTitle}>
 					Additional Event info
 				</Typography>
-				<ReadMoreAdditionalInfo readMoreText="View full description" readLessText="Hide full description">
+				<ReadMoreAdditionalInfo
+					readMoreText="View full description"
+					readLessText="Hide full description"
+				>
 					{additional_info ? lineBreakHtmlToPlainText(additional_info) : ""}
 				</ReadMoreAdditionalInfo>
 				<Divider className={classes.dividerStyle}/>
@@ -149,38 +151,24 @@ const DetailsOverview = ({
 			{/*MOBILE*/}
 			<Hidden mdUp>
 				<div className={classes.detailsContainer}>
-					<Typography
-						className={classes.smallGreyCapTitle}
-					>
+					<Typography className={classes.smallGreyCapTitle}>
 						Event Name
 					</Typography>
-					<Typography
-						className={classes.smallTitle}
-					>
+					<Typography className={classes.smallTitle}>
 						{values[0] ? values[0] : "-"}
 					</Typography>
 				</div>
 				<div className={classes.detailsContainer}>
-					<Typography
-						className={classes.smallGreyCapTitle}
-					>
-						Venue
-					</Typography>
-					<Typography
-						className={classes.smallTitle}
-					>
+					<Typography className={classes.smallGreyCapTitle}>Venue</Typography>
+					<Typography className={classes.smallTitle}>
 						{values[1] ? values[1] : "-"}
 					</Typography>
 				</div>
 				<div className={classes.detailsContainer}>
-					<Typography
-						className={classes.smallGreyCapTitle}
-					>
+					<Typography className={classes.smallGreyCapTitle}>
 						Top Line Info
 					</Typography>
-					<Typography
-						className={classes.smallTitle}
-					>
+					<Typography className={classes.smallTitle}>
 						{values[2] ? values[2] : "-"}
 					</Typography>
 				</div>
@@ -188,7 +176,10 @@ const DetailsOverview = ({
 				<Typography className={classes.smallGreyCapTitle}>
 					Additional Event info
 				</Typography>
-				<ReadMoreAdditionalInfo readMoreText="View full description" readLessText="Hide full description">
+				<ReadMoreAdditionalInfo
+					readMoreText="View full description"
+					readLessText="Hide full description"
+				>
 					{additional_info ? lineBreakHtmlToPlainText(additional_info) : ""}
 				</ReadMoreAdditionalInfo>
 				<Divider className={classes.dividerStyle}/>
@@ -196,14 +187,10 @@ const DetailsOverview = ({
 					{dateHeadings.map((heading, index) => (
 						<Grid item xs={6} key={index}>
 							<div className={classes.detailsContainer}>
-								<Typography
-									className={classes.smallGreyCapTitle}
-								>
+								<Typography className={classes.smallGreyCapTitle}>
 									{heading}
 								</Typography>
-								<Typography
-									className={classes.smallTitle}
-								>
+								<Typography className={classes.smallTitle}>
 									{dateValues[index] ? dateValues[index] : "-"}
 								</Typography>
 							</div>
@@ -215,14 +202,10 @@ const DetailsOverview = ({
 					{infoHeadings.map((heading, index) => (
 						<Grid item xs={6} key={index}>
 							<div className={classes.detailsContainer}>
-								<Typography
-									className={classes.smallGreyCapTitle}
-								>
+								<Typography className={classes.smallGreyCapTitle}>
 									{heading}
 								</Typography>
-								<Typography
-									className={classes.smallTitle}
-								>
+								<Typography className={classes.smallTitle}>
 									{infoValues[index] ? infoValues[index] : "-"}
 								</Typography>
 							</div>
