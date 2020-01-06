@@ -4,7 +4,7 @@ import optimizedImageUrl from "../../../../../helpers/optimizedImageUrl";
 import { Typography } from "@material-ui/core";
 import classnames from "classnames";
 
-const ArtistsOverview = ({ classes, artist }) => {
+const ArtistsOverview = ({ classes, artist, importance }) => {
 	const { thumb_image_url, image_url } = artist;
 
 	let imageSrc =
@@ -26,7 +26,7 @@ const ArtistsOverview = ({ classes, artist }) => {
 			/>
 			<div>
 				<Typography className={classes.smallGreyCapTitle}>
-					{artist.importance === 0 ? "Headline " : "Supporting "}act
+					{importance === 0 ? "Headline " : "Supporting "}act
 				</Typography>
 				<Typography className={classes.smallTitle}>{artist.name}</Typography>
 			</div>

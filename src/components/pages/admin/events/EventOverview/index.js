@@ -490,6 +490,7 @@ class EventOverview extends Component {
 									key={index}
 									classes={classes}
 									artist={artist}
+									importance={importance}
 								/>
 							))}
 						</div>
