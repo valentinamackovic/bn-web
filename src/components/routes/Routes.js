@@ -73,6 +73,9 @@ const AdminEventDashboardSummary = asyncComponent(() =>
 const EventOverview = asyncComponent(() =>
 	import("../pages/admin/events/EventOverview/index")
 );
+const AdminEventDashboardSummaryV2 = asyncComponent(() =>
+	import("../pages/admin/events/dashboard/Summary_V2")
+);
 const AdminEventDashboardHolds = asyncComponent(() =>
 	import("../pages/admin/events/dashboard/holds/List")
 );
@@ -182,7 +185,10 @@ class Routes extends Component {
 			analytics.trackPageLoadTime(Date.now() - startLoadTime);
 		}
 		// store url params data for campaign tracking
-		user.setCampaignTrackingData(getAllUrlParams());
+		user.setCampaignTrackingData({
+			referrer: document.referrer,
+			...getAllUrlParams()
+		});
 	}
 
 	componentDidCatch(error, errorInfo) {
@@ -440,6 +446,12 @@ class Routes extends Component {
 									exact
 									path="/admin/events/:id/event-overview"
 									component={EventOverview}
+									isAuthenticated={isAuthenticated}
+								/>
+								<PrivateRoute
+									exact
+									path="/admin/events/:id/dashboard_v2"
+									component={AdminEventDashboardSummaryV2}
 									isAuthenticated={isAuthenticated}
 								/>
 								<PrivateRoute

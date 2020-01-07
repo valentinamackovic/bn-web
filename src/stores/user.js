@@ -579,6 +579,20 @@ class User {
 
 		return false;
 	}
+
+	@computed
+	get hasEventAnnouncements() {
+		if (
+			this.isAdmin ||
+			this.isOrgOwner ||
+			this.isOrgAdmin ||
+			this.isOrgMember
+		) {
+			return true;
+		}
+
+		return false;
+	}
 }
 
 const user = new User();
