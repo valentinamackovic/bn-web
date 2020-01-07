@@ -246,6 +246,9 @@ const styles = theme => ({
 			float: "none",
 			width: "100%"
 		}
+	},
+	noBackground: {
+		backgroundColor: "transparent"
 	}
 });
 

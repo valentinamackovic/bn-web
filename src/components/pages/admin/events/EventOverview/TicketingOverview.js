@@ -306,7 +306,7 @@ const TicketingOverview = ({
 					)}
 				</Grid>
 
-				<Collapse in={isExpanded}>
+				<Collapse in={isExpanded} timeout="auto" classes={{wrapper: classes.noBackground}}>
 					<Grid container>
 						{description ? (
 							<Grid item xs={12}>
