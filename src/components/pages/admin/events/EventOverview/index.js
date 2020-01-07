@@ -34,7 +34,6 @@ import DetailsOverview from "./DetailsOverview";
 import TicketingOverview from "./TicketingOverview";
 import Bigneon from "../../../../../helpers/bigneon";
 import PublishedOverview from "./PublishedOverview";
-import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 import DashboardIcon from "@material-ui/icons/Dashboard";
 import EditIcon from "@material-ui/icons/Edit";
 import ViewIcon from "@material-ui/icons/Link";

@@ -243,9 +243,7 @@ class Container extends React.Component {
 
 						{layout.showFooter ? (
 							<LandingFooter/>
-						) : (
-							<div className={classes.footerPlaceholder}/>
-						)}
+						) : null}
 
 						{layout.belowFooterPadding ? (
 							<div className={classes.belowFooterPadding}/>
