@@ -10,7 +10,7 @@ import Loader from "../../../../../../elements/loaders/Loader";
 const COLORS_SERIES = ["#707CED"];
 const FILL_SERIES = ["rgba(112,124,237,0.06)"];
 
-const lineRender = ({ resultSet, startDate, endDate }) => {
+const SalesLine = ({ resultSet, startDate, endDate }) => {
 	const data = {
 		labels: resultSet.categories().map(c => c.category),
 		datasets: resultSet.series().map((s, index) => ({
@@ -18,7 +18,7 @@ const lineRender = ({ resultSet, startDate, endDate }) => {
 			data: s.series.map(r => r.value),
 			borderColor: COLORS_SERIES[index],
 			backgroundColor: FILL_SERIES[index],
-			// fill: false,
+			fill: true,
 			lineTension: 0
 		}))
 	};
@@ -28,7 +28,30 @@ const lineRender = ({ resultSet, startDate, endDate }) => {
 		},
 		elements: {
 			point: {
-				radius: 0
+				radius: 0,
+				hitRadius: 10
+			}
+		},
+		tooltips: {
+			// enabled: false
+			custom: function(tooltipModel) {},
+			callbacks: {
+				beforeTitle: () => {
+					return "";
+				},
+				title: (tooltipItem, data) => {
+					let label = tooltipItem[0].label;
+					if (label) {
+						label = moment(label).format("ddd MM/DD/YYYY");
+					}
+
+					return label;
+				},
+				label: (tooltipItem, data) => {
+					const label = data.datasets[tooltipItem.datasetIndex].label || "";
+					const value = tooltipItem.value || "";
+					return `Total: ${value}`;
+				}
 			}
 		},
 		scales: {
@@ -41,7 +64,7 @@ const lineRender = ({ resultSet, startDate, endDate }) => {
 					ticks: {
 						min: startDate,
 						max: endDate,
-					 lineHeight: "14px",
+						lineHeight: "14px",
 						fontColor: "#2C3136",
 						fontSize: "12px"
 						// fontWeight: "600" // Not supported
@@ -71,7 +94,7 @@ const lineRender = ({ resultSet, startDate, endDate }) => {
 	return <Line data={data} options={options}/>;
 };
 
-const renderChart = Component => ({ resultSet, error }) =>
+const SalesChart = Component => ({ resultSet, error }) =>
 	(resultSet && <Component resultSet={resultSet}/>) ||
 	(error && error.toString()) || <Loader/>;
 
@@ -107,7 +130,7 @@ class TicketSalesChart extends Component {
 					// ]
 				}}
 				cubejsApi={cubeJsApi}
-				render={renderChart((vals) => lineRender({ ...vals, startDate, endDate }))}
+				render={SalesChart(vals => SalesLine({ ...vals, startDate, endDate }))}
 			/>
 		);
 	}

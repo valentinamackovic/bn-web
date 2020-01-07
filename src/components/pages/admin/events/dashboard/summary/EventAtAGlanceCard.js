@@ -11,6 +11,7 @@ import TransfersChart from "./charts/TransfersChart";
 import AttendanceChart from "./charts/AttendanceChart";
 import PropTypes from "prop-types";
 import { dollars } from "../../../../../../helpers/money";
+import EventSummaryCard from "../../EventSummaryCard";
 
 const styles = theme => {
 	return {
@@ -127,20 +128,21 @@ const EventAtAGlanceCard = ({
 	on_sale,
 	cubeApiUrl,
 	sales_total_in_cents,
-
 	total_tickets,
 	sold_unreserved,
 	sold_held,
 	tickets_open,
 	tickets_held,
-	tickets_redeemed,
-
-	...rest
+	tickets_redeemed
 }) => {
+	const totalSold = sold_held + sold_unreserved;
+	const totalOpen = tickets_open;
+	const totalHeld = tickets_held - sold_held;
+
 	const values = [
-		{ label: "Sold", value: 500, color: "#707ced" },
-		{ label: "Open", value: 224, color: "#afc6d4" },
-		{ label: "Held", value: 80, color: "#ff22b2" }
+		{ label: "Sold", value: totalSold, color: "#707ced" },
+		{ label: "Open", value: totalOpen, color: "#afc6d4" },
+		{ label: "Held", value: totalHeld, color: "#ff22b2" }
 	];
 
 	const breakDownValues = <BreakDownValues classes={classes} values={values}/>;

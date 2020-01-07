@@ -22,6 +22,11 @@ const formatValueFunctions = {
 	},
 	"PageViews.source": row => {
 		const val = row["PageViews.source"];
+
+		if (!val) {
+			return "Direct";
+		}
+
 		return upperFirstChar(val);
 	},
 	"PageViews.medium": row => {
@@ -79,6 +84,36 @@ class PageViewsTable extends Component {
 
 	render() {
 		const { cubeJsApi } = this.state;
+		const { startDate, endDate } = this.props;
+
+		const filters = [];
+
+		if (startDate) {
+			filters.push({
+				dimension: "PageViews.date",
+				operator: "gt",
+				values: [
+					startDate
+						.clone()
+						.utc()
+						.format()
+				]
+			});
+		}
+
+		if (endDate) {
+			filters.push({
+				dimension: "PageViews.date",
+				operator: "lt",
+				values: [
+					endDate
+						.clone()
+						.utc()
+						.format()
+				]
+			});
+		}
+
 		return (
 			<QueryRenderer
 				query={{
@@ -91,7 +126,8 @@ class PageViewsTable extends Component {
 					segments: [],
 					order: {
 						"PageViews.tickets": "desc"
-					}
+					},
+					filters
 				}}
 				cubejsApi={cubeJsApi}
 				render={ChartRender(TableRender)}
@@ -102,7 +138,9 @@ class PageViewsTable extends Component {
 
 PageViewsTable.propTypes = {
 	token: PropTypes.string.isRequired,
-	cubeApiUrl: PropTypes.string.isRequired
+	cubeApiUrl: PropTypes.string.isRequired,
+	startDate: PropTypes.object,
+	endDate: PropTypes.object
 };
 
 export default PageViewsTable;
