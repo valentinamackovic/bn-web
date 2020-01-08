@@ -54,6 +54,22 @@ const DetailsOverview = ({
 		displayEventEndTime
 	];
 
+	const mobileDateHeadings = [
+		`Event date (${timezoneAbbr})`,
+		`Show time (${timezoneAbbr})`,
+		`End date (${timezoneAbbr})`,
+		`End time (${timezoneAbbr})`,
+		"Door time"
+	];
+
+	const mobileDateValues = [
+		displayEventStart,
+		displayShowTime,
+		displayEventEnd,
+		displayEventEndTime,
+		displayDoorTime
+	];
+
 	const infoHeadings = [
 		"Age limit",
 		"Event type",
@@ -184,14 +200,14 @@ const DetailsOverview = ({
 				</ReadMoreAdditionalInfo>
 				<Divider className={classes.dividerStyle}/>
 				<Grid container>
-					{dateHeadings.map((heading, index) => (
+					{mobileDateHeadings.map((heading, index) => (
 						<Grid item xs={6} key={index}>
 							<div className={classes.detailsContainer}>
 								<Typography className={classes.smallGreyCapTitle}>
 									{heading}
 								</Typography>
 								<Typography className={classes.smallTitle}>
-									{dateValues[index] ? dateValues[index] : "-"}
+									{mobileDateValues[index]}
 								</Typography>
 							</div>
 						</Grid>

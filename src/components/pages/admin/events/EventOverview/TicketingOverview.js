@@ -72,9 +72,9 @@ const TicketingOverview = ({
 		"Quantity",
 		"Price",
 		"Sales start",
-		start_date ? `start time ${timezoneAbbr}` : null,
+		start_date ? `start time (${timezoneAbbr})` : null,
 		"sales end",
-		end_date ? `end time ${timezoneAbbr}` : null
+		end_date ? `end time (${timezoneAbbr})` : null
 	];
 
 	const values = [
@@ -114,10 +114,10 @@ const TicketingOverview = ({
 	];
 	const priceChangeHeadings = [
 		"Price Name",
-		`On sale date ${timezoneAbbr}`,
-		`On sale time ${timezoneAbbr}`,
-		`End sale date ${timezoneAbbr}`,
-		`End sale time ${timezoneAbbr}`,
+		`On sale date (${timezoneAbbr})`,
+		`On sale time (${timezoneAbbr})`,
+		`End sale date (${timezoneAbbr})`,
+		`End sale time (${timezoneAbbr})`,
 		"price"
 	];
 
