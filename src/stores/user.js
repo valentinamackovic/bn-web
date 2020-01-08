@@ -394,7 +394,7 @@ class User {
 
 	@computed
 	get isAdmin() {
-		return this.globalRoles.indexOf("Admin") > -1;
+		return this.globalRoles.indexOf("Admin") > -1 || this.isSuper;
 	}
 
 	@computed
