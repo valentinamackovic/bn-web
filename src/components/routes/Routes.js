@@ -152,6 +152,7 @@ import WidgetLinkBuilder from "../widgets/LinkBuilder";
 import analytics from "../../helpers/analytics";
 import getAllUrlParams from "../../helpers/getAllUrlParams";
 import Meta from "./Meta";
+import decodeJWT from "../../helpers/decodeJWT";
 
 const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) => {
 	//If isAuthenticated is null then we're still checking the state
@@ -181,10 +182,24 @@ class Routes extends Component {
 		if (startLoadTime) {
 			analytics.trackPageLoadTime(Date.now() - startLoadTime);
 		}
+		const { access_token, refresh_token, ...params } = getAllUrlParams();
+		if (access_token && refresh_token) {
+			try {
+				//Attempt to decode these, if they are not valid do not store them.
+				decodeJWT(access_token);
+				decodeJWT(refresh_token);
+				localStorage.setItem("access_token", access_token);
+				localStorage.setItem("refresh_token", refresh_token);
+				user.refreshUser();
+			}catch(e) {
+				console.error("Invalid access / refresh token provided");
+			}
+
+		}
 		// store url params data for campaign tracking
 		user.setCampaignTrackingData({
 			referrer: document.referrer,
-			...getAllUrlParams()
+			...params
 		});
 	}
 
