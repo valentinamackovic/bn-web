@@ -14,13 +14,14 @@ const OverviewHeader = ({ classes, event, artists, venue }) => {
 		door_time,
 		cancelled_at,
 		publish_date,
-		eventEnded,
-		on_sale,
-		isExternal
+		is_external,
+		event_end,
+		sales_start_date
 	} = event;
 
 	const isPublished = moment.utc(publish_date).isBefore(moment.utc());
-	const isOnSale = isPublished && moment.utc(on_sale).isBefore(moment.utc());
+	const isOnSale = isPublished && moment.utc(sales_start_date).isBefore(moment.utc());
+	const eventEnded = moment.utc(event_end).isBefore(moment.utc());
 
 	const promo_image_url = event.promo_image_url
 		? optimizedImageUrl(event.promo_image_url)
@@ -42,7 +43,7 @@ const OverviewHeader = ({ classes, event, artists, venue }) => {
 			onSaleTag = <ColorTag variant="disabled">Event ended</ColorTag>;
 		} else if (isOnSale) {
 			onSaleTag = <ColorTag variant="green">On sale</ColorTag>;
-		} else if (isExternal) {
+		} else if (is_external) {
 			onSaleTag = <ColorTag variant="green">External</ColorTag>;
 		}
 
