@@ -30,7 +30,7 @@ const OverviewHeader = ({ classes, event, artists, venue }) => {
 	if (promo_image_url) {
 		promoImgStyle.backgroundImage = `url(${promo_image_url})`;
 	}
-	const shortDate = moment(event_start).format("MMM, D YYYY");
+	const shortDate = moment(event_start).format("MMM D, YYYY");
 	const shortDoorTime = moment(door_time).format("LT");
 	const shortShowTime = moment(event_start).format("LT");
 	let tags = null;
@@ -98,7 +98,7 @@ const OverviewHeader = ({ classes, event, artists, venue }) => {
 							</Typography>
 						</div>
 					</div>
-					<div className={classes.dateInfoContainer}>
+					<div className={classes.venueInfoContainer}>
 						<img
 							alt="Location Icon"
 							className={classes.icon}

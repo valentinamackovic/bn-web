@@ -52,7 +52,7 @@ const TicketingOverview = ({
 		: splitByCamelCase(end_date_type);
 	const displayEndTime = end_date
 		? moment
-			.utc(start_date)
+			.utc(end_date)
 			.tz(timezone)
 			.format("hh:mm A")
 		: null;
@@ -114,9 +114,9 @@ const TicketingOverview = ({
 	];
 	const priceChangeHeadings = [
 		"Price Name",
-		`On sale date (${timezoneAbbr})`,
+		`On sale date`,
 		`On sale time (${timezoneAbbr})`,
-		`End sale date (${timezoneAbbr})`,
+		`End sale date`,
 		`End sale time (${timezoneAbbr})`,
 		"price"
 	];
@@ -242,7 +242,7 @@ const TicketingOverview = ({
 								: splitByCamelCase(ticket.end_date_type);
 							const displayEndTime = ticket.end_date
 								? moment
-									.utc(ticket.start_date)
+									.utc(ticket.end_date)
 									.tz(timezone)
 									.format("hh:mm A")
 								: null;
@@ -306,7 +306,7 @@ const TicketingOverview = ({
 					)}
 				</Grid>
 
-				<Collapse in={isExpanded} timeout="auto" classes={{wrapper: classes.noBackground}}>
+				<Collapse in={isExpanded} timeout="auto" classes={{ wrapper: classes.noBackground }}>
 					<Grid container>
 						{description ? (
 							<Grid item xs={12}>

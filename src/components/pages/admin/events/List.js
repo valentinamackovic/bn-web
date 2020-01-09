@@ -15,6 +15,7 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import EditIcon from "@material-ui/icons/Edit";
 import ViewIcon from "@material-ui/icons/Link";
 import CancelIcon from "@material-ui/icons/Cancel";
+import RemoveRedEye from "@material-ui/icons/RemoveRedEye";
 import moment from "moment";
 
 import notifications from "../../../../stores/notifications";
@@ -202,7 +203,7 @@ class EventsList extends Component {
 							this.props.history.push(
 								`/admin/events/${eventMenuSelected}/event-overview`
 							),
-						MenuOptionIcon: EditIcon
+						MenuOptionIcon: RemoveRedEye
 					},
 					{
 						text: "Cancel event",

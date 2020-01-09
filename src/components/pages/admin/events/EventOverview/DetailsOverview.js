@@ -4,6 +4,7 @@ import { Typography, Hidden, Grid } from "@material-ui/core";
 import Divider from "@material-ui/core/Divider";
 import lineBreakHtmlToPlainText from "../../../../../helpers/lineBreakHtmlToPlainText";
 import ReadMoreAdditionalInfo from "../../../../elements/event/ReadMoreAdditionalInfo";
+import moment from "moment-timezone";
 
 const DetailsOverview = ({
 	classes,
@@ -23,7 +24,8 @@ const DetailsOverview = ({
 		age_limit,
 		event_type,
 		private_access_code,
-		status
+		status,
+		publish_date
 	} = event;
 	// Top Line col styles
 	const colStyles = [{ flex: 3 }, { flex: 2 }, { flex: 4 }];
@@ -39,10 +41,10 @@ const DetailsOverview = ({
 		{ flex: 2 }
 	];
 	const dateHeadings = [
-		`Event date (${timezoneAbbr})`,
+		`Event date`,
 		`Show time (${timezoneAbbr})`,
 		"Door time",
-		`End date (${timezoneAbbr})`,
+		`End date`,
 		`End time (${timezoneAbbr})`
 	];
 
@@ -55,9 +57,9 @@ const DetailsOverview = ({
 	];
 
 	const mobileDateHeadings = [
-		`Event date (${timezoneAbbr})`,
+		`Event date`,
 		`Show time (${timezoneAbbr})`,
-		`End date (${timezoneAbbr})`,
+		`End date`,
 		`End time (${timezoneAbbr})`,
 		"Door time"
 	];
@@ -78,7 +80,10 @@ const DetailsOverview = ({
 		""
 	];
 
-	const infoValues = [age_limit, event_type, private_access_code, status, " "];
+	const ageLimit = (age_limit === "18") ? "18 & over" : (age_limit === "21") ? "21 & over" : "All Ages";
+
+	const publishStatus = moment.utc(publish_date).isBefore(moment.utc()) ? "Published" : "Draft";
+	const infoValues = [ageLimit, event_type, private_access_code, publishStatus, " "];
 
 	return (
 		<Card variant={"form"} className={classes.detailsCardStyle}>

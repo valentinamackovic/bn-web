@@ -115,6 +115,15 @@ const styles = theme => ({
 			marginBottom: 25
 		}
 	},
+	venueInfoContainer: {
+		display: "flex",
+		flexDirection: "row",
+		paddingLeft: 40,
+		[theme.breakpoints.down("sm")]: {
+			marginBottom: 25,
+			paddingLeft: 0
+		}
+	},
 	headerEventDateInfo: {
 		display: "flex",
 		flexDirection: "row",
@@ -221,7 +230,11 @@ const styles = theme => ({
 		fontFamily: fontFamilyDemiBold,
 		lineHeight: "14px",
 		textTransform: "uppercase",
-		marginBottom: 10
+		marginBottom: 10,
+		paddingRight: 10,
+		[theme.breakpoints.down("sm")]: {
+			paddingRight: 0
+		}
 	},
 	smallTitle: {
 		fontFamily: fontFamily,
@@ -229,8 +242,10 @@ const styles = theme => ({
 		color: "#000000",
 		fontSize: 16,
 		lineHeight: "18px",
+		paddingRight: 10,
 		[theme.breakpoints.down("sm")]: {
-			marginBottom: 15
+			marginBottom: 15,
+			paddingRight: 0
 		}
 	},
 	detailsTopRow: {
