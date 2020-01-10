@@ -23,6 +23,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MobileOptionsControlDialog from "../../../../../../elements/MobileOptionsControlDialog";
 import notification from "../../../../../../../stores/notifications";
 import RefundDialog from "./RefundDialog";
+import RefundOverrideDialog from "./RefundOverrideDialog";
 import user from "../../../../../../../stores/user";
 import RefundBottomBar from "./RefundBottomBar";
 import Divider from "../../../../../../common/Divider";
@@ -143,6 +144,7 @@ class OrderItems extends Component {
 			mobileOptionsControlOpen: false,
 
 			showRefundType: null,
+			showRefundOverrideType: null,
 			refundAmountInCents: null
 		};
 
@@ -182,6 +184,15 @@ class OrderItems extends Component {
 
 	onRefundDialogClose() {
 		this.setState({ showRefundType: null });
+		this.props.refreshOrder();
+	}
+
+	onRefundOverrideDialogOpen() {
+		this.setState({ showRefundOverrideType: "items" });
+	}
+
+	onRefundOverrideDialogClose() {
+		this.setState({ showRefundOverrideType: null });
 		this.props.refreshOrder();
 	}
 
@@ -365,7 +376,8 @@ class OrderItems extends Component {
 			mobileOptionsControlOpen,
 			showRefundType,
 			refundAmountInCents,
-			selectedRefundOrderItem
+			selectedRefundOrderItem,
+			showRefundOverrideType
 		} = this.state;
 
 		const {
@@ -444,6 +456,22 @@ class OrderItems extends Component {
 					items={items}
 					order={order}
 					type={showRefundType}
+					selectedRefundOrderItem={selectedRefundOrderItem}
+					onSuccess={() =>
+						this.setState(
+							{ selectedRefundOrderItem: {} },
+							this.setRefundAmount.bind(this)
+						)
+					}
+					onOverride={this.onRefundOverrideDialogOpen.bind(this)}
+				/>
+
+				<RefundOverrideDialog
+					open={!!showRefundOverrideType}
+					onClose={this.onRefundOverrideDialogClose.bind(this)}
+					items={items}
+					order={order}
+					type={showRefundOverrideType}
 					selectedRefundOrderItem={selectedRefundOrderItem}
 					onSuccess={() =>
 						this.setState(
