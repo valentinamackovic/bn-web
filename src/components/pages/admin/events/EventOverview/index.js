@@ -38,8 +38,10 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import EditIcon from "@material-ui/icons/Edit";
 import ViewIcon from "@material-ui/icons/Link";
 import CancelIcon from "@material-ui/icons/Cancel";
+import RemoveRedEye from "@material-ui/icons/RemoveRedEye";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import Button from "../../../../elements/Button";
+import DeleteCancelEventDialog from "../DeleteCancelEventDialog";
 
 const styles = theme => ({
 	paper: {
@@ -276,13 +278,67 @@ class EventOverview extends Component {
 			ticket_types_info: [],
 			optionsAnchorEl: null,
 			eventMenuSelected: this.props.match.params.id,
-			expandedCardId: null
+			expandedCardId: null,
+			isDelete: false,
+			deleteCancelEventId: null
 		};
 		this.formatDateL = this.formatDateL.bind(this);
 		this.handleExpandTicketCard = this.handleExpandTicketCard.bind(this);
 	}
 
 	componentDidMount() {
+		this.getEvent();
+	}
+
+	getTickets(event_id) {
+		Bigneon()
+			.events.ticketTypes.index({ event_id })
+			.then(response => {
+				this.setState({ ticket_types_info: response.data.data });
+			})
+			.catch(error => {
+				console.error(error);
+			});
+	}
+
+	formatDateL(date, tz) {
+		return moment
+			.utc(date)
+			.tz(tz)
+			.format("L");
+	}
+
+	handleMenuClick = event => {
+		this.setState({ optionsAnchorEl: event.currentTarget });
+	};
+
+	handleOptionsClose = () => {
+		this.setState({ optionsAnchorEl: null });
+	};
+
+	handleExpandTicketCard(expandedCardId) {
+		this.setState({ expandedCardId: expandedCardId });
+	}
+
+	get cancelMenuItemDisabled() {
+		const { event } = selectedEvent;
+
+		if (event) {
+			if (event.cancelled_at) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	getEvent() {
+		//A bit of a hack, we might not have set the current org ID yet for this admin so keep checking
+		if (!user.currentOrganizationId) {
+			this.timeout = setTimeout(this.updateEvents.bind(this), 100);
+			return;
+		}
+
 		if (
 			this.props.match &&
 			this.props.match.params &&
@@ -333,39 +389,9 @@ class EventOverview extends Component {
 		}
 	}
 
-	getTickets(event_id) {
-		Bigneon()
-			.events.ticketTypes.index({ event_id })
-			.then(response => {
-				this.setState({ ticket_types_info: response.data.data });
-			})
-			.catch(error => {
-				console.error(error);
-			});
-	}
-
-	formatDateL(date, tz) {
-		return moment
-			.utc(date)
-			.tz(tz)
-			.format("L");
-	}
-
-	handleMenuClick = event => {
-		this.setState({ optionsAnchorEl: event.currentTarget });
-	};
-
-	handleOptionsClose = () => {
-		this.setState({ optionsAnchorEl: null });
-	};
-
-	handleExpandTicketCard(expandedCardId) {
-		this.setState({ expandedCardId: expandedCardId });
-	}
-
 	render() {
 		const { classes } = this.props;
-		const { ticket_types_info, expandedCardId } = this.state;
+		const { ticket_types_info, expandedCardId, deleteCancelEventId, isDelete } = this.state;
 		const { event, venue, artists, ticket_types } = selectedEvent;
 
 		if (event === null) {
@@ -380,7 +406,7 @@ class EventOverview extends Component {
 			return <NotFound>Event not found.</NotFound>;
 		}
 
-		const { name, event_start, event_end } = event;
+		const { id, name, event_start, event_end } = event;
 
 		const displayEventStart = this.formatDateL(event_start, venue.timezone);
 		const displayEventEnd = this.formatDateL(event_end, venue.timezone);
@@ -405,7 +431,7 @@ class EventOverview extends Component {
 				text: "Dashboard",
 				onClick: () =>
 					this.props.history.push(
-						`/admin/events/${eventMenuSelected}/dashboard`
+						`/admin/events/${id}/dashboard`
 					),
 				MenuOptionIcon: DashboardIcon
 			},
@@ -429,14 +455,14 @@ class EventOverview extends Component {
 					this.props.history.push(
 						`/admin/events/${eventMenuSelected}/event-overview`
 					),
-				MenuOptionIcon: EditIcon
+				MenuOptionIcon: RemoveRedEye
 			},
 			{
 				text: "Cancel event",
 				disabled: !user.hasScope("event:write") || this.cancelMenuItemDisabled,
 				onClick: () =>
 					this.setState({
-						deleteCancelEventId: eventMenuSelected,
+						deleteCancelEventId: id,
 						isDelete: false
 					}),
 				MenuOptionIcon: CancelIcon
@@ -446,7 +472,7 @@ class EventOverview extends Component {
 				disabled: !user.hasScope("event:write"),
 				onClick: () =>
 					this.setState({
-						deleteCancelEventId: eventMenuSelected,
+						deleteCancelEventId: id,
 						isDelete: true
 					}),
 				MenuOptionIcon: CancelIcon
@@ -455,6 +481,16 @@ class EventOverview extends Component {
 
 		return (
 			<div style={{ padding: 10 }}>
+				<DeleteCancelEventDialog
+					id={deleteCancelEventId}
+					isDelete={isDelete}
+					onClose={() =>
+						this.setState(
+							{ deleteCancelEventId: null, isDelete: false },
+							this.getEvent.bind(this)
+						)
+					}
+				/>
 				<Grid container>
 					<Grid item xs={12} md={9}>
 						<PageHeading iconUrl="/icons/events-multi.svg">{name}</PageHeading>

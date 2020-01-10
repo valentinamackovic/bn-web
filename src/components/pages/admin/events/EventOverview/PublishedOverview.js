@@ -7,12 +7,12 @@ import lineBreakHtmlToPlainText from "../../../../../helpers/lineBreakHtmlToPlai
 import moment from "moment-timezone";
 
 const PublishedOverview = ({ classes, event, timezoneAbbr }) => {
-	const { name, top_line_info, additional_info, status, created_at, publish_date } = event;
+	const { name, top_line_info, additional_info, status, created_at, publish_date, cancelled_at } = event;
 
 	// Top Line col styles
 	const colStyles = [{ flex: 1 }, { flex: 4 }];
 	const publishStatusHeading = moment.utc(publish_date).isBefore(moment.utc()) ? "Published on" : "Future date";
-	const publishStatus = moment.utc(publish_date).isBefore(moment.utc()) ? "Published" : "Draft";
+	const publishStatus = (cancelled_at) ? "Cancelled" : moment.utc(publish_date).isBefore(moment.utc()) ? "Published" : "Draft";
 	const headings = ["Status", publishStatusHeading];
 	const values = [publishStatus, moment(publish_date, "YYYY-MM-DD HH:mm ZZ").format("MM/DD/YYYY HH:mm A") + " " + timezoneAbbr];
 
