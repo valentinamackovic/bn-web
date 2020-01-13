@@ -110,7 +110,7 @@ class TicketSalesChart extends Component {
 
 	render() {
 		const { cubeJsApi } = this.state;
-		const { startDate, endDate } = this.props;
+		const { startDate, endDate, timezone } = this.props;
 		return (
 			<QueryRenderer
 				query={{
@@ -120,7 +120,8 @@ class TicketSalesChart extends Component {
 							dimension: "Orders.paidAt",
 							granularity: "day"
 						}
-					]
+					],
+					timezone
 					// filters: [
 					// 	{
 					// 		dimension: "Orders.paidAt",
@@ -140,7 +141,8 @@ TicketSalesChart.propTypes = {
 	token: PropTypes.string.isRequired,
 	startDate: PropTypes.string,
 	endDate: PropTypes.string.isRequired,
-	cubeApiUrl: PropTypes.string.isRequired
+	cubeApiUrl: PropTypes.string.isRequired,
+	timezone: PropTypes.string.isRequired
 };
 
 export default TicketSalesChart;

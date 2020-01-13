@@ -17,6 +17,7 @@ class TransfersChart extends Component {
 
 	render() {
 		const { cubeJsApi } = this.state;
+		const { timezone } = this.props;
 
 		return (
 			<QueryRenderer
@@ -24,7 +25,8 @@ class TransfersChart extends Component {
 					measures: ["Transfers.count"],
 					timeDimensions: [],
 					dimensions: ["Transfers.status"],
-					filters: []
+					filters: [],
+					timezone
 				}}
 				cubejsApi={cubeJsApi}
 				render={props => (
@@ -37,7 +39,8 @@ class TransfersChart extends Component {
 
 TransfersChart.propTypes = {
 	token: PropTypes.string.isRequired,
-	cubeApiUrl: PropTypes.string.isRequired
+	cubeApiUrl: PropTypes.string.isRequired,
+	timezone: PropTypes.string.isRequired
 };
 
 export default TransfersChart;

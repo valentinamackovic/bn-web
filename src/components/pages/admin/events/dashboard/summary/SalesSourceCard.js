@@ -171,7 +171,7 @@ class SalesSourceCard extends Component {
 	render() {
 		const title = "Sales Source";
 
-		const { classes, token, on_sale, cubeApiUrl, ...rest } = this.props;
+		const { classes, token, venue, cubeApiUrl, ...rest } = this.props;
 		const {
 			selectedTimePeriod,
 			startDate,
@@ -230,6 +230,7 @@ class SalesSourceCard extends Component {
 							token={token}
 							startDate={startDate}
 							endDate={endDate}
+							timezone={venue.timezone}
 						/>
 					</div>
 				</div>
@@ -242,6 +243,7 @@ SalesSourceCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	token: PropTypes.string.isRequired,
 	on_sale: PropTypes.string.isRequired,
+	venue: PropTypes.object.isRequired,
 	cubeApiUrl: PropTypes.string.isRequired
 };
 

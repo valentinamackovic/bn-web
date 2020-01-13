@@ -16,6 +16,7 @@ class AttendanceChart extends Component {
 
 	render() {
 		const { cubeJsApi } = this.state;
+		const { timezone } = this.props;
 		return (
 			<QueryRenderer
 				query={{
@@ -23,7 +24,8 @@ class AttendanceChart extends Component {
 					timeDimensions: [],
 					dimensions: ["Tickets.redeemedStatus"],
 					segments: ["Tickets.purchasedTickets"],
-					filters: []
+					filters: [],
+					timezone
 				}}
 				cubejsApi={cubeJsApi}
 				render={props => (
@@ -36,7 +38,8 @@ class AttendanceChart extends Component {
 
 AttendanceChart.propTypes = {
 	token: PropTypes.string.isRequired,
-	cubeApiUrl: PropTypes.string.isRequired
+	cubeApiUrl: PropTypes.string.isRequired,
+	timezone: PropTypes.string.isRequired
 };
 
 export default AttendanceChart;

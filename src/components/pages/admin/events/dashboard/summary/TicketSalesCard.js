@@ -29,7 +29,7 @@ const styles = theme => {
 	};
 };
 
-const TicketSalesCard = ({ classes, token, on_sale, event_end, cubeApiUrl, ...rest }) => {
+const TicketSalesCard = ({ classes, token, on_sale, event_end, venue, cubeApiUrl, ...rest }) => {
 	const title = "Ticket Sales";
 
 	return (
@@ -42,6 +42,7 @@ const TicketSalesCard = ({ classes, token, on_sale, event_end, cubeApiUrl, ...re
 				<TicketSalesChart
 					cubeApiUrl={cubeApiUrl}
 					token={token}
+					timezone={venue.timezone}
 					endDate={event_end}
 				/>
 			</div>
@@ -54,6 +55,7 @@ TicketSalesCard.propTypes = {
 	token: PropTypes.string.isRequired,
 	on_sale: PropTypes.string.isRequired,
 	event_end: PropTypes.string.isRequired,
+	venue: PropTypes.object.isRequired,
 	cubeApiUrl: PropTypes.string.isRequired
 };
 

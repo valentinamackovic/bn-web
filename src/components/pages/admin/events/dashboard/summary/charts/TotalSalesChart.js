@@ -31,7 +31,7 @@ class TotalSalesChart extends Component {
 
 	render() {
 		const { cubeJsApi } = this.state;
-
+		const { timezone } = this.props;
 		return (
 			<QueryRenderer
 				query={{
@@ -48,7 +48,8 @@ class TotalSalesChart extends Component {
 							operator: "equals",
 							values: ["Paid"]
 						}
-					]
+					],
+					timezone
 				}}
 				cubejsApi={cubeJsApi}
 				render={renderChart(numberRender)}
@@ -58,7 +59,8 @@ class TotalSalesChart extends Component {
 }
 
 TotalSalesChart.propTypes = {
-	token: PropTypes.string.isRequired
+	token: PropTypes.string.isRequired,
+	timezone: PropTypes.string.isRequired
 };
 
 export default TotalSalesChart;

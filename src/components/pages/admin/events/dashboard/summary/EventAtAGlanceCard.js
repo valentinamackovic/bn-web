@@ -133,11 +133,12 @@ const EventAtAGlanceCard = ({
 	sold_held,
 	tickets_open,
 	tickets_held,
-	tickets_redeemed
+	venue
 }) => {
 	const totalSold = sold_held + sold_unreserved;
 	const totalOpen = tickets_open;
 	const totalHeld = tickets_held - sold_held;
+	const timezone = venue.timezone;
 
 	const values = [
 		{ label: "Sold", value: totalSold, color: "#707ced" },
@@ -190,12 +191,14 @@ const EventAtAGlanceCard = ({
 					cubeApiUrl={cubeApiUrl}
 					token={token}
 					startDate={on_sale}
+					timezone={timezone}
 				/>
 
 				<AttendanceChart
 					cubeApiUrl={cubeApiUrl}
 					token={token}
 					startDate={on_sale}
+					timezone={timezone}
 				/>
 			</div>
 		</CollapseCard>
@@ -207,6 +210,7 @@ EventAtAGlanceCard.propTypes = {
 	token: PropTypes.string.isRequired,
 	on_sale: PropTypes.string.isRequired,
 	sales_total_in_cents: PropTypes.number.isRequired,
-	cubeApiUrl: PropTypes.string.isRequired
+	cubeApiUrl: PropTypes.string.isRequired,
+	venue: PropTypes.object.isRequired
 };
 export default withStyles(styles)(EventAtAGlanceCard);

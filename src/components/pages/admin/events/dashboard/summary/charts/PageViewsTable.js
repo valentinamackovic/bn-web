@@ -84,7 +84,7 @@ class PageViewsTable extends Component {
 
 	render() {
 		const { cubeJsApi } = this.state;
-		const { startDate, endDate } = this.props;
+		const { startDate, endDate, timezone } = this.props;
 
 		const filters = [];
 
@@ -127,7 +127,8 @@ class PageViewsTable extends Component {
 					order: {
 						"PageViews.tickets": "desc"
 					},
-					filters
+					filters,
+					timezone
 				}}
 				cubejsApi={cubeJsApi}
 				render={ChartRender(TableRender)}
@@ -140,7 +141,8 @@ PageViewsTable.propTypes = {
 	token: PropTypes.string.isRequired,
 	cubeApiUrl: PropTypes.string.isRequired,
 	startDate: PropTypes.object,
-	endDate: PropTypes.object
+	endDate: PropTypes.object,
+	timezone: PropTypes.string.isRequired
 };
 
 export default PageViewsTable;
