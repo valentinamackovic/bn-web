@@ -30,14 +30,17 @@ const TicketingOverview = ({
 		price_in_cents,
 		visibility,
 		limit_per_person,
-		end_date_type
+		end_date_type,
+		parent_name
 	} = ticket_type;
-	const displayStartDate = start_date
-		? moment
-			.utc(start_date)
-			.tz(timezone)
-			.format("L")
-		: "Immediately";
+	const displayStartDate = parent_name
+		? "When sales end for " + parent_name
+		: start_date
+			? moment
+				.utc(start_date)
+				.tz(timezone)
+				.format("L")
+			: "Immediately";
 	const displayStartTime = start_date
 		? moment
 			.utc(start_date)
@@ -306,7 +309,11 @@ const TicketingOverview = ({
 					)}
 				</Grid>
 
-				<Collapse in={isExpanded} timeout="auto" classes={{ wrapper: classes.noBackground }}>
+				<Collapse
+					in={isExpanded}
+					timeout="auto"
+					classes={{ wrapper: classes.noBackground }}
+				>
 					<Grid container>
 						{description ? (
 							<Grid item xs={12}>

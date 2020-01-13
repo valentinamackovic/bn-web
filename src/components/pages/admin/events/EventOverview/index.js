@@ -391,7 +391,12 @@ class EventOverview extends Component {
 
 	render() {
 		const { classes } = this.props;
-		const { ticket_types_info, expandedCardId, deleteCancelEventId, isDelete } = this.state;
+		const {
+			ticket_types_info,
+			expandedCardId,
+			deleteCancelEventId,
+			isDelete
+		} = this.state;
 		const { event, venue, artists, ticket_types } = selectedEvent;
 
 		if (event === null) {
@@ -429,10 +434,7 @@ class EventOverview extends Component {
 		const eventOptions = [
 			{
 				text: "Dashboard",
-				onClick: () =>
-					this.props.history.push(
-						`/admin/events/${id}/dashboard`
-					),
+				onClick: () => this.props.history.push(`/admin/events/${id}/dashboard`),
 				MenuOptionIcon: DashboardIcon
 			},
 			{
@@ -447,15 +449,6 @@ class EventOverview extends Component {
 				// onClick: () =>
 				// 	this.props.history.push(`/events/${eventMenuSelected}`),
 				MenuOptionIcon: ViewIcon
-			},
-			{
-				text: "Event overview",
-				disabled: !user.hasScope("event:write"),
-				onClick: () =>
-					this.props.history.push(
-						`/admin/events/${eventMenuSelected}/event-overview`
-					),
-				MenuOptionIcon: RemoveRedEye
 			},
 			{
 				text: "Cancel event",
