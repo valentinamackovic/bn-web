@@ -34,7 +34,7 @@ const TicketingOverview = ({
 		parent_name
 	} = ticket_type;
 	const displayStartDate = parent_name
-		? "When sales end for " + parent_name
+		? "When sales end for "
 		: start_date
 			? moment
 				.utc(start_date)
@@ -75,6 +75,7 @@ const TicketingOverview = ({
 		"Quantity",
 		"Price",
 		"Sales start",
+		parent_name ? "Ticket type" : null,
 		start_date ? `start time (${timezoneAbbr})` : null,
 		"sales end",
 		end_date ? `end time (${timezoneAbbr})` : null
@@ -85,6 +86,7 @@ const TicketingOverview = ({
 		available,
 		dollars(price_in_cents),
 		displayStartDate,
+		parent_name,
 		displayStartTime,
 		displayEndDate,
 		displayEndTime
