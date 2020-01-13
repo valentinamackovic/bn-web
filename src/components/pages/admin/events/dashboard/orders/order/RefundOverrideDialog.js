@@ -17,7 +17,6 @@ import SelectGroup from "../../../../../../common/form/SelectGroup";
 import CheckBox from "../../../../../../elements/form/CheckBox";
 import TicketCard from "./TicketCard";
 import Divider from "../../../../../../common/Divider";
-import user from "../../../../../../../stores/user";
 
 const styles = theme => ({
 	content: {
@@ -160,7 +159,7 @@ const refundReasons = [
 	}
 ];
 
-class RefundDialog extends Component {
+class RefundOverrideDialog extends Component {
 	constructor(props) {
 		super(props);
 
@@ -224,18 +223,6 @@ class RefundDialog extends Component {
 		}
 	}
 
-	onOverride = () => {
-		const { onClose, onOverride } = this.props;
-		const { refundSuccessDetails } = this.state;
-		onClose();
-		onOverride();
-
-		if (refundSuccessDetails) {
-			//Reset the dialog content just after it's finished hiding so the user doesn't notice
-			setTimeout(() => this.setState(this.defaultState), 500);
-		}
-	}
-
 	refund() {
 		const { order, items: itemDetails, type } = this.props;
 
@@ -266,14 +253,12 @@ class RefundDialog extends Component {
 		}
 
 		this.setState({ isRefunding: true });
-		const reason = refundReasons.find(function(refund) {
-			return refund.value === reasonVal;
-		}).label;
+		const manual_override = true;
 		Bigneon()
 			.orders.refund({
 				id,
 				items,
-				reason
+				manual_override
 			})
 			.then(response => {
 				const { amount_refunded, refund_breakdown } = response.data;
@@ -522,14 +507,13 @@ class RefundDialog extends Component {
 
 		const refundValues = this.refundValues(order);
 
-		let title = `Issue ${type === "full" ? "full " : ""}refund`;
+		let title = `Refund ${type === "full" ? "full " : ""}Override`;
 		if (refundSuccessDetails) {
 			title = "Refund successful";
 		}
 
 		return (
 			<Dialog
-				iconUrl={"/icons/tickets-white.svg"}
 				open={open}
 				title={title}
 				onClose={this.onClose}
@@ -538,85 +522,14 @@ class RefundDialog extends Component {
 					this.renderSuccessContent()
 				) : (
 					<div className={classes.content}>
-						{type !== "full" ? (
-							<Typography>
-								In order to issue a refund, select the refund amount and refund
-								method below. The refund will be transferred to the ticket
-								purchaser.
+						{type === "items" ? (
+							<Typography align="center">
+								<b>Are you sure you want to process the refund?</b><br/>
+								By processing a refund override, funds will not be returned to the original purchaser.
+								Please ensure funds are returned to the customer from an alternate method.
+								Tickets will be returned to sellable inventory. Reporting will be updated to reflect the refund.
 							</Typography>
 						) : null}
-
-						{type === "full" ? (
-							<React.Fragment>
-								<Hidden smDown>{this.renderDesktopOrderDetails()}</Hidden>
-								<Hidden mdUp>{this.renderMobileOrderDetails()}</Hidden>
-							</React.Fragment>
-						) : null}
-
-						{type === "items" ? (
-							<React.Fragment>
-								<Hidden smDown>{this.renderDesktopOrderItems()}</Hidden>
-								<Hidden mdUp>{this.renderMobileOrderItems()}</Hidden>
-							</React.Fragment>
-						) : null}
-
-						<br/>
-						<Typography className={classes.formLabelText}>
-							Select refund reason
-						</Typography>
-						<SelectGroup
-							name={"reason"}
-							value={reasonVal}
-							onChange={this.onReasonChange.bind(this)}
-							items={refundReasons}
-						/>
-
-						{type === "full" ? (
-							<React.Fragment>
-								<Typography className={classes.formLabelText}>
-									Select refund amount
-								</Typography>
-								<div className={classes.refundAmountBox}>
-									{Object.keys(refundValues).map(key => {
-										const { label, cents } = refundValues[key];
-										const active = selectedRefundType === key;
-
-										return (
-											<div key={key} className={classes.refundAmountRow}>
-												<CheckBox
-													active={active}
-													onClick={() =>
-														this.setState({ selectedRefundType: key })
-													}
-												>
-													{label}
-												</CheckBox>
-												<Typography
-													className={classnames({
-														[classes.valueText]: true,
-														[classes.valueTextActive]: active
-													})}
-												>
-													{dollars(cents)}
-												</Typography>
-											</div>
-										);
-									})}
-								</div>
-							</React.Fragment>
-						) : null}
-
-						{type === "items" ? (
-							<div className={classes.orderTotalRow}>
-								<Typography className={classes.orderTotalRowLabel}>
-									Refund total
-								</Typography>
-								<Typography className={classes.orderTotalRowValue}>
-									{dollars(refundAmountInCents)}
-								</Typography>
-							</div>
-						) : null}
-
 						<div className={classes.actionButtonsContainer}>
 							<Button
 								style={{ marginRight: 5, width: 150 }}
@@ -625,15 +538,6 @@ class RefundDialog extends Component {
 							>
 								Cancel
 							</Button>
-							{(user.isAdmin || user.isSuper) ? (
-								<Button
-									style={{ marginRight: 5, width: 150 }}
-									variant="default"
-									onClick={this.onOverride}
-								>
-									Refund Override
-								</Button>
-							) : null}
 							<Button
 								style={{ marginLeft: 5, width: 150 }}
 								variant="secondary"
@@ -650,11 +554,10 @@ class RefundDialog extends Component {
 	}
 }
 
-RefundDialog.propTypes = {
+RefundOverrideDialog.propTypes = {
 	classes: PropTypes.object.isRequired,
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
-	onOverride: PropTypes.func.isRequired,
 	onSuccess: PropTypes.func.isRequired,
 	items: PropTypes.array.isRequired,
 	order: PropTypes.object.isRequired,
@@ -662,4 +565,4 @@ RefundDialog.propTypes = {
 	type: PropTypes.oneOf(["full", "items"])
 };
 
-export default withStyles(styles)(RefundDialog);
+export default withStyles(styles)(RefundOverrideDialog);
