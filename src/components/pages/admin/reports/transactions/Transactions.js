@@ -42,7 +42,7 @@ const UNLIMITED_LINE_LIMIT = 999999999;
 const formatItems = (data, timezone) => {
 	const items = [];
 	data.forEach(item => {
-		const formattedDate = moment
+		const formattedDate = moment(item.transaction_date)
 			.utc(item.transaction_date)
 			.tz(timezone)
 			.format("MM/DD/YYYY h:mm A");
