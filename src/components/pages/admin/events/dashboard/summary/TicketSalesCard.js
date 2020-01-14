@@ -29,7 +29,15 @@ const styles = theme => {
 	};
 };
 
-const TicketSalesCard = ({ classes, token, on_sale, event_end, venue, cubeApiUrl, ...rest }) => {
+const TicketSalesCard = ({
+	classes,
+	token,
+	on_sale,
+	event_end,
+	venue,
+	cubeApiUrl,
+	...rest
+}) => {
 	const title = "Ticket Sales";
 
 	return (

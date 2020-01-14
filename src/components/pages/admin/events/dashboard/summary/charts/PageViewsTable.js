@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import cubejs from "@cubejs-client/core";
 import { QueryRenderer } from "@cubejs-client/react";
 import PropTypes from "prop-types";
+import Typography from "@material-ui/core/Typography";
 import PageViewsRow from "./PageViewsRow";
 import Loader from "../../../../../../elements/loaders/Loader";
 
@@ -45,13 +46,19 @@ const formatValueFunctions = {
 	}
 };
 
-const TableRender = ({ resultSet }) => {
+const TableRender = ({ resultSet, classes }) => {
+	const rows = resultSet.tablePivot();
+
+	if (rows.length === 0) {
+		return <Typography>No results found</Typography>;
+	}
+
 	return (
 		<div>
 			<PageViewsRow heading>
 				{resultSet.tableColumns().map(c => columnHeadingMap[c.key] || c.title)}
 			</PageViewsRow>
-			{resultSet.tablePivot().map((row, index) => {
+			{rows.map((row, index) => {
 				return (
 					<PageViewsRow key={index} gray={!!(index % 2)}>
 						{Object.keys(row).map(key => {

@@ -7,8 +7,8 @@ import {
 	fontFamilyBold,
 	fontFamilyDemiBold
 } from "../../../../../../config/theme";
-import TransfersChart from "./charts/TransfersChart";
-import AttendanceChart from "./charts/AttendanceChart";
+import ActivityChart from "./charts/ActivityChart";
+// import AttendanceChart from "./charts/AttendanceChart";
 import PropTypes from "prop-types";
 import { dollars } from "../../../../../../helpers/money";
 import EventSummaryCard from "../../EventSummaryCard";
@@ -98,6 +98,11 @@ const styles = theme => {
 			[theme.breakpoints.up("sm")]: {
 				display: "flex"
 			}
+		},
+		innerChartContainer: {
+			flex: 1,
+			display: "flex",
+			flexDirection: "flex-start"
 		}
 	};
 };
@@ -187,19 +192,38 @@ const EventAtAGlanceCard = ({
 			<Hidden mdUp>{breakDownValues}</Hidden>
 
 			<div className={classes.chartContainer}>
-				<TransfersChart
-					cubeApiUrl={cubeApiUrl}
-					token={token}
-					startDate={on_sale}
-					timezone={timezone}
-				/>
-
-				<AttendanceChart
-					cubeApiUrl={cubeApiUrl}
-					token={token}
-					startDate={on_sale}
-					timezone={timezone}
-				/>
+				<div className={classes.innerChartContainer}>
+					<ActivityChart
+						cubeApiUrl={cubeApiUrl}
+						token={token}
+						startDate={on_sale}
+						timezone={timezone}
+						title={"Transfer Activity"}
+						legendKeyMap={{
+							Completed: "Completed Transfers",
+							Pending: "Pending Transfers",
+							Cancelled: "Cancelled Transfers"
+						}}
+						measures={["Transfers.count"]}
+						dimensions={["Transfers.status"]}
+					/>
+				</div>
+				<div className={classes.innerChartContainer}>
+					<ActivityChart
+						cubeApiUrl={cubeApiUrl}
+						token={token}
+						startDate={on_sale}
+						timezone={timezone}
+						title={"Scanning & Attendance"}
+						legendKeyMap={{
+							"Not Redeemed": "Tickets Scanned/Attended",
+							Redeemed: "Remaining/No Show"
+						}}
+						measures={["Tickets.count"]}
+						dimensions={["Tickets.redeemedStatus"]}
+						segments={["Tickets.purchasedTickets"]}
+					/>
+				</div>
 			</div>
 		</CollapseCard>
 	);

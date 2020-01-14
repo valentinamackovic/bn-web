@@ -140,12 +140,9 @@ class SalesSourceCard extends Component {
 				showCustomDateRange = true;
 				break;
 			}
-			case "all":
-			default: {
-				if (on_sale) {
-					startDate = on_sale;
-				}
-			}
+			// case "all":
+			// default: {
+			// }
 		}
 
 		this.setState({
