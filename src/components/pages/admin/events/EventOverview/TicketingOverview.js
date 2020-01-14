@@ -154,32 +154,20 @@ const TicketingOverview = ({
 			</Hidden>
 			{/*DESKTOP*/}
 			<Hidden smDown>
-				<div className={classes.detailsTopRow}>
+				<Grid container>
 					{headings.map((heading, index) =>
 						heading ? (
-							<Typography
-								key={index}
-								style={colStyles[index]}
-								className={classes.smallGreyCapTitle}
-							>
-								{heading}
-							</Typography>
+							<Grid item key={index} xs>
+								<Typography className={classes.smallGreyCapTitle}>
+									{heading}
+								</Typography>
+								<Typography className={classes.smallTitle}>
+									{values[index]}
+								</Typography>
+							</Grid>
 						) : null
 					)}
-				</div>
-				<div className={classes.detailsTopRow}>
-					{values.map((value, index) =>
-						value ? (
-							<Typography
-								key={index}
-								style={colStyles[index]}
-								className={classes.smallTitle}
-							>
-								{value}
-							</Typography>
-						) : null
-					)}
-				</div>
+				</Grid>
 				{description ? (
 					<div>
 						<Divider className={classes.dividerStyle}/>

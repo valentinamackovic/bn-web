@@ -80,11 +80,25 @@ const DetailsOverview = ({
 		""
 	];
 
-	const ageLimit = (age_limit === "18") ? "18 & over" : (age_limit === "21") ? "21 & over" : "All Ages";
+	const ageLimit =
+		age_limit === "18"
+			? "18 & over"
+			: age_limit === "21"
+				? "21 & over"
+				: age_limit === "0"
+					? "All Ages"
+					: age_limit;
 
-	const publishStatus = moment.utc(publish_date).isBefore(moment.utc()) ? "Published" : "Draft";
-	const infoValues = [ageLimit, event_type, private_access_code, publishStatus, " "];
-
+	const publishStatus = moment.utc(publish_date).isBefore(moment.utc())
+		? "Published"
+		: "Draft";
+	const infoValues = [
+		ageLimit,
+		event_type,
+		private_access_code,
+		publishStatus,
+		" "
+	];
 	return (
 		<Card variant={"form"} className={classes.detailsCardStyle}>
 			{/*DESKTOP*/}
