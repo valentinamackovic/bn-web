@@ -345,7 +345,7 @@ class Event extends Component {
 		const { classes } = this.props;
 		const { event } = eventUpdateStore;
 		const hasPublishDate = !!event.publishDate;
-
+		const timezone = event.eventDate._z ? event.eventDate._z : "";
 		return (
 			<div>
 				<FormSubHeading>Publish options</FormSubHeading>
@@ -365,7 +365,7 @@ class Event extends Component {
 						active={hasPublishDate}
 						onClick={() =>
 							eventUpdateStore.updateEvent({
-								publishDate: moment()
+								publishDate: moment().tz(timezone.name)
 							})
 						}
 					>
@@ -459,8 +459,8 @@ class Event extends Component {
 
 				{!shouldUnpublish ? (
 					<Typography className={classes.publishedAt}>
-						Published at{" "}
-						{moment(event.publishDate).format("MM/DD/YYYY hh:mm A z")}
+						{moment.utc(event.publishDate).isBefore(moment.utc()) ? "Published at " : "Scheduled "}
+						{moment(event.publishDate).format("MM/DD/YYYY hh:mm A (z)")}
 					</Typography>
 				) : null}
 			</div>
