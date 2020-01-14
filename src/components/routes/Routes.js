@@ -71,7 +71,7 @@ const AdminEventDashboardSummary = asyncComponent(() =>
 	import("../pages/admin/events/dashboard/Summary")
 );
 const EventOverview = asyncComponent(() =>
-	import("../pages/admin/events/EventOverview/index")
+	import("../pages/admin/events/EventOverview/Index")
 );
 const AdminEventDashboardSummaryV2 = asyncComponent(() =>
 	import("../pages/admin/events/dashboard/Summary_V2")
