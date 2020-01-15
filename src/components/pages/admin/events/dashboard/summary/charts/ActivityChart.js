@@ -157,7 +157,7 @@ const LegendRows = ({ resultSet }) => {
 				color={COLORS_SERIES[index]}
 				label={label}
 				valueLabel={`${value}`}
-				subValueLabel={`${percent}% of Total`}
+				subValueLabel={`${percent}%`}
 			/>
 		);
 	});
