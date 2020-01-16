@@ -1,6 +1,6 @@
 {
 	"name": "bn-web",
-	"version": "1.0.703",
+	"version": "1.0.704",
 	"private": true,
 	"dependencies": {
 		"@cubejs-client/core": "latest",
