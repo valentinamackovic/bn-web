@@ -211,7 +211,7 @@ const bigneon = {
 				const referrer = trackingData.referrer || document.referrer;
 				img.src =
 					baseUrl +
-					`/analytics/track?url=${uri}&client_id=${clientId}&source=${source}&medium=${medium}&referrer=${referrer}&` +
+					`/a/t?url=${uri}&client_id=${clientId}&source=${source}&medium=${medium}&referrer=${referrer}&` +
 					data;
 				document.body.insertBefore(img, document.body.firstChild);
 			});
