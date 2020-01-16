@@ -17,6 +17,7 @@ import {
 import { updateTimezonesInObjects } from "../helpers/time";
 //TODO separate artists and ticketTypes into their own stores
 import user from "./user";
+import cart from "./cart";
 
 const freshEvent = formatEventDataForInputs({});
 
@@ -32,6 +33,9 @@ class EventUpdate {
 
 	@observable
 	disabledExternalEvent = false;
+
+	@observable
+	disablePastDate = false;
 
 	@observable
 	organization = {};
@@ -639,6 +643,7 @@ class EventUpdate {
 		this.ticketTypeActiveIndex = null;
 		this.timezone = "";
 		this.disabledExternalEvent = false;
+		this.disablePastDate = false;
 		this.maxTicketTypeAdditionalFeeInCents = null;
 
 		//this.addTicketType();
@@ -649,9 +654,17 @@ class EventUpdate {
 		Bigneon()
 			.events.dashboard({ id })
 			.then(response => {
-				const { sold_unreserved, sold_held } = response.data.event;
+				const {
+					sold_unreserved,
+					sold_held,
+					tickets_redeemed
+				} = response.data.event;
 				if (sold_unreserved || sold_held) {
 					this.disabledExternalEvent = true;
+				}
+
+				if (sold_held || sold_unreserved || tickets_redeemed) {
+					this.disablePastDate = true;
 				}
 			})
 			.catch(error => {
