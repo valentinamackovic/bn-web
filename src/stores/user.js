@@ -344,7 +344,7 @@ class User {
 	getCampaignTrackingData() {
 		try {
 			const data = JSON.parse(localStorage.getItem("campaignData"));
-			if (data.expiresAt < moment()) {
+			if (moment(data.expiresAt) < moment()) {
 				return {};
 			}
 
@@ -360,6 +360,7 @@ class User {
 	setCampaignTrackingData(data) {
 		let currentData = this.getCampaignTrackingData();
 		currentData = { ...currentData, ...data };
+		currentData.clientId = currentData.clientId || `bn.${Math.random().toString(36).substr(2, 7)}.${Math.random().toString(36).substr(2, 7)}`;
 		currentData.expiresAt = moment().add({ hours: 24 });
 		localStorage.setItem("campaignData", JSON.stringify(currentData));
 	}
