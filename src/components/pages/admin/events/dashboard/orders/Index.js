@@ -126,7 +126,7 @@ class OrderList extends Component {
 				data.forEach(o => {
 					const date = o.paid_at ? o.paid_at : o.date;
 					o.displayDate = date
-						? moment(date)
+						? moment
 							.utc(date)
 							.tz(venueTimeZone)
 							.format("MM/DD/YYYY h:mm A")
