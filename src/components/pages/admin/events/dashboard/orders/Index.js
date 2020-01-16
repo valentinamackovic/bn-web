@@ -108,7 +108,7 @@ class OrderList extends Component {
 
 		const { promoFilterId, ticketTypeFilterId } = this.state;
 		if (promoFilterId) {
-			params.promo_code = promoFilterId;
+			params.promo_code_id = promoFilterId;
 		}
 
 		if (ticketTypeFilterId) {
@@ -125,10 +125,12 @@ class OrderList extends Component {
 				//Set the qty of tickets bought and the formatted date
 				data.forEach(o => {
 					const date = o.paid_at ? o.paid_at : o.date;
-					o.displayDate = date ? moment(date)
-					    .utc(date)
-						.tz(venueTimeZone)
-						.format("MM/DD/YYYY h:mm A") : null;
+					o.displayDate = date
+						? moment(date)
+							.utc(date)
+							.tz(venueTimeZone)
+							.format("MM/DD/YYYY h:mm A")
+						: null;
 
 					o.ticketCount = 0;
 					o.ticketTypeIds = [];
