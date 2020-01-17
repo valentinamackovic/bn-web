@@ -425,7 +425,7 @@ class CheckoutSelection extends Component {
 						cartItems,
 						total
 					);
-					this.props.history.push(`/events/${id}/tickets/confirmation`);
+					this.props.history.push(`/tickets/${id}/tickets/confirmation${window.location.search}`);
 				} else {
 					//They had something in their cart, but they removed and updated
 					this.setState({ isSubmitting: false });

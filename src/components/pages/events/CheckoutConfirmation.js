@@ -174,12 +174,13 @@ class CheckoutConfirmation extends Component {
 				amount: 0,
 				method: {
 					type: "Free"
+				},
+				tracking_data: {
+					...user.getCampaignTrackingData(),
+					...getAllUrlParams()
 				}
 			})
-			.then((response) => {
-				cart.refreshCart();
-				orders.refreshOrders();
-				tickets.refreshTickets();
+			.then(response => {
 
 				const { data } = response;
 				const { history } = this.props;
@@ -187,14 +188,22 @@ class CheckoutConfirmation extends Component {
 				const { slug } = event;
 				analytics.purchaseCompleted(
 					event.id,
-					getAllUrlParams(),
+					{ ...user.getCampaignTrackingData(),  ...getAllUrlParams() },
 					"USD",
 					cartItems,
 					0
 				);
+				cart.refreshCart();
+				orders.refreshOrders();
+				tickets.refreshTickets();
+ 				user.clearCampaignTrackingData();
+
 				if (id) {
 					//If they're checking out for a specific event then we have a custom success page for them
-					history.push(`/tickets/${slug}/tickets/success?order_id=${data.id}`);
+					history.push(
+						`/tickets/${slug}/tickets/success${window.location.search ||
+							"?"}&order_id=${data.id}`
+					);
 				} else {
 					history.push(`/`); //TODO go straight to tickets when route is available
 				}
@@ -242,7 +251,10 @@ class CheckoutConfirmation extends Component {
 		Bigneon()
 			.cart.checkout({
 				method: method,
-				tracking_data: user.getCampaignTrackingData()
+				tracking_data: {
+					...user.getCampaignTrackingData(),
+					...getAllUrlParams()
+				}
 			})
 			.then(response => {
 				const { data } = response;
@@ -251,24 +263,28 @@ class CheckoutConfirmation extends Component {
 					return;
 				}
 
-				cart.refreshCart();
-				orders.refreshOrders();
-				tickets.refreshTickets();
-				user.clearCampaignTrackingData();
-
 				const { history } = this.props;
 				const { id, event } = selectedEvent;
 				const { slug } = event;
 				analytics.purchaseCompleted(
 					event.id,
-					getAllUrlParams(),
+					{ ...user.getCampaignTrackingData(),  ...getAllUrlParams() },
 					"USD",
 					cartItems,
 					total
 				);
+
+				cart.refreshCart();
+				orders.refreshOrders();
+				tickets.refreshTickets();
+				user.clearCampaignTrackingData();
+
 				if (id) {
 					//If they're checking out for a specific event then we have a custom success page for them
-					history.push(`/tickets/${slug}/tickets/success?order_id=${data.id}`);
+					history.push(
+						`/tickets/${slug}/tickets/success${window.location.search ||
+							"?"}&order_id=${data.id}`
+					);
 				} else {
 					history.push(`/`); //TODO go straight to tickets when route is available
 				}
@@ -340,7 +356,7 @@ class CheckoutConfirmation extends Component {
 				<div className={classes.ticketLineTotalContainer}>
 					<TicketLineTotal
 						col1={(
-							<Link to={`/events/${id}/tickets`}>
+							<Link to={`/tickets/${id}/tickets${window.location.search}`}>
 								<span className={classes.backLink}>Change tickets</span>
 							</Link>
 						)}
@@ -403,7 +419,9 @@ class CheckoutConfirmation extends Component {
 		}
 
 		if (cartExpired) {
-			return <Redirect to={`/events/${id}/tickets`}/>;
+			return (
+				<Redirect to={`/tickets/${id}/tickets${window.location.search}`}/>
+			);
 		}
 
 		const sharedContent = (

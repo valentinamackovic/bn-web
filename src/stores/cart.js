@@ -2,6 +2,7 @@ import { observable, computed, action } from "mobx";
 import notifications from "./notifications";
 import Bigneon from "../helpers/bigneon";
 import user from "./user";
+import getAllUrlParams from "../helpers/getAllUrlParams";
 
 const itemListToSave = selectedTickets => {
 	const ticketIds = Object.keys(selectedTickets);
@@ -133,7 +134,10 @@ class Cart {
 			.cart.update({
 				items,
 				redemption_code: this.redemptionCode,
-				tracking_data: user.getCampaignTrackingData()
+				tracking_data: {
+					...user.getCampaignTrackingData(),
+					...getAllUrlParams()
+				}
 			})
 			.then(response => {
 				const { data } = response;
@@ -156,7 +160,10 @@ class Cart {
 			.cart.replace({
 				items,
 				redemption_code: this.redemptionCode,
-				tracking_data: user.getCampaignTrackingData()
+				tracking_data: {
+					...user.getCampaignTrackingData(),
+					...getAllUrlParams()
+				}
 			})
 			.then(response => {
 				const { data } = response;
