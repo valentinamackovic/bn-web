@@ -10,6 +10,7 @@ import PropTypes from "prop-types";
 import classnames from "classnames";
 import MoreHorizIcon from "@material-ui/icons/MoreHoriz";
 
+import Bigneon from "../../../../../../../helpers/bigneon";
 import Card from "../../../../../../elements/Card";
 import {
 	fontFamilyDemiBold,
@@ -22,6 +23,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import MobileOptionsControlDialog from "../../../../../../elements/MobileOptionsControlDialog";
 import notification from "../../../../../../../stores/notifications";
 import RefundDialog from "./RefundDialog";
+import RefundOverrideDialog from "./RefundOverrideDialog";
 import user from "../../../../../../../stores/user";
 import RefundBottomBar from "./RefundBottomBar";
 import Divider from "../../../../../../common/Divider";
@@ -142,7 +144,8 @@ class OrderItems extends Component {
 			mobileOptionsControlOpen: false,
 
 			showRefundType: null,
-			refundAmountInCents: 0
+			showRefundOverrideType: null,
+			refundAmountInCents: null
 		};
 
 		this.toggleShowOrderDetails = this.toggleShowOrderDetails.bind(this);
@@ -153,21 +156,43 @@ class OrderItems extends Component {
 	}
 
 	resendConfirmationEmail() {
-		//TODO
-		setTimeout(() => {
-			notification.show({
-				message: "Not yet implemented",
-				variant: "warning"
+		const { order } = this.props;
+		const orderId = order.id;
+		Bigneon()
+			.orders.resendOrderConfirmation({
+				id: orderId
+			})
+			.then(response => {
+				notification.show({
+					message: "Resent order confirmation",
+					variant: "success"
+				});
+			})
+			.catch(error => {
+				notification.showFromErrorResponse({
+					error,
+					defaultMessage: "Failed to resend order confirmation."
+				});
+			})
+			.finally(() => {
+				this.setState({
+					mobileOptionsControlOpen: false
+				});
+				this.props.refreshOrder();
 			});
-
-			this.setState({ mobileOptionsControlOpen: false });
-
-			this.props.refreshOrder();
-		}, 0);
 	}
 
 	onRefundDialogClose() {
 		this.setState({ showRefundType: null });
+		this.props.refreshOrder();
+	}
+
+	onRefundOverrideDialogOpen() {
+		this.setState({ showRefundOverrideType: "items" });
+	}
+
+	onRefundOverrideDialogClose() {
+		this.setState({ showRefundOverrideType: null });
 		this.props.refreshOrder();
 	}
 
@@ -279,10 +304,10 @@ class OrderItems extends Component {
 		const { selectedRefundOrderItem } = this.state;
 
 		const colStyles = [
-			{ flex: 4 },
 			{ flex: 3 },
 			{ flex: 3 },
 			{ flex: 3 },
+			// { flex: 3 },
 			{ flex: 1 },
 			{ flex: 2 },
 			{ flex: 2 }
@@ -295,7 +320,7 @@ class OrderItems extends Component {
 						"Ticket #",
 						"Attendee",
 						"Ticket type",
-						"Code",
+						// "Code",
 						"QTY",
 						"Total",
 						"Status"
@@ -351,7 +376,8 @@ class OrderItems extends Component {
 			mobileOptionsControlOpen,
 			showRefundType,
 			refundAmountInCents,
-			selectedRefundOrderItem
+			selectedRefundOrderItem,
+			showRefundOverrideType
 		} = this.state;
 
 		const {
@@ -394,8 +420,7 @@ class OrderItems extends Component {
 
 		const orderControlOptions = [];
 
-		//TODO when api endpoint is ready use correct permission
-		if (user.isAdmin) {
+		if (user.hasScope("order:resend-confirmation"))  {
 			orderControlOptions.push({
 				label: "Resend Confirmation Email",
 				onClick: this.resendConfirmationEmail.bind(this)
@@ -420,7 +445,8 @@ class OrderItems extends Component {
 				<span/>
 			);
 
-		const venueDisplayName = `${venue.name}, ${venue.address}, ${venue.city}`;
+		// const venueDisplayName = `${venue.name}, ${venue.address}, ${venue.city}`;
+		const venueDisplayName = `${venue.name}`;
 
 		return (
 			<React.Fragment>
@@ -430,6 +456,22 @@ class OrderItems extends Component {
 					items={items}
 					order={order}
 					type={showRefundType}
+					selectedRefundOrderItem={selectedRefundOrderItem}
+					onSuccess={() =>
+						this.setState(
+							{ selectedRefundOrderItem: {} },
+							this.setRefundAmount.bind(this)
+						)
+					}
+					onOverride={this.onRefundOverrideDialogOpen.bind(this)}
+				/>
+
+				<RefundOverrideDialog
+					open={!!showRefundOverrideType}
+					onClose={this.onRefundOverrideDialogClose.bind(this)}
+					items={items}
+					order={order}
+					type={showRefundOverrideType}
 					selectedRefundOrderItem={selectedRefundOrderItem}
 					onSuccess={() =>
 						this.setState(

@@ -35,6 +35,7 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 	private static String NOTE_TEXT = "Custom Note Text";
 	private String ticketTypeName = "VIP";
 	private Purchase purchase;
+	private final RefundReason refundReason = RefundReason.UNABLE_TO_ATTEND;
 
 	/**
 	 * Test for guest search on guest page task task #1769
@@ -186,7 +187,7 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 		orderManageFacade.whenUserSelectsPurchasedStatusTicketForRefund();
 		orderManageFacade.whenUserClicksOnRefundButton();
 		orderManageFacade.thenRefundDialogShouldBeVisible();
-		orderManageFacade.whenUserSelectRefundReasonAndClicksOnConfirmButton(RefundReason.UNABLE_TO_ATTEND);
+		orderManageFacade.whenUserSelectRefundReasonAndClicksOnConfirmButton(refundReason);
 		orderManageFacade.thenRefundDialogShouldBeVisible();
 		orderManageFacade.whenUserClicksOnGotItButtonOnRefundSuccessDialog();
 		
@@ -248,9 +249,8 @@ public class OrderManagmentSearchForOrdersStepsIT extends BaseSteps {
 		boolean isTherePurchasedHistoryItem =  orderManageFacade.thenThereShouldBePurchasedHistoryItemWithNumberOfPurchases(customerOne, purchase, 3);
 		Assert.assertTrue(isTherePurchasedHistoryItem);
 		TicketType ticketType = event.getTicketTypes().stream().filter(tt->tt.getTicketTypeName().equals(ticketTypeName)).findFirst().get();
-		boolean isDataValid = orderManageFacade.whenUserExpandsActivityItemAndChecksValidityOfData(purchase, MULTIPLE_PURCHASE_QTY_FOR_ONE_USER, ticketType);
-		Assert.assertTrue(isDataValid, "Activity Item data invalid");
-		boolean isRefundDataValid = orderManageFacade.whenUserExpandsRefundedHistoryItemAndChecksData(purchase, 1, ticketType);
+		orderManageFacade.whenUserExpandsActivityItemAndChecksValidityOfData(purchase, MULTIPLE_PURCHASE_QTY_FOR_ONE_USER, ticketType);
+		boolean isRefundDataValid = orderManageFacade.whenUserExpandsRefundedHistoryItemAndChecksData(purchase, 1, ticketType,refundReason);
 		Assert.assertTrue(isRefundDataValid, "Refunded history item data invalid");
 		loginFacade.logOut();
 		

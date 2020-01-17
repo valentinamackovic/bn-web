@@ -21,7 +21,8 @@ export const settingsFactory = () => {
 			supportFAQLink: process.env.REACT_APP_SUPPORT_FAQ_LINK,
 			submitSupportLink: process.env.REACT_APP_NEW_SUPPORT_LINK,
 			appStoreIos: process.env.REACT_APP_STORE_IOS,
-			appStoreAndroid: process.env.REACT_APP_STORE_ANDROID
+			appStoreAndroid: process.env.REACT_APP_STORE_ANDROID,
+			cubeApiUrl: process.env.REACT_APP_CUBE_API_URL || "http://localhost:4000"
 			//TODO add all process.env variables here
 		};
 

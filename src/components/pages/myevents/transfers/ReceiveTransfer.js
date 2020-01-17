@@ -130,7 +130,7 @@ const styles = theme => ({
 		[theme.breakpoints.down("sm")]: {
 			justifyContent: "space-between",
 			padding: 35,
-			paddingTop: "40%"
+			paddingTop: "30%"
 		}
 	},
 	additionalText: {
@@ -142,6 +142,15 @@ const styles = theme => ({
 		fontFamily: fontFamilyDemiBold,
 		textAlign: "center",
 		margin: "30px auto 0 auto"
+	},
+	logo: {
+		width: 55,
+		marginBottom: theme.spacing.unit * 5
+	},
+	acceptedMsgContainer: {
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center"
 	}
 });
 
@@ -473,14 +482,41 @@ class ReceiveTransfer extends Component {
 
 		if (transferStatus === "Completed") {
 			explainer = (
-				<div>
+				<div className={classes.acceptedMsgContainer}>
+					<img
+						className={classes.logo}
+						alt="Big Neon Logo"
+						src={servedImage("/images/bn-logo-white.png")}
+					/>
 					<Typography className={classes.backgroundText}>
-						This ticket transfer is no longer valid.
+						Looks like this transfer has been accepted - just login to the Big
+						Neon app to get it!
 					</Typography>
-					<br/>
-					<Typography className={classes.backgroundTextSmall}>
-						Contact the sender if you believe there was a mistake.
-					</Typography>
+				</div>
+			);
+			buttonLink = (
+				<div>
+					<Hidden smUp>
+						<Button
+							size={"mediumLarge"}
+							variant={"whiteCTA"}
+							style={{ width: "100%", marginTop: 40 }}
+							onClick={this.handleViewTicketsClick}
+						>
+							View Tickets
+						</Button>
+					</Hidden>
+					<Hidden smDown>
+						<Link to={"/login"}>
+							<Button
+								size={"mediumLarge"}
+								variant={"whiteCTA"}
+								style={{ width: "100%", marginTop: 40 }}
+							>
+								View Tickets
+							</Button>
+						</Link>
+					</Hidden>
 				</div>
 			);
 		} else if (transferStatus === "Cancelled") {

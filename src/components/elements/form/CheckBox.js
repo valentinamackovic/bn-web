@@ -34,6 +34,10 @@ const styles = theme => {
 			backgroundColor: "#ffffff",
 			borderColor: "#d1d1d1"
 		},
+		whiteDarkerBorder: {
+			backgroundColor: "#ffffff",
+			borderColor: "#9da3b4"
+		},
 		activeSquare: {
 			backgroundImage: "linear-gradient(229deg, #e53d96, #5491cc)",
 			marginRight: theme.spacing.unit,
@@ -134,7 +138,7 @@ CheckBox.propTypes = {
 	onClick: PropTypes.func,
 	disabled: PropTypes.bool,
 	style: PropTypes.object,
-	variant: PropTypes.oneOf(["default", "white"]),
+	variant: PropTypes.oneOf(["default", "white", "whiteDarkerBorder"]),
 	size: PropTypes.oneOf(["small", "medium"])
 };
 

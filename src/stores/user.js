@@ -394,7 +394,7 @@ class User {
 
 	@computed
 	get isAdmin() {
-		return this.globalRoles.indexOf("Admin") > -1;
+		return this.globalRoles.indexOf("Admin") > -1 || this.isSuper;
 	}
 
 	@computed
@@ -574,6 +574,20 @@ class User {
 	@computed
 	get hasEventPromoCodesReport() {
 		if (this.isAdmin) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@computed
+	get hasEventAnnouncements() {
+		if (
+			this.isAdmin ||
+			this.isOrgOwner ||
+			this.isOrgAdmin ||
+			this.isOrgMember
+		) {
 			return true;
 		}
 

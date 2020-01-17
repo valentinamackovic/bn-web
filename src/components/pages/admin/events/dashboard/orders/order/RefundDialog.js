@@ -17,6 +17,7 @@ import SelectGroup from "../../../../../../common/form/SelectGroup";
 import CheckBox from "../../../../../../elements/form/CheckBox";
 import TicketCard from "./TicketCard";
 import Divider from "../../../../../../common/Divider";
+import user from "../../../../../../../stores/user";
 
 const styles = theme => ({
 	content: {
@@ -216,6 +217,18 @@ class RefundDialog extends Component {
 		const { onClose } = this.props;
 		const { refundSuccessDetails } = this.state;
 		onClose();
+
+		if (refundSuccessDetails) {
+			//Reset the dialog content just after it's finished hiding so the user doesn't notice
+			setTimeout(() => this.setState(this.defaultState), 500);
+		}
+	}
+
+	onOverride = () => {
+		const { onClose, onOverride } = this.props;
+		const { refundSuccessDetails } = this.state;
+		onClose();
+		onOverride();
 
 		if (refundSuccessDetails) {
 			//Reset the dialog content just after it's finished hiding so the user doesn't notice
@@ -612,6 +625,15 @@ class RefundDialog extends Component {
 							>
 								Cancel
 							</Button>
+							{(user.isAdmin || user.isSuper) ? (
+								<Button
+									style={{ marginRight: 5, width: 150 }}
+									variant="default"
+									onClick={this.onOverride}
+								>
+									Refund Override
+								</Button>
+							) : null}
 							<Button
 								style={{ marginLeft: 5, width: 150 }}
 								variant="secondary"
@@ -632,6 +654,7 @@ RefundDialog.propTypes = {
 	classes: PropTypes.object.isRequired,
 	open: PropTypes.bool.isRequired,
 	onClose: PropTypes.func.isRequired,
+	onOverride: PropTypes.func.isRequired,
 	onSuccess: PropTypes.func.isRequired,
 	items: PropTypes.array.isRequired,
 	order: PropTypes.object.isRequired,

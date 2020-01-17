@@ -80,11 +80,12 @@ class AffiliateLinkGeneratorDialog extends React.Component {
 				content
 			})
 			.then(response => {
-				const { link } = response.data;
+				const { link, long_link: longLink } = response.data;
 
 				this.setState({
 					isSubmitting: false,
-					shortLink: link
+					shortLink: link,
+					longLink
 				});
 			})
 			.catch(error => {
@@ -107,17 +108,17 @@ class AffiliateLinkGeneratorDialog extends React.Component {
 	}
 
 	renderShortLink() {
-		const { shortLink, linkCopied } = this.state;
+		const { shortLink, longLink,  linkCopied } = this.state;
 
-		if (!shortLink) {
+		if (!shortLink && !longLink) {
 			return null;
 		}
 
 		const linkComponent = (
 			<InputGroup
 				InputProps={{ style: { color: secondaryHex } }}
-				value={shortLink}
-				name="shortLink"
+				value={longLink}
+				name="longLink"
 				label={"Use this link to track your campaign:"}
 				type="text"
 				onChange={e => {}}

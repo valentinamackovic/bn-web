@@ -35,6 +35,17 @@ public class AccessabilityUtil {
 		return text.trim();
 	}
 	
+	public List<String> getTextOfElements(List<WebElement> elements){
+		if (elements == null) {
+			throw new IllegalArgumentException("List passed to getTextOfElements method is null");
+		}
+		List<String> retVal = new ArrayList<>(elements.size());
+		for(WebElement el : elements) {
+			retVal.add(getTextOfElement(el));
+		}
+		return retVal;
+	}
+	
 	public String getTextOfElement(WebElement element) {
 		return element.getText().trim();
 	}
@@ -130,6 +141,22 @@ public class AccessabilityUtil {
 		}
 		return Double.parseDouble(text.trim());
 	}
+	
+	public BigDecimal getBigDecimalAmount(WebElement element, String oldChar, String newChar) {
+		String text = ProjectUtils.getTextForElementAndReplace(element, oldChar, newChar);
+		if (text.isEmpty()) {
+			return null;
+		}
+		return new BigDecimal(text);
+	}
+
+	public BigDecimal getBigDecimalAmount(WebElement parent, String relativeChildXpath) {
+		if (!isChildElementVisibleFromParentLocatedBy(parent, By.xpath(relativeChildXpath), 3)) {
+			return null;
+		}
+		WebElement el = getChildElementFromParentLocatedBy(parent, By.xpath(relativeChildXpath));
+		return getBigDecimalAmount(el, "$", "");
+	}
 
 	public boolean refreshElement(WebElement toBeRefreshed) {
 		try {
@@ -164,6 +191,12 @@ public class AccessabilityUtil {
 			retVal = false;
 		}
 		return retVal;
+	}
+	
+	public void clearInputFields(WebElement... inputFields) {
+		for(WebElement el : inputFields) {
+			clearInputField(el);
+		}
 	}
 
 	public void clearInputField(WebElement inputField) {

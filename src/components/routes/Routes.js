@@ -54,9 +54,7 @@ const AdminOrganization = asyncComponent(() =>
 const AdminVenuesList = asyncComponent(() =>
 	import("../pages/admin/venues/List")
 );
-const AdminVenue = asyncComponent(() =>
-	import("../pages/admin/venues/Venue")
-);
+const AdminVenue = asyncComponent(() => import("../pages/admin/venues/Venue"));
 const AdminRegionsList = asyncComponent(() =>
 	import("../pages/admin/regions/List")
 );
@@ -71,6 +69,9 @@ const AdminEventsList = asyncComponent(() =>
 );
 const AdminEventDashboardSummary = asyncComponent(() =>
 	import("../pages/admin/events/dashboard/Summary")
+);
+const AdminEventDashboardSummaryV2 = asyncComponent(() =>
+	import("../pages/admin/events/dashboard/Summary_V2")
 );
 const AdminEventDashboardHolds = asyncComponent(() =>
 	import("../pages/admin/events/dashboard/holds/List")
@@ -151,6 +152,7 @@ import WidgetLinkBuilder from "../widgets/LinkBuilder";
 import analytics from "../../helpers/analytics";
 import getAllUrlParams from "../../helpers/getAllUrlParams";
 import Meta from "./Meta";
+import decodeJWT from "../../helpers/decodeJWT";
 
 const PrivateRoute = ({ component: Component, isAuthenticated, ...rest }) => {
 	//If isAuthenticated is null then we're still checking the state
@@ -180,8 +182,25 @@ class Routes extends Component {
 		if (startLoadTime) {
 			analytics.trackPageLoadTime(Date.now() - startLoadTime);
 		}
+		const { access_token, refresh_token, ...params } = getAllUrlParams();
+		if (access_token && refresh_token) {
+			try {
+				//Attempt to decode these, if they are not valid do not store them.
+				decodeJWT(access_token);
+				decodeJWT(refresh_token);
+				localStorage.setItem("access_token", access_token);
+				localStorage.setItem("refresh_token", refresh_token);
+				user.refreshUser();
+			}catch(e) {
+				console.error("Invalid access / refresh token provided");
+			}
+
+		}
 		// store url params data for campaign tracking
-		user.setCampaignTrackingData({ referrer: document.referrer});
+		user.setCampaignTrackingData({
+			referrer: document.referrer,
+			...params
+		});
 	}
 
 	componentDidCatch(error, errorInfo) {
@@ -433,6 +452,12 @@ class Routes extends Component {
 									exact
 									path="/admin/events/:id/dashboard"
 									component={AdminEventDashboardSummary}
+									isAuthenticated={isAuthenticated}
+								/>
+								<PrivateRoute
+									exact
+									path="/admin/events/:id/dashboard_v2"
+									component={AdminEventDashboardSummaryV2}
 									isAuthenticated={isAuthenticated}
 								/>
 								<PrivateRoute

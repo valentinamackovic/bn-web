@@ -48,7 +48,10 @@ class SingleOrder extends Component {
 		this.state = {
 			...this.defaultState,
 			eventId: this.props.match.params.eventId,
-			orderId: this.props.match.params.orderId
+			orderId: this.props.match.params.orderId,
+			eventName: null,
+			salesStartStringUtc: null,
+			venueTimeZone: null
 		};
 
 		this.refreshOrder = this.loadAll.bind(this);
@@ -56,6 +59,21 @@ class SingleOrder extends Component {
 	}
 
 	componentDidMount() {
+		const { eventId } = this.state;
+
+		Bigneon()
+			.events.read({ id: eventId })
+			.then(response => {
+				const { name, publish_date, venue } = response.data;
+				this.setState({
+					eventName: name,
+					salesStartStringUtc: publish_date,
+					venueTimeZone: venue.timezone
+				});
+			})
+			.catch(error => {
+				console.error(error);
+			});
 		this.loadAll();
 	}
 
@@ -96,9 +114,10 @@ class SingleOrder extends Component {
 
 					const { event_start, venue } = data;
 
-					const displayDate = moment(event_start)
+					const displayDate = moment
+						.utc(event_start)
 						.tz(venue.timezone)
-						.format("ddd, MMM DD, YYYY");
+						.format("llll");
 
 					this.setState({
 						eventDetails: { ...data, displayDate }
@@ -137,10 +156,12 @@ class SingleOrder extends Component {
 						this.setState({ eventId: orderEventId });
 					}
 
-					const { timezone } = this.props;
-					const displayDate = moment(date)
-						.tz(timezone)
-						.format("MM/DD/YYYY h:mm A z");
+					const { venueTimeZone } = this.state;
+
+					const displayDate = date ? moment(date)
+						.utc(date)
+						.tz(venueTimeZone)
+						.format("YYYY/DD/MM HH:mm A z") : null;
 
 					const platform = is_box_office ? "Box office" : data.platform || "";
 
@@ -210,12 +231,15 @@ class SingleOrder extends Component {
 			.then(response => {
 				const { data } = response.data;
 
+				const { venueTimeZone } = this.state;
+
 				const orderHistory = data.map(item => {
-					const { occurred_at } = item;
-					const occurredAt = occurred_at
-						? moment
-							.utc(occurred_at)
-							.tz(timezone)
+					const { occurred_at, paid_at } = item;
+					const date = paid_at ? paid_at : occurred_at;
+					const occurredAt = date
+						? moment(date)
+							.utc(date)
+						    .tz(venueTimeZone)
 							.format("llll")
 						: "-";
 

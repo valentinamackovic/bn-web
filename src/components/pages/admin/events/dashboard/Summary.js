@@ -129,10 +129,11 @@ class Summary extends Component {
 		Bigneon()
 			.events.dashboard({ id })
 			.then(response => {
-				const { day_stats, event, venue } = response.data;
+				const { day_stats, event, cube_js_token } = response.data;
 
 				this.setState({
 					event,
+					cube_js_token,
 					dayStats: day_stats,
 					chartValues: this.getDailyBreakdownValues(day_stats),
 					daysLeft: Math.max(
@@ -333,7 +334,7 @@ class Summary extends Component {
 			return (
 				<Container
 					eventId={event.id}
-					subheading={"summary"}
+					subheading={"summary_old"}
 					layout={"childrenInsideCard"}
 				>
 					<Grid
@@ -356,7 +357,7 @@ class Summary extends Component {
 			return (
 				<Container
 					eventId={event.id}
-					subheading={"summary"}
+					subheading={"summary_old"}
 					layout={"childrenInsideCard"}
 				>
 					{this.renderBarChart()}

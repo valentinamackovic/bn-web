@@ -28,12 +28,14 @@ public class ProjectUtils {
 	public static final String CONCATINATED_DATE_FORMAT = "MMddyyyy";
 	public static final String ADMIN_EVENT_DATE_TIME_FORMAT = "EEEE, MMMM d yyyy h:mm a";
 	public static final String ADMIN_EVENT_MANAGE_ORDERS_ORDER_ROW = "MM/dd/yyyy h:mm a";
-	public static final String SUCCESS_PURCHASE_PAGE_DATE_FORMAT = "EEE, MMM dd, yyyy h:mm a z";
+	public static final String EVENT_RESULT_SUMMARY_DATE_TIME_FORMAT = "MMM d EEE, h:mm a";
+	public static final String SUCCESS_PURCHASE_PAGE_DATE_FORMAT = "EEE, MMM d, yyyy h:mm a z";
 	public static final String MANAGE_ORDER_HISTORY_ITEM_DATE_FORMAT = "EEE, MMM d, yyyy h:mm a";
 	public static final String REPORTS_BOX_OFFICE_TITLE_DATE_FORMAT = "MMM dd, yyyy";
 	public static final String REPORTS_BOX_OFFICE_OPERATOR_TABLE_DATE = "MM/dd/yyyy h:mm a, z";
 	public static final String DATE_PICKER_MONTH_YEAR_FORMAT = "MMMM yyyy";
 	public static final String RESOURCE_IMAGE_PATH = "src/test/resources/images/";
+	public static final String CSS_REQUIRED_FIELD_COLOR = "rgba(244, 67, 54, 1)";
 
 	public static Integer generateRandomInt(int size) {
 		Random random = new Random();
@@ -281,5 +283,11 @@ public class ProjectUtils {
 		}
 		
 		return retVal;
+	}
+	
+	public static boolean isMatch(String pattern, String text) {
+		Pattern p = Pattern.compile(pattern);
+		Matcher matcher = p.matcher(text);
+		return matcher.find();
 	}
 }

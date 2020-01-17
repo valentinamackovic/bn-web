@@ -49,6 +49,9 @@ const styles = theme => ({
 	},
 	desktopHeadingText: {
 		fontFamily: fontFamilyDemiBold
+	},
+	desktopCTAButtonContainer: {
+		display: "flex"
 	}
 });
 
@@ -488,7 +491,11 @@ class CodeList extends Component {
 				eventId={this.eventId}
 				subheading={"tools"}
 				layout={"childrenInsideCard"}
-				additionalDesktopMenuContent={<div>{createButtonsArray}</div>}
+				additionalDesktopMenuContent={(
+					<div className={classes.desktopCTAButtonContainer}>
+						{createButtonsArray}
+					</div>
+				)}
 			>
 				<div style={{ display: "flex", justifyContent: "space-between" }}>
 					<div>
@@ -514,7 +521,7 @@ class CodeList extends Component {
 					onClick={e => this.onAddCode("discount")}
 					style={{ marginRight: 5, flex: 1 }}
 				>
-					New Discount Code
+					New&nbsp;Discount&nbsp;Code
 				</Button>
 			) : null,
 			user.hasScope("code:write") ? (
@@ -524,7 +531,7 @@ class CodeList extends Component {
 					onClick={e => this.onAddCode("access")}
 					style={{ marginLeft: 5, flex: 1 }}
 				>
-					New Access Code
+					New&nbsp;Access&nbsp;Code
 				</Button>
 			) : null
 		];

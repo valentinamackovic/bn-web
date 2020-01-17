@@ -18,14 +18,10 @@ public class CreateFixtures extends BaseSteps {
 		fs.getLoginFacade().givenAdminUserIsLogedIn(user);
 		if (!fs.getOrganizationFacade().isOrganizationPresent(org)) {
 			fs.getOrganizationFacade().createOrganization(org);
-			fs.getOrganizationFacade().givenUserIsOnOrganizationsPage();
-			fs.getOrganizationFacade().whenUserPicksOrganizationAndClickOnEdit(org);
-			fs.getOrganizationFacade().updateSteps(org);
-		} else {
-			fs.getOrganizationFacade().givenUserIsOnOrganizationsPage();
-			fs.getOrganizationFacade().whenUserPicksOrganizationAndClickOnEdit(org);
-			fs.getOrganizationFacade().updateSteps(org);
 		}
+		fs.getOrganizationFacade().givenUserIsOnOrganizationsPage();
+		fs.getOrganizationFacade().whenUserPicksOrganizationAndClickOnEdit(org);
+		fs.getOrganizationFacade().updateSteps(org, true, true);
 		fs.getLoginFacade().logOut();
 	}
 	
@@ -43,7 +39,7 @@ public class CreateFixtures extends BaseSteps {
 		fp.getLoginFacade().givenAdminUserIsLogedIn(user);
 		fp.getVenueFacade().givenUserIsOnVenuesPage();
 		if (fp.getVenueFacade().isVenueAlreadyCreated(venue)) {
-			fp.getVenueFacade().venueUpdateSteps(venue);
+			fp.getVenueFacade().venueUpdateSteps(venue, false);
 		} else {
 			fp.getVenueFacade().venueCreateSteps(venue);
 		}
@@ -53,13 +49,15 @@ public class CreateFixtures extends BaseSteps {
 	@DataProvider(name = "venue_data")
 	public static Object[][] venuesData(){
 		Venue venueEST = Venue.generateVenueFromJson(DataConstants.VENUE_EST);
-		Venue venueJST = Venue.generateVenueFromJson(DataConstants.VENUE_JST);
-		Venue venueSAST = Venue.generateVenueFromJson(DataConstants.VENUE_SAST);
+		Venue venueJST = Venue.generateVenueFromJson(DataConstants.VENUE_PST);
+		Venue venueCST = Venue.generateVenueFromJson(DataConstants.VENUE_CST);
+		Venue venueStandard = Venue.generateVenueFromJson(DataConstants.VENUE_STANDARD_KEY);
 		User superUser = User.generateSuperUser();
 		return new Object[][] {
 			{venueEST, superUser},
 			{venueJST, superUser},
-			{venueSAST, superUser}
+			{venueCST, superUser},
+			{venueStandard, superUser}
 		};
 	}
 

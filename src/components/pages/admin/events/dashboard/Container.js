@@ -77,17 +77,21 @@ const styles = theme => {
 		menuContainer: {
 			display: "flex",
 			justifyContent: "flex-start",
+			flexWrap: "wrap",
 			alignItems: "center",
 
 			paddingTop: theme.spacing.unit * 4,
+			paddingBottom: theme.spacing.unit * 3,
 			...defaultSidePadding,
 
 			[theme.breakpoints.down("sm")]: {
-				padding: theme.spacing.unit * 2
+				padding: theme.spacing.unit * 2,
+				paddingBottom: theme.spacing.unit
 			}
 		},
 		menuText: {
 			marginRight: theme.spacing.unit * 4,
+			marginBottom: theme.spacing.unit,
 
 			[theme.breakpoints.down("sm")]: {
 				marginRight: theme.spacing.unit * 2
@@ -95,7 +99,7 @@ const styles = theme => {
 		},
 		menuDividerContainer: {
 			marginBottom: theme.spacing.unit * 3,
-			marginTop: theme.spacing.unit * 3,
+			marginTop: theme.spacing.unit * 2,
 
 			...defaultSidePadding,
 
@@ -281,7 +285,7 @@ class EventDashboardContainer extends Component {
 				) : (
 					<span/>
 				)}
-				{user.isAdmin ? (
+				{user.hasEventAnnouncements ? (
 					<Link to={`/admin/events/${event.id}/announcements`}>
 						<MenuItem onClick={this.handleToolsMenuClose.bind(this)}>
 							Announcements
@@ -462,7 +466,10 @@ class EventDashboardContainer extends Component {
 		}
 		if (user.hasScope("event:write")) {
 			items.push(
-				<MenuItem key="affiliate-link" onClick={this.openAffiliateLinkDialog.bind(this)}>
+				<MenuItem
+					key="affiliate-link"
+					onClick={this.openAffiliateLinkDialog.bind(this)}
+				>
 					Affiliate Tracking Links
 				</MenuItem>
 			);
@@ -656,12 +663,22 @@ class EventDashboardContainer extends Component {
 					<div className={classes.menuContainer}>
 						<Typography className={classes.menuText}>
 							<StyledLink
-								underlined={subheading === "summary"}
+								underlined={subheading === "summary_old"}
 								to={`/admin/events/${event.id}/dashboard`}
 							>
 								Dashboard
 							</StyledLink>
 						</Typography>
+						{user.isAdmin ? (
+							<Typography className={classes.menuText}>
+								<StyledLink
+									underlined={subheading === "summary"}
+									to={`/admin/events/${event.id}/dashboard_v2`}
+								>
+									Dashboard V2
+								</StyledLink>
+							</Typography>
+						) : null}
 
 						{!event.is_external ? (
 							<React.Fragment>
