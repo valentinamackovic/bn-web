@@ -8,6 +8,7 @@ import orders from "./orders";
 import errorReporting from "../helpers/errorReporting";
 import maskString from "../helpers/maskString";
 import { logoutFB } from "../components/pages/authentication/social/FacebookButton";
+import moment from "moment";
 
 class User {
 	@observable
@@ -342,7 +343,14 @@ class User {
 
 	getCampaignTrackingData() {
 		try {
-			return JSON.parse(localStorage.getItem("campaignData"));
+			const data = JSON.parse(localStorage.getItem("campaignData"));
+			if (moment(data.expiresAt) < moment()) {
+				return {};
+			}
+
+			data.expiresAt = moment().add({ hours: 24 });
+			localStorage.setItem("campaignData", JSON.stringify(data));
+			return data;
 		} catch (e) {
 			return {};
 		}
@@ -352,6 +360,8 @@ class User {
 	setCampaignTrackingData(data) {
 		let currentData = this.getCampaignTrackingData();
 		currentData = { ...currentData, ...data };
+		currentData.clientId = currentData.clientId || `bn.${Math.random().toString(36).substr(2, 7)}.${Math.random().toString(36).substr(2, 7)}`;
+		currentData.expiresAt = moment().add({ hours: 24 });
 		localStorage.setItem("campaignData", JSON.stringify(currentData));
 	}
 

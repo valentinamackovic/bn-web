@@ -202,20 +202,26 @@ const bigneon = {
 
 		const baseUrl = this.baseUrl;
 
+		const trackingData = user.getCampaignTrackingData();
+		let clientId = trackingData.clientId || "";
+		let source = trackingData["utm_source"] || "";
+		let medium = trackingData["utm_medium"] || "";
+
 		if (ReactGA && ReactGA.ga()) {
 			ReactGA.ga()(function(tracker) {
-				const trackingData = user.getCampaignTrackingData();
-				const clientId = tracker.get("clientId") || "";
-				const source = trackingData["utm_source"] || tracker.get("source") || "";
-				const medium = trackingData["utm_medium"] || tracker.get("medium") || "";
-				const referrer = trackingData.referrer || document.referrer;
-				img.src =
-					baseUrl +
-					`/analytics/track?url=${uri}&client_id=${clientId}&source=${source}&medium=${medium}&referrer=${referrer}&` +
-					data;
-				document.body.insertBefore(img, document.body.firstChild);
+				clientId = tracker.get("clientId") || clientId;
+				source = source || tracker.get("source") || "";
+				medium = medium  || tracker.get("medium") || "";
 			});
 		}
+
+		const referrer = trackingData.referrer || document.referrer;
+		const nonce = Math.random().toString(36).substr(2, 5);
+		img.src =
+			baseUrl +
+			`/a/t?n=${nonce}&url=${uri}&client_id=${clientId}&source=${source}&medium=${medium}&referrer=${referrer}&` +
+			data;
+		document.body.insertBefore(img, document.body.firstChild);
 	},
 	eventClick(id, name, category, organizationId, listPosition, list) {
 		this.track("event_id=" + id);
