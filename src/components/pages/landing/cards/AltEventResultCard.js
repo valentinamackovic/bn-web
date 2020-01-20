@@ -227,7 +227,7 @@ class AltEventResultCard extends Component {
 
 		const style = {};
 		if (promo_image_url) {
-			style.backgroundImage = `linear-gradient(to top, #000000, rgba(0, 0, 0, 0)), url(${optimizedImageUrl(
+			style.backgroundImage = `url(${optimizedImageUrl(
 				promo_image_url,
 				"low",
 				{ w: 430 }
