@@ -97,6 +97,15 @@ const styles = theme => {
 		callToAction: {
 			width: "100%"
 		},
+		plainWhite: {
+			width: "100%",
+			color: "#000000 !important",
+			backgroundColor: "#E9E9E9",
+			opacity: 1,
+			"& span": {
+				fontFamily: "TTCommons-DemiBold"
+			}
+		},
 		eventDetailsRow: {
 			display: "flex"
 		},
@@ -390,7 +399,8 @@ class ViewEvent extends Component {
 			tracking_keys,
 			external_url,
 			min_ticket_price,
-			max_ticket_price
+			max_ticket_price,
+			status
 		} = event;
 		const eventIsCancelled = !!(event && event.cancelled_at);
 
@@ -412,7 +422,17 @@ class ViewEvent extends Component {
 		const sharedContent = (
 			<div>
 				<div className={classes.callToActionContainer}>
-					{this.renderCallToActionButton()}
+					{status === "Closed" ? (
+						<Button
+							size={"mediumLarge"}
+							className={classes.plainWhite}
+							variant={"text"}
+							title={"This event is now over 😢"}
+							disabled={true}
+						>
+							This event is now over 😢
+						</Button>
+					) : this.renderCallToActionButton()}
 				</div>
 
 				<div className={classes.spacer}/>
@@ -453,9 +473,7 @@ class ViewEvent extends Component {
 					</Typography>
 					{venue.googleMapsLink ? (
 						<a target="_blank" href={venue.googleMapsLink}>
-							<span className={classes.eventDetailLinkText}>
-								View map
-							</span>
+							<span className={classes.eventDetailLinkText}>View map</span>
 						</a>
 					) : null}
 					<br/>
@@ -466,18 +484,16 @@ class ViewEvent extends Component {
 							<span className={classes.eventDetailLinkText}>{venue.name}</span>{" "}
 						</Link>
 					</Typography>
-					{
-						venue.city_slug ?
-							(
-								<Typography className={classes.eventDetailText}>
-									More Events in{" "}
-									<Link to={`/cities/${venue.city_slug}`}>
-										<span className={classes.eventDetailLinkText}>{venue.city}</span>
-									</Link>
-								</Typography>
-							)
-							: null
-					}
+					{venue.city_slug ? (
+						<Typography className={classes.eventDetailText}>
+							More Events in{" "}
+							<Link to={`/cities/${venue.city_slug}`}>
+								<span className={classes.eventDetailLinkText}>
+									{venue.city}
+								</span>
+							</Link>
+						</Typography>
+					) : null}
 				</EventDetail>
 			</div>
 		);
@@ -615,7 +631,9 @@ class ViewEvent extends Component {
 								alignItems="flex-start"
 							>
 								<Grid item xs={12} style={{ paddingBottom: 0, paddingTop: 0 }}>
-									<h4 className={classes.artistsPerforming}>Artists Performing</h4>
+									<h4 className={classes.artistsPerforming}>
+										Artists Performing
+									</h4>
 								</Grid>
 								{artists.map(({ artist, importance }, index) => (
 									<Grid item xs={12} key={index}>
