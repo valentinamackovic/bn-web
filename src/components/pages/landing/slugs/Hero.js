@@ -10,11 +10,10 @@ const styles = theme => ({
 		display: "flex",
 		flexDirection: "column",
 		justifyContent: "center",
-
-		minHeight: 267,
+		paddingTop: 80,
+		paddingBottom: 80,
 		[theme.breakpoints.down("sm")]: {
-			flexDirection: "column",
-			minHeight: 350
+			flexDirection: "column"
 		}
 	},
 	heading: {
@@ -37,12 +36,22 @@ const styles = theme => ({
 		fontSize: 21,
 		lineSpace: 1,
 		[theme.breakpoints.down("sm")]: {
-			fontSize: theme.typography.fontSize * 1.4
+			fontSize: 15,
+			lineHeight: "18px",
+			paddingLeft: theme.spacing.unit * 3,
+			paddingRight: theme.spacing.unit * 3,
+			maxWidth: "85vw"
 		}
+	},
+	viewMapLinkText: {
+		fontSize: 16,
+		marginLeft: theme.spacing.unit * 1.5,
+		color: "#fff",
+		cursor: "pointer"
 	}
 });
 
-const OrgLandingHero = props => {
+const SlugLandingHero = props => {
 	return (
 		<div className={props.classes.root}>
 			<Hidden smDown>
@@ -53,10 +62,20 @@ const OrgLandingHero = props => {
 			</Hidden>
 
 			<div className={props.classes.headingContainer}>
-				<Typography className={props.classes.heading}>{props.pageTitle}</Typography>
+				<Typography className={props.classes.heading}>
+					{props.pageTitle}
+				</Typography>
+				<Typography className={props.classes.subHeading}>
+					{props.pageSubTitle}
+					{props.mapLink ? (
+						<a target="_blank" href={props.mapLink}>
+							<span className={props.classes.viewMapLinkText}>View on map</span>
+						</a>
+					) : null}
+				</Typography>
 			</div>
 		</div>
 	);
 };
 
-export default withStyles(styles)(OrgLandingHero);
+export default withStyles(styles)(SlugLandingHero);

@@ -13,6 +13,7 @@ const showFooterRoutes = [
 	"/cities",
 	"/venues",
 	"/organizations",
+	"/genres",
 	"/tickets"
 ];
 const removePaddingRoutes = [
@@ -21,6 +22,7 @@ const removePaddingRoutes = [
 	"/cities",
 	"/venues",
 	"/organizations",
+	"/genres",
 	"/tickets/transfers",
 	"/public/tickets"
 ];
@@ -39,6 +41,7 @@ const hideBottomMobileCartBar = [
 	"/cities",
 	"/venues",
 	"/organizations",
+	"/genres",
 	"/events/"
 ];
 

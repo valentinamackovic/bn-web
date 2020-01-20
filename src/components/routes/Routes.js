@@ -31,9 +31,7 @@ const PublicTicketViewer = asyncComponent(() =>
 
 //Unauthenticated pages
 import Home from "../pages/landing/Index";
-import VenueLanding from "../pages/landing/venues/Index";
-import CityLanding from "../pages/landing/cities/Index";
-import OrganizationLanding from "../pages/landing/organizations/Index";
+import SlugsLanding from "../pages/landing/slugs/Index";
 import ViewEvent from "../pages/events/ViewEvent";
 import ViewVenue from "../pages/venues/ViewVenue";
 import CheckoutSelection from "../pages/events/CheckoutSelection";
@@ -225,22 +223,31 @@ class Routes extends Component {
 								/>
 								<Route exact path="/" component={Home}/>
 								<Route exact path="/events" component={Home}/>
-								<Route exact path="/venues/:id" component={VenueLanding}/>
-								<Route exact path="/cities/:id" component={CityLanding}/>
+								<Route exact path="/venues/:id" component={SlugsLanding}/>
+								<Route exact path="/cities/:id" component={SlugsLanding}/>
+								<Route exact path="/genres/:id" component={SlugsLanding}/>
 								<Route
 									exact
 									path="/organizations/:id"
-									component={OrganizationLanding}
+									component={SlugsLanding}
 								/>
 								<Route exact path="/sign-up" component={Signup}/>
 								<Route exact path="/login" component={Login}/>
-								<Route exact path="/password-reset" component={PasswordReset}/>
+								<Route
+									exact
+									path="/password-reset"
+									component={PasswordReset}
+								/>
 								<Route
 									exact
 									path="/invites/decline"
 									component={InviteDecline}
 								/>
-								<Route exact path="/invites/accept" component={InviteAccept}/>
+								<Route
+									exact
+									path="/invites/accept"
+									component={InviteAccept}
+								/>
 								<Route
 									exact
 									path="/tickets/receive" //TODO remove this route
@@ -345,9 +352,9 @@ class Routes extends Component {
 									path="/events/:id/tickets/success"
 									component={props => (
 										<Redirect
-											to={`/tickets/${props.match.params.id}/tickets/success${
-												window.location.search
-											}`}
+											to={`/tickets/${
+												props.match.params.id
+											}/tickets/success${window.location.search}`}
 										/>
 									)}
 									isAuthenticated={isAuthenticated}

@@ -23,6 +23,12 @@ class SlugResults {
 	@observable
 	cityInfo = null;
 
+	@observable
+	meta = null;
+
+	@observable
+	type = null;
+
 	@action
 	refreshResults(slug, params, onSuccess, onError) {
 		this.isLoading = true;
@@ -32,7 +38,7 @@ class SlugResults {
 			.then(response => {
 				const result = [];
 
-				const { events, organization, venue, city } = response.data;
+				const { events, organization, venue, city, genre, type, meta } = response.data;
 				events.forEach(eventData => {
 					const { venue, promo_image_url, cancelled_at, ...event } = eventData;
 
@@ -54,6 +60,9 @@ class SlugResults {
 					});
 				});
 
+				this.type = type;
+				this.genre = genre;
+				this.meta = meta;
 				this.venueInfo = venue;
 				this.cityInfo = city;
 				this.events = result;
