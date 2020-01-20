@@ -13,15 +13,15 @@ import moment from "moment";
 const styles = theme => {
 	return {
 		root: {
-			[theme.breakpoints.up("sm")]: {
-				padding: 30
-			},
-			[theme.breakpoints.down("md")]: {
-				padding: 10
-			},
-			[theme.breakpoints.down("sm")]: {
-				padding: 0
-			}
+			// [theme.breakpoints.up("sm")]: {
+			// 	padding: 30
+			// },
+			// [theme.breakpoints.down("md")]: {
+			// 	padding: 10
+			// },
+			// [theme.breakpoints.down("sm")]: {
+			// 	padding: 0
+			// }
 		},
 		titleText: {
 			fontFamily: fontFamilyDemiBold,
@@ -59,6 +59,7 @@ class TicketSalesCard extends Component {
 			name,
 			organization_id,
 			id,
+			publish_date,
 			...rest
 		} = this.props;
 
@@ -70,7 +71,11 @@ class TicketSalesCard extends Component {
 		}
 
 		return (
-			<CollapseCard title={title} className={classes.root}>
+			<CollapseCard
+				title={title}
+				className={classes.root}
+				iconPath={"/icons/graph.png"}
+			>
 				<div className={classes.root}>
 					<Hidden smDown>
 						<Typography className={classes.titleText}>{title}</Typography>
@@ -80,12 +85,16 @@ class TicketSalesCard extends Component {
 						cubeApiUrl={cubeApiUrl}
 						token={token}
 						timezone={venue.timezone}
+						startDate={publish_date}
 						endDate={event_end}
 					/>
 				</div>
 				{ticketCounts ? (
 					<div className={classes.root}>
-						<EventTicketCountTable ticketCounts={ticketCounts} hideDetails={true}/>
+						<EventTicketCountTable
+							ticketCounts={ticketCounts}
+							hideDetails={true}
+						/>
 					</div>
 				) : (
 					<div>Loading</div>
