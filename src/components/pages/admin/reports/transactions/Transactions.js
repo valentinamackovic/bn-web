@@ -154,7 +154,8 @@ class Transactions extends Component {
 					"Campaign",
 					"Term",
 					"Content",
-					"Platform"
+					"Platform",
+					"Check-in Method"
 				]);
 
 				items.forEach(item => {
@@ -194,7 +195,8 @@ class Transactions extends Component {
 						campaign,
 						term,
 						content,
-						platform
+						platform,
+						check_in_source
 					} = item;
 
 					csvRows.push([
@@ -224,7 +226,8 @@ class Transactions extends Component {
 						campaign,
 						term,
 						content,
-						platform
+						platform,
+						check_in_source
 					]);
 				});
 
