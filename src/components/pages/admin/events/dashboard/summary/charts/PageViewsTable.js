@@ -132,7 +132,8 @@ class PageViewsTable extends Component {
 					dimensions: ["PageViews.source", "PageViews.medium"],
 					segments: [],
 					order: {
-						"PageViews.tickets": "desc"
+						"PageViews.tickets": "desc",
+						"PageViews.uniqueViews": "desc"
 					},
 					filters,
 					timezone
