@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { Typography, Hidden } from "@material-ui/core";
 import PropTypes from "prop-types";
@@ -6,6 +6,8 @@ import PropTypes from "prop-types";
 import CollapseCard from "./CollapseCard";
 import { fontFamilyDemiBold } from "../../../../../../config/theme";
 import TicketSalesChart from "./charts/TicketSalesChart";
+import ticketCountReport from "../../../../../../stores/reports/ticketCountReport";
+import EventTicketCountTable from "../../../reports/counts/EventTicketCountTable";
 import moment from "moment";
 
 const styles = theme => {
@@ -29,34 +31,69 @@ const styles = theme => {
 	};
 };
 
-const TicketSalesCard = ({
-	classes,
-	token,
-	on_sale,
-	event_end,
-	venue,
-	cubeApiUrl,
-	...rest
-}) => {
-	const title = "Ticket Sales";
+class TicketSalesCard extends Component {
+	constructor(props) {
+		super(props);
+		this.state = { ticketCounts: null };
+	}
 
-	return (
-		<CollapseCard title={title} className={classes.root}>
-			<div className={classes.root}>
-				<Hidden smDown>
-					<Typography className={classes.titleText}>{title}</Typography>
-				</Hidden>
+	refreshData() {
+		const { organization_id, id } = this.props;
+		const queryParams = { organization_id, event_id: id };
 
-				<TicketSalesChart
-					cubeApiUrl={cubeApiUrl}
-					token={token}
-					timezone={venue.timezone}
-					endDate={event_end}
-				/>
-			</div>
-		</CollapseCard>
-	);
-};
+		ticketCountReport.fetchCountAndSalesData(queryParams, false, () => {
+			const ticketCounts = ticketCountReport.dataByPrice[id];
+
+			this.setState({ ticketCounts });
+		});
+	}
+
+	render() {
+		const {
+			classes,
+			token,
+			on_sale,
+			event_end,
+			venue,
+			cubeApiUrl,
+			name,
+			organization_id,
+			id,
+			...rest
+		} = this.props;
+
+		const title = "Ticket Sales";
+
+		const { ticketCounts } = this.state;
+		if (!ticketCounts) {
+			this.refreshData();
+		}
+
+		return (
+			<CollapseCard title={title} className={classes.root}>
+				<div className={classes.root}>
+					<Hidden smDown>
+						<Typography className={classes.titleText}>{title}</Typography>
+					</Hidden>
+
+					<TicketSalesChart
+						cubeApiUrl={cubeApiUrl}
+						token={token}
+						timezone={venue.timezone}
+						endDate={event_end}
+					/>
+				</div>
+				{ticketCounts ? (
+					<div className={classes.root}>
+						<EventTicketCountTable ticketCounts={ticketCounts} hideDetails={true}/>
+					</div>
+				) : (
+					<div>Loading</div>
+				)}
+			</CollapseCard>
+		);
+	}
+}
 
 TicketSalesCard.propTypes = {
 	classes: PropTypes.object.isRequired,
