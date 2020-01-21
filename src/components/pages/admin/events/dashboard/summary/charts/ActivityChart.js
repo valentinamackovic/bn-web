@@ -21,7 +21,7 @@ const styles = theme => {
 			flex: 1,
 			justifyContent: "flex-start",
 
-			[theme.breakpoints.down("md")]: {
+			[theme.breakpoints.down("sm")]: {
 				flexDirection: "column",
 				justifyContent: "center"
 			}
@@ -30,7 +30,7 @@ const styles = theme => {
 			flex: 3,
 			display: "flex",
 			flexDirection: "column",
-			justifyContent: "flex-start",
+			justifyContent: "center",
 
 			marginTop: 20,
 			marginBottom: 30,
@@ -41,7 +41,7 @@ const styles = theme => {
 			[theme.breakpoints.up("sm")]: {
 				marginTop: 0,
 				marginBottom: 0,
-				paddingLeft: 0,
+				paddingLeft: 20,
 				paddingRight: 20
 			}
 		},

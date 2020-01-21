@@ -100,18 +100,9 @@ const styles = theme => {
 			}
 		},
 		innerChartContainer: {
-			flex: 4,
-			display: "flex",
-			flexDirection: "flex-start",
-
-			[theme.breakpoints.down("lg")]: {
-				flex: 5
-			}
-		},
-		innerInnerChartContainer: {
-			display: "flex",
 			flex: 1,
-			maxWidth: 420
+			display: "flex",
+			flexDirection: "flex-start"
 		}
 	};
 };
@@ -165,11 +156,7 @@ const EventAtAGlanceCard = ({
 	const title = "Event at a Glance";
 
 	return (
-		<CollapseCard
-			title={title}
-			className={classes.root}
-			iconPath={"/icons/dashboard.png"}
-		>
+		<CollapseCard title={title} className={classes.root}>
 			<Hidden smDown>
 				<Typography className={classes.titleText}>{title}</Typography>
 			</Hidden>
@@ -177,7 +164,7 @@ const EventAtAGlanceCard = ({
 			<div className={classes.rowOne}>
 				<div className={classes.valuesContainer}>
 					<div className={classes.valueContainer}>
-						<Typography className={classes.label}>Total Sales</Typography>
+						<Typography className={classes.label}>Gross Revenue</Typography>
 						<Typography className={classes.value}>
 							{dollars(sales_total_in_cents)}
 						</Typography>
@@ -185,7 +172,9 @@ const EventAtAGlanceCard = ({
 					<div className={classes.valueContainer}>
 						<Typography className={classes.label}>Tickets Sold</Typography>
 						<span style={{ display: "flex" }}>
-							<Typography className={classes.value}>{totalSold}</Typography>
+							<Typography className={classes.value}>
+								{sold_unreserved}
+							</Typography>
 							<Typography className={classes.subValue}>
 								/{total_tickets}
 							</Typography>
@@ -204,40 +193,36 @@ const EventAtAGlanceCard = ({
 
 			<div className={classes.chartContainer}>
 				<div className={classes.innerChartContainer}>
-					<div className={classes.innerInnerChartContainer}>
-						<ActivityChart
-							cubeApiUrl={cubeApiUrl}
-							token={token}
-							startDate={on_sale}
-							timezone={timezone}
-							title={"Transfer Activity"}
-							legendKeyMap={{
-								Completed: "Completed Transfers",
-								Pending: "Pending Transfers",
-								Cancelled: "Cancelled Transfers"
-							}}
-							measures={["Transfers.count"]}
-							dimensions={["Transfers.status"]}
-						/>
-					</div>
+					<ActivityChart
+						cubeApiUrl={cubeApiUrl}
+						token={token}
+						startDate={on_sale}
+						timezone={timezone}
+						title={"Transfer Activity"}
+						legendKeyMap={{
+							Completed: "Completed Transfers",
+							Pending: "Pending Transfers",
+							Cancelled: "Cancelled Transfers"
+						}}
+						measures={["Transfers.count"]}
+						dimensions={["Transfers.status"]}
+					/>
 				</div>
 				<div className={classes.innerChartContainer}>
-					<div className={classes.innerInnerChartContainer}>
-						<ActivityChart
-							cubeApiUrl={cubeApiUrl}
-							token={token}
-							startDate={on_sale}
-							timezone={timezone}
-							title={"Scanning & Attendance"}
-							legendKeyMap={{
-								"Not Redeemed": "Tickets Scanned/Attended",
-								Redeemed: "Remaining/No Show"
-							}}
-							measures={["Tickets.count"]}
-							dimensions={["Tickets.redeemedStatus"]}
-							segments={["Tickets.purchasedTickets"]}
-						/>
-					</div>
+					<ActivityChart
+						cubeApiUrl={cubeApiUrl}
+						token={token}
+						startDate={on_sale}
+						timezone={timezone}
+						title={"Scanning & Attendance"}
+						legendKeyMap={{
+							"Not Redeemed": "Tickets Scanned/Attended",
+							Redeemed: "Remaining/No Show"
+						}}
+						measures={["Tickets.count"]}
+						dimensions={["Tickets.redeemedStatus"]}
+						segments={["Tickets.purchasedTickets"]}
+					/>
 				</div>
 			</div>
 		</CollapseCard>

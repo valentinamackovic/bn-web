@@ -21,7 +21,7 @@ const styles = theme => {
 			position: "relative"
 		},
 		pieContainer: {
-			zIndex: 2
+			zIndex: 1
 		},
 		totalContainer: {
 			left: 0,
@@ -68,22 +68,10 @@ const DoughnutRender = ({ resultSet, colors, chartTotal }) => {
 		cutoutPercentage: 60,
 		maintainAspectRatio: false,
 		tooltips: {
-			enabled: chartTotal > 0,
-			custom: tooltipModel => {
-				tooltipModel.backgroundColor = secondaryHex;
-				tooltipModel.displayColors = false;
-				tooltipModel.bodyFontSize = 11;
-				tooltipModel.width = tooltipModel.width * 0.85;
-			},
-			callbacks: {
-				label: (tooltipItem, data) => {
-					const { labels } = data;
-					return labels[tooltipItem.index];
-				}
-			}
+			enabled: chartTotal > 0
 		}
 	};
-	return <Doughnut height={120} width={150} data={data} options={options}/>;
+	return <Doughnut height={120} width={120} data={data} options={options}/>;
 };
 
 const ChartContainer = ({ children, resultSet, classes, chartTotal }) => {
@@ -149,11 +137,7 @@ const DoughnutChart = Component => ({ resultSet, error, colors }) => {
 	return (
 		(resultSet && (
 			<ChartContainerWithStyles resultSet={resultSet}>
-				<Component
-					resultSet={resultSet}
-					colors={pieColors}
-					chartTotal={chartTotal}
-				/>
+				<Component resultSet={resultSet} colors={pieColors}/>
 			</ChartContainerWithStyles>
 		)) ||
 		(error && error.toString()) || <Loader/>

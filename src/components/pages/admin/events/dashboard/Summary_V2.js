@@ -84,13 +84,13 @@ class Summary extends Component {
 						venue,
 						displayEventDate: moment(event_start)
 							.tz(venue.timezone)
-							.format("MMM D, YYYY"),
+							.format("MMM, D, YYYY"),
 						displayDoorsOpenTime: moment(door_time)
 							.tz(venue.timezone)
-							.format("h:mm A"),
+							.format("MMM, D, YYYY"),
 						displayShowStartTime: moment(event_start)
 							.tz(venue.timezone)
-							.format("h:mm A")
+							.format("MMM, D, YYYY")
 					}
 				});
 			})

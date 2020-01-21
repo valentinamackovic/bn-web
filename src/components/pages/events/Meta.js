@@ -181,8 +181,9 @@ const Meta = props => {
 		...event
 	} = props;
 
+	//TODO use slug when it's ready
 	const landingUrl = Settings().webUrl;
-	const slugEventUrl = `${landingUrl}/tickets/${slug}`;
+	const slugEventUrl = `${landingUrl}/events/${slug}`;
 	const ticketSelectionUrl = `${slugEventUrl}/tickets`;
 
 	const promoImageUrl = promo_image_url
