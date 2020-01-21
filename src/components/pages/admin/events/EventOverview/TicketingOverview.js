@@ -126,6 +126,9 @@ const TicketingOverview = ({
 		"price"
 	];
 
+	const ticket_pricing_order = ticket_pricing.sort(function (a, b) {
+		return new Date(a.start_date) - new Date(b.start_date);
+	});
 	return (
 		<Card variant={"form"} className={classes.detailsCardStyle}>
 			{/*Mobile expand icon*/}
@@ -214,71 +217,73 @@ const TicketingOverview = ({
 						<Typography className={classes.headerTitle}>
 							Scheduled Price Change
 						</Typography>
-						{ticket_pricing.map((ticket, index) => {
-							const displayStartDate = ticket.start_date
-								? moment
-									.utc(ticket.start_date)
-									.tz(timezone)
-									.format("L")
-								: "Immediately";
-							const displayStartTime = ticket.start_date
-								? moment
-									.utc(ticket.start_date)
-									.tz(timezone)
-									.format("hh:mm A")
-								: null;
-							const displayEndDate = ticket.end_date
-								? moment
-									.utc(ticket.end_date)
-									.tz(timezone)
-									.format("L")
-								: splitByCamelCase(ticket.end_date_type);
-							const displayEndTime = ticket.end_date
-								? moment
-									.utc(ticket.end_date)
-									.tz(timezone)
-									.format("hh:mm A")
-								: null;
-							const priceChangeValues = [
-								ticket.name,
-								displayStartDate,
-								displayStartTime,
-								displayEndDate,
-								displayEndTime,
-								dollars(price_in_cents)
-							];
-							return (
-								<Card
-									key={index}
-									style={{ marginTop: 20 }}
-									variant={"form"}
-									className={classes.detailsCardStyle}
-								>
-									<div className={classes.detailsTopRow}>
-										{priceChangeHeadings.map((heading, index) => (
-											<Typography
-												key={index}
-												style={priceChangeColStyles[index]}
-												className={classes.smallGreyCapTitle}
-											>
-												{heading}
-											</Typography>
-										))}
-									</div>
-									<div className={classes.detailsTopRow}>
-										{priceChangeValues.map((value, index) => (
-											<Typography
-												key={index}
-												style={priceChangeColStyles[index]}
-												className={classes.smallTitle}
-											>
-												{value ? value : "-"}
-											</Typography>
-										))}
-									</div>
-								</Card>
-							);
-						})}
+						{ticket_pricing_order
+							.map((ticket, index) => {
+								const displayStartDate = ticket.start_date
+									? moment
+										.utc(ticket.start_date)
+										.tz(timezone)
+										.format("L")
+									: "Immediately";
+								const displayStartTime = ticket.start_date
+									? moment
+										.utc(ticket.start_date)
+										.tz(timezone)
+										.format("hh:mm A")
+									: null;
+								const displayEndDate = ticket.end_date
+									? moment
+										.utc(ticket.end_date)
+										.tz(timezone)
+										.format("L")
+									: splitByCamelCase(ticket.end_date_type);
+								const displayEndTime = ticket.end_date
+									? moment
+										.utc(ticket.end_date)
+										.tz(timezone)
+										.format("hh:mm A")
+									: null;
+								const priceChangeValues = [
+									ticket.name,
+									displayStartDate,
+									displayStartTime,
+									displayEndDate,
+									displayEndTime,
+									dollars(ticket.price_in_cents)
+								];
+								return (
+									<Card
+										key={index}
+										style={{ marginTop: 20 }}
+										variant={"form"}
+										className={classes.detailsCardStyle}
+									>
+										<div className={classes.detailsTopRow}>
+											{priceChangeHeadings.map((heading, index) => (
+												<Typography
+													key={index}
+													style={priceChangeColStyles[index]}
+													className={classes.smallGreyCapTitle}
+												>
+													{heading}
+												</Typography>
+											))}
+										</div>
+										<div className={classes.detailsTopRow}>
+											{priceChangeValues.map((value, index) => (
+												<Typography
+													key={index}
+													style={priceChangeColStyles[index]}
+													className={classes.smallTitle}
+												>
+													{value ? value : "-"}
+												</Typography>
+											))}
+										</div>
+									</Card>
+								);
+							}
+							)}
 					</div>
 				) : null}
 			</Hidden>
@@ -331,7 +336,7 @@ const TicketingOverview = ({
 								</Grid>
 							) : null
 						)}
-						{ticket_pricing.map((ticket, index) => {
+						{ticket_pricing_order.map((ticket, index) => {
 							const displayStartDate = ticket.start_date
 								? moment
 									.utc(ticket.start_date)
@@ -362,7 +367,7 @@ const TicketingOverview = ({
 								displayStartTime,
 								displayEndDate,
 								displayEndTime,
-								dollars(price_in_cents)
+								dollars(ticket.price_in_cents)
 							];
 							return (
 								<div key={index}>
