@@ -42,7 +42,7 @@ const UNLIMITED_LINE_LIMIT = 999999999;
 const formatItems = (data, timezone) => {
 	const items = [];
 	data.forEach(item => {
-		const formattedDate = moment
+		const formattedDate = moment(item.transaction_date)
 			.utc(item.transaction_date)
 			.tz(timezone)
 			.format("MM/DD/YYYY h:mm A");
@@ -154,7 +154,8 @@ class Transactions extends Component {
 					"Campaign",
 					"Term",
 					"Content",
-					"Platform"
+					"Platform",
+					"Check-in Method"
 				]);
 
 				items.forEach(item => {
@@ -194,7 +195,8 @@ class Transactions extends Component {
 						campaign,
 						term,
 						content,
-						platform
+						platform,
+						check_in_source
 					} = item;
 
 					csvRows.push([
@@ -224,7 +226,8 @@ class Transactions extends Component {
 						campaign,
 						term,
 						content,
-						platform
+						platform,
+						check_in_source
 					]);
 				});
 

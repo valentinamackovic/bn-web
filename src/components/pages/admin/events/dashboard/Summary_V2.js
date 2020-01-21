@@ -2,25 +2,15 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import { Typography } from "@material-ui/core";
-import classNames from "classnames";
 import moment from "moment-timezone";
 import { observer } from "mobx-react";
 
-import TicketTypeSalesBarChart from "../../../../elements/charts/TicketTypeSalesBarChart";
-import Card from "../../../../elements/Card";
-import Divider from "../../../../common/Divider";
-import { fontFamilyDemiBold } from "../../../../../config/theme";
 import Container from "./Container";
 import Bigneon from "../../../../../helpers/bigneon";
 import notifications from "../../../../../stores/notifications";
 import user from "../../../../../stores/user";
 import Loader from "../../../../elements/loaders/Loader";
 import servedImage from "../../../../../helpers/imagePathHelper";
-import TicketSalesChart from "./summary/charts/TicketSalesChart";
-import TotalSalesChart from "./summary/charts/TotalSalesChart";
-import TransfersChart from "./summary/charts/TransfersChart";
-import AttendanceChart from "./summary/charts/AttendanceChart";
-import PageViewsTable from "./summary/charts/PageViewsTable";
 import EventSummaryCard from "./summary/EventSummaryCard";
 import EventAtAGlanceCard from "./summary/EventAtAGlanceCard";
 import TicketSalesCard from "./summary/TicketSalesCard";
@@ -94,13 +84,13 @@ class Summary extends Component {
 						venue,
 						displayEventDate: moment(event_start)
 							.tz(venue.timezone)
-							.format("MMM, D, YYYY"),
+							.format("MMM D, YYYY"),
 						displayDoorsOpenTime: moment(door_time)
 							.tz(venue.timezone)
-							.format("MMM, D, YYYY"),
+							.format("h:mm A"),
 						displayShowStartTime: moment(event_start)
 							.tz(venue.timezone)
-							.format("MMM, D, YYYY")
+							.format("h:mm A")
 					}
 				});
 			})
@@ -129,22 +119,6 @@ class Summary extends Component {
 					error
 				});
 			});
-	}
-
-	renderCubeData() {
-		const { event, cube_js_token } = this.state;
-		return (
-			<div>
-				<p>Sales</p>
-				<TotalSalesChart token={cube_js_token} startDate={event.on_sale}/>
-				<p>Transfers</p>
-				<TransfersChart token={cube_js_token} startDate={event.on_sale}/>
-				<p>Attendance</p>
-				<AttendanceChart token={cube_js_token} startDate={event.on_sale}/>
-				<p>Page Views</p>
-				<PageViewsTable token={cube_js_token} startDate={event.on_sale}/>
-			</div>
-		);
 	}
 
 	render() {

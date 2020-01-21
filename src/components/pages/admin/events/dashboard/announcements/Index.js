@@ -332,9 +332,6 @@ class Announcements extends Component {
 
 					<Typography className={classes.explainerText}>
 						Email all current ticket holders
-						{numberOfRecipients !== null ? (
-							<span className={classes.boldText}> ({numberOfRecipients}) </span>
-						) : null}
 						to announce any major event updates including cancellation,
 						postponement, rescheduled date/time, or new location.
 						<br/>

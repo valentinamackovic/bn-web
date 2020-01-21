@@ -68,7 +68,10 @@ class OrderList extends Component {
 			ticketTypes: [],
 			ticketTypeFilterId: "",
 			paging: null,
-			ticketTypesKeyValue: {}
+			ticketTypesKeyValue: {},
+			eventName: null,
+			salesStartStringUtc: null,
+			venueTimeZone: null
 		};
 
 		this.onChangePromoFilter = this.onChangePromoFilter.bind(this);
@@ -77,6 +80,22 @@ class OrderList extends Component {
 	}
 
 	componentDidMount() {
+		const eventId = this.props.match.params.id;
+
+		Bigneon()
+			.events.read({ id: eventId })
+			.then(response => {
+				const { name, publish_date, venue } = response.data;
+				this.setState({
+					eventName: name,
+					salesStartStringUtc: publish_date,
+					venueTimeZone: venue.timezone
+				});
+			})
+			.catch(error => {
+				console.error(error);
+			});
+
 		this.refreshOrders();
 		this.loadPromoCodes();
 		this.loadTicketTypes();
@@ -101,13 +120,15 @@ class OrderList extends Component {
 			.then(response => {
 				const { data, paging } = response.data;
 
-				const { timezone } = this.props;
+				const { venueTimeZone } = this.state;
 
 				//Set the qty of tickets bought and the formatted date
 				data.forEach(o => {
-					o.displayDate = moment(o.date)
-						.tz(timezone)
-						.format("MM/DD/YYYY h:mm A");
+					const date = o.paid_at ? o.paid_at : o.date;
+					o.displayDate = date ? moment(date)
+					    .utc(date)
+						.tz(venueTimeZone)
+						.format("MM/DD/YYYY h:mm A") : null;
 
 					o.ticketCount = 0;
 					o.ticketTypeIds = [];

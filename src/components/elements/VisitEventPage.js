@@ -31,7 +31,7 @@ const VisitEventPage = props => {
 
 	return (
 		<div style={style} className={classes.root}>
-			<a href={`/events/${id}`} target={"_blank"} className={classes.link}>
+			<a href={`/tickets/${id}`} target={"_blank"} className={classes.link}>
 				<Typography className={classes.text}>{label}</Typography>
 				<img
 					alt={label}

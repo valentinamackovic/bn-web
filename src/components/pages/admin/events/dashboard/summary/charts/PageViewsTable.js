@@ -2,8 +2,11 @@ import React, { Component } from "react";
 import cubejs from "@cubejs-client/core";
 import { QueryRenderer } from "@cubejs-client/react";
 import PropTypes from "prop-types";
+import Typography from "@material-ui/core/Typography";
 import PageViewsRow from "./PageViewsRow";
 import Loader from "../../../../../../elements/loaders/Loader";
+import { withStyles } from "@material-ui/core/styles";
+import { fontFamilyDemiBold } from "../../../../../../../config/theme";
 
 const upperFirstChar = string =>
 	string ? string[0].toUpperCase() + string.slice(1) : "";
@@ -17,10 +20,19 @@ const columnHeadingMap = {
 };
 
 const formatValueFunctions = {
-	"PageViews.uniqueViews": row => {
-		return row["PageViews.uniqueViews"];
+	"PageViews.uniqueViews": (row, classes, totalUniquePageViews) => {
+		const value = Number(row["PageViews.uniqueViews"]);
+
+		const percent = `${Math.round((value / totalUniquePageViews) * 100) /
+			100}%`;
+
+		return (
+			<span key={"PageViews.uniqueViews"}>
+				{value} <span className={classes.percentText}>({percent})</span>
+			</span>
+		);
 	},
-	"PageViews.source": row => {
+	"PageViews.source": (row, classes, totalUniquePageViews) => {
 		const val = row["PageViews.source"];
 
 		if (!val) {
@@ -29,7 +41,7 @@ const formatValueFunctions = {
 
 		return upperFirstChar(val);
 	},
-	"PageViews.medium": row => {
+	"PageViews.medium": (row, classes, totalUniquePageViews) => {
 		const val = row["PageViews.medium"];
 
 		if (val == "venuewebsite") {
@@ -38,32 +50,55 @@ const formatValueFunctions = {
 
 		return upperFirstChar(val);
 	},
-	"PageViews.conversionRate": row => {
+	"PageViews.conversionRate": (row, classes, totalUniquePageViews) => {
 		const percent = Number(row["PageViews.conversionRate"]);
 
 		return `${Math.round(percent * 100) / 100}%`;
 	}
 };
 
-const TableRender = ({ resultSet }) => {
+const TableRender = ({ resultSet, classes }) => {
+	const rows = resultSet.tablePivot();
+
+	let totalUniquePageViews = 0;
+	rows.forEach(r => {
+		totalUniquePageViews += Number(r["PageViews.uniqueViews"]);
+	});
+
 	return (
 		<div>
 			<PageViewsRow heading>
 				{resultSet.tableColumns().map(c => columnHeadingMap[c.key] || c.title)}
 			</PageViewsRow>
-			{resultSet.tablePivot().map((row, index) => {
-				return (
-					<PageViewsRow key={index} gray={!!(index % 2)}>
-						{Object.keys(row).map(key => {
-							let value = "";
-							const formatFunc = formatValueFunctions[key];
-							value = formatFunc ? formatFunc(row) : row[key];
+			{rows.length > 0 ? (
+				rows.map((row, index) => {
+					return (
+						<PageViewsRow key={index} gray={!!(index % 2)}>
+							{Object.keys(row).map(key => {
+								let value = "";
+								const formatFunc = formatValueFunctions[key];
+								value = formatFunc
+									? formatFunc(row, classes, totalUniquePageViews)
+									: row[key];
 
-							return value;
-						})}
-					</PageViewsRow>
-				);
-			})}
+								return value;
+							})}
+						</PageViewsRow>
+					);
+				})
+			) : (
+				<div className={classes.emptyStateRoot}>
+					<div className={classes.emptyStateContainer}>
+						<Typography className={classes.emptyStateTitle}>
+							No Sales Source Data Available
+						</Typography>
+						<Typography className={classes.emptyStateMessage}>
+							There is no Sales Source data available yet. When a ticket is
+							purchased, information on the source will show up here.
+						</Typography>
+					</div>
+				</div>
+			)}
 		</div>
 	);
 };
@@ -71,6 +106,34 @@ const TableRender = ({ resultSet }) => {
 const ChartRender = ChartComponent => ({ resultSet, error }) =>
 	(resultSet && <ChartComponent resultSet={resultSet}/>) ||
 	(error && error.toString()) || <Loader/>;
+
+const styles = theme => {
+	return {
+		emptyStateRoot: {
+			display: "flex",
+			justifyContent: "center"
+		},
+		emptyStateContainer: {
+			marginTop: 40,
+			maxWidth: 360
+		},
+		emptyStateTitle: {
+			textAlign: "center",
+			fontSize: 22,
+			fontFamily: fontFamilyDemiBold
+		},
+		emptyStateMessage: {
+			textAlign: "center",
+			fontSize: 15,
+			color: "#979797",
+			marginTop: 15
+		},
+		percentText: {
+			fontSize: 12,
+			color: "#9DA3B4"
+		}
+	};
+};
 
 class PageViewsTable extends Component {
 	constructor(props) {
@@ -84,7 +147,7 @@ class PageViewsTable extends Component {
 
 	render() {
 		const { cubeJsApi } = this.state;
-		const { startDate, endDate } = this.props;
+		const { startDate, endDate, timezone, classes } = this.props;
 
 		const filters = [];
 
@@ -125,12 +188,16 @@ class PageViewsTable extends Component {
 					dimensions: ["PageViews.source", "PageViews.medium"],
 					segments: [],
 					order: {
-						"PageViews.tickets": "desc"
+						"PageViews.tickets": "desc",
+						"PageViews.uniqueViews": "desc"
 					},
-					filters
+					filters,
+					timezone
 				}}
 				cubejsApi={cubeJsApi}
-				render={ChartRender(TableRender)}
+				render={ChartRender(props => (
+					<TableRender {...props} classes={classes}/>
+				))}
 			/>
 		);
 	}
@@ -140,7 +207,8 @@ PageViewsTable.propTypes = {
 	token: PropTypes.string.isRequired,
 	cubeApiUrl: PropTypes.string.isRequired,
 	startDate: PropTypes.object,
-	endDate: PropTypes.object
+	endDate: PropTypes.object,
+	timezone: PropTypes.string.isRequired
 };
 
-export default PageViewsTable;
+export default withStyles(styles)(PageViewsTable);

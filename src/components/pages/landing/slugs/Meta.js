@@ -5,9 +5,10 @@ import Settings from "../../../../config/settings";
 //Reference: https://github.com/nfl/react-helmet
 
 const Meta = props => {
+	const { title, description } = props;
 	return (
 		<Helmet
-			title={`Concert Tickets ${props.venueName} ${props.cityName}- Big Neon`}
+			title={title}
 			meta={[
 				{
 					property: "og:title",
@@ -36,9 +37,7 @@ const Meta = props => {
 				},
 				{
 					name: "description",
-					content: `Concert Tickets ${props.venueName} ${
-						props.cityName
-					}- Find tickets to live events and concerts on Big Neon.`
+					content: description
 				}
 			]}
 			link={[

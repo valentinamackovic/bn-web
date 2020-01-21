@@ -31,6 +31,7 @@ export const DEFAULT_END_TIME_HOURS_AFTER_SHOW_TIME = 24; //For lack of a better
 const validateFields = event => {
 	const errors = {};
 
+	const { disablePastDate } = eventUpdateStore;
 	const {
 		name,
 		eventDate,
@@ -82,6 +83,8 @@ const validateFields = event => {
 		errors.eventDate = "Event start time required.";
 	} else if (endTime.diff(eventDate) <= 0) {
 		errors.endTime = "End time must be after event date.";
+	} else if (moment.utc(endTime).diff(moment.utc()) <= 0 && disablePastDate) {
+		errors.endTime = "Event with sales cannot move to past date.";
 	}
 
 	if (Object.keys(errors).length > 0) {
