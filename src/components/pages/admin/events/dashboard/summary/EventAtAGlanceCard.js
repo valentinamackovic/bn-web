@@ -230,8 +230,8 @@ const EventAtAGlanceCard = ({
 							timezone={timezone}
 							title={"Scanning & Attendance"}
 							legendKeyMap={{
-								"Not Redeemed": "Tickets Scanned/Attended",
-								Redeemed: "Remaining/No Show"
+								"Not Redeemed": "Remaining/No Show",
+								Redeemed: "Tickets Scanned/Attended"
 							}}
 							measures={["Tickets.count"]}
 							dimensions={["Tickets.redeemedStatus"]}

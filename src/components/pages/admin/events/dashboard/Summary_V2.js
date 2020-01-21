@@ -82,13 +82,16 @@ class Summary extends Component {
 						...this.state.event,
 						artists,
 						venue,
-						displayEventDate: moment(event_start)
+						displayEventDate: moment
+							.utc(event_start)
 							.tz(venue.timezone)
 							.format("MMM D, YYYY"),
-						displayDoorsOpenTime: moment(door_time)
+						displayDoorsOpenTime: moment
+							.utc(door_time)
 							.tz(venue.timezone)
 							.format("h:mm A"),
-						displayShowStartTime: moment(event_start)
+						displayShowStartTime: moment
+							.utc(event_start)
 							.tz(venue.timezone)
 							.format("h:mm A")
 					}

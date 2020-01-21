@@ -23,8 +23,9 @@ const formatValueFunctions = {
 	"PageViews.uniqueViews": (row, classes, totalUniquePageViews) => {
 		const value = Number(row["PageViews.uniqueViews"]);
 
-		const percent = `${Math.round((value / totalUniquePageViews) * 100 * 100) /
-			100}%`;
+		const percent = totalUniquePageViews
+			? `${Math.round((value / totalUniquePageViews) * 100 * 100) / 100}%`
+			: "0%";
 
 		return (
 			<span key={"PageViews.uniqueViews"}>
@@ -57,7 +58,7 @@ const formatValueFunctions = {
 	}
 };
 
-const TableRender = ({ resultSet, classes }) => {
+const TableRender = ({ resultSet, classes, salesSourceUnavailableMessage }) => {
 	const rows = resultSet.tablePivot();
 
 	let totalUniquePageViews = 0;
@@ -70,7 +71,7 @@ const TableRender = ({ resultSet, classes }) => {
 			<PageViewsRow heading>
 				{resultSet.tableColumns().map(c => columnHeadingMap[c.key] || c.title)}
 			</PageViewsRow>
-			{rows.length > 0 ? (
+			{rows.length > 0 && !salesSourceUnavailableMessage ? (
 				rows.map((row, index) => {
 					return (
 						<PageViewsRow key={index} gray={!!(index % 2)}>
@@ -93,8 +94,8 @@ const TableRender = ({ resultSet, classes }) => {
 							No Sales Source Data Available
 						</Typography>
 						<Typography className={classes.emptyStateMessage}>
-							There is no Sales Source data available yet. When a ticket is
-							purchased, information on the source will show up here.
+							{salesSourceUnavailableMessage ||
+								"There is no Sales Source data available yet. When a ticket is purchased, information on the source will show up here."}
 						</Typography>
 					</div>
 				</div>
@@ -147,7 +148,13 @@ class PageViewsTable extends Component {
 
 	render() {
 		const { cubeJsApi } = this.state;
-		const { startDate, endDate, timezone, classes } = this.props;
+		const {
+			startDate,
+			endDate,
+			timezone,
+			salesSourceUnavailableMessage,
+			classes
+		} = this.props;
 
 		const filters = [];
 
@@ -196,7 +203,11 @@ class PageViewsTable extends Component {
 				}}
 				cubejsApi={cubeJsApi}
 				render={ChartRender(props => (
-					<TableRender {...props} classes={classes}/>
+					<TableRender
+						{...props}
+						classes={classes}
+						salesSourceUnavailableMessage={salesSourceUnavailableMessage}
+					/>
 				))}
 			/>
 		);
@@ -208,7 +219,8 @@ PageViewsTable.propTypes = {
 	cubeApiUrl: PropTypes.string.isRequired,
 	startDate: PropTypes.object,
 	endDate: PropTypes.object,
-	timezone: PropTypes.string.isRequired
+	timezone: PropTypes.string.isRequired,
+	salesSourceUnavailableMessage: PropTypes.string
 };
 
 export default withStyles(styles)(PageViewsTable);
