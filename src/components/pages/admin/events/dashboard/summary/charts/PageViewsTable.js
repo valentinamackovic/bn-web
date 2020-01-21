@@ -161,7 +161,7 @@ class PageViewsTable extends Component {
 		if (startDate) {
 			filters.push({
 				dimension: "PageViews.date",
-				operator: "gt",
+				operator: "gte",
 				values: [
 					startDate
 						.clone()
