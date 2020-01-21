@@ -26,14 +26,22 @@ const styles = theme => {
 		root: {
 			width: CARD_WIDTH,
 			position: "fixed",
-			height: CARD_HEIGHT,
+			minHeight: CARD_HEIGHT,
 			padding: 39,
 			boxShadow: "10px 10px 25px 2px rgba(43,43,43,0.12)",
-			zIndex: 10
+			zIndex: 10,
+
+			[theme.breakpoints.down("sm")]: {
+				width: getScreenWidth() * 0.85
+			}
 		},
 		dataContainer: {
 			display: "flex",
-			height: "100%"
+			height: "100%",
+
+			[theme.breakpoints.down("sm")]: {
+				flexDirection: "column"
+			}
 		},
 		pieContainer: {
 			flex: 2,
@@ -211,9 +219,9 @@ class TicketSalesTooltip extends Component {
 			endDateStringFilter
 		} = this.state;
 
-		const { classes, timezone, top } = this.props;
+		const { classes, timezone } = this.props;
 
-		let { left } = this.props;
+		let { top, left } = this.props;
 
 		//Adjust to keep it on screen
 		if (left * 1.3 > screenWidth) {
@@ -222,12 +230,21 @@ class TicketSalesTooltip extends Component {
 			left = left + left * 0.3;
 		}
 
+		//If the screen is too small, fix it to the left
+		if (screenWidth < 500) {
+			left = 20;
+		} else {
+			left = left - CARD_WIDTH / 2;
+		}
+
+		top = top - CARD_HEIGHT - 20;
+
 		return (
 			<Card
 				className={classes.root}
 				style={{
-					top: top - CARD_HEIGHT - 20,
-					left: left - CARD_WIDTH / 2
+					top,
+					left
 				}}
 			>
 				{startDateStringFilter ? (

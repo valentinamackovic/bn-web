@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import moment from "moment-timezone";
 import Loader from "../../../../../../elements/loaders/Loader";
 import TicketSalesTooltip from "./TicketSalesTooltip";
+import getScreenWidth from "../../../../../../../helpers/getScreenWidth";
 
 const COLORS_SERIES = ["#707CED"];
 const FILL_SERIES = ["rgba(112,124,237,0.06)"];
@@ -64,6 +65,11 @@ class SalesLine extends Component {
 			timezone
 		} = this.props;
 
+		let borderWidth = 2;
+		if (getScreenWidth() < 500) {
+			borderWidth = 1;
+		}
+
 		const data = {
 			labels: resultSet.categories().map(c => c.category),
 			datasets: resultSet.series().map((s, index) => ({
@@ -76,7 +82,7 @@ class SalesLine extends Component {
 
 				pointHitRadius: 20,
 				//pointRadius: 4,
-				// borderWidth: 3,
+				borderWidth,
 				pointHoverRadius: 5
 				// pointHoverBorderWidth: 2
 			}))
@@ -244,7 +250,7 @@ class TicketSalesChart extends Component {
 
 TicketSalesChart.propTypes = {
 	token: PropTypes.string.isRequired,
-	startDate: PropTypes.string,
+	startDate: PropTypes.string.isRequired,
 	endDate: PropTypes.string.isRequired,
 	cubeApiUrl: PropTypes.string.isRequired,
 	timezone: PropTypes.string.isRequired
