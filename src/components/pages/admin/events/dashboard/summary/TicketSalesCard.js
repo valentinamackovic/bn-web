@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { Typography, Hidden } from "@material-ui/core";
 import PropTypes from "prop-types";
@@ -6,22 +6,20 @@ import PropTypes from "prop-types";
 import CollapseCard from "./CollapseCard";
 import { fontFamilyDemiBold } from "../../../../../../config/theme";
 import TicketSalesChart from "./charts/TicketSalesChart";
-import ticketCountReport from "../../../../../../stores/reports/ticketCountReport";
-import EventTicketCountTable from "../../../reports/counts/EventTicketCountTable";
 import moment from "moment";
 
 const styles = theme => {
 	return {
 		root: {
-			// [theme.breakpoints.up("sm")]: {
-			// 	padding: 30
-			// },
-			// [theme.breakpoints.down("md")]: {
-			// 	padding: 10
-			// },
-			// [theme.breakpoints.down("sm")]: {
-			// 	padding: 0
-			// }
+			[theme.breakpoints.up("sm")]: {
+				padding: 30
+			},
+			[theme.breakpoints.down("md")]: {
+				padding: 10
+			},
+			[theme.breakpoints.down("sm")]: {
+				padding: 0
+			}
 		},
 		titleText: {
 			fontFamily: fontFamilyDemiBold,
@@ -31,78 +29,34 @@ const styles = theme => {
 	};
 };
 
-class TicketSalesCard extends Component {
-	constructor(props) {
-		super(props);
-		this.state = { ticketCounts: null };
-	}
+const TicketSalesCard = ({
+	classes,
+	token,
+	on_sale,
+	event_end,
+	venue,
+	cubeApiUrl,
+	...rest
+}) => {
+	const title = "Ticket Sales";
 
-	refreshData() {
-		const { organization_id, id } = this.props;
-		const queryParams = { organization_id, event_id: id };
+	return (
+		<CollapseCard title={title} className={classes.root}>
+			<div className={classes.root}>
+				<Hidden smDown>
+					<Typography className={classes.titleText}>{title}</Typography>
+				</Hidden>
 
-		ticketCountReport.fetchCountAndSalesData(queryParams, false, () => {
-			const ticketCounts = ticketCountReport.dataByPrice[id];
-
-			this.setState({ ticketCounts });
-		});
-	}
-
-	render() {
-		const {
-			classes,
-			token,
-			on_sale,
-			event_end,
-			venue,
-			cubeApiUrl,
-			name,
-			organization_id,
-			id,
-			publish_date,
-			...rest
-		} = this.props;
-
-		const title = "Ticket Sales";
-
-		const { ticketCounts } = this.state;
-		if (!ticketCounts) {
-			this.refreshData();
-		}
-
-		return (
-			<CollapseCard
-				title={title}
-				className={classes.root}
-				iconPath={"/icons/graph.png"}
-			>
-				<div className={classes.root}>
-					<Hidden smDown>
-						<Typography className={classes.titleText}>{title}</Typography>
-					</Hidden>
-
-					<TicketSalesChart
-						cubeApiUrl={cubeApiUrl}
-						token={token}
-						timezone={venue.timezone}
-						startDate={publish_date}
-						endDate={event_end}
-					/>
-				</div>
-				{ticketCounts ? (
-					<div className={classes.root}>
-						<EventTicketCountTable
-							ticketCounts={ticketCounts}
-							hideDetails={true}
-						/>
-					</div>
-				) : (
-					<div>Loading</div>
-				)}
-			</CollapseCard>
-		);
-	}
-}
+				<TicketSalesChart
+					cubeApiUrl={cubeApiUrl}
+					token={token}
+					timezone={venue.timezone}
+					endDate={event_end}
+				/>
+			</div>
+		</CollapseCard>
+	);
+};
 
 TicketSalesCard.propTypes = {
 	classes: PropTypes.object.isRequired,

@@ -5,7 +5,6 @@ import React from "react";
 import { withStyles, withTheme } from "@material-ui/core/styles";
 import { Typography } from "@material-ui/core";
 import Hidden from "@material-ui/core/Hidden";
-import getScreenWidth from "../../../helpers/getScreenWidth";
 
 const styles = theme => {
 	return {
@@ -32,12 +31,7 @@ const ScreenWidthDebug = ({ classes, theme }) => {
 				return (
 					<Hidden key={size} only={excludingSizes}>
 						<Typography className={classes.text}>{size}</Typography>
-						<Typography className={classes.textSmall}>
-							{theme.breakpoints.only(size)}
-						</Typography>
-						<Typography className={classes.textSmall}>
-							Current width: {getScreenWidth()}
-						</Typography>
+						<Typography className={classes.textSmall}>{theme.breakpoints.only(size)}</Typography>
 					</Hidden>
 				);
 			})}

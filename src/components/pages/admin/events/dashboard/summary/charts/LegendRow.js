@@ -32,8 +32,7 @@ const styles = theme => {
 		},
 		valueLabel: {
 			fontSize: 15,
-			fontFamily: fontFamilyBold,
-			marginTop: 4
+			fontFamily: fontFamilyBold
 		},
 		subValueLabel: {
 			fontSize: 15,
@@ -53,7 +52,7 @@ const LegendRow = props => {
 				<Typography className={classes.label}>{label}</Typography>
 			</div>
 			<Typography className={classes.valueLabel}>
-				{valueLabel}&nbsp;
+				{valueLabel}{" "}
 				<span className={classes.subValueLabel}>
 					{subValueLabel ? `(${subValueLabel})` : ""}
 				</span>
