@@ -264,7 +264,7 @@ class TicketSalesTooltip extends Component {
 							filters: [
 								{
 									dimension: "PageViews.date",
-									operator: "gt",
+									operator: "gte",
 									values: [startDateStringFilter]
 								},
 								{
