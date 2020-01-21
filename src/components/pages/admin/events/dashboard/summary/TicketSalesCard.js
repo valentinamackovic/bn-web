@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { Typography, Hidden, Collapse } from "@material-ui/core";
 import PropTypes from "prop-types";
+import moment from "moment-timezone";
 
 import CollapseCard from "./CollapseCard";
 import {
@@ -61,7 +62,10 @@ class TicketSalesCard extends Component {
 
 		this.state = {
 			ticketCounts: null,
-			showTicketCounts: false
+			showTicketCounts: false,
+			publishDateMinusOneDayUTC: moment(props.publish_date)
+				.subtract(1, "days")
+				.format()
 		};
 	}
 
@@ -80,7 +84,6 @@ class TicketSalesCard extends Component {
 		const {
 			classes,
 			token,
-			on_sale,
 			event_end,
 			venue,
 			cubeApiUrl,
@@ -93,7 +96,11 @@ class TicketSalesCard extends Component {
 
 		const title = "Ticket Sales";
 
-		const { ticketCounts, showTicketCounts } = this.state;
+		const {
+			ticketCounts,
+			showTicketCounts,
+			publishDateMinusOneDayUTC
+		} = this.state;
 		if (!ticketCounts) {
 			this.refreshData();
 		}
@@ -145,7 +152,7 @@ class TicketSalesCard extends Component {
 						cubeApiUrl={cubeApiUrl}
 						token={token}
 						timezone={venue.timezone}
-						startDate={publish_date}
+						startDate={publishDateMinusOneDayUTC}
 						endDate={event_end}
 					/>
 				</div>
@@ -157,7 +164,7 @@ class TicketSalesCard extends Component {
 TicketSalesCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	token: PropTypes.string.isRequired,
-	on_sale: PropTypes.string.isRequired,
+	publish_date: PropTypes.string.isRequired,
 	event_end: PropTypes.string.isRequired,
 	venue: PropTypes.object.isRequired,
 	cubeApiUrl: PropTypes.string.isRequired

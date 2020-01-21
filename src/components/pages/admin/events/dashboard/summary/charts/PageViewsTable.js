@@ -12,7 +12,7 @@ const upperFirstChar = string =>
 	string ? string[0].toUpperCase() + string.slice(1) : "";
 
 const columnHeadingMap = {
-	"PageViews.uniqueViews": "Unique Page Views",
+	"PageViews.uniqueViews": "Unique Visitors",
 	"PageViews.source": "Source",
 	"PageViews.medium": "Medium",
 	"PageViews.tickets": "Tickets Sold",
@@ -36,8 +36,8 @@ const formatValueFunctions = {
 	"PageViews.source": (row, classes, totalUniquePageViews) => {
 		const val = row["PageViews.source"];
 
-		if (!val) {
-			return "Direct";
+		if (!val || val.toLowerCase() == "direct") {
+			return "Big Neon";
 		}
 
 		return upperFirstChar(val);

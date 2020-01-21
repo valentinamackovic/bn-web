@@ -109,7 +109,7 @@ class SalesLine extends Component {
 				custom: tooltipModel => {
 					// hide the tooltip
 					if (tooltipModel.opacity === 0) {
-						this.hideTooltip();
+						//this.hideTooltip();
 						return;
 					}
 
@@ -162,7 +162,11 @@ class SalesLine extends Component {
 						ticks: {
 							min: 0,
 							callback: function(label, index, labels) {
-								return label;
+								if (Number(label) % 1 != 0) {
+									return "";
+								} else {
+									return label;
+								}
 							}
 						}
 					}

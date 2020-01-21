@@ -97,7 +97,7 @@ class SalesSourceCard extends Component {
 	constructor(props) {
 		super(props);
 
-		const cutOffDateString = "2020-01-09T00:00:00";
+		const cutOffDateString = "2020-01-01T00:00:00";
 
 		const { publish_date } = props;
 		const salesSourceAvailable = moment

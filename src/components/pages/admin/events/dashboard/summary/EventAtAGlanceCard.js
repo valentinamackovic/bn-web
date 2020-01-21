@@ -1,6 +1,8 @@
 import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import { Typography, Hidden } from "@material-ui/core";
+import PropTypes from "prop-types";
+
 import CollapseCard from "./CollapseCard";
 import HorizontalBreakdownBar from "../../../../../elements/charts/HorizontalBreakdownBar";
 import {
@@ -8,10 +10,7 @@ import {
 	fontFamilyDemiBold
 } from "../../../../../../config/theme";
 import ActivityChart from "./charts/ActivityChart";
-// import AttendanceChart from "./charts/AttendanceChart";
-import PropTypes from "prop-types";
 import { dollars } from "../../../../../../helpers/money";
-import EventSummaryCard from "../../EventSummaryCard";
 
 const styles = theme => {
 	return {
@@ -43,7 +42,8 @@ const styles = theme => {
 			color: "#9DA3B4",
 			paddingTop: 7,
 			fontSize: 11,
-			fontFamily: fontFamilyBold
+			fontFamily: fontFamilyBold,
+			marginLeft: 2
 		},
 		valueContainer: {
 			marginRight: 20
