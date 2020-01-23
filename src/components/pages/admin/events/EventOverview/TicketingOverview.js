@@ -31,10 +31,13 @@ const TicketingOverview = ({
 		visibility,
 		limit_per_person,
 		end_date_type,
+		app_sales_enabled,
+		web_sales_enabled,
+		box_office_sales_enabled,
 		parent_name
 	} = ticket_type;
 	const displayStartDate = parent_name
-		? "When sales end for "
+		? "When sales end for..."
 		: start_date
 			? moment
 				.utc(start_date)
@@ -62,13 +65,14 @@ const TicketingOverview = ({
 
 	//General ticket info columns
 	const colStyles = [
-		{ flex: 3 },
+		{ flex: 1 },
+		{ flex: 1 },
+		{ flex: 1 },
 		{ flex: 2 },
 		{ flex: 2 },
-		{ flex: 2 },
-		{ flex: 2 },
-		start_date ? { flex: 2 } : { flex: 4 },
-		{ flex: 2 }
+		start_date ? { flex: 1 } : { flex: 2 },
+		end_date ? { flex: 1 } : { flex: 2 },
+		end_date ? { flex: 1 } : { flex: 2 }
 	];
 	const headings = [
 		"Ticket name",
@@ -93,17 +97,72 @@ const TicketingOverview = ({
 	];
 
 	//Additional info cols
-	const infoColStyles = [{ flex: 2 }, { flex: 2 }, { flex: 2 }, { flex: 2 }];
+	const infoColStyles = [
+		{ flex: 2 },
+		{ flex: 2 },
+		{ flex: 2 },
+		{ flex: 2 },
+		{ flex: 2 }
+	];
 	const infoHeadings = [
-		"Max tickets per customer",
 		"visibility",
+		"Point of sale",
+		"Max tickets per customer",
 		"cart quantity increment",
 		"per ticket fee increase"
 	];
 
+	function getPointOfSale() {
+		let pointOfSale = "";
+
+		if (web_sales_enabled && box_office_sales_enabled && app_sales_enabled) {
+			pointOfSale = "Web, App, and Box Office";
+		} else if (
+			web_sales_enabled &&
+			box_office_sales_enabled &&
+			!app_sales_enabled
+		) {
+			pointOfSale = "Web and Box Office";
+		} else if (
+			web_sales_enabled &&
+			!box_office_sales_enabled &&
+			app_sales_enabled
+		) {
+			pointOfSale = "Web and App";
+		} else if (
+			!web_sales_enabled &&
+			box_office_sales_enabled &&
+			app_sales_enabled
+		) {
+			pointOfSale = "Box Office and App";
+		} else if (
+			web_sales_enabled &&
+			!box_office_sales_enabled &&
+			!app_sales_enabled
+		) {
+			pointOfSale = "Web Only";
+		} else if (
+			!web_sales_enabled &&
+			box_office_sales_enabled &&
+			!app_sales_enabled
+		) {
+			pointOfSale = "Box Office Only";
+		} else if (
+			!web_sales_enabled &&
+			!box_office_sales_enabled &&
+			app_sales_enabled
+		) {
+			pointOfSale = "App Only";
+		} else {
+			pointOfSale = "None";
+		}
+		return pointOfSale;
+	}
+
 	const infoValues = [
-		limit_per_person === 0 ? "None" : limit_per_person,
 		splitByCamelCase(visibility),
+		getPointOfSale(),
+		limit_per_person === 0 ? "None" : limit_per_person,
 		increment,
 		dollars(additional_fee_in_cents)
 	];
@@ -157,45 +216,57 @@ const TicketingOverview = ({
 			</Hidden>
 			{/*DESKTOP*/}
 			<Hidden smDown>
-				<Grid container>
+				<div className={classes.detailsTopRow}>
 					{headings.map((heading, index) =>
 						heading ? (
-							<Grid item key={index} xs>
-								<Typography className={classes.smallGreyCapTitle}>
-									{heading}
-								</Typography>
-								<Typography className={classes.smallTitle}>
-									{values[index]}
-								</Typography>
-							</Grid>
+							<Typography
+								key={index}
+								style={colStyles[index]}
+								className={classes.smallGreyCapTitle}
+							>
+								{heading}
+							</Typography>
 						) : null
 					)}
-					<Hidden smDown>
-						{!isExpanded ? (
-							<div
-								className={classes.expandIconRowDesktop}
-								onClick={() => onExpandClick(id)}
+				</div>
+				<div className={classes.detailsTopRow}>
+					{values.map((value, index) =>
+						value ? (
+							<Typography
+								key={index}
+								style={colStyles[index]}
+								className={classes.smallTitle}
 							>
-								<img
-									className={classes.expandIcon}
-									src={servedImage("/icons/down-active.svg")}
-								/>
-							</div>
-						) : (
-							<div
-								className={classes.expandIconRowDesktop}
-								onClick={() => onExpandClick(null)}
-							>
-								<img
-									className={classes.expandIcon}
-									src={servedImage("/icons/up-active.svg")}
-								/>
-							</div>
-						)}
-					</Hidden>
-				</Grid>
+								{value}
+							</Typography>
+						) : null
+					)}
+					{!isExpanded ? (
+						<div
+							className={classes.expandIconRowDesktop}
+							onClick={() => onExpandClick(id)}
+						>
+							<img
+								className={classes.expandIcon}
+								src={servedImage("/icons/down-active.svg")}
+							/>
+						</div>
+					) : (
+						<div
+							className={classes.expandIconRowDesktop}
+							onClick={() => onExpandClick(null)}
+						>
+							<img
+								className={classes.expandIcon}
+								src={servedImage("/icons/up-active.svg")}
+							/>
+						</div>
+					)}
+				</div>
+
 				<Collapse
-					in={isExpanded}
+					// in={isExpanded}
+					in={true}
 					timeout="auto"
 					classes={{ wrapper: classes.noBackground }}
 				>

@@ -216,7 +216,10 @@ const styles = theme => ({
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center",
-		justifyContent: "center"
+		justifyContent: "center",
+		position: "absolute",
+		right: 20,
+		zIndex: 500
 	},
 	expandIcon: {
 		width: 20
@@ -257,7 +260,10 @@ const styles = theme => ({
 		}
 	},
 	detailsTopRow: {
-		display: "flex"
+		display: "flex",
+		[theme.breakpoints.up("sm")]: {
+			position: "relative"
+		}
 	},
 	detailsContainer: {
 		marginBottom: 10
