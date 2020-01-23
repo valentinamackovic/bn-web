@@ -222,7 +222,7 @@ class TicketSalesChart extends Component {
 
 	render() {
 		const { cubeJsApi } = this.state;
-		const { startDate, endDate, timezone, token, cubeApiUrl } = this.props;
+		const { startDate, endDate, timezone, token, cubeApiUrl, cutOffDateString } = this.props;
 
 		return (
 			<QueryRenderer
@@ -252,6 +252,7 @@ class TicketSalesChart extends Component {
 						token={token}
 						cubeApiUrl={cubeApiUrl}
 						timezone={timezone}
+						cutOffDateString={cutOffDateString}
 					/>
 				))}
 			/>
