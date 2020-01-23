@@ -66,9 +66,6 @@ const AdminEventsList = asyncComponent(() =>
 	import("../pages/admin/events/List")
 );
 const AdminEventDashboardSummary = asyncComponent(() =>
-	import("../pages/admin/events/dashboard/Summary")
-);
-const AdminEventDashboardSummaryV2 = asyncComponent(() =>
 	import("../pages/admin/events/dashboard/Summary_V2")
 );
 const AdminEventDashboardHolds = asyncComponent(() =>
@@ -459,12 +456,6 @@ class Routes extends Component {
 									exact
 									path="/admin/events/:id/dashboard"
 									component={AdminEventDashboardSummary}
-									isAuthenticated={isAuthenticated}
-								/>
-								<PrivateRoute
-									exact
-									path="/admin/events/:id/dashboard_v2"
-									component={AdminEventDashboardSummaryV2}
 									isAuthenticated={isAuthenticated}
 								/>
 								<PrivateRoute
