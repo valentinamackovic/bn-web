@@ -212,6 +212,12 @@ const styles = theme => ({
 		right: 20,
 		zIndex: 500
 	},
+	expandIconRowDesktop: {
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center",
+		justifyContent: "center"
+	},
 	expandIcon: {
 		width: 20
 	},

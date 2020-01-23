@@ -126,7 +126,7 @@ const TicketingOverview = ({
 		"price"
 	];
 
-	const ticket_pricing_order = ticket_pricing.sort(function (a, b) {
+	const ticket_pricing_order = ticket_pricing.sort(function(a, b) {
 		return new Date(a.start_date) - new Date(b.start_date);
 	});
 	return (
@@ -170,55 +170,82 @@ const TicketingOverview = ({
 							</Grid>
 						) : null
 					)}
+					<Hidden smDown>
+						{!isExpanded ? (
+							<div
+								className={classes.expandIconRowDesktop}
+								onClick={() => onExpandClick(id)}
+							>
+								<img
+									className={classes.expandIcon}
+									src={servedImage("/icons/down-active.svg")}
+								/>
+							</div>
+						) : (
+							<div
+								className={classes.expandIconRowDesktop}
+								onClick={() => onExpandClick(null)}
+							>
+								<img
+									className={classes.expandIcon}
+									src={servedImage("/icons/up-active.svg")}
+								/>
+							</div>
+						)}
+					</Hidden>
 				</Grid>
-				{description ? (
-					<div>
-						<Divider className={classes.dividerStyle}/>
-						<Typography className={classes.smallGreyCapTitle}>
-							Ticket description
-						</Typography>
-						<Typography className={classes.smallTitle}>
-							{description}
-						</Typography>
+				<Collapse
+					in={isExpanded}
+					timeout="auto"
+					classes={{ wrapper: classes.noBackground }}
+				>
+					{description ? (
+						<div>
+							<Divider className={classes.dividerStyle}/>
+							<Typography className={classes.smallGreyCapTitle}>
+								Ticket description
+							</Typography>
+							<Typography className={classes.smallTitle}>
+								{description}
+							</Typography>
+						</div>
+					) : null}
+
+					<Divider className={classes.dividerStyle}/>
+
+					<div className={classes.detailsTopRow}>
+						{infoHeadings.map((heading, index) =>
+							heading ? (
+								<Typography
+									key={index}
+									style={infoColStyles[index]}
+									className={classes.smallGreyCapTitle}
+								>
+									{heading}
+								</Typography>
+							) : null
+						)}
 					</div>
-				) : null}
-
-				<Divider className={classes.dividerStyle}/>
-
-				<div className={classes.detailsTopRow}>
-					{infoHeadings.map((heading, index) =>
-						heading ? (
-							<Typography
-								key={index}
-								style={infoColStyles[index]}
-								className={classes.smallGreyCapTitle}
-							>
-								{heading}
+					<div className={classes.detailsTopRow}>
+						{infoValues.map((value, index) =>
+							value ? (
+								<Typography
+									key={index}
+									style={infoColStyles[index]}
+									className={classes.smallTitle}
+								>
+									{value}
+								</Typography>
+							) : null
+						)}
+					</div>
+					{ticket_pricing.length > 0 ? (
+						<div>
+							<Divider className={classes.dividerStyle}/>
+							<Typography className={classes.headerTitle}>
+								Scheduled Price Change
 							</Typography>
-						) : null
-					)}
-				</div>
-				<div className={classes.detailsTopRow}>
-					{infoValues.map((value, index) =>
-						value ? (
-							<Typography
-								key={index}
-								style={infoColStyles[index]}
-								className={classes.smallTitle}
-							>
-								{value}
-							</Typography>
-						) : null
-					)}
-				</div>
-				{ticket_pricing.length > 0 ? (
-					<div>
-						<Divider className={classes.dividerStyle}/>
-						<Typography className={classes.headerTitle}>
-							Scheduled Price Change
-						</Typography>
-						{ticket_pricing_order
-							.map((ticket, index) => {
+							{ticket_pricing_order.map((ticket, index) => {
 								const displayStartDate = ticket.start_date
 									? moment
 										.utc(ticket.start_date)
@@ -282,10 +309,10 @@ const TicketingOverview = ({
 										</div>
 									</Card>
 								);
-							}
-							)}
-					</div>
-				) : null}
+							})}
+						</div>
+					) : null}
+				</Collapse>
 			</Hidden>
 			{/*MOBILE*/}
 			<Hidden mdUp>
