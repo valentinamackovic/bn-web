@@ -97,12 +97,20 @@ class SalesSourceCard extends Component {
 	constructor(props) {
 		super(props);
 
+		const cutOffDateString = "2020-01-01T00:00:00";
+
+		const { publish_date } = props;
+		const salesSourceAvailable = moment
+			.utc(publish_date)
+			.isAfter(moment.utc(cutOffDateString));
+
 		this.state = {
 			selectedTimePeriod: "all",
 			startDate: null,
 			endDate: null,
 			showCustomDateRange: false,
-			errors: {}
+			errors: {},
+			salesSourceAvailable
 		};
 
 		this.onChangeSelectTime = this.onChangeSelectTime.bind(this);
@@ -111,7 +119,7 @@ class SalesSourceCard extends Component {
 	}
 
 	onChangeSelectTime(e) {
-		const { on_sale } = this.props;
+		const { on_sale, venue } = this.props;
 		const selectedTimePeriod = e.target.value;
 
 		let startDate = null;
@@ -120,29 +128,35 @@ class SalesSourceCard extends Component {
 
 		switch (selectedTimePeriod) {
 			case "today": {
-				startDate = moment().startOf("day");
+				startDate = moment()
+					.tz(venue.timezone)
+					.startOf("day");
 				break;
 			}
 			case "yesterday": {
 				startDate = moment()
+					.tz(venue.timezone)
 					.subtract(1, "days")
 					.startOf("day");
-				endDate = moment().startOf("day");
+				endDate = moment()
+					.tz(venue.timezone)
+					.startOf("day");
 				break;
 			}
 			case "30-days": {
 				startDate = moment()
+					.tz(venue.timezone)
 					.subtract(30, "days")
 					.startOf("day");
 				break;
 			}
 			case "custom": {
 				showCustomDateRange = true;
+				startDate = moment().tz(venue.timezone);
+				endDate = moment().tz(venue.timezone);
+
 				break;
 			}
-			// case "all":
-			// default: {
-			// }
 		}
 
 		this.setState({
@@ -155,14 +169,13 @@ class SalesSourceCard extends Component {
 
 	onChangeStartDate(startDate) {
 		//TODO set errors
-
-		this.setState({ startDate });
+		this.setState({ startDate: startDate.startOf("day") });
 	}
 
 	onChangeEndDate(endDate) {
 		//TODO set errors
 
-		this.setState({ endDate });
+		this.setState({ endDate: endDate.endOf("day") });
 	}
 
 	render() {
@@ -174,8 +187,13 @@ class SalesSourceCard extends Component {
 			startDate,
 			endDate,
 			showCustomDateRange,
-			errors
+			errors,
+			salesSourceAvailable
 		} = this.state;
+
+		const salesSourceUnavailableMessage = !salesSourceAvailable
+			? "Sales source data is only available for events that started on or after January 9, 2020."
+			: "";
 
 		return (
 			<CollapseCard title={title} className={classes.root}>
@@ -228,6 +246,7 @@ class SalesSourceCard extends Component {
 							startDate={startDate}
 							endDate={endDate}
 							timezone={venue.timezone}
+							salesSourceUnavailableMessage={salesSourceUnavailableMessage}
 						/>
 					</div>
 				</div>
