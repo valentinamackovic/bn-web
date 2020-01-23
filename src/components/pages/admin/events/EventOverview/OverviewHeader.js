@@ -20,7 +20,8 @@ const OverviewHeader = ({ classes, event, artists, venue }) => {
 	} = event;
 
 	const isPublished = moment.utc(publish_date).isBefore(moment.utc());
-	const isOnSale = isPublished && moment.utc(sales_start_date).isBefore(moment.utc());
+	const isOnSale =
+		isPublished && moment.utc(sales_start_date).isBefore(moment.utc());
 	const eventEnded = moment.utc(event_end).isBefore(moment.utc());
 
 	const promo_image_url = event.promo_image_url
@@ -30,7 +31,7 @@ const OverviewHeader = ({ classes, event, artists, venue }) => {
 	if (promo_image_url) {
 		promoImgStyle.backgroundImage = `url(${promo_image_url})`;
 	}
-	const shortDate = moment(event_start).format("MMM D, YYYY");
+	const shortDate = moment(event_start).format("ddd, MMM D, YYYY");
 	const shortDoorTime = moment(door_time).format("LT");
 	const shortShowTime = moment(event_start).format("LT");
 	let tags = null;
@@ -59,23 +60,36 @@ const OverviewHeader = ({ classes, event, artists, venue }) => {
 			</div>
 		);
 	}
+
+	function renderArtistSubtitle() {
+		if (artists.length > 1) {
+			return (
+				<Typography className={classes.headerSupportingSubtitle}>
+					With&nbsp;
+					{artists.map(({ artist }, index) => {
+						if (artist.name != name) {
+							return (
+								<span key={index}>
+									{artist.name}
+									{artists.length === index + 1 ? "" : " and "}
+								</span>
+							);
+						}
+					})}
+				</Typography>
+			);
+		} else {
+			return <div>&nbsp;</div>;
+		}
+	}
+
 	return (
 		<Card className={classes.eventHeaderInfo}>
 			<div className={classes.headerImage} style={promoImgStyle}/>
 			<div className={classes.headerInfo}>
 				<Typography className={classes.headerTitle}>{name}</Typography>
 				<div className={classes.justifyBetween}>
-					{artists ? (
-						<Typography className={classes.headerSupportingSubtitle}>
-							With&nbsp;
-							{artists.map(({ artist }, index) => (
-								<span key={index}>
-									{artist.name}
-									{artists.length === index + 1 ? "" : " and "}
-								</span>
-							))}
-						</Typography>
-					) : null}
+					{renderArtistSubtitle()}
 					{tags}
 				</div>
 				<Divider className={classes.dividerStyle}/>

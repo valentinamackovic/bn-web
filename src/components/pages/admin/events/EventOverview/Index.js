@@ -42,6 +42,7 @@ import RemoveRedEye from "@material-ui/icons/RemoveRedEye";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import Button from "../../../../elements/Button";
 import DeleteCancelEventDialog from "../DeleteCancelEventDialog";
+import ArtistSummary from "../../../../elements/event/ArtistSummary";
 
 const styles = theme => ({
 	paper: {
@@ -558,12 +559,7 @@ class EventOverview extends Component {
 								Artists
 							</Typography>
 							{artists.map(({ artist, importance }, index) => (
-								<ArtistsOverview
-									key={index}
-									classes={classes}
-									artist={artist}
-									importance={importance}
-								/>
+								<ArtistSummary headliner={importance === 0} {...artist}/>
 							))}
 						</div>
 					) : null}
