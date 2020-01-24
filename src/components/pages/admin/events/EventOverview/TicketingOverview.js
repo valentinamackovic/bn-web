@@ -67,9 +67,9 @@ const TicketingOverview = ({
 		{ flex: 1 },
 		{ flex: 1 },
 		{ flex: 1 },
+		parent_name ? { flex: 2 } : { flex: 1 },
 		{ flex: 2 },
-		{ flex: 2 },
-		start_date ? { flex: 1 } : { flex: 2 },
+		start_date ? { flex: 1 } : { flex: 1 },
 		end_date ? { flex: 1 } : { flex: 2 },
 		end_date ? { flex: 1 } : { flex: 2 }
 	];

@@ -293,7 +293,12 @@ class EventOverview extends Component {
 			eventMenuSelected: this.props.match.params.id,
 			expandedCardId: null,
 			isDelete: false,
-			deleteCancelEventId: null
+			deleteCancelEventId: null,
+
+			displayEventStart: null,
+			displayEventEnd: null,
+			displayEventStartTime: null,
+			displayEventEndTime: null
 		};
 		this.formatDateL = this.formatDateL.bind(this);
 		this.handleExpandTicketCard = this.handleExpandTicketCard.bind(this);
@@ -375,12 +380,28 @@ class EventOverview extends Component {
 						slug,
 						organization_id: organizationId,
 						name,
-						event_type
+						event_type,
+						event_start,
+						event_end
 					} = selectedEvent.event;
 					//Replace the id in the URL with the slug if we have it and it isn't currently set
 					if (id === selectedEventId && slug) {
 						replaceIdWithSlug(id, slug);
 					}
+					const { venue } = selectedEvent;
+
+					this.setState({
+						displayEventStart: this.formatDateL(event_start, venue.timezone),
+						displayEventEnd: this.formatDateL(event_end, venue.timezone),
+						displayEventStartTime: moment
+							.utc(event_start)
+							.tz(venue.timezone)
+							.format("hh:mm A"),
+						displayEventEndTime: moment
+							.utc(event_end)
+							.tz(venue.timezone)
+							.format("hh:mm A")
+					});
 
 					analytics.viewContent(
 						[selectedEventId],
@@ -408,7 +429,11 @@ class EventOverview extends Component {
 			ticket_types_info,
 			expandedCardId,
 			deleteCancelEventId,
-			isDelete
+			isDelete,
+			displayEventStart,
+			displayEventEnd,
+			displayEventStartTime,
+			displayEventEndTime
 		} = this.state;
 		const { event, venue, artists, ticket_types } = selectedEvent;
 
@@ -425,17 +450,6 @@ class EventOverview extends Component {
 		}
 
 		const { id, name, event_start, event_end } = event;
-
-		const displayEventStart = this.formatDateL(event_start, venue.timezone);
-		const displayEventEnd = this.formatDateL(event_end, venue.timezone);
-		const displayEventStartTime = moment
-			.utc(event_start)
-			.tz(venue.timezone)
-			.format("hh:mm A");
-		const displayEventEndTime = moment
-			.utc(event_end)
-			.tz(venue.timezone)
-			.format("hh:mm A");
 
 		const promo_image_url = event.promo_image_url
 			? optimizedImageUrl(event.promo_image_url)
@@ -564,7 +578,11 @@ class EventOverview extends Component {
 								Artists
 							</Typography>
 							{artists.map(({ artist, importance }, index) => (
-								<ArtistSummary headliner={importance === 0} {...artist}/>
+								<ArtistSummary
+									key={index}
+									headliner={importance === 0}
+									{...artist}
+								/>
 							))}
 						</div>
 					) : null}
