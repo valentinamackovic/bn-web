@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import { withStyles } from "@material-ui/core/styles";
-import { Typography, Hidden, Collapse } from "@material-ui/core";
+import { Typography, Hidden, Card } from "@material-ui/core";
 import PropTypes from "prop-types";
 import moment from "moment-timezone";
 
@@ -63,7 +63,7 @@ const styles = theme => {
 	};
 };
 
-class TicketSalesCard extends Component {
+class TicketSalesChartCard extends Component {
 	constructor(props) {
 		super(props);
 
@@ -113,65 +113,31 @@ class TicketSalesCard extends Component {
 			this.refreshData();
 		}
 
-		const footerContent = (
-			<React.Fragment>
-				<Typography
-					className={classes.showHideLink}
-					onClick={() => this.setState({ showTicketCounts: !showTicketCounts })}
-				>
-					{showTicketCounts ? "Hide" : "Show"} Ticket Type Breakdown
-					<img
-						src={`/icons/${showTicketCounts ? "up" : "down"}-active.svg`}
-						className={classes.dropDownIcon}
-					/>
-				</Typography>
-				<Collapse in={showTicketCounts}>
-					{ticketCounts ? (
-						<div className={classes.tableContainer}>
-							<div className={classes.scroll}>
-								<div className={classes.block}>
-									<EventTicketCountTable
-										ticketCounts={ticketCounts}
-										hideDetails={true}
-									/>
-								</div>
-							</div>
-						</div>
-					) : (
-						<Loader>Loading Ticket Type Breakdown</Loader>
-					)}
-				</Collapse>
-			</React.Fragment>
-		);
-
 		return (
 			<CollapseCard
 				title={title}
 				className={classes.root}
 				iconPath={"/icons/graph.png"}
-				footerContent={footerContent}
 			>
 				<div className={classes.root}>
 					<Hidden smDown>
 						<Typography className={classes.titleText}>{title}</Typography>
 					</Hidden>
-					<div className={classes.chartContainer}>
-						<TicketSalesChart
-							cubeApiUrl={cubeApiUrl}
-							token={token}
-							timezone={venue.timezone}
-							startDate={publishDateMinusOneDayUTC}
-							endDate={event_end}
-							cutOffDateString={cutOffDateString}
-						/>
-					</div>
+
+					<TicketSalesChart
+						cubeApiUrl={cubeApiUrl}
+						token={token}
+						timezone={venue.timezone}
+						startDate={publishDateMinusOneDayUTC}
+						endDate={event_end}
+					/>
 				</div>
 			</CollapseCard>
 		);
 	}
 }
 
-TicketSalesCard.propTypes = {
+TicketSalesChartCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	token: PropTypes.string.isRequired,
 	publish_date: PropTypes.string.isRequired,
@@ -181,4 +147,4 @@ TicketSalesCard.propTypes = {
 	cutOffDateString: PropTypes.string
 };
 
-export default withStyles(styles)(TicketSalesCard);
+export default withStyles(styles)(TicketSalesChartCard);

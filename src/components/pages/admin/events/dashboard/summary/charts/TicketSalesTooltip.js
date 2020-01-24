@@ -103,12 +103,14 @@ const DataRenderer = ({ resultSet, displayDate, classes, closeToolTip }) => {
 		}
 	});
 
+	//Limit to 4 items
 	const items = rows.map((row, index) => {
 		if(index <= 3) {
 			return row;
 		}
 	});
 
+	//If more than 4 items put them all in "Other" and group tickets
 	const sum = rows.map(function (object, index) {
 		if(index > 3) {
 			return Object.keys(object).reduce(function (sum, key) {
@@ -118,14 +120,14 @@ const DataRenderer = ({ resultSet, displayDate, classes, closeToolTip }) => {
 				}
 			}, 0);
 		} else {
-			return 0;
+			return 0; //items before 4th
 		}
 	});
 
 	const rowsUpdated = items.concat({
 		"PageViews.source": "other",
 		"PageViews.medium": "other",
-		"PageViews.tickets": sum.reduce((a, b) => a + b, 0)
+		"PageViews.tickets": sum.reduce((a, b) => a + b, 0) //tally ticket numbers
 	});
 
 	return (

@@ -3,7 +3,7 @@ import cubejs from "@cubejs-client/core";
 import { QueryRenderer } from "@cubejs-client/react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import {Hidden, Typography} from "@material-ui/core";
+import { Hidden, Typography } from "@material-ui/core";
 import DoughnutChart from "./DoughnutChart";
 import {
 	fontFamilyDemiBold,
