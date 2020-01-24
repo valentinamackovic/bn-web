@@ -103,10 +103,12 @@ const appendMissingDatasets = (resultSet, legendKeyMap) => {
 			return;
 		}
 
-		data.push({
-			[query.dimensions[0]]: label,
-			[query.measures[0]]: "0"
-		});
+		if (!data.find(x=> x[query.dimensions[0]] === label)){
+			data.push({
+				[query.dimensions[0]]: label,
+				[query.measures[0]]: "0"
+			});
+		}
 	});
 
 	resultSet.loadResponse = { ...loadResponse, data };
