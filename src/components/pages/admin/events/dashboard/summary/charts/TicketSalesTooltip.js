@@ -14,6 +14,8 @@ import Loader from "../../../../../../elements/loaders/Loader";
 import DoughnutChart from "./DoughnutChart";
 import LegendRow from "./LegendRow";
 import getScreenWidth from "../../../../../../../helpers/getScreenWidth";
+import IconButton from "../../../../../../elements/IconButton";
+import Hidden from "@material-ui/core/Hidden";
 
 const COLORS = ["#00F1C5", "#00C5CB", "#FFC65F", secondaryHex];
 const DEBOUNCE_DELAY = 250;
@@ -72,51 +74,95 @@ const styles = theme => {
 		emptyStateText: {
 			fontSize: 15,
 			color: "#979797"
+		},
+		emptyStateContainer: {
+			marginTop: 20
+		},
+		emptyStateTitle: {
+			textAlign: "center",
+			fontSize: 22,
+			fontFamily: fontFamilyDemiBold
+		},
+		closeButton: {
+			position: "absolute",
+			top: "10%",
+			right: "10%"
 		}
 	};
 };
 
-const DataRenderer = ({ resultSet, displayDate, classes }) => {
+const DataRenderer = ({ resultSet, displayDate, classes, closeToolTip }) => {
 	const rows = resultSet.tablePivot();
 
 	//Ignore dummy data used to create a filled gray chart
 	let hasData = false;
-	rows.forEach(row => {
+
+	rows.forEach(function (row, index) {
 		if (row["PageViews.source"] !== "No data") {
 			hasData = true;
 		}
+	});
+
+	const items = rows.map((row, index) => {
+		if(index <= 3) {
+			return row;
+		}
+	});
+
+	const sum = rows.map(function (object, index) {
+		if(index > 3) {
+			return Object.keys(object).reduce(function (sum, key) {
+				const tickets = Number(object["PageViews.tickets"]);
+				if (!isNaN(tickets)) {
+					return sum + tickets;
+				}
+			}, 0);
+		} else {
+			return 0;
+		}
+	});
+
+	const rowsUpdated = items.concat({
+		"PageViews.source": "other",
+		"PageViews.medium": "other",
+		"PageViews.tickets": sum.reduce((a, b) => a + b, 0)
 	});
 
 	return (
 		<div className={classes.dataContainer}>
 			<div className={classes.pieContainer}>
 				<DoughnutChart resultSet={resultSet} colors={COLORS}/>
+				<Hidden smUp>
+					<IconButton onClick={closeToolTip} iconUrl="/icons/delete-gray.svg" className={classes.closeButton}/>
+				</Hidden>
 			</div>
 			<div className={classes.detailsContainer}>
 				<Typography className={classes.title}>Ticket Sales Source</Typography>
 				<Typography className={classes.date}>{displayDate}</Typography>
-				{hasData ? (
-					rows.map((row, index) => {
-						let source = row["PageViews.source"];
-						let medium = row["PageViews.medium"];
-						const tickets = Number(row["PageViews.tickets"]);
+				{(hasData && rowsUpdated) ? (
+					rowsUpdated.map((row, index) => {
+						if(row) {
+							let source = row["PageViews.source"];
+							let medium = row["PageViews.medium"];
+							const tickets = Number(row["PageViews.tickets"]);
 
-						if (!source) {
-							source = "www.bigneon.com";
+							if (!source) {
+								source = "www.bigneon.com";
+							}
+
+							if (!medium) {
+								medium = "Direct";
+							}
+
+							return (
+								<LegendRow
+									key={index}
+									color={COLORS[index]}
+									label={`${medium} - ${source}`}
+									valueLabel={`${tickets}`}
+								/>
+							);
 						}
-
-						if (!medium) {
-							medium = "Direct";
-						}
-
-						return (
-							<LegendRow
-								key={index}
-								color={COLORS[index]}
-								label={`${medium} - ${source}`}
-								valueLabel={`${tickets}`}
-							/>
-						);
 					})
 				) : (
 					<Typography className={classes.emptyStateText}>
@@ -219,7 +265,7 @@ class TicketSalesTooltip extends Component {
 			endDateStringFilter
 		} = this.state;
 
-		const { classes, timezone } = this.props;
+		const { classes, timezone, closeToolTip, cutOffDateString } = this.props;
 
 		let { top, left } = this.props;
 
@@ -248,41 +294,53 @@ class TicketSalesTooltip extends Component {
 				}}
 			>
 				{startDateStringFilter ? (
-					<QueryRenderer
-						query={{
-							timezone,
-							measures: [
-								"PageViews.tickets"
-								// "PageViews.uniqueViews",
-								// "PageViews.conversionRate"
-							],
-							dimensions: ["PageViews.source", "PageViews.medium"],
-							segments: [],
-							order: {
-								"PageViews.tickets": "desc"
-							},
-							filters: [
-								{
-									dimension: "PageViews.date",
-									operator: "gte",
-									values: [startDateStringFilter]
+					moment.utc(startDateStringFilter).isAfter(cutOffDateString, "day") ? (
+						<QueryRenderer
+							query={{
+								timezone,
+								measures: [
+									"PageViews.tickets"
+									// "PageViews.uniqueViews",
+									// "PageViews.conversionRate"
+								],
+								dimensions: ["PageViews.source", "PageViews.medium"],
+								segments: [],
+								order: {
+									"PageViews.tickets": "desc"
 								},
-								{
-									dimension: "PageViews.date",
-									operator: "lt",
-									values: [endDateStringFilter]
-								}
-							]
-						}}
-						cubejsApi={cubeJsApi}
-						render={ChartRender(props => (
-							<DataRenderer
-								{...props}
-								classes={classes}
-								displayDate={displayDate}
-							/>
-						))}
-					/>
+								filters: [
+									{
+										dimension: "PageViews.date",
+										operator: "gte",
+										values: [startDateStringFilter]
+									},
+									{
+										dimension: "PageViews.date",
+										operator: "lt",
+										values: [endDateStringFilter]
+									}
+								]
+							}}
+							cubejsApi={cubeJsApi}
+							render={ChartRender(props => (
+								<DataRenderer
+									{...props}
+									classes={classes}
+									displayDate={displayDate}
+									closeToolTip={closeToolTip}
+								/>
+							))}
+						/>
+					) : (
+						<div className={classes.emptyStateContainer}>
+							<Typography className={classes.emptyStateTitle}>
+								No Sales Source Data Available
+							</Typography>
+							<Typography align={"center"}>
+								Sales source data is available for events that were put on sale after January 9, 2020.
+							</Typography>
+						</div>
+					)
 				) : (
 					<Loader/>
 				)}
@@ -297,7 +355,9 @@ TicketSalesTooltip.propTypes = {
 	dateString: PropTypes.string.isRequired,
 	top: PropTypes.number.isRequired,
 	left: PropTypes.number.isRequired,
-	timezone: PropTypes.string.isRequired
+	timezone: PropTypes.string.isRequired,
+	closeToolTip: PropTypes.func,
+	cutOffDateString: PropTypes.string
 };
 
 export default withStyles(styles)(TicketSalesTooltip);

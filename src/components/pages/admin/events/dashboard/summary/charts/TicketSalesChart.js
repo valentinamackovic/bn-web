@@ -62,7 +62,8 @@ class SalesLine extends Component {
 			endDate,
 			token,
 			cubeApiUrl,
-			timezone
+			timezone,
+			cutOffDateString
 		} = this.props;
 
 		let borderWidth = 2;
@@ -81,13 +82,14 @@ class SalesLine extends Component {
 				lineTension: 0,
 
 				pointHitRadius: 20,
-				//pointRadius: 4,
+				pointRadius: 4,
 				borderWidth,
-				pointHoverRadius: 5
-				// pointHoverBorderWidth: 2
+				pointHoverRadius: 5,
+				pointHoverBorderWidth: 2
 			}))
 		};
 		const options = {
+			responsive: true,
 			legend: {
 				display: false
 			},
@@ -149,6 +151,9 @@ class SalesLine extends Component {
 							// 	const { value } = labels[0];
 							// 	return moment(value).format("MMM YYYY");
 							// }
+						},
+						time: {
+							unit: 'day'
 						}
 					}
 				],
@@ -192,6 +197,8 @@ class SalesLine extends Component {
 						top={tooltipTop}
 						left={tooltipLeft}
 						timezone={timezone}
+						closeToolTip={this.hideTooltip.bind(this)}
+						cutOffDateString={cutOffDateString}
 					/>
 				) : null}
 			</div>
@@ -215,7 +222,7 @@ class TicketSalesChart extends Component {
 
 	render() {
 		const { cubeJsApi } = this.state;
-		const { startDate, endDate, timezone, token, cubeApiUrl } = this.props;
+		const { startDate, endDate, timezone, token, cubeApiUrl, cutOffDateString } = this.props;
 
 		return (
 			<QueryRenderer
@@ -245,6 +252,7 @@ class TicketSalesChart extends Component {
 						token={token}
 						cubeApiUrl={cubeApiUrl}
 						timezone={timezone}
+						cutOffDateString={cutOffDateString}
 					/>
 				))}
 			/>
@@ -257,7 +265,8 @@ TicketSalesChart.propTypes = {
 	startDate: PropTypes.string.isRequired,
 	endDate: PropTypes.string.isRequired,
 	cubeApiUrl: PropTypes.string.isRequired,
-	timezone: PropTypes.string.isRequired
+	timezone: PropTypes.string.isRequired,
+	cutOffDateString: PropTypes.string
 };
 
 export default TicketSalesChart;

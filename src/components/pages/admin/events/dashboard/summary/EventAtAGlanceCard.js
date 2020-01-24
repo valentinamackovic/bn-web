@@ -212,9 +212,9 @@ const EventAtAGlanceCard = ({
 							timezone={timezone}
 							title={"Transfer Activity"}
 							legendKeyMap={{
-								Completed: "Completed Transfers",
-								Pending: "Pending Transfers",
-								Cancelled: "Cancelled Transfers"
+								Completed: "Completed",
+								Pending: "Pending",
+								Cancelled: "Cancelled"
 							}}
 							measures={["Transfers.count"]}
 							dimensions={["Transfers.status"]}
@@ -230,8 +230,8 @@ const EventAtAGlanceCard = ({
 							timezone={timezone}
 							title={"Scanning & Attendance"}
 							legendKeyMap={{
-								"Not Redeemed": "Remaining/No Show",
-								Redeemed: "Tickets Scanned/Attended"
+								"Not Redeemed": "Pending/No Show",
+								Redeemed: "Scanned"
 							}}
 							measures={["Tickets.count"]}
 							dimensions={["Tickets.redeemedStatus"]}

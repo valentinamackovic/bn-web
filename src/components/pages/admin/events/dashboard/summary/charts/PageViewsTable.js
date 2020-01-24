@@ -36,18 +36,10 @@ const formatValueFunctions = {
 	"PageViews.source": (row, classes, totalUniquePageViews) => {
 		const val = row["PageViews.source"];
 
-		if (!val || val.toLowerCase() == "direct") {
-			return "Big Neon";
-		}
-
 		return upperFirstChar(val);
 	},
 	"PageViews.medium": (row, classes, totalUniquePageViews) => {
 		const val = row["PageViews.medium"];
-
-		if (val == "venuewebsite") {
-			return "Venue Website";
-		}
 
 		return upperFirstChar(val);
 	},

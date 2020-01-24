@@ -3,7 +3,7 @@ import cubejs from "@cubejs-client/core";
 import { QueryRenderer } from "@cubejs-client/react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
+import {Hidden, Typography} from "@material-ui/core";
 import DoughnutChart from "./DoughnutChart";
 import {
 	fontFamilyDemiBold,
@@ -212,13 +212,18 @@ class ActivityChart extends Component {
 
 					return (
 						<div className={classes.root}>
+							<Hidden smUp>
+								<Typography className={classes.legendTitle}>{title}</Typography>
+							</Hidden>
 							<DoughnutChart
 								{...props}
 								colors={COLORS_SERIES}
 								resultSet={completeResultSet}
 							/>
 							<div className={classes.legendContainer}>
-								<Typography className={classes.legendTitle}>{title}</Typography>
+								<Hidden smDown>
+									<Typography className={classes.legendTitle}>{title}</Typography>
+								</Hidden>
 								<LegendRows resultSet={completeResultSet}/>
 							</div>
 						</div>

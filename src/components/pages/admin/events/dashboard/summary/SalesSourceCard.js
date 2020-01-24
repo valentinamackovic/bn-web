@@ -97,9 +97,7 @@ class SalesSourceCard extends Component {
 	constructor(props) {
 		super(props);
 
-		const cutOffDateString = "2020-01-01T00:00:00";
-
-		const { publish_date } = props;
+		const { publish_date, cutOffDateString } = props;
 		const salesSourceAvailable = moment
 			.utc(publish_date)
 			.isAfter(moment.utc(cutOffDateString));
@@ -152,8 +150,8 @@ class SalesSourceCard extends Component {
 			}
 			case "custom": {
 				showCustomDateRange = true;
-				startDate = moment().tz(venue.timezone);
-				endDate = moment().tz(venue.timezone);
+				startDate = null;
+				endDate = null;
 
 				break;
 			}
@@ -181,7 +179,7 @@ class SalesSourceCard extends Component {
 	render() {
 		const title = "Sales Source";
 
-		const { classes, token, venue, cubeApiUrl, ...rest } = this.props;
+		const { classes, token, venue, cubeApiUrl, cutOffDateString, ...rest } = this.props;
 		const {
 			selectedTimePeriod,
 			startDate,
@@ -222,6 +220,7 @@ class SalesSourceCard extends Component {
 								name="startDate"
 								label="Start Date"
 								onChange={this.onChangeStartDate}
+								timezone={venue.timezone}
 							/>
 						</div>
 						<span style={{ width: 20 }}/>
@@ -260,7 +259,8 @@ SalesSourceCard.propTypes = {
 	token: PropTypes.string.isRequired,
 	on_sale: PropTypes.string.isRequired,
 	venue: PropTypes.object.isRequired,
-	cubeApiUrl: PropTypes.string.isRequired
+	cubeApiUrl: PropTypes.string.isRequired,
+	cutOffDate: PropTypes.string
 };
 
 export default withStyles(styles)(SalesSourceCard);

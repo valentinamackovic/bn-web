@@ -132,6 +132,8 @@ class Summary extends Component {
 			return <Loader/>;
 		}
 
+		const cutOffDateString = "2020-01-09T00:00:00";
+
 		if (event.is_external) {
 			return (
 				<Container
@@ -175,12 +177,14 @@ class Summary extends Component {
 						cubeApiUrl={CUBE_API_URL}
 						{...event}
 						token={cube_js_token}
+						cutOffDateString={cutOffDateString}
 					/>
 					<div className={classes.spacer}/>
 					<SalesSourceCard
 						cubeApiUrl={CUBE_API_URL}
 						{...event}
 						token={cube_js_token}
+						cutOffDateString={cutOffDateString}
 					/>
 				</Container>
 			);
