@@ -13,7 +13,6 @@ const TicketingOverview = ({
 	classes,
 	ticket_type,
 	timezone,
-	timezoneAbbr,
 	isExpanded,
 	onExpandClick
 }) => {
@@ -80,9 +79,9 @@ const TicketingOverview = ({
 		"Price",
 		"Sales start",
 		parent_name ? "Ticket type" : null,
-		start_date ? `start time (${timezoneAbbr})` : null,
+		start_date ? `start time` : null,
 		"sales end",
-		end_date ? `end time (${timezoneAbbr})` : null
+		end_date ? `end time` : null
 	];
 
 	const values = [
@@ -98,7 +97,7 @@ const TicketingOverview = ({
 
 	//Additional info cols
 	const infoColStyles = [
-		{ flex: 2 },
+		{ flex: 1 },
 		{ flex: 2 },
 		{ flex: 2 },
 		{ flex: 2 },
@@ -179,9 +178,9 @@ const TicketingOverview = ({
 	const priceChangeHeadings = [
 		"Price Name",
 		`On sale date`,
-		`On sale time (${timezoneAbbr})`,
+		`On sale time`,
 		`End sale date`,
-		`End sale time (${timezoneAbbr})`,
+		`End sale time`,
 		"price"
 	];
 
@@ -265,8 +264,7 @@ const TicketingOverview = ({
 				</div>
 
 				<Collapse
-					// in={isExpanded}
-					in={true}
+					in={isExpanded}
 					timeout="auto"
 					classes={{ wrapper: classes.noBackground }}
 				>

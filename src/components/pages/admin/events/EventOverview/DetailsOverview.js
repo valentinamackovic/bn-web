@@ -13,6 +13,7 @@ const DetailsOverview = ({
 	displayEventStart,
 	displayEventEnd,
 	timezoneAbbr,
+	displayEventStartTime,
 	displayEventEndTime
 }) => {
 	const {
@@ -42,15 +43,15 @@ const DetailsOverview = ({
 	];
 	const dateHeadings = [
 		`Event date`,
-		`Show time (${timezoneAbbr})`,
+		`Show time`,
 		"Door time",
 		`End date`,
-		`End time (${timezoneAbbr})`
+		`End time`
 	];
 
 	const dateValues = [
 		displayEventStart,
-		displayShowTime,
+		displayEventStartTime,
 		displayDoorTime,
 		displayEventEnd,
 		displayEventEndTime
@@ -58,15 +59,15 @@ const DetailsOverview = ({
 
 	const mobileDateHeadings = [
 		`Event date`,
-		`Show time (${timezoneAbbr})`,
+		`Show time`,
 		`End date`,
-		`End time (${timezoneAbbr})`,
+		`End time`,
 		"Door time"
 	];
 
 	const mobileDateValues = [
 		displayEventStart,
-		displayShowTime,
+		displayEventStartTime,
 		displayEventEnd,
 		displayEventEndTime,
 		displayDoorTime

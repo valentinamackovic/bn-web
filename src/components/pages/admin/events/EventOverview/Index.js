@@ -428,6 +428,10 @@ class EventOverview extends Component {
 
 		const displayEventStart = this.formatDateL(event_start, venue.timezone);
 		const displayEventEnd = this.formatDateL(event_end, venue.timezone);
+		const displayEventStartTime = moment
+			.utc(event_start)
+			.tz(venue.timezone)
+			.format("hh:mm A");
 		const displayEventEndTime = moment
 			.utc(event_end)
 			.tz(venue.timezone)
@@ -546,6 +550,7 @@ class EventOverview extends Component {
 				<OverviewHeader
 					event={event}
 					classes={classes}
+					timezoneAbbr={timezoneAbbr}
 					artists={artists}
 					venue={venue}
 				/>
@@ -574,6 +579,7 @@ class EventOverview extends Component {
 						displayEventStart={displayEventStart}
 						displayEventEnd={displayEventEnd}
 						displayEventEndTime={displayEventEndTime}
+						displayEventStartTime={displayEventStartTime}
 						timezoneAbbr={timezoneAbbr}
 					/>
 

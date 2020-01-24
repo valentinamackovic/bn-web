@@ -7,7 +7,7 @@ import servedImage from "../../../../../helpers/imagePathHelper";
 import moment from "moment-timezone";
 import ColorTag from "../../../../elements/ColorTag";
 
-const OverviewHeader = ({ classes, event, artists, venue }) => {
+const OverviewHeader = ({ classes, event, artists, venue, timezoneAbbr }) => {
 	const {
 		name,
 		event_start,
@@ -105,10 +105,10 @@ const OverviewHeader = ({ classes, event, artists, venue }) => {
 								{shortDate}
 							</Typography>
 							<Typography className={classes.infoSmallText}>
-								Doors open at {shortDoorTime}
+								{`Doors open at ${shortDoorTime} ${timezoneAbbr}`}
 							</Typography>
 							<Typography className={classes.infoSmallText}>
-								Show starts at {shortShowTime}
+								{`Show starts at ${shortShowTime} ${timezoneAbbr}`}
 							</Typography>
 						</div>
 					</div>
