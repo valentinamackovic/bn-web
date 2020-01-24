@@ -73,7 +73,7 @@ class SalesLine extends Component {
 
 		const chartEnd =  moment.utc(endDate).isAfter(moment()) ? moment().add(1, "days") :  endDate;
 
-		resultSet.categories().forEach( c => c.category = moment.utc(c.category).startOf('week').weekday(0));
+		resultSet.categories().forEach( c => c.category = moment.utc(c.category).startOf("week").weekday(0));
 
 		const data = {
 			labels: resultSet.categories().map(c => c.category),
