@@ -13,7 +13,7 @@ import Loader from "../../../../elements/loaders/Loader";
 import servedImage from "../../../../../helpers/imagePathHelper";
 import EventSummaryCard from "./summary/EventSummaryCard";
 import EventAtAGlanceCard from "./summary/EventAtAGlanceCard";
-import TicketSalesCard from "./summary/TicketSalesBreakdownCard";
+import TicketSalesBreakdownCard from "./summary/TicketSalesBreakdownCard";
 import TicketSalesChartCard from "./summary/TicketSalesChartCard";
 import SalesSourceCard from "./summary/SalesSourceCard";
 import settings from "../../../../../config/settings";
@@ -180,7 +180,7 @@ class Summary extends Component {
 						token={cube_js_token}
 						cutOffDateString={cutOffDateString}
 					/>
-					<TicketSalesCard
+					<TicketSalesBreakdownCard
 						cubeApiUrl={CUBE_API_URL}
 						{...event}
 						token={cube_js_token}

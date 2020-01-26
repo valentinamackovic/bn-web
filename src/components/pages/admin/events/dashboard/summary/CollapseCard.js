@@ -10,7 +10,6 @@ import {
 	secondaryHex
 } from "../../../../../../config/theme";
 import servedImage from "../../../../../../helpers/imagePathHelper.js";
-import Divider from "../../../../../common/Divider";
 
 const styles = theme => {
 	return {
@@ -125,13 +124,13 @@ class CollapseCard extends Component {
 							</Hidden>
 						</div>
 					</Card>
-				 ) : null}
+				) : <div/>}
 				<Card className={classes.footerCard}>
 					{footerContent ? (
 						<React.Fragment>
 							<div className={classes.footer}>{footerContent}</div>
 						</React.Fragment>
-					) : null}
+					) : <div/>}
 				</Card>
 			</div>
 		);
@@ -141,7 +140,7 @@ class CollapseCard extends Component {
 CollapseCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	title: PropTypes.string.isRequired,
-	children: PropTypes.any.isRequired,
+	children: PropTypes.any,
 	iconPath: PropTypes.string,
 	footerContent: PropTypes.any
 };

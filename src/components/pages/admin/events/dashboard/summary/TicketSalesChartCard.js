@@ -130,6 +130,7 @@ class TicketSalesChartCard extends Component {
 						timezone={venue.timezone}
 						startDate={publishDateMinusOneDayUTC}
 						endDate={event_end}
+						cutOffDateString={cutOffDateString}
 					/>
 				</div>
 			</CollapseCard>
