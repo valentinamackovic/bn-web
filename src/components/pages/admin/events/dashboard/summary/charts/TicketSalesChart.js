@@ -179,7 +179,11 @@ class SalesLine extends Component {
 						}
 					}
 				]
-			}
+			},
+			animation: {
+				duration: 0
+			},
+			responsive: "true"
 		};
 
 		const {
