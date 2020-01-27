@@ -89,7 +89,7 @@ const appendMissingDatasets = (resultSet, legendKeyMap) => {
 	//Append entries from legendKeyMap
 	Object.keys(legendKeyMap).forEach(key => {
 		const label = legendKeyMap[key];
-		if (label == null) {
+		if (label == null || data.find(x=> x[query.dimensions[0]] === label)) {
 			//Don't append ones we've used just above
 			return;
 		}
@@ -103,12 +103,10 @@ const appendMissingDatasets = (resultSet, legendKeyMap) => {
 			return;
 		}
 
-		if (!data.find(x=> x[query.dimensions[0]] === label)){
-			data.push({
-				[query.dimensions[0]]: label,
-				[query.measures[0]]: "0"
-			});
-		}
+		data.push({
+			[query.dimensions[0]]: label,
+			[query.measures[0]]: "0"
+		});
 	});
 
 	resultSet.loadResponse = { ...loadResponse, data };
