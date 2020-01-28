@@ -11,7 +11,6 @@ import {
 	ListItemText
 } from "@material-ui/core";
 import PageHeading from "../../../../elements/PageHeading";
-import selectedEvent from "../../../../../stores/selectedEvent";
 import notifications from "../../../../../stores/notifications";
 import replaceIdWithSlug from "../../../../../helpers/replaceIdWithSlug";
 import analytics from "../../../../../helpers/analytics";
@@ -288,6 +287,8 @@ class EventOverview extends Component {
 	constructor(props) {
 		super(props);
 		this.state = {
+			event: null,
+			eventId: null,
 			venueTimezone: null,
 			ticket_types_info: [],
 			optionsAnchorEl: null,
@@ -295,7 +296,6 @@ class EventOverview extends Component {
 			expandedCardId: null,
 			isDelete: false,
 			deleteCancelEventId: null,
-
 			displayEventStart: null,
 			displayEventEnd: null,
 			displayEventStartTime: null,
@@ -306,7 +306,20 @@ class EventOverview extends Component {
 	}
 
 	componentDidMount() {
-		this.getEvent();
+		if (
+			this.props.match &&
+			this.props.match.params &&
+			this.props.match.params.id
+		) {
+			this.setState(
+				{
+					eventId: this.props.match.params.id
+				},
+				() => {
+					this.getEvent(this.state.eventId);
+				}
+			);
+		}
 	}
 
 	getTickets(event_id) {
@@ -340,7 +353,7 @@ class EventOverview extends Component {
 	}
 
 	get cancelMenuItemDisabled() {
-		const { event } = selectedEvent;
+		const { event } = this.state;
 
 		if (event) {
 			if (event.cancelled_at) {
@@ -351,31 +364,22 @@ class EventOverview extends Component {
 		return false;
 	}
 
-	getEvent() {
+	getEvent(eventId) {
 		//A bit of a hack, we might not have set the current org ID yet for this admin so keep checking
 		if (!user.currentOrganizationId) {
 			this.timeout = setTimeout(this.updateEvents.bind(this), 100);
 			return;
 		}
 
-		if (
-			this.props.match &&
-			this.props.match.params &&
-			this.props.match.params.id
-		) {
-			const { id } = this.props.match.params;
+		const { id } = this.props.match.params;
 
-			selectedEvent.refreshResult(
-				id,
-				errorMessage => {
-					notifications.show({
-						message: errorMessage,
-						variant: "error"
-					});
-				},
-				() => {
-					this.getTickets(selectedEvent.event.id);
+		if (eventId) {
+			Bigneon()
+				.events.read({ id: eventId })
+				.then(response => {
+					this.setState({ event: response.data });
 
+					const { event } = this.state;
 					const {
 						id: selectedEventId,
 						slug,
@@ -383,32 +387,44 @@ class EventOverview extends Component {
 						name,
 						event_type,
 						event_start,
-						event_end
-					} = selectedEvent.event;
+						event_end,
+						venue
+					} = event;
+
+					this.getTickets(selectedEventId);
+
 					//Replace the id in the URL with the slug if we have it and it isn't currently set
 					if (id === selectedEventId && slug) {
 						replaceIdWithSlug(id, slug);
 					}
-					const { venue } = selectedEvent;
 
-					this.setState({
-						displayEventStart: this.formatDateL(event_start, venue.timezone),
-						displayEventEnd: this.formatDateL(event_end, venue.timezone),
-						displayEventStartTime: moment
+					if (event) {
+						const venueTimezone = venue.timezone || "America/Los_Angeles";
+
+						event.displayEventStart = this.formatDateL(
+							event_start,
+							venue.timezone
+						);
+						event.displayEventEnd = this.formatDateL(event_end, venueTimezone);
+						event.displayEventStartTime = moment
 							.utc(event_start)
-							.tz(venue.timezone)
-							.format("hh:mm A"),
-						displayEventEndTime: moment
+							.tz(venueTimezone)
+							.format("hh:mm A");
+						event.displayEventEndTime = moment
 							.utc(event_end)
-							.tz(venue.timezone)
-							.format("hh:mm A")
-					});
+							.tz(venueTimezone)
+							.format("hh:mm A");
+
+						this.setState({
+							...event
+						});
+					}
 
 					analytics.viewContent(
 						[selectedEventId],
 						getAllUrlParams(),
 						name,
-						selectedEvent.organization.id,
+						organizationId,
 						event_type
 					);
 					if (user.isAuthenticated) {
@@ -417,8 +433,14 @@ class EventOverview extends Component {
 							user.setCurrentOrganizationRolesAndScopes(organizationId, false);
 						}
 					}
-				}
-			);
+				})
+				.catch(error => {
+					console.error(error);
+					notifications.show({
+						message: error.message,
+						variant: "error"
+					});
+				});
 		} else {
 			//TODO return 404
 		}
@@ -434,9 +456,10 @@ class EventOverview extends Component {
 			displayEventStart,
 			displayEventEnd,
 			displayEventStartTime,
-			displayEventEndTime
+			displayEventEndTime,
+			event,
+			ticket_types
 		} = this.state;
-		const { event, venue, artists, ticket_types } = selectedEvent;
 
 		if (event === null) {
 			return (
@@ -450,7 +473,7 @@ class EventOverview extends Component {
 			return <NotFound>Event not found.</NotFound>;
 		}
 
-		const { id, name, event_start, event_end } = event;
+		const { id, name, event_start, event_end, venue, artists } = event;
 
 		const promo_image_url = event.promo_image_url
 			? optimizedImageUrl(event.promo_image_url)
@@ -580,16 +603,13 @@ class EventOverview extends Component {
 							</Typography>
 							{artists.map(({ artist, importance }, index) => (
 								<Card
+									key={index}
 									className={classnames({
 										[classes.detailsCardStyle]: true,
 										[classes.artistsOverviewCard]: true
 									})}
 								>
-									<ArtistSummary
-										key={index}
-										headliner={importance === 0}
-										{...artist}
-									/>
+									<ArtistSummary headliner={importance === 0} {...artist}/>
 								</Card>
 							))}
 						</div>
