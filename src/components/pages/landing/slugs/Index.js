@@ -54,8 +54,10 @@ class SlugLanding extends Component {
 			const { id } = this.props.match.params;
 			slugResults.refreshResults(
 				id,
-				() => {},
-				() => {},
+				() => {
+				},
+				() => {
+				},
 				message => {
 					notifications.show({
 						message,
@@ -71,6 +73,7 @@ class SlugLanding extends Component {
 
 	render() {
 		const { history, classes } = this.props;
+		const { id: slug } = this.props.match.params;
 		const {
 			type,
 			events,
@@ -89,9 +92,11 @@ class SlugLanding extends Component {
 		let heroTitle = "";
 		let mapLink = null;
 		let heroSubtitle = "";
+		let slugUriType = "";
 
 		switch (type) {
 			case "Organization":
+				slugUriType = "organizations";
 				metaTitle = `Concert Tickets to ${orgData.name} in ${
 					orgData.city
 				} - Big Neon`;
@@ -103,6 +108,7 @@ class SlugLanding extends Component {
 				description = "";
 				break;
 			case "City":
+				slugUriType = "cities";
 				metaTitle = `Concert Tickets in ${cityData.city} - Big Neon`;
 				metaDescription = `Concert Tickets in ${
 					cityData.city
@@ -112,6 +118,7 @@ class SlugLanding extends Component {
 				description = "";
 				break;
 			case "Venue":
+				slugUriType = "venues";
 				metaTitle = `Concert Tickets to ${venueData.name} in ${
 					venueData.city
 				} - Big Neon`;
@@ -127,16 +134,22 @@ class SlugLanding extends Component {
 				mapLink = createGoogleMapsLink(venueData);
 				break;
 			case "Genre":
+				slugUriType = "genres";
 				metaTitle = `Live Music Event Tickets - ${genre} - Big Neon`;
 				metaDescription = `Concert Tickets for ${genre} - Find tickets to live events and concerts on Big Neon.`;
 				heroTitle = title || `${genre} Events`;
 				title = `Upcoming ${genre} Events`;
 				break;
 		}
+		const slugUri = `${slugUriType}/${slug}`;
 
 		return (
 			<div className={classes.root}>
-				<Meta title={metaTitle} description={metaDescription}/>
+				<Meta
+					title={metaTitle}
+					description={metaDescription}
+					slugUri={slugUri}
+				/>
 				<Hidden smDown>
 					<LandingAppBar
 						isAuthenticated={user.isAuthenticated}
@@ -165,8 +178,14 @@ class SlugLanding extends Component {
 							<Loader>Finding events...</Loader>
 						) : (
 							<div className={classes.cardContainer}>
-								<Typography variant={"title"} className={classes.heading}>
+								<Typography
+									variant={"title"}
+									className={classes.heading}
+								>
 									{title}
+								</Typography>
+								<Typography variant={"body1"}>
+									{description}
 								</Typography>
 								<AltResults/>
 							</div>
