@@ -101,7 +101,7 @@ const DetailsOverview = ({
 		" "
 	];
 	return (
-		<Card variant={"form"} className={classes.detailsCardStyle}>
+		<Card className={classes.detailsCardStyle}>
 			{/*DESKTOP*/}
 			<Hidden smDown>
 				<div className={classes.detailsTopRow}>

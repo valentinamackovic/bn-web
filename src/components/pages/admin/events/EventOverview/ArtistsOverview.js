@@ -12,7 +12,6 @@ const ArtistsOverview = ({ classes, artist, importance }) => {
 	imageSrc = optimizedImageUrl(imageSrc);
 	return (
 		<Card
-			variant={"form"}
 			className={classnames({
 				[classes.detailsCardStyle]: true,
 				[classes.artistsOverviewCard]: true

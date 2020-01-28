@@ -42,6 +42,8 @@ import RemoveRedEye from "@material-ui/icons/RemoveRedEye";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import Button from "../../../../elements/Button";
 import DeleteCancelEventDialog from "../DeleteCancelEventDialog";
+import classnames from "classnames";
+
 import ArtistSummary from "../../../../elements/event/ArtistSummary";
 
 const styles = theme => ({
@@ -164,8 +166,7 @@ const styles = theme => ({
 		}
 	},
 	eventAllDetailsContainer: {
-		marginTop: 20,
-		padding: "65px",
+		marginTop: 50,
 		[theme.breakpoints.down("sm")]: {
 			padding: "0px",
 			border: 0,
@@ -568,7 +569,7 @@ class EventOverview extends Component {
 					artists={artists}
 					venue={venue}
 				/>
-				<Card className={classes.eventAllDetailsContainer}>
+				<div className={classes.eventAllDetailsContainer}>
 					{artists ? (
 						<div>
 							<Typography
@@ -578,11 +579,18 @@ class EventOverview extends Component {
 								Artists
 							</Typography>
 							{artists.map(({ artist, importance }, index) => (
-								<ArtistSummary
-									key={index}
-									headliner={importance === 0}
-									{...artist}
-								/>
+								<Card
+									className={classnames({
+										[classes.detailsCardStyle]: true,
+										[classes.artistsOverviewCard]: true
+									})}
+								>
+									<ArtistSummary
+										key={index}
+										headliner={importance === 0}
+										{...artist}
+									/>
+								</Card>
 							))}
 						</div>
 					) : null}
@@ -627,7 +635,7 @@ class EventOverview extends Component {
 						event={event}
 						timezoneAbbr={timezoneAbbr}
 					/>
-				</Card>
+				</div>
 			</div>
 		);
 	}

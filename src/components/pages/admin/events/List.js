@@ -28,6 +28,8 @@ import EventSummaryCard from "./EventSummaryCard";
 import user from "../../../../stores/user";
 import Card from "../../../elements/Card";
 import Loader from "../../../elements/loaders/Loader";
+import CloneEventDialog from "./CloneEventDialog";
+import { LibraryAdd } from "@material-ui/icons";
 
 const styles = theme => ({
 	paper: {
@@ -64,6 +66,7 @@ class EventsList extends Component {
 			isDelete: false,
 			deleteCancelEventId: null,
 			eventMenuSelected: null,
+			cloneIsOpen: null,
 			eventSlug: null,
 			optionsAnchorEl: null,
 			upcomingOrPast: this.props.match.params.upcomingOrPast || "upcoming"
@@ -206,6 +209,15 @@ class EventsList extends Component {
 						MenuOptionIcon: RemoveRedEye
 					},
 					{
+						text: "Clone event",
+						disabled: !user.hasScope("event:write"),
+						onClick: () =>
+							this.setState({
+								cloneEventId: eventMenuSelected
+							}),
+						MenuOptionIcon: LibraryAdd
+					},
+					{
 						text: "Cancel event",
 						disabled:
 							!user.hasScope("event:write") || this.cancelMenuItemDisabled,
@@ -311,7 +323,12 @@ class EventsList extends Component {
 	}
 
 	render() {
-		const { deleteCancelEventId, upcomingOrPast, isDelete } = this.state;
+		const {
+			deleteCancelEventId,
+			upcomingOrPast,
+			isDelete,
+			cloneEventId
+		} = this.state;
 		const { classes } = this.props;
 
 		return (
@@ -324,6 +341,12 @@ class EventsList extends Component {
 							{ deleteCancelEventId: null, isDelete: false },
 							this.updateEvents.bind(this)
 						)
+					}
+				/>
+				<CloneEventDialog
+					id={cloneEventId}
+					onClose={() =>
+						this.setState({ cloneEventId: null }, this.updateEvents.bind(this))
 					}
 				/>
 				<Grid container spacing={0} alignItems="center">

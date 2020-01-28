@@ -188,7 +188,7 @@ const TicketingOverview = ({
 		return new Date(a.start_date) - new Date(b.start_date);
 	});
 	return (
-		<Card variant={"form"} className={classes.detailsCardStyle}>
+		<Card className={classes.detailsCardStyle}>
 			{/*Mobile expand icon*/}
 			<Hidden smUp>
 				{!isExpanded ? (
