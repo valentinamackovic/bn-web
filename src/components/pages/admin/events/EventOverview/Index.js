@@ -400,7 +400,8 @@ class EventOverview extends Component {
 						event_end,
 						venue,
 						publish_date,
-						door_time
+						door_time,
+						cancelled_at
 					} = event;
 
 					this.getTickets(selectedEventId);
@@ -438,6 +439,23 @@ class EventOverview extends Component {
 							isPublished &&
 							moment.utc(sales_start_date).isBefore(moment.utc());
 						event.eventEnded = moment.utc(event_end).isBefore(moment.utc());
+
+						event.publishStatusHeading = moment
+							.utc(publish_date)
+							.isBefore(moment.utc())
+							? "Published on"
+							: "Publish date";
+
+						event.publishStatus = cancelled_at
+							? "Cancelled"
+							: moment.utc(publish_date).isBefore(moment.utc())
+								? "Published"
+								: "Draft";
+
+						event.publishedDateFormatted = moment(
+							publish_date,
+							"YYYY-MM-DD HH:mm ZZ"
+						).format("MM/DD/YYYY HH:mm A");
 
 						this.setState({
 							...event
@@ -481,9 +499,7 @@ class EventOverview extends Component {
 			displayEventEnd,
 			displayEventStartTime,
 			displayEventEndTime,
-			displayDoorTime,
-			event,
-			ticket_types
+			event
 		} = this.state;
 
 		if (event === null) {
@@ -498,7 +514,7 @@ class EventOverview extends Component {
 			return <NotFound>Event not found.</NotFound>;
 		}
 
-		const { id, name, event_start, shortDate, venue, artists } = event;
+		const { id, name, event_start, venue, artists } = event;
 
 		const promo_image_url = event.promo_image_url
 			? optimizedImageUrl(event.promo_image_url)

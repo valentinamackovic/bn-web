@@ -5,6 +5,7 @@ import Divider from "@material-ui/core/Divider";
 import lineBreakHtmlToPlainText from "../../../../../helpers/lineBreakHtmlToPlainText";
 import ReadMoreAdditionalInfo from "../../../../elements/event/ReadMoreAdditionalInfo";
 import moment from "moment-timezone";
+import splitByCamelCase from "../../../../../helpers/splitByCamelCase";
 
 const DetailsOverview = ({
 	classes,
@@ -12,7 +13,6 @@ const DetailsOverview = ({
 	venue,
 	displayEventStart,
 	displayEventEnd,
-	timezoneAbbr,
 	displayEventStartTime,
 	displayEventEndTime
 }) => {
@@ -20,13 +20,11 @@ const DetailsOverview = ({
 		name,
 		top_line_info,
 		additional_info,
-		displayShowTime,
 		displayDoorTime,
 		age_limit,
 		event_type,
-		private_access_code,
-		status,
-		publish_date
+		override_status,
+		private_access_code
 	} = event;
 	// Top Line col styles
 	const colStyles = [{ flex: 3 }, { flex: 2 }, { flex: 4 }];
@@ -90,14 +88,11 @@ const DetailsOverview = ({
 					? "All Ages"
 					: age_limit;
 
-	const publishStatus = moment.utc(publish_date).isBefore(moment.utc())
-		? "Published"
-		: "Draft";
 	const infoValues = [
 		ageLimit,
 		event_type,
 		private_access_code,
-		publishStatus,
+		override_status ? splitByCamelCase(override_status) : "Auto",
 		" "
 	];
 	return (
@@ -127,16 +122,20 @@ const DetailsOverview = ({
 					))}
 				</div>
 				<Divider className={classes.dividerStyle}/>
-				<Typography className={classes.smallGreyCapTitle}>
-					Additional Event info
-				</Typography>
-				<ReadMoreAdditionalInfo
-					readMoreText="View full description"
-					readLessText="Hide full description"
-				>
-					{additional_info ? lineBreakHtmlToPlainText(additional_info) : ""}
-				</ReadMoreAdditionalInfo>
-				<Divider className={classes.dividerStyle}/>
+				{additional_info ? (
+					<div>
+						<Typography className={classes.smallGreyCapTitle}>
+							Additional Event info
+						</Typography>
+						<ReadMoreAdditionalInfo
+							readMoreText="View full description"
+							readLessText="Hide full description"
+						>
+							{additional_info ? lineBreakHtmlToPlainText(additional_info) : ""}
+						</ReadMoreAdditionalInfo>
+						<Divider className={classes.dividerStyle}/>
+					</div>
+				) : null}
 				<div className={classes.detailsTopRow}>
 					{dateHeadings.map((heading, index) => (
 						<Typography

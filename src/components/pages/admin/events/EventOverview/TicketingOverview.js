@@ -1,7 +1,6 @@
 import React from "react";
 import Card from "../../../../elements/Card";
 import { Typography, Hidden, Grid } from "@material-ui/core";
-import classnames from "classnames";
 import moment from "moment-timezone";
 import Divider from "@material-ui/core/Divider";
 import { dollars } from "../../../../../helpers/money";

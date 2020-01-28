@@ -1,39 +1,22 @@
 import React from "react";
 import Card from "../../../../elements/Card";
 import { Typography, Grid, Hidden } from "@material-ui/core";
-import Divider from "@material-ui/core/Divider";
-import FormattedAdditionalInfo from "../../../events/FormattedAdditionalInfo";
-import lineBreakHtmlToPlainText from "../../../../../helpers/lineBreakHtmlToPlainText";
 import moment from "moment-timezone";
 
-const PublishedOverview = ({ classes, event, timezoneAbbr }) => {
+const PublishedOverview = ({ classes, event }) => {
 	const {
-		name,
-		top_line_info,
-		additional_info,
-		status,
-		created_at,
 		publish_date,
-		cancelled_at
+		cancelled_at,
+		publishedDateFormatted,
+		publishStatus,
+		publishStatusHeading
 	} = event;
 
 	// Top Line col styles
 	const colStyles = [{ flex: 1 }, { flex: 4 }];
-	const publishStatusHeading = moment.utc(publish_date).isBefore(moment.utc())
-		? "Published on"
-		: "Publish date";
-	const publishStatus = cancelled_at
-		? "Cancelled"
-		: moment.utc(publish_date).isBefore(moment.utc())
-			? "Published"
-			: "Draft";
+
 	const headings = ["Status", publishStatusHeading];
-	const values = [
-		publishStatus,
-		publish_date
-			? moment(publish_date, "YYYY-MM-DD HH:mm ZZ").format("MM/DD/YYYY HH:mm A")
-			: ""
-	];
+	const values = [publishStatus, publish_date ? publishedDateFormatted : ""];
 
 	return (
 		<Card className={classes.detailsCardStyle}>
