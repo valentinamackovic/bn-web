@@ -100,7 +100,7 @@ class SalesSourceCard extends Component {
 		const { publish_date, cutOffDateString } = props;
 		const salesSourceAvailable = moment
 			.utc(publish_date)
-			.isAfter(moment.utc(cutOffDateString));
+			.isAfter(cutOffDateString, "day");
 
 		this.state = {
 			selectedTimePeriod: "all",
@@ -260,7 +260,7 @@ SalesSourceCard.propTypes = {
 	on_sale: PropTypes.string.isRequired,
 	venue: PropTypes.object.isRequired,
 	cubeApiUrl: PropTypes.string.isRequired,
-	cutOffDate: PropTypes.string
+	cutOffDateString: PropTypes.string
 };
 
 export default withStyles(styles)(SalesSourceCard);
