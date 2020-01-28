@@ -127,10 +127,10 @@ class SlugLanding extends Component {
 				mapLink = createGoogleMapsLink(venueData);
 				break;
 			case "Genre":
-				metaTitle = `Concert Tickets for ${genre} - Big Neon`;
+				metaTitle = `Live Music Event Tickets - ${genre} - Big Neon`;
 				metaDescription = `Concert Tickets for ${genre} - Find tickets to live events and concerts on Big Neon.`;
-				heroTitle = genre;
-				title = title || `Upcoming Events for ${genre}`;
+				heroTitle = title || `${genre} Events`;
+				title = `Upcoming ${genre} Events`;
 				break;
 		}
 
@@ -148,6 +148,8 @@ class SlugLanding extends Component {
 					<SlugLandingHero
 						pageTitle={heroTitle}
 						history={history}
+						title={title}
+						description={description}
 						mapLink={mapLink ? mapLink : null}
 						pageSubTitle={heroSubtitle ? heroSubtitle : null}
 					/>
@@ -166,7 +168,6 @@ class SlugLanding extends Component {
 								<Typography variant={"title"} className={classes.heading}>
 									{title}
 								</Typography>
-								<Typography variant={"body1"}>{description}</Typography>
 								<AltResults/>
 							</div>
 						)}
