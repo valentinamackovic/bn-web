@@ -1,10 +1,8 @@
 import React, { Component } from "react";
-import { observer } from "mobx-react";
 import {
 	withStyles,
 	Typography,
 	Grid,
-	IconButton,
 	MenuItem,
 	Menu,
 	ListItemIcon,
@@ -22,13 +20,11 @@ import OverviewHeader from "./OverviewHeader";
 import optimizedImageUrl from "../../../../../helpers/optimizedImageUrl";
 import {
 	fontFamily,
-	fontFamilyBold,
 	fontFamilyDemiBold
 } from "../../../../../config/theme";
 import Card from "../../../../elements/Card";
 import moment from "moment-timezone";
 
-import ArtistsOverview from "./ArtistsOverview";
 import DetailsOverview from "./DetailsOverview";
 import TicketingOverview from "./TicketingOverview";
 import Bigneon from "../../../../../helpers/bigneon";
@@ -37,7 +33,6 @@ import DashboardIcon from "@material-ui/icons/Dashboard";
 import EditIcon from "@material-ui/icons/Edit";
 import ViewIcon from "@material-ui/icons/Link";
 import CancelIcon from "@material-ui/icons/Cancel";
-import RemoveRedEye from "@material-ui/icons/RemoveRedEye";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import Button from "../../../../elements/Button";
 import DeleteCancelEventDialog from "../DeleteCancelEventDialog";
@@ -282,7 +277,6 @@ const styles = theme => ({
 	}
 });
 
-@observer
 class EventOverview extends Component {
 	constructor(props) {
 		super(props);
