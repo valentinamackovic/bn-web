@@ -299,9 +299,11 @@ class EventOverview extends Component {
 			displayEventStart: null,
 			displayEventEnd: null,
 			displayEventStartTime: null,
-			displayEventEndTime: null
+			displayEventEndTime: null,
+			displayDoorTime: null
 		};
 		this.formatDateL = this.formatDateL.bind(this);
+		this.formatDisplayTimeS = this.formatDisplayTimeS.bind(this);
 		this.handleExpandTicketCard = this.handleExpandTicketCard.bind(this);
 	}
 
@@ -338,6 +340,13 @@ class EventOverview extends Component {
 			.utc(date)
 			.tz(tz)
 			.format("L");
+	}
+
+	formatDisplayTimeS(date, tz) {
+		return moment
+			.utc(date)
+			.tz(tz)
+			.format("hh:mm A");
 	}
 
 	handleMenuClick = event => {
@@ -387,8 +396,11 @@ class EventOverview extends Component {
 						name,
 						event_type,
 						event_start,
+						sales_start_date,
 						event_end,
-						venue
+						venue,
+						publish_date,
+						door_time
 					} = event;
 
 					this.getTickets(selectedEventId);
@@ -406,14 +418,26 @@ class EventOverview extends Component {
 							venue.timezone
 						);
 						event.displayEventEnd = this.formatDateL(event_end, venueTimezone);
-						event.displayEventStartTime = moment
-							.utc(event_start)
-							.tz(venueTimezone)
-							.format("hh:mm A");
-						event.displayEventEndTime = moment
-							.utc(event_end)
-							.tz(venueTimezone)
-							.format("hh:mm A");
+						event.displayEventStartTime = this.formatDisplayTimeS(
+							event_start,
+							venueTimezone
+						);
+						event.displayEventEndTime = this.formatDisplayTimeS(
+							event_end,
+							venueTimezone
+						);
+						event.displayDoorTime = this.formatDisplayTimeS(
+							door_time,
+							venueTimezone
+						);
+						event.shortDate = moment(event_start).format("ddd, MMM D, YYYY");
+
+						const isPublished = moment.utc(publish_date).isBefore(moment.utc());
+						event.isPublished = isPublished;
+						event.isOnSale =
+							isPublished &&
+							moment.utc(sales_start_date).isBefore(moment.utc());
+						event.eventEnded = moment.utc(event_end).isBefore(moment.utc());
 
 						this.setState({
 							...event
@@ -457,6 +481,7 @@ class EventOverview extends Component {
 			displayEventEnd,
 			displayEventStartTime,
 			displayEventEndTime,
+			displayDoorTime,
 			event,
 			ticket_types
 		} = this.state;
@@ -473,7 +498,7 @@ class EventOverview extends Component {
 			return <NotFound>Event not found.</NotFound>;
 		}
 
-		const { id, name, event_start, event_end, venue, artists } = event;
+		const { id, name, event_start, shortDate, venue, artists } = event;
 
 		const promo_image_url = event.promo_image_url
 			? optimizedImageUrl(event.promo_image_url)

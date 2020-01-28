@@ -1,28 +1,23 @@
-import { Typography, Hidden } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import React from "react";
 import Card from "../../../../elements/Card";
 import optimizedImageUrl from "../../../../../helpers/optimizedImageUrl";
 import Divider from "@material-ui/core/Divider";
 import servedImage from "../../../../../helpers/imagePathHelper";
-import moment from "moment-timezone";
 import ColorTag from "../../../../elements/ColorTag";
 
 const OverviewHeader = ({ classes, event, artists, venue, timezoneAbbr }) => {
 	const {
 		name,
-		event_start,
-		door_time,
 		cancelled_at,
-		publish_date,
 		is_external,
-		event_end,
-		sales_start_date
+		displayEventStartTime,
+		displayDoorTime,
+		shortDate,
+		isPublished,
+		isOnSale,
+		eventEnded
 	} = event;
-
-	const isPublished = moment.utc(publish_date).isBefore(moment.utc());
-	const isOnSale =
-		isPublished && moment.utc(sales_start_date).isBefore(moment.utc());
-	const eventEnded = moment.utc(event_end).isBefore(moment.utc());
 
 	const promo_image_url = event.promo_image_url
 		? optimizedImageUrl(event.promo_image_url)
@@ -31,9 +26,6 @@ const OverviewHeader = ({ classes, event, artists, venue, timezoneAbbr }) => {
 	if (promo_image_url) {
 		promoImgStyle.backgroundImage = `url(${promo_image_url})`;
 	}
-	const shortDate = moment(event_start).format("ddd, MMM D, YYYY");
-	const shortDoorTime = moment(door_time).format("LT");
-	const shortShowTime = moment(event_start).format("LT");
 	let tags = null;
 	if (cancelled_at) {
 		tags = <Typography className={classes.cancelled}>Cancelled</Typography>;
@@ -105,10 +97,10 @@ const OverviewHeader = ({ classes, event, artists, venue, timezoneAbbr }) => {
 								{shortDate}
 							</Typography>
 							<Typography className={classes.infoSmallText}>
-								{`Doors open at ${shortDoorTime} ${timezoneAbbr}`}
+								{`Doors open at ${displayDoorTime} ${timezoneAbbr}`}
 							</Typography>
 							<Typography className={classes.infoSmallText}>
-								{`Show starts at ${shortShowTime} ${timezoneAbbr}`}
+								{`Show starts at ${displayEventStartTime} ${timezoneAbbr}`}
 							</Typography>
 						</div>
 					</div>
