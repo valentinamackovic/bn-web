@@ -40,7 +40,7 @@ const PublishedOverview = ({ classes, event }) => {
 							style={colStyles[index]}
 							className={classes.smallTitle}
 						>
-							{value ? value + " " : "-"}
+							{value ? value + " " : "Not Published"}
 						</Typography>
 					))}
 				</div>
@@ -54,7 +54,7 @@ const PublishedOverview = ({ classes, event }) => {
 								{heading}
 							</Typography>
 							<Typography className={classes.smallTitle}>
-								{values[index] ? values[index] + " " : "-"}
+								{values[index] ? values[index] + " " : "Not Published"}
 							</Typography>
 						</Grid>
 					))}

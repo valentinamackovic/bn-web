@@ -41,7 +41,12 @@ const TicketingOverview = ({
 				.utc(start_date)
 				.tz(timezone)
 				.format("L")
-			: "Immediately";
+			: moment
+				.utc(start_date)
+				.tz(timezone)
+				.isBefore(moment.utc())
+				? "Immediately"
+				: "Immediately";
 	const displayStartTime = start_date
 		? moment
 			.utc(start_date)
@@ -114,7 +119,7 @@ const TicketingOverview = ({
 		let pointOfSale = "";
 
 		if (web_sales_enabled && box_office_sales_enabled && app_sales_enabled) {
-			pointOfSale = "Web, App, and Box Office";
+			pointOfSale = "All";
 		} else if (
 			web_sales_enabled &&
 			box_office_sales_enabled &&
@@ -126,7 +131,7 @@ const TicketingOverview = ({
 			!box_office_sales_enabled &&
 			app_sales_enabled
 		) {
-			pointOfSale = "Web and App";
+			pointOfSale = "Online only";
 		} else if (
 			!web_sales_enabled &&
 			box_office_sales_enabled &&
@@ -138,13 +143,13 @@ const TicketingOverview = ({
 			!box_office_sales_enabled &&
 			!app_sales_enabled
 		) {
-			pointOfSale = "Web Only";
+			pointOfSale = "Online only";
 		} else if (
 			!web_sales_enabled &&
 			box_office_sales_enabled &&
 			!app_sales_enabled
 		) {
-			pointOfSale = "Box Office Only";
+			pointOfSale = "Box Office only";
 		} else if (
 			!web_sales_enabled &&
 			!box_office_sales_enabled &&
@@ -263,7 +268,7 @@ const TicketingOverview = ({
 				</div>
 
 				<Collapse
-					in={isExpanded}
+					in={!!isExpanded}
 					timeout="auto"
 					classes={{ wrapper: classes.noBackground }}
 				>
@@ -400,7 +405,7 @@ const TicketingOverview = ({
 				</Grid>
 
 				<Collapse
-					in={isExpanded}
+					in={!!isExpanded}
 					timeout="auto"
 					classes={{ wrapper: classes.noBackground }}
 				>
