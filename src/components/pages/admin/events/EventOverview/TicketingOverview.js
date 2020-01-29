@@ -8,13 +8,8 @@ import splitByCamelCase from "../../../../../helpers/splitByCamelCase";
 import Collapse from "@material-ui/core/es/Collapse/Collapse";
 import servedImage from "../../../../../helpers/imagePathHelper";
 
-const TicketingOverview = ({
-	classes,
-	ticket_type,
-	timezone,
-	isExpanded,
-	onExpandClick
-}) => {
+const TicketingOverview = props => {
+	const { classes, ticket_type, timezone, isExpanded, onExpandClick } = props;
 	const {
 		id,
 		name,
@@ -65,7 +60,7 @@ const TicketingOverview = ({
 			.tz(timezone)
 			.format("hh:mm A")
 		: null;
-
+	console.warn("??", isExpanded);
 	//General ticket info columns
 	const colStyles = [
 		{ flex: 1 },
@@ -268,7 +263,7 @@ const TicketingOverview = ({
 				</div>
 
 				<Collapse
-					in={!!isExpanded}
+					in={isExpanded}
 					timeout="auto"
 					classes={{ wrapper: classes.noBackground }}
 				>
@@ -405,7 +400,7 @@ const TicketingOverview = ({
 				</Grid>
 
 				<Collapse
-					in={!!isExpanded}
+					in={isExpanded}
 					timeout="auto"
 					classes={{ wrapper: classes.noBackground }}
 				>
