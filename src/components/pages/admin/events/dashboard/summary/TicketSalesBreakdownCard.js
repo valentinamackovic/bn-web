@@ -52,6 +52,11 @@ const styles = theme => {
 		},
 		block: {
 			flex: 1
+		},
+		ticketSalesBreakdown: {
+			[theme.breakpoints.down("xs")]: {
+				minWidth: "400vw"
+			}
 		}
 	};
 };

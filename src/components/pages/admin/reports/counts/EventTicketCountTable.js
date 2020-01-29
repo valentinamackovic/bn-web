@@ -6,7 +6,11 @@ import { dollars } from "../../../../../helpers/money";
 
 const styles = theme => {
 	return {
-		root: {}
+		root: {
+			[theme.breakpoints.down("xs")]: {
+				minWidth: "400vw"
+			}
+		}
 	};
 };
 
