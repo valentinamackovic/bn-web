@@ -86,7 +86,10 @@ const styles = theme => {
 		closeButton: {
 			position: "absolute",
 			top: "10%",
-			right: "10%"
+			right: "5%",
+			[theme.breakpoints.down("sm")]: {
+				right: "10%"
+			}
 		}
 	};
 };
@@ -134,9 +137,7 @@ const DataRenderer = ({ resultSet, displayDate, classes, closeToolTip }) => {
 		<div className={classes.dataContainer}>
 			<div className={classes.pieContainer}>
 				<DoughnutChart resultSet={resultSet} colors={COLORS}/>
-				<Hidden smUp>
-					<IconButton onClick={closeToolTip} iconUrl="/icons/delete-gray.svg" className={classes.closeButton}/>
-				</Hidden>
+				<IconButton onClick={closeToolTip} iconUrl="/icons/delete-gray.svg" className={classes.closeButton}/>
 			</div>
 			<div className={classes.detailsContainer}>
 				<Typography className={classes.title}>Ticket Sales Source</Typography>
