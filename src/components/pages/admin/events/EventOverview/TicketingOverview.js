@@ -1,11 +1,10 @@
 import React from "react";
 import Card from "../../../../elements/Card";
-import { Typography, Hidden, Grid } from "@material-ui/core";
+import { Typography, Hidden, Grid, Collapse } from "@material-ui/core";
 import moment from "moment-timezone";
 import Divider from "@material-ui/core/Divider";
 import { dollars } from "../../../../../helpers/money";
 import splitByCamelCase from "../../../../../helpers/splitByCamelCase";
-import Collapse from "@material-ui/core/es/Collapse/Collapse";
 import servedImage from "../../../../../helpers/imagePathHelper";
 
 const TicketingOverview = props => {

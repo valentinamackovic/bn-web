@@ -345,7 +345,7 @@ class EventOverview extends Component {
 	};
 
 	handleExpandTicketCard(expandedCardId) {
-		this.setState({ expandedCardId: expandedCardId });
+		this.setState({ expandedCardId });
 	}
 
 	get cancelMenuItemDisabled() {
