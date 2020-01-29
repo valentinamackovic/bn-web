@@ -38,10 +38,6 @@ import classnames from "classnames";
 import ArtistSummary from "../../../../elements/event/ArtistSummary";
 
 const styles = theme => ({
-	paper: {
-		marginBottom: theme.spacing.unit,
-		paddingBottom: theme.spacing.unit * 5
-	},
 	paddedContent: {
 		paddingRight: theme.spacing.unit * 12,
 		paddingLeft: theme.spacing.unit * 12,

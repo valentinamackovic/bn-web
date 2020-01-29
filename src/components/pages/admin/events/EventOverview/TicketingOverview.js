@@ -60,7 +60,6 @@ const TicketingOverview = props => {
 			.tz(timezone)
 			.format("hh:mm A")
 		: null;
-	console.warn("??", isExpanded);
 	//General ticket info columns
 	const colStyles = [
 		{ flex: 1 },
