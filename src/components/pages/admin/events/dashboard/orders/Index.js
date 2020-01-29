@@ -109,7 +109,7 @@ class OrderList extends Component {
 
 		const { promoFilterId, ticketTypeFilterId } = this.state;
 		if (promoFilterId) {
-			params.promo_code_id = promoFilterId;
+			params.promo_code = promoFilterId;
 		}
 
 		if (ticketTypeFilterId) {
@@ -180,7 +180,7 @@ class OrderList extends Component {
 			.then(response => {
 				const codes = response.data.data;
 				codes.forEach(c => {
-					promoCodes.push({ value: c.id, label: c.name });
+					promoCodes.push({ value: c.redemption_codes[0], label: c.name });
 				});
 
 				this.setState({ promoCodes });
