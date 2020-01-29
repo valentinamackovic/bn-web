@@ -303,7 +303,15 @@ const TicketingOverview = props => {
 								>
 									{value}
 								</Typography>
-							) : null
+							) : (
+								<Typography
+									key={index}
+									style={infoColStyles[index]}
+									className={classes.smallTitle}
+								>
+									-
+								</Typography>
+							)
 						)}
 					</div>
 					{ticket_pricing.length > 0 ? (
