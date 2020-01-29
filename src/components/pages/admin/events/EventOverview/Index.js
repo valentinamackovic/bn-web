@@ -18,10 +18,7 @@ import Loader from "../../../../elements/loaders/Loader";
 import NotFound from "../../../../common/NotFound";
 import OverviewHeader from "./OverviewHeader";
 import optimizedImageUrl from "../../../../../helpers/optimizedImageUrl";
-import {
-	fontFamily,
-	fontFamilyDemiBold
-} from "../../../../../config/theme";
+import { fontFamily, fontFamilyDemiBold } from "../../../../../config/theme";
 import Card from "../../../../elements/Card";
 import moment from "moment-timezone";
 
@@ -446,10 +443,10 @@ class EventOverview extends Component {
 								? "Published"
 								: "Draft";
 
-						event.publishedDateFormatted = moment(
-							publish_date,
-							"YYYY-MM-DD HH:mm ZZ"
-						).format("MM/DD/YYYY HH:mm A");
+						event.publishedDateFormatted = moment
+							.utc(publish_date)
+							.tz(venueTimezone)
+							.format("MM/DD/YYYY HH:mm A z");
 
 						this.setState({
 							...event
@@ -503,7 +500,6 @@ class EventOverview extends Component {
 				</div>
 			);
 		}
-
 		if (event === false) {
 			return <NotFound>Event not found.</NotFound>;
 		}
@@ -664,7 +660,7 @@ class EventOverview extends Component {
 						timezoneAbbr={timezoneAbbr}
 					/>
 
-					{ticket_types_info ? (
+					{ticket_types_info.length > 0 ? (
 						<div>
 							<Typography className={classes.eventAllDetailsTitle}>
 								Ticketing
