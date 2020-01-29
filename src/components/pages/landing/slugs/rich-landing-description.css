@@ -1,7 +1,7 @@
 .rich-edit-landing-content {
 	color: #b0b6c6;
 	/*border: solid;*/
-	font-family: TTCommons !important;
+	font-family: TTCommons-Regular;
 
 	font-size: 21px;
 	line-height: 24px;
@@ -23,7 +23,7 @@
 
 .rich-edit-landing-content > #text {
 	font-size: 21px;
-	font-family: TTCommons !important;
+	font-family: TTCommons-Regular;
 
 	margin: 0;
 	line-height: 24px;
