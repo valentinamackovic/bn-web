@@ -54,10 +54,8 @@ class SlugLanding extends Component {
 			const { id } = this.props.match.params;
 			slugResults.refreshResults(
 				id,
-				() => {
-				},
-				() => {
-				},
+				() => {},
+				() => {},
 				message => {
 					notifications.show({
 						message,
@@ -178,14 +176,8 @@ class SlugLanding extends Component {
 							<Loader>Finding events...</Loader>
 						) : (
 							<div className={classes.cardContainer}>
-								<Typography
-									variant={"title"}
-									className={classes.heading}
-								>
+								<Typography variant={"title"} className={classes.heading}>
 									{title}
-								</Typography>
-								<Typography variant={"body1"}>
-									{description}
 								</Typography>
 								<AltResults/>
 							</div>
