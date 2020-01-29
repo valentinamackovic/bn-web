@@ -668,7 +668,7 @@ class EventOverview extends Component {
 									ticket_type={ticket_type}
 									timezoneAbbr={timezoneAbbr}
 									timezone={venue.timezone}
-									isExpanded={expandedCardId === ticket_type.id}
+									isExpanded={expandedCardId && ticket_type.id && expandedCardId === ticket_type.id}
 									onExpandClick={this.handleExpandTicketCard}
 								/>
 							))}

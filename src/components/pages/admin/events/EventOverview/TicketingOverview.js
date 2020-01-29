@@ -12,7 +12,7 @@ const TicketingOverview = props => {
 	const {
 		id,
 		name,
-		available,
+		capacity,
 		ticket_pricing,
 		start_date,
 		end_date,
@@ -28,6 +28,7 @@ const TicketingOverview = props => {
 		box_office_sales_enabled,
 		parent_name
 	} = ticket_type;
+
 	const displayStartDate = parent_name
 		? "When sales end for..."
 		: start_date
@@ -83,7 +84,7 @@ const TicketingOverview = props => {
 
 	const values = [
 		name,
-		available,
+		capacity,
 		dollars(price_in_cents),
 		displayStartDate,
 		parent_name,
@@ -227,7 +228,7 @@ const TicketingOverview = props => {
 				</div>
 				<div className={classes.detailsTopRow}>
 					{values.map((value, index) =>
-						value ? (
+						value !== null ? (
 							<Typography
 								key={index}
 								style={colStyles[index]}
