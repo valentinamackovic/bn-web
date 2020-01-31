@@ -161,7 +161,7 @@ const DataRenderer = ({ resultSet, displayDate, classes, closeToolTip }) => {
 								<LegendRow
 									key={index}
 									color={COLORS[index]}
-									label={`${medium} - ${source}`}
+									label={`${source} - ${medium}`}
 									valueLabel={`${tickets}`}
 								/>
 							);
