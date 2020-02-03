@@ -56,6 +56,9 @@ const AdminVenue = asyncComponent(() => import("../pages/admin/venues/Venue"));
 const AdminRegionsList = asyncComponent(() =>
 	import("../pages/admin/regions/List")
 );
+const AdminSlugsList = asyncComponent(() =>
+	import("../pages/admin/slugs/List")
+);
 const AdminArtistsList = asyncComponent(() =>
 	import("../pages/admin/artists/List")
 );
@@ -426,6 +429,12 @@ class Routes extends Component {
 									exact
 									path="/admin/regions"
 									component={AdminRegionsList}
+									isAuthenticated={isAuthenticated}
+								/>
+								<PrivateRoute
+									exact
+									path="/admin/slugs"
+									component={AdminSlugsList}
 									isAuthenticated={isAuthenticated}
 								/>
 								<PrivateRoute

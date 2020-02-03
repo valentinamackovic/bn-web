@@ -59,7 +59,7 @@ const TableRender = ({ resultSet, classes, salesSourceUnavailableMessage }) => {
 	});
 
 	return (
-		<div>
+		<div className={classes.pageViewsTable}>
 			<PageViewsRow heading>
 				{resultSet.tableColumns().map(c => columnHeadingMap[c.key] || c.title)}
 			</PageViewsRow>
@@ -124,6 +124,11 @@ const styles = theme => {
 		percentText: {
 			fontSize: 12,
 			color: "#9DA3B4"
+		},
+		pageViewsTable: {
+			[theme.breakpoints.down("xs")]: {
+				minWidth: "200vw"
+			}
 		}
 	};
 };

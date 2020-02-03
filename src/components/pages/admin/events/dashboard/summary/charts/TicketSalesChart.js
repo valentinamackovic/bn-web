@@ -71,6 +71,10 @@ class SalesLine extends Component {
 			borderWidth = 1;
 		}
 
+		const chartEnd =  moment.utc(endDate).isAfter(moment()) ? moment().add(1, "days") :  endDate;
+
+		resultSet.categories().forEach( c => c.category = moment.utc(c.category).startOf("week").weekday(0));
+
 		const data = {
 			labels: resultSet.categories().map(c => c.category),
 			datasets: resultSet.series().map((s, index) => ({
@@ -89,7 +93,6 @@ class SalesLine extends Component {
 			}))
 		};
 		const options = {
-			responsive: true,
 			legend: {
 				display: false
 			},
@@ -142,7 +145,7 @@ class SalesLine extends Component {
 						},
 						ticks: {
 							min: startDate,
-							max: endDate,
+							max: chartEnd,
 							lineHeight: "14px",
 							fontColor: "#2C3136",
 							fontSize: "12px"
@@ -153,7 +156,7 @@ class SalesLine extends Component {
 							// }
 						},
 						time: {
-							unit: 'day'
+							unit: "week"
 						}
 					}
 				],
@@ -176,7 +179,11 @@ class SalesLine extends Component {
 						}
 					}
 				]
-			}
+			},
+			animation: {
+				duration: 0
+			},
+			responsive: "true"
 		};
 
 		const {

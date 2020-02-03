@@ -53,17 +53,15 @@ const styles = theme => {
 		block: {
 			flex: 1
 		},
-		chartContainer: {
+		ticketSalesBreakdown: {
 			[theme.breakpoints.down("xs")]: {
-				position: "relative",
-				margin: "auto",
-				width: "80vw"
+				minWidth: "400vw"
 			}
 		}
 	};
 };
 
-class TicketSalesCard extends Component {
+class TicketSalesBreakdownCard extends Component {
 	constructor(props) {
 		super(props);
 
@@ -98,7 +96,6 @@ class TicketSalesCard extends Component {
 			organization_id,
 			id,
 			publish_date,
-			cutOffDateString,
 			...rest
 		} = this.props;
 
@@ -151,34 +148,18 @@ class TicketSalesCard extends Component {
 				iconPath={"/icons/graph.png"}
 				footerContent={footerContent}
 			>
-				<div className={classes.root}>
-					<Hidden smDown>
-						<Typography className={classes.titleText}>{title}</Typography>
-					</Hidden>
-					<div className={classes.chartContainer}>
-						<TicketSalesChart
-							cubeApiUrl={cubeApiUrl}
-							token={token}
-							timezone={venue.timezone}
-							startDate={publishDateMinusOneDayUTC}
-							endDate={event_end}
-							cutOffDateString={cutOffDateString}
-						/>
-					</div>
-				</div>
 			</CollapseCard>
 		);
 	}
 }
 
-TicketSalesCard.propTypes = {
+TicketSalesBreakdownCard.propTypes = {
 	classes: PropTypes.object.isRequired,
 	token: PropTypes.string.isRequired,
 	publish_date: PropTypes.string.isRequired,
 	event_end: PropTypes.string.isRequired,
 	venue: PropTypes.object.isRequired,
-	cubeApiUrl: PropTypes.string.isRequired,
-	cutOffDateString: PropTypes.string
+	cubeApiUrl: PropTypes.string.isRequired
 };
 
-export default withStyles(styles)(TicketSalesCard);
+export default withStyles(styles)(TicketSalesBreakdownCard);

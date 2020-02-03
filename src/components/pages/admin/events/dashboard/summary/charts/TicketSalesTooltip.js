@@ -29,7 +29,7 @@ const styles = theme => {
 			width: CARD_WIDTH,
 			position: "fixed",
 			minHeight: CARD_HEIGHT,
-			padding: 39,
+			padding: 33,
 			boxShadow: "10px 10px 25px 2px rgba(43,43,43,0.12)",
 			zIndex: 10,
 
@@ -86,7 +86,10 @@ const styles = theme => {
 		closeButton: {
 			position: "absolute",
 			top: "10%",
-			right: "10%"
+			right: "5%",
+			[theme.breakpoints.down("sm")]: {
+				right: "10%"
+			}
 		}
 	};
 };
@@ -103,12 +106,14 @@ const DataRenderer = ({ resultSet, displayDate, classes, closeToolTip }) => {
 		}
 	});
 
+	//Limit to 4 items
 	const items = rows.map((row, index) => {
 		if(index <= 3) {
 			return row;
 		}
 	});
 
+	//If more than 4 items put them all in "Other" and group tickets
 	const sum = rows.map(function (object, index) {
 		if(index > 3) {
 			return Object.keys(object).reduce(function (sum, key) {
@@ -118,23 +123,21 @@ const DataRenderer = ({ resultSet, displayDate, classes, closeToolTip }) => {
 				}
 			}, 0);
 		} else {
-			return 0;
+			return 0; //items before 4th
 		}
 	});
 
 	const rowsUpdated = items.concat({
 		"PageViews.source": "other",
 		"PageViews.medium": "other",
-		"PageViews.tickets": sum.reduce((a, b) => a + b, 0)
+		"PageViews.tickets": sum.reduce((a, b) => a + b, 0) //tally ticket numbers
 	});
 
 	return (
 		<div className={classes.dataContainer}>
 			<div className={classes.pieContainer}>
 				<DoughnutChart resultSet={resultSet} colors={COLORS}/>
-				<Hidden smUp>
-					<IconButton onClick={closeToolTip} iconUrl="/icons/delete-gray.svg" className={classes.closeButton}/>
-				</Hidden>
+				<IconButton onClick={closeToolTip} iconUrl="/icons/delete-gray.svg" className={classes.closeButton}/>
 			</div>
 			<div className={classes.detailsContainer}>
 				<Typography className={classes.title}>Ticket Sales Source</Typography>
@@ -158,7 +161,7 @@ const DataRenderer = ({ resultSet, displayDate, classes, closeToolTip }) => {
 								<LegendRow
 									key={index}
 									color={COLORS[index]}
-									label={`${medium} - ${source}`}
+									label={`${source} - ${medium}`}
 									valueLabel={`${tickets}`}
 								/>
 							);
@@ -283,7 +286,7 @@ class TicketSalesTooltip extends Component {
 			left = left - CARD_WIDTH / 2;
 		}
 
-		top = top - CARD_HEIGHT - 20;
+		top = top - CARD_HEIGHT - 50;
 
 		return (
 			<Card
