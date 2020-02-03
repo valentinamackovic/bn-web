@@ -82,7 +82,7 @@ class ScheduleButton extends Component {
 					{scheduledAt ? (
 						<span>
 							&nbsp;for <span className={classes.pinkText}>
-								{scheduledAt ? moment.utc(scheduledAt).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE) : null}
+								{scheduledAt ? moment.utc(scheduledAt).tz(timezone).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE) : null}
 							</span>
 						</span>
 					) : null}

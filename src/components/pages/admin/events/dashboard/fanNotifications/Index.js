@@ -15,7 +15,10 @@ import {
 import SelectGroup from "../../../../../common/form/SelectGroup";
 import moment from "moment-timezone";
 import servedImage from "../../../../../../helpers/imagePathHelper";
-import { TIME_FORMAT_YYYY_MM_DD_NO_TIMEZONE, TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE } from "../../../../../../helpers/time";
+import {
+	TIME_FORMAT_YYYY_MM_DD_NO_TIMEZONE,
+	TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE
+} from "../../../../../../helpers/time";
 import SendDialog from "./sections/SendDialog";
 import MobileView from "./sections/MobileView";
 import DesktopView from "./sections/DesktopView";
@@ -109,6 +112,9 @@ class Index extends Component {
 		this.eventId = this.props.match.params.id;
 
 		this.state = {
+			event_start: null,
+			door_time: null,
+			event_end: null,
 			canTrigger: null,
 			isSending: false,
 			openConfirmDialog: false,
@@ -146,7 +152,7 @@ class Index extends Component {
 			.events.broadcasts.index({ event_id: this.eventId })
 			.then(response => {
 				const { data } = response.data;
-				let notificationTriggered = false;
+				let notificationTriggered = true;
 				data.forEach(
 					({
 						 id,
@@ -158,22 +164,20 @@ class Index extends Component {
 						 opened_quantity
 					 }) => {
 						if (
-							(notification_type === "LastCall" && status === "Pending") ||
-							(notification_type === "LastCall" && status === "InProgress")
+							(notification_type === "LastCall")
 						) {
-							const { timezone } = this.state;
-							notificationTriggered = true;
+							notificationTriggered = status !== "Pending";
+							const scheduledAt = (send_at !== null) ? send_at : created_at;
+
+							const isNotificationAfter = !!moment.utc(scheduledAt).isAfter(moment.utc());
 							this.setState({
+								isNotificationAfter,
 								notificationTriggered,
-								scheduledAt: (send_at !== null) ? moment.utc(send_at).tz(timezone).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE) : moment.utc(created_at).tz(timezone).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE),
+								scheduledAt,
 								scheduleProgress: opened_quantity,
 								scheduleSent: sent_quantity,
 								broadcastId: id
 							});
-							const { scheduledAt } = this.state;
-							moment.utc(scheduledAt).isAfter(moment.utc())
-								? this.setState({ isNotificationAfter: true })
-								: this.setState({ isNotificationAfter: false });
 						}
 					}
 				);
@@ -193,6 +197,9 @@ class Index extends Component {
 			.then(response => {
 				const { event_start, door_time, event_end, venue, status } = response.data;
 				this.setState({
+					event_start,
+					door_time,
+					event_end,
 					eventStart: moment.utc(door_time).tz(venue.timezone).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE),
 					eventEnd: moment.utc(event_end).tz(venue.timezone).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE),
 					timezone: venue.timezone,
@@ -254,23 +261,24 @@ class Index extends Component {
 		}
 
 		this.setState({ isSending: true });
-
+		const send_at = moment.tz(sendAt, TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE, timezone)
+			.utc()
+			.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
+		broadcastData = {
+			send_at,
+			notification_type: "LastCall"
+		};
 		if (updateNotification && broadcastId) {
+
 			broadcastData = {
-				id: broadcastId,
-				notification_type: "LastCall",
-				send_at: moment.utc(sendAt)
-					.tz(timezone)
-					.format(moment.HTML5_FMT.DATETIME_LOCAL_MS)
+				...broadcastData,
+				id: broadcastId
 			};
 		} else {
 			broadcastData = {
+				...broadcastData,
 				event_id: this.eventId,
-				channel: "PushNotification",
-				notification_type: "LastCall",
-				send_at: moment.utc(sendAt)
-					.tz(timezone)
-					.format(moment.HTML5_FMT.DATETIME_LOCAL_MS)
+				channel: "PushNotification"
 			};
 		}
 
@@ -283,18 +291,15 @@ class Index extends Component {
 		Bigneon()
 			.events.broadcasts.create(broadcastData)
 			.then(response => {
-				let notificationTriggered = false;
+				let notificationTriggered = true;
 
-				if (
-					(response.data.notification_type === "LastCall" &&
-						response.data.status === "Pending") ||
-					(response.data.notification_type === "LastCall" &&
-						response.data.status === "InProgress")
-				) {
-					notificationTriggered = true;
+				if (response.data.notification_type === "LastCall") {
+					notificationTriggered =  status !== "Pending";
 
-					this.setState({ notificationTriggered });
-					this.setState({ scheduledAt: response.data.send_at });
+					this.setState({
+						notificationTriggered,
+						scheduledAt: response.data.send_at
+					});
 				}
 
 				this.setState({
@@ -305,7 +310,7 @@ class Index extends Component {
 				});
 				this.submitAttempted = false;
 				notifications.show({
-					message: "Notification triggered!",
+					message: "Notification created!",
 					variant: "success"
 				});
 			})
@@ -315,7 +320,7 @@ class Index extends Component {
 				});
 				notifications.showFromErrorResponse({
 					error,
-					defaultMessage: "Failed to trigger notifications."
+					defaultMessage: "Failed to create notification."
 				});
 			});
 	}
@@ -326,19 +331,14 @@ class Index extends Component {
 			.then(response => {
 				let notificationTriggered = false;
 
-				if (
-					(response.data.notification_type === "LastCall" &&
-						response.data.status === "Pending") ||
-					(response.data.notification_type === "LastCall" &&
-						response.data.status === "InProgress")
-				) {
-					notificationTriggered = true;
+				if (response.data.notification_type === "LastCall") {
+					notificationTriggered =  status !== "Pending";
 
-					this.setState({ notificationTriggered });
 					this.setState({ scheduledAt: response.data.send_at });
 				}
 
 				this.setState({
+					notificationTriggered,
 					isSending: false,
 					openConfirmDialog: false,
 					lastCallMessage: "",
@@ -346,7 +346,7 @@ class Index extends Component {
 				});
 				this.submitAttempted = false;
 				notifications.show({
-					message: "Notification triggered!",
+					message: "Notification updated!",
 					variant: "success"
 				});
 			})
@@ -356,7 +356,7 @@ class Index extends Component {
 				});
 				notifications.showFromErrorResponse({
 					error,
-					defaultMessage: "Failed to trigger notifications."
+					defaultMessage: "Failed to update notifications."
 				});
 			});
 	}
@@ -402,15 +402,15 @@ class Index extends Component {
 	}
 
 	fifteenInterval() {
-		const { eventStart, eventEnd, times, timezone } = this.state;
-		const start = moment.utc(eventStart);
-		const end = moment.utc(eventEnd);
+		const { door_time, event_end, eventStart, eventEnd, times, timezone } = this.state;
+		const start = moment.utc(door_time);
+		const end = moment.utc(event_end);
 		// round starting minutes up to nearest 15 (12 --> 15, 17 --> 30)
 		// note that 59 will round up to 60, and moment.js handles that correctly
 		start.minutes(Math.ceil(start.minutes() / 15) * 15);
 		while (start < end) {
-			if(moment(start).tz(timezone).isAfter(moment())) {
-				times.push(start.format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE));
+			if (start.isAfter(moment.utc())) {
+				times.push(start.tz(timezone).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE));
 			}
 			start.add(15, "minutes");
 		}
@@ -426,7 +426,8 @@ class Index extends Component {
 			scheduledAt,
 			notificationTriggered,
 			isNotificationAfter,
-			isEventEnded
+			isEventEnded,
+			timezone
 		} = this.state;
 
 		if (eventStart === null || eventEnd === null) {
@@ -453,10 +454,12 @@ class Index extends Component {
 					items={datesOptions}
 					name={"sendAt"}
 					error={errors.sendAt}
-					onChange={e =>
+					onChange={e => {
+
 						this.setState({
 							sendAt: e.target.value
-						})
+						});
+					}
 					}
 				/>
 			);
@@ -488,16 +491,20 @@ class Index extends Component {
 							How does it work?
 						</span>
 						<br/>
-						Last Call Notifications are optimized to drive food and beverage
-						sales by intelligently engaging your attendees prior to the close
+						Last Call Notifications are optimized to drive food and
+						beverage
+						sales by intelligently engaging your attendees prior to
+						the close
 						of service to entice them to make a purchase.{" "}
 						<span className={classes.pinkText}>
 							This can only be used once during your event.
 						</span>
 						<br/>
 						<br/>
-						All attendees who have enabled notifications on their devices will
-						receive the following Last Call notification on their device at
+						All attendees who have enabled notifications on their
+						devices will
+						receive the following Last Call notification on their
+						device at
 						the time set above.
 					</Typography>
 				</Grid>
