@@ -152,11 +152,11 @@ class NotificationProgress extends Component {
 					</Grid>
 					<Grid item xs={9} md={4}>
 						<Typography className={classes.descriptionHeading}>
-							{(isNotificationAfter || isEventEnded) ? "Event has ended" : "Schedule the Last Call"}
+							{isEventEnded ? "Event has ended" : "Schedule the Last Call"}
 						</Typography>
 					</Grid>
 					<Grid item xs={12} md={4}>
-						{(isNotificationAfter || isEventEnded) ? null : renderTimes}
+						{isEventEnded ? null : renderTimes}
 					</Grid>
 				</Grid>
 			);

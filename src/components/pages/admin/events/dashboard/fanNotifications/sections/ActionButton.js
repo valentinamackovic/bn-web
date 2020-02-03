@@ -59,10 +59,8 @@ class ActionButton extends Component {
 			notificationTriggered
 		} = this.props;
 
-		if (isSending) {
-			return <Button disabled>Sending...</Button>;
-		} else {
-			return (notificationTriggered || isNotificationAfter || isEventEnded) ? null : (
+		if (scheduledAt || notificationTriggered) {
+			return (
 				<Button
 					variant={"whiteCTA"}
 					size={"large"}
@@ -71,6 +69,8 @@ class ActionButton extends Component {
 					{scheduledAt || notificationTriggered ? "Change" : "Send now"}
 				</Button>
 			);
+		} else {
+			return null;
 		}
 	}
 }

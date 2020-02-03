@@ -153,7 +153,6 @@ class Index extends Component {
 						 notification_type,
 						 status,
 						 send_at,
-						 progress,
 						 sent_quantity,
 						 created_at,
 						 opened_quantity
@@ -162,16 +161,17 @@ class Index extends Component {
 							(notification_type === "LastCall" && status === "Pending") ||
 							(notification_type === "LastCall" && status === "InProgress")
 						) {
+							const { timezone } = this.state;
 							notificationTriggered = true;
 							this.setState({
 								notificationTriggered,
-								scheduledAt: send_at ? send_at : created_at,
+								scheduledAt: (send_at !== null) ? moment.utc(send_at).tz(timezone).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE) : moment.utc(created_at).tz(timezone).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE),
 								scheduleProgress: opened_quantity,
 								scheduleSent: sent_quantity,
 								broadcastId: id
 							});
-							const { scheduledAt, timezone } = this.state;
-							moment.utc(scheduledAt).tz(timezone).isBefore(moment())
+							const { scheduledAt } = this.state;
+							moment.utc(scheduledAt).isAfter(moment.utc())
 								? this.setState({ isNotificationAfter: true })
 								: this.setState({ isNotificationAfter: false });
 						}

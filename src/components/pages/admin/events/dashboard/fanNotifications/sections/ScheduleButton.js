@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import moment from "moment";
+import moment from "moment-timezone";
 import { Typography } from "@material-ui/core";
 import Button from "../../../../../../elements/Button";
 import { TIME_FORMAT_YYYY_MM_DD_NO_TIMEZONE, TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE } from "../../../../../../../helpers/time";
@@ -75,24 +75,21 @@ class ScheduleButton extends Component {
 			onSend
 		} = this.props;
 
-		const scheduledDate = scheduledAt ? moment(scheduledAt, TIME_FORMAT_YYYY_MM_DD_NO_TIMEZONE).tz(timezone) : null;
-		const date = scheduledDate ? scheduledDate.format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE) : null;
-
 		if (scheduledAt || notificationTriggered) {
 			return (
 				<Typography className={classes.notificationBg}>
 					Notification scheduled
-					{scheduledDate ? (
+					{scheduledAt ? (
 						<span>
 							&nbsp;for <span className={classes.pinkText}>
-								{scheduledDate ? moment(scheduledAt, TIME_FORMAT_YYYY_MM_DD_NO_TIMEZONE).tz(timezone).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE) : null}
+								{scheduledAt ? moment.utc(scheduledAt).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE) : null}
 							</span>
 						</span>
 					) : null}
 				</Typography>
 			);
 		} else {
-			if(isNotificationAfter || isEventEnded) {
+			if(isEventEnded) {
 				return null;
 			} else {
 				return (
