@@ -12,7 +12,7 @@ class NotificationProgress extends Component {
 			classes,
 			notificationTriggered,
 			scheduleProgress,
-			scheduleAt,
+			scheduledAt,
 			eventStart,
 			eventEnd,
 			timezone,
@@ -26,7 +26,7 @@ class NotificationProgress extends Component {
 			classes,
 			notificationTriggered,
 			scheduleProgress,
-			scheduleAt,
+			scheduledAt,
 			eventStart,
 			eventEnd,
 			timezone,
@@ -44,7 +44,7 @@ class NotificationProgress extends Component {
 			classes,
 			notificationTriggered,
 			scheduleProgress,
-			scheduleAt,
+			scheduledAt,
 			eventStart,
 			eventEnd,
 			timezone,
@@ -58,7 +58,7 @@ class NotificationProgress extends Component {
 			classes,
 			notificationTriggered,
 			scheduleProgress,
-			scheduleAt,
+			scheduledAt,
 			eventStart,
 			eventEnd,
 			timezone,
@@ -74,7 +74,7 @@ class NotificationProgress extends Component {
 			classes,
 			notificationTriggered,
 			scheduleProgress,
-			scheduleAt,
+			scheduledAt,
 			eventStart,
 			eventEnd,
 			isNotificationAfter,
@@ -90,7 +90,7 @@ class NotificationProgress extends Component {
 			completed = (scheduleProgress / scheduleSent) * 100;
 		}
 
-		if (scheduleAt || notificationTriggered) {
+		if (scheduledAt || notificationTriggered) {
 			return (
 				<Grid container alignItems="center" spacing={24}>
 					<Grid item xs={1}>
@@ -129,7 +129,7 @@ class NotificationProgress extends Component {
 							</Grid>
 							<Grid item xs={7}>
 								<Typography className={classes.greyText}>
-									Period:{" "}
+									Event Period:{" "}
 									<span className={classes.blackText}>
 										{eventStart ? eventStart : ""} -
 										{eventEnd ? eventEnd : ""}

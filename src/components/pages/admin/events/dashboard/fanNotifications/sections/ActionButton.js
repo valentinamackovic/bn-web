@@ -59,7 +59,7 @@ class ActionButton extends Component {
 			notificationTriggered
 		} = this.props;
 
-		if (scheduledAt && !notificationTriggered) {
+		if (scheduledAt && !notificationTriggered && isNotificationAfter) {
 			return (
 				<Button
 					variant={"whiteCTA"}

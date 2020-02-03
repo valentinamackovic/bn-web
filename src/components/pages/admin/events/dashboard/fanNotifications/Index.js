@@ -329,16 +329,7 @@ class Index extends Component {
 		Bigneon()
 			.broadcasts.update(broadcastData)
 			.then(response => {
-				let notificationTriggered = false;
-
-				if (response.data.notification_type === "LastCall") {
-					notificationTriggered =  status !== "Pending";
-
-					this.setState({ scheduledAt: response.data.send_at });
-				}
-
 				this.setState({
-					notificationTriggered,
 					isSending: false,
 					openConfirmDialog: false,
 					lastCallMessage: "",
@@ -349,6 +340,7 @@ class Index extends Component {
 					message: "Notification updated!",
 					variant: "success"
 				});
+				this.loadEventBroadcast();
 			})
 			.catch(error => {
 				this.setState({
