@@ -207,7 +207,8 @@ const styles = theme => ({
 		alignItems: "center",
 		justifyContent: "center",
 		position: "absolute",
-		right: 20,
+		right: 10,
+		bottom: 10,
 		zIndex: 500
 	},
 	expandIcon: {
@@ -250,6 +251,29 @@ const styles = theme => ({
 	},
 	detailsTopRow: {
 		display: "flex",
+		[theme.breakpoints.up("sm")]: {
+			position: "relative"
+		}
+	},
+	detailsTopRowHolder: {
+		display: "flex",
+		flexDirection: "row",
+		[theme.breakpoints.up("sm")]: {
+			position: "relative"
+		}
+	},
+	detailsLeft: {
+		display: "flex",
+		flexDirection: "column",
+		width: "55%",
+		[theme.breakpoints.up("sm")]: {
+			position: "relative"
+		}
+	},
+	detailsRight: {
+		display: "flex",
+		flexDirection: "column",
+		width: "45%",
 		[theme.breakpoints.up("sm")]: {
 			position: "relative"
 		}
@@ -668,7 +692,11 @@ class EventOverview extends Component {
 									ticket_type={ticket_type}
 									timezoneAbbr={timezoneAbbr}
 									timezone={venue.timezone}
-									isExpanded={expandedCardId && ticket_type.id && expandedCardId === ticket_type.id}
+									isExpanded={
+										expandedCardId &&
+										ticket_type.id &&
+										expandedCardId === ticket_type.id
+									}
 									onExpandClick={this.handleExpandTicketCard}
 								/>
 							))}

@@ -6,6 +6,7 @@ import Divider from "@material-ui/core/Divider";
 import { dollars } from "../../../../../helpers/money";
 import splitByCamelCase from "../../../../../helpers/splitByCamelCase";
 import servedImage from "../../../../../helpers/imagePathHelper";
+import ellipsis from "../../../../../helpers/ellipsis";
 
 const TicketingOverview = props => {
 	const { classes, ticket_type, timezone, isExpanded, onExpandClick } = props;
@@ -93,20 +94,57 @@ const TicketingOverview = props => {
 		displayEndTime
 	];
 
+	const desktopLeftHeadings = [
+		"Ticket name",
+		"Quantity",
+		"Price",
+		"Sales start"
+	];
+
+	const desktopRightHeadings = [
+		parent_name ? "Ticket type" : null,
+		start_date ? `start time` : null,
+		"sales end",
+		end_date ? `end time` : null
+	];
+
+	//new cols for desktop, to keep cols aligned
+
+	const desktopLeftValues = [
+		ellipsis(name, 25),
+		capacity,
+		dollars(price_in_cents),
+		displayStartDate
+	];
+
+	const desktopRightValues = [
+		parent_name,
+		displayStartTime,
+		displayEndDate,
+		displayEndTime
+	];
+
+	const desktopLeftColStyles = [
+		{ flex: 4 },
+		{ flex: 2 },
+		{ flex: 2 },
+		{ flex: 3 }
+	];
+
 	//Additional info cols
 	const infoColStyles = [
-		{ flex: 1 },
+		{ flex: 3 },
 		{ flex: 2 },
 		{ flex: 2 },
 		{ flex: 2 },
-		{ flex: 2 }
+		{ flex: 6 }
 	];
 	const infoHeadings = [
 		"visibility",
 		"Point of sale",
-		"Max tickets per customer",
-		"cart quantity increment",
-		"per ticket fee increase"
+		"Max per customer",
+		"increment",
+		"per ticket fee *"
 	];
 
 	function getPointOfSale() {
@@ -188,7 +226,7 @@ const TicketingOverview = props => {
 	return (
 		<Card className={classes.detailsCardStyle}>
 			{/*Mobile expand icon*/}
-			<Hidden smUp>
+			<Hidden mdUp>
 				{!isExpanded ? (
 					<div
 						className={classes.expandIconRow}
@@ -213,52 +251,85 @@ const TicketingOverview = props => {
 			</Hidden>
 			{/*DESKTOP*/}
 			<Hidden smDown>
-				<div className={classes.detailsTopRow}>
-					{headings.map((heading, index) =>
-						heading ? (
-							<Typography
-								key={index}
-								style={colStyles[index]}
-								className={classes.smallGreyCapTitle}
-							>
-								{heading}
-							</Typography>
-						) : null
-					)}
-				</div>
-				<div className={classes.detailsTopRow}>
-					{values.map((value, index) =>
-						value !== null ? (
-							<Typography
-								key={index}
-								style={colStyles[index]}
-								className={classes.smallTitle}
-							>
-								{value}
-							</Typography>
-						) : null
-					)}
-					{!isExpanded ? (
-						<div
-							className={classes.expandIconRowDesktop}
-							onClick={() => onExpandClick(id)}
-						>
-							<img
-								className={classes.expandIcon}
-								src={servedImage("/icons/down-active.svg")}
-							/>
+				<div className={classes.detailsTopRowHolder}>
+					<div className={classes.detailsLeft}>
+						<div className={classes.detailsTopRow}>
+							{desktopLeftHeadings.map((heading, index) =>
+								heading ? (
+									<Typography
+										key={index}
+										style={desktopLeftColStyles[index]}
+										className={classes.smallGreyCapTitle}
+									>
+										{heading}
+									</Typography>
+								) : null
+							)}
 						</div>
-					) : (
-						<div
-							className={classes.expandIconRowDesktop}
-							onClick={() => onExpandClick(null)}
-						>
-							<img
-								className={classes.expandIcon}
-								src={servedImage("/icons/up-active.svg")}
-							/>
+						<div className={classes.detailsTopRow}>
+							{desktopLeftValues.map((value, index) =>
+								value ? (
+									<Typography
+										key={index}
+										title={index === 0 ? name : null}
+										style={desktopLeftColStyles[index]}
+										className={classes.smallTitle}
+									>
+										{value}
+									</Typography>
+								) : null
+							)}
 						</div>
-					)}
+					</div>
+					<div className={classes.detailsRight}>
+						<div className={classes.detailsTopRow}>
+							{desktopRightHeadings.map((heading, index) =>
+								heading ? (
+									<Typography
+										key={index}
+										style={{ width: "33%" }}
+										className={classes.smallGreyCapTitle}
+									>
+										{heading}
+									</Typography>
+								) : null
+							)}
+						</div>
+						<div className={classes.detailsTopRow}>
+							{desktopRightValues.map((value, index) =>
+								value !== null ? (
+									<Typography
+										key={index}
+										style={{ width: "33%" }}
+										className={classes.smallTitle}
+									>
+										{value}
+									</Typography>
+								) : null
+							)}
+							{!isExpanded ? (
+								<div
+									className={classes.expandIconRowDesktop}
+									onClick={() => onExpandClick(id)}
+								>
+									<img
+										className={classes.expandIcon}
+										src={servedImage("/icons/down-active.svg")}
+									/>
+								</div>
+							) : (
+								<div
+									className={classes.expandIconRowDesktop}
+									onClick={() => onExpandClick(null)}
+								>
+									<img
+										className={classes.expandIcon}
+										src={servedImage("/icons/up-active.svg")}
+									/>
+								</div>
+							)}
+						</div>
+					</div>
 				</div>
 
 				<Collapse
