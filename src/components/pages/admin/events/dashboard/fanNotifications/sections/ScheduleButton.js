@@ -75,7 +75,7 @@ class ScheduleButton extends Component {
 			onSend
 		} = this.props;
 
-		if (scheduledAt || notificationTriggered) {
+		if (scheduledAt && !notificationTriggered) {
 			return (
 				<Typography className={classes.notificationBg}>
 					Notification scheduled

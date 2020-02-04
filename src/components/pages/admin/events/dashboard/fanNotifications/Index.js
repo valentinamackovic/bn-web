@@ -160,14 +160,14 @@ class Index extends Component {
 						 status,
 						 send_at,
 						 sent_quantity,
-						 created_at,
+						 updated_at,
 						 opened_quantity
 					 }) => {
 						if (
 							(notification_type === "LastCall")
 						) {
 							notificationTriggered = status !== "Pending";
-							const scheduledAt = (send_at !== null) ? send_at : created_at;
+							const scheduledAt = (send_at !== null) ? send_at : updated_at;
 
 							const isNotificationAfter = !!moment.utc(scheduledAt).isAfter(moment.utc());
 							this.setState({
@@ -176,7 +176,8 @@ class Index extends Component {
 								scheduledAt,
 								scheduleProgress: opened_quantity,
 								scheduleSent: sent_quantity,
-								broadcastId: id
+								broadcastId: id,
+								sendAt: scheduledAt
 							});
 						}
 					}
@@ -291,17 +292,6 @@ class Index extends Component {
 		Bigneon()
 			.events.broadcasts.create(broadcastData)
 			.then(response => {
-				let notificationTriggered = true;
-
-				if (response.data.notification_type === "LastCall") {
-					notificationTriggered =  status !== "Pending";
-
-					this.setState({
-						notificationTriggered,
-						scheduledAt: response.data.send_at
-					});
-				}
-
 				this.setState({
 					isSending: false,
 					openConfirmDialog: false,
@@ -313,6 +303,7 @@ class Index extends Component {
 					message: "Notification created!",
 					variant: "success"
 				});
+				this.loadEventBroadcast();
 			})
 			.catch(error => {
 				this.setState({
@@ -361,15 +352,14 @@ class Index extends Component {
 	}
 
 	onAction() {
-		const { scheduledAt, notificationTriggered } = this.state;
+		this.setState({
+			notificationTriggered: true,
+			updateNotification: true
+		});
+	}
 
-		scheduledAt || notificationTriggered
-			? this.setState({
-				scheduledAt: "",
-				notificationTriggered: false,
-				updateNotification: true
-			})
-			: this.setState({ openConfirmDialog: true, isCustom: false });
+	onSendNow() {
+		this.setState({ openConfirmDialog: true, isCustom: false });
 	}
 
 	validateFields() {
@@ -442,7 +432,7 @@ class Index extends Component {
 		if (!isNotificationAfter || !isEventEnded) {
 			return (
 				<SelectGroup
-					value={sendAt}
+					value={sendAt ? moment.utc(sendAt).tz(timezone).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE) : ""}
 					items={datesOptions}
 					name={"sendAt"}
 					error={errors.sendAt}
@@ -536,6 +526,7 @@ class Index extends Component {
 						renderTimes={this.renderTimes()}
 						onSend={this.onSend.bind(this)}
 						onAction={this.onAction.bind(this)}
+						onSendNow={this.onSendNow.bind(this)}
 						details={Details}
 						eventId={this.eventId}
 					/>
@@ -557,6 +548,7 @@ class Index extends Component {
 						renderTimes={this.renderTimes()}
 						onSend={this.onSend.bind(this)}
 						onAction={this.onAction.bind(this)}
+						onSendNow={this.onSendNow.bind(this)}
 						details={Details}
 						eventId={this.eventId}
 					/>

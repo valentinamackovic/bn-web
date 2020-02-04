@@ -90,7 +90,7 @@ class NotificationProgress extends Component {
 			completed = (scheduleProgress / scheduleSent) * 100;
 		}
 
-		if (scheduledAt || notificationTriggered) {
+		if (scheduledAt && !notificationTriggered) {
 			return (
 				<Grid container alignItems="center" spacing={24}>
 					<Grid item xs={1}>

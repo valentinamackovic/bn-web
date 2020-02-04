@@ -13,7 +13,8 @@ class ActionButton extends Component {
 			isEventEnded,
 			isCustom,
 			onAction,
-			notificationTriggered
+			notificationTriggered,
+			onSendNow
 		} = this.props;
 
 		this.defaultState = {
@@ -23,7 +24,8 @@ class ActionButton extends Component {
 			isEventEnded,
 			isCustom,
 			onAction,
-			notificationTriggered
+			notificationTriggered,
+			onSendNow
 		};
 
 		this.state = this.defaultState;
@@ -36,7 +38,8 @@ class ActionButton extends Component {
 			isNotificationAfter,
 			isEventEnded,
 			onAction,
-			notificationTriggered
+			notificationTriggered,
+			onSendNow
 		} = props;
 
 		return {
@@ -45,18 +48,19 @@ class ActionButton extends Component {
 			isNotificationAfter,
 			isEventEnded,
 			onAction,
-			notificationTriggered
+			notificationTriggered,
+			onSendNow
 		};
 	}
 
 	render() {
 		const {
 			scheduledAt,
-			isSending,
 			isNotificationAfter,
 			isEventEnded,
 			onAction,
-			notificationTriggered
+			notificationTriggered,
+			onSendNow
 		} = this.props;
 
 		if (scheduledAt && !notificationTriggered && isNotificationAfter) {
@@ -65,8 +69,20 @@ class ActionButton extends Component {
 					variant={"whiteCTA"}
 					size={"large"}
 					onClick={onAction}
+					disabled={isEventEnded}
 				>
-					{scheduledAt || notificationTriggered ? "Change" : "Send now"}
+					Change
+				</Button>
+			);
+		} else if(isNotificationAfter) {
+			return (
+				<Button
+					variant={"whiteCTA"}
+					size={"large"}
+					onClick={onSendNow}
+					disabled={isEventEnded}
+				>
+					Send now
 				</Button>
 			);
 		} else {
@@ -82,7 +98,8 @@ ActionButton.propTypes = {
 	isNotificationAfter: PropTypes.bool.isRequired,
 	isEventEnded: PropTypes.bool.isRequired,
 	notificationTriggered: PropTypes.bool,
-	onAction: PropTypes.func.isRequired
+	onAction: PropTypes.func.isRequired,
+	onSendNow: PropTypes.func.isRequired
 };
 
 export default ActionButton;

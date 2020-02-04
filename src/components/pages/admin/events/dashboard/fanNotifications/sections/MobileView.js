@@ -24,7 +24,8 @@ class MobileView extends Component {
 			scheduleSent,
 			isSending,
 			isCustom,
-			renderTimes
+			renderTimes,
+			onSendNow
 		} = this.props;
 
 		this.defaultState = {
@@ -40,7 +41,8 @@ class MobileView extends Component {
 			scheduleSent,
 			isSending,
 			isCustom,
-			renderTimes
+			renderTimes,
+			onSendNow
 		};
 
 		this.state = this.defaultState;
@@ -60,7 +62,8 @@ class MobileView extends Component {
 			scheduleSent,
 			isSending,
 			isCustom,
-			renderTimes
+			renderTimes,
+			onSendNow
 		} = props;
 
 		return {
@@ -76,7 +79,8 @@ class MobileView extends Component {
 			scheduleSent,
 			isSending,
 			isCustom,
-			renderTimes
+			renderTimes,
+			onSendNow
 		};
 	}
 
@@ -99,7 +103,8 @@ class MobileView extends Component {
 			onSend,
 			onAction,
 			details,
-			eventId
+			eventId,
+			onSendNow
 		} = this.props;
 
 		return (
@@ -154,6 +159,7 @@ class MobileView extends Component {
 											isEventEnded={isEventEnded}
 											isCustom={isCustom}
 											onAction={onAction}
+											onSendNow={onSendNow}
 											notificationTriggered={notificationTriggered}
 										/>
 									</div>
@@ -194,6 +200,7 @@ MobileView.propTypes = {
 	isCustom: PropTypes.bool,
 	renderTimes: PropTypes.object,
 	onSend: PropTypes.func,
+	onSendNow: PropTypes.func,
 	onAction: PropTypes.func,
 	details: PropTypes.object,
 	eventId: PropTypes.string
