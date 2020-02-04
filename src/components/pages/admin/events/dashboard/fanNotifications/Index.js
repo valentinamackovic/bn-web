@@ -135,7 +135,7 @@ class Index extends Component {
 			isSchedule: false,
 			updateNotification: false,
 			broadcastId: null,
-			isNotificationAfter: false,
+			isNotificationAfter: true,
 			isEventEnded: false
 		};
 	}
