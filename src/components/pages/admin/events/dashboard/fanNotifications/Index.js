@@ -1,10 +1,5 @@
 import React, { Component } from "react";
-import {
-	Typography,
-	withStyles,
-	Grid,
-	Hidden
-} from "@material-ui/core";
+import { Typography, withStyles, Grid, Hidden } from "@material-ui/core";
 
 import notifications from "../../../../../../stores/notifications";
 import Bigneon from "../../../../../../helpers/bigneon";
@@ -119,7 +114,7 @@ class Index extends Component {
 			isSending: false,
 			openConfirmDialog: false,
 			isCustom: false,
-			notificationTriggered: false,
+			broadcastSent: false,
 			lastCallMessage: "",
 			errors: {},
 			broadcastData: {},
@@ -136,7 +131,8 @@ class Index extends Component {
 			updateNotification: false,
 			broadcastId: null,
 			isNotificationAfter: true,
-			isEventEnded: false
+			isEventEnded: false,
+			datesOptions: []
 		};
 	}
 
@@ -148,36 +144,40 @@ class Index extends Component {
 	}
 
 	loadEventBroadcast() {
+		const { timezone } = this.state;
 		Bigneon()
 			.events.broadcasts.index({ event_id: this.eventId })
 			.then(response => {
 				const { data } = response.data;
-				let notificationTriggered = true;
+				let broadcastSent = true;
 				data.forEach(
 					({
-						 id,
-						 notification_type,
-						 status,
-						 send_at,
-						 sent_quantity,
-						 updated_at,
-						 opened_quantity
-					 }) => {
-						if (
-							(notification_type === "LastCall")
-						) {
-							notificationTriggered = status !== "Pending";
-							const scheduledAt = (send_at !== null) ? send_at : updated_at;
+						id,
+						notification_type,
+						status,
+						send_at,
+						sent_quantity,
+						updated_at,
+						opened_quantity
+					}) => {
+						if (notification_type === "LastCall") {
+							broadcastSent = status !== "Pending" && status !== "InProgress";
+							const scheduledAt = send_at !== null ? send_at : updated_at;
 
-							const isNotificationAfter = !!moment.utc(scheduledAt).isAfter(moment.utc());
+							const isNotificationAfter = !!moment
+								.utc(scheduledAt)
+								.isAfter(moment.utc());
 							this.setState({
 								isNotificationAfter,
-								notificationTriggered,
+								broadcastSent,
 								scheduledAt,
 								scheduleProgress: opened_quantity,
 								scheduleSent: sent_quantity,
 								broadcastId: id,
-								sendAt: scheduledAt
+								sendAt: moment
+									.utc(scheduledAt)
+									.tz(timezone)
+									.format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE)
 							});
 						}
 					}
@@ -196,17 +196,45 @@ class Index extends Component {
 		Bigneon()
 			.events.read({ id: this.eventId })
 			.then(response => {
-				const { event_start, door_time, event_end, venue, status } = response.data;
-				this.setState({
+				const {
 					event_start,
 					door_time,
 					event_end,
-					eventStart: moment.utc(door_time).tz(venue.timezone).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE),
-					eventEnd: moment.utc(event_end).tz(venue.timezone).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE),
-					timezone: venue.timezone,
-					isEventEnded: (status === "Closed")
-				});
-				this.loadEventBroadcast();
+					venue,
+					status
+				} = response.data;
+				this.setState(
+					{
+						event_start,
+						door_time,
+						event_end,
+						eventStart: moment
+							.utc(door_time)
+							.tz(venue.timezone)
+							.format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE),
+						eventEnd: moment
+							.utc(event_end)
+							.tz(venue.timezone)
+							.format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE),
+						timezone: venue.timezone,
+						isEventEnded: status === "Closed"
+					},
+
+					() => {
+						this.loadEventBroadcast();
+
+						const dates = this.fifteenInterval();
+						const setArray = new Set(dates);
+						const datesArray = Array.from(setArray);
+
+						const datesOptions = datesArray.map(date => ({
+							value: date,
+							label: date
+						}));
+
+						this.setState({ datesOptions });
+					}
+				);
 			})
 			.catch(error => {
 				console.error(error);
@@ -262,7 +290,8 @@ class Index extends Component {
 		}
 
 		this.setState({ isSending: true });
-		const send_at = moment.tz(sendAt, TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE, timezone)
+		const send_at = moment
+			.tz(sendAt, TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE, timezone)
 			.utc()
 			.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
 		broadcastData = {
@@ -270,7 +299,6 @@ class Index extends Component {
 			notification_type: "LastCall"
 		};
 		if (updateNotification && broadcastId) {
-
 			broadcastData = {
 				...broadcastData,
 				id: broadcastId
@@ -353,7 +381,7 @@ class Index extends Component {
 
 	onAction() {
 		this.setState({
-			notificationTriggered: true,
+			broadcastSent: true,
 			updateNotification: true
 		});
 	}
@@ -384,7 +412,14 @@ class Index extends Component {
 	}
 
 	fifteenInterval() {
-		const { door_time, event_end, eventStart, eventEnd, times, timezone } = this.state;
+		const {
+			door_time,
+			event_end,
+			eventStart,
+			eventEnd,
+			times,
+			timezone
+		} = this.state;
 		const start = moment.utc(door_time);
 		const end = moment.utc(event_end);
 		// round starting minutes up to nearest 15 (12 --> 15, 17 --> 30)
@@ -392,7 +427,9 @@ class Index extends Component {
 		start.minutes(Math.ceil(start.minutes() / 15) * 15);
 		while (start < end) {
 			if (start.isAfter(moment.utc())) {
-				times.push(start.tz(timezone).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE));
+				times.push(
+					start.tz(timezone).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE)
+				);
 			}
 			start.add(15, "minutes");
 		}
@@ -406,43 +443,33 @@ class Index extends Component {
 			sendAt,
 			errors,
 			scheduledAt,
-			notificationTriggered,
+			broadcastSent,
 			isNotificationAfter,
 			isEventEnded,
-			timezone
+			timezone,
+			datesOptions
 		} = this.state;
 
 		if (eventStart === null || eventEnd === null) {
 			return <Typography variant="body1">Loading times...</Typography>;
 		}
 
-		if (!scheduledAt && notificationTriggered) {
+		if (!scheduledAt && broadcastSent) {
 			return null;
 		}
-
-		const dates = this.fifteenInterval();
-		const setArray = new Set(dates);
-		const datesArray = Array.from(setArray);
-
-		const datesOptions = datesArray.map(date => ({
-			value: date,
-			label: date
-		}));
 
 		if (!isNotificationAfter || !isEventEnded) {
 			return (
 				<SelectGroup
-					value={sendAt ? moment.utc(sendAt).tz(timezone).format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE) : ""}
+					value={sendAt}
 					items={datesOptions}
 					name={"sendAt"}
 					error={errors.sendAt}
 					onChange={e => {
-
 						this.setState({
 							sendAt: e.target.value
 						});
-					}
-					}
+					}}
 				/>
 			);
 		}
@@ -453,7 +480,7 @@ class Index extends Component {
 		const {
 			openConfirmDialog,
 			isSending,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -473,21 +500,17 @@ class Index extends Component {
 							How does it work?
 						</span>
 						<br/>
-						Last Call Notifications are optimized to drive food and
-						beverage
-						sales by intelligently engaging your attendees prior to
-						the close
-						of service to entice them to make a purchase.{" "}
+						Last Call Notifications are optimized to drive food and beverage
+						sales by intelligently engaging your attendees prior to the close of
+						service to entice them to make a purchase.{" "}
 						<span className={classes.pinkText}>
 							This can only be used once during your event.
 						</span>
 						<br/>
 						<br/>
-						All attendees who have enabled notifications on their
-						devices will
-						receive the following Last Call notification on their
-						device at
-						the time set above.
+						All attendees who have enabled notifications on their devices will
+						receive the following Last Call notification on their device at the
+						time set above.
 					</Typography>
 				</Grid>
 				<Grid item xs={12} md={5}>
@@ -512,7 +535,7 @@ class Index extends Component {
 				<Hidden smDown>
 					<DesktopView
 						classes={classes}
-						notificationTriggered={notificationTriggered}
+						broadcastSent={broadcastSent}
 						scheduleProgress={scheduleProgress}
 						scheduledAt={scheduledAt}
 						eventStart={eventStart}
@@ -534,7 +557,7 @@ class Index extends Component {
 				<Hidden mdUp>
 					<MobileView
 						classes={classes}
-						notificationTriggered={notificationTriggered}
+						broadcastSent={broadcastSent}
 						scheduleProgress={scheduleProgress}
 						scheduledAt={scheduledAt}
 						eventStart={eventStart}

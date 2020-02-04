@@ -12,7 +12,7 @@ class DesktopView extends Component {
 
 		const {
 			canTrigger,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -29,7 +29,7 @@ class DesktopView extends Component {
 
 		this.defaultState = {
 			canTrigger,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -50,7 +50,7 @@ class DesktopView extends Component {
 	static getDerivedStateFromProps(props, state) {
 		const {
 			canTrigger,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -67,7 +67,7 @@ class DesktopView extends Component {
 
 		return {
 			canTrigger,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -86,7 +86,7 @@ class DesktopView extends Component {
 	render() {
 		const {
 			classes,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -119,7 +119,7 @@ class DesktopView extends Component {
 					<Grid item xs={12} md={7}>
 						<NotificationProgress
 							classes={classes}
-							notificationTriggered={notificationTriggered}
+							broadcastSent={broadcastSent}
 							scheduleProgress={scheduleProgress}
 							scheduledAt={scheduledAt}
 							eventStart={eventStart}
@@ -143,7 +143,7 @@ class DesktopView extends Component {
 										isEventEnded={isEventEnded}
 										timezone={timezone}
 										onSend={onSend}
-										notificationTriggered={notificationTriggered}
+										broadcastSent={broadcastSent}
 									/>
 								</div>
 							</Grid>
@@ -157,7 +157,7 @@ class DesktopView extends Component {
 									isCustom={isCustom}
 									onAction={onAction}
 									onSendNow={onSendNow}
-									notificationTriggered={notificationTriggered}
+									broadcastSent={broadcastSent}
 								/>
 							</Grid>
 						</Grid>
@@ -175,7 +175,7 @@ class DesktopView extends Component {
 DesktopView.propTypes = {
 	classes: PropTypes.object.isRequired,
 	canTrigger: PropTypes.bool,
-	notificationTriggered: PropTypes.bool,
+	broadcastSent: PropTypes.bool,
 	scheduleProgress: PropTypes.number,
 	scheduledAt: PropTypes.string,
 	eventStart: PropTypes.string,

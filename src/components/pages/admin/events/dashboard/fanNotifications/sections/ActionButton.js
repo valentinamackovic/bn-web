@@ -13,7 +13,7 @@ class ActionButton extends Component {
 			isEventEnded,
 			isCustom,
 			onAction,
-			notificationTriggered,
+			broadcastSent,
 			onSendNow
 		} = this.props;
 
@@ -24,7 +24,7 @@ class ActionButton extends Component {
 			isEventEnded,
 			isCustom,
 			onAction,
-			notificationTriggered,
+			broadcastSent,
 			onSendNow
 		};
 
@@ -38,7 +38,7 @@ class ActionButton extends Component {
 			isNotificationAfter,
 			isEventEnded,
 			onAction,
-			notificationTriggered,
+			broadcastSent,
 			onSendNow
 		} = props;
 
@@ -48,7 +48,7 @@ class ActionButton extends Component {
 			isNotificationAfter,
 			isEventEnded,
 			onAction,
-			notificationTriggered,
+			broadcastSent,
 			onSendNow
 		};
 	}
@@ -59,11 +59,11 @@ class ActionButton extends Component {
 			isNotificationAfter,
 			isEventEnded,
 			onAction,
-			notificationTriggered,
+			broadcastSent,
 			onSendNow
 		} = this.props;
 
-		if (scheduledAt && !notificationTriggered && isNotificationAfter) {
+		if (scheduledAt && !broadcastSent && isNotificationAfter) {
 			return (
 				<Button
 					variant={"whiteCTA"}
@@ -97,7 +97,7 @@ ActionButton.propTypes = {
 	isSending: PropTypes.bool.isRequired,
 	isNotificationAfter: PropTypes.bool.isRequired,
 	isEventEnded: PropTypes.bool.isRequired,
-	notificationTriggered: PropTypes.bool,
+	broadcastSent: PropTypes.bool,
 	onAction: PropTypes.func.isRequired,
 	onSendNow: PropTypes.func.isRequired
 };

@@ -13,7 +13,7 @@ class MobileView extends Component {
 
 		const {
 			canTrigger,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -30,7 +30,7 @@ class MobileView extends Component {
 
 		this.defaultState = {
 			canTrigger,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -51,7 +51,7 @@ class MobileView extends Component {
 	static getDerivedStateFromProps(props, state) {
 		const {
 			canTrigger,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -68,7 +68,7 @@ class MobileView extends Component {
 
 		return {
 			canTrigger,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -88,7 +88,7 @@ class MobileView extends Component {
 		const {
 			classes,
 			canTrigger,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -124,7 +124,7 @@ class MobileView extends Component {
 						<Grid item xs={12}>
 							<NotificationProgress
 								classes={classes}
-								notificationTriggered={notificationTriggered}
+								broadcastSent={broadcastSent}
 								scheduleProgress={scheduleProgress}
 								scheduledAt={scheduledAt}
 								eventStart={eventStart}
@@ -160,7 +160,7 @@ class MobileView extends Component {
 											isCustom={isCustom}
 											onAction={onAction}
 											onSendNow={onSendNow}
-											notificationTriggered={notificationTriggered}
+											broadcastSent={broadcastSent}
 										/>
 									</div>
 								</Grid>
@@ -187,7 +187,7 @@ class MobileView extends Component {
 MobileView.propTypes = {
 	classes: PropTypes.object.isRequired,
 	canTrigger: PropTypes.bool,
-	notificationTriggered: PropTypes.bool,
+	broadcastSent: PropTypes.bool,
 	scheduleProgress: PropTypes.number,
 	scheduledAt: PropTypes.string,
 	eventStart: PropTypes.string,

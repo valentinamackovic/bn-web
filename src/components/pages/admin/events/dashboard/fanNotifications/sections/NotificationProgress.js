@@ -10,7 +10,7 @@ class NotificationProgress extends Component {
 
 		const {
 			classes,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -24,7 +24,7 @@ class NotificationProgress extends Component {
 
 		this.defaultState = {
 			classes,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -42,7 +42,7 @@ class NotificationProgress extends Component {
 	static getDerivedStateFromProps(props, state) {
 		const {
 			classes,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -56,7 +56,7 @@ class NotificationProgress extends Component {
 
 		return {
 			classes,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -72,7 +72,7 @@ class NotificationProgress extends Component {
 	render() {
 		const {
 			classes,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -90,7 +90,7 @@ class NotificationProgress extends Component {
 			completed = (scheduleProgress / scheduleSent) * 100;
 		}
 
-		if (scheduledAt && !notificationTriggered) {
+		if (scheduledAt && !broadcastSent) {
 			return (
 				<Grid container alignItems="center" spacing={24}>
 					<Grid item xs={1}>
@@ -166,7 +166,7 @@ class NotificationProgress extends Component {
 
 NotificationProgress.propTypes = {
 	classes: PropTypes.object.isRequired,
-	notificationTriggered: PropTypes.bool.isRequired,
+	broadcastSent: PropTypes.bool.isRequired,
 	scheduleProgress: PropTypes.number,
 	scheduleAt: PropTypes.string,
 	eventStart: PropTypes.string,

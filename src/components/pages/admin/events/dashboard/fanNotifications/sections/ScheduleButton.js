@@ -12,7 +12,7 @@ class ScheduleButton extends Component {
 		const {
 			scheduledAt,
 			isSending,
-			notificationTriggered,
+			broadcastSent,
 			isSchedule,
 			isNotificationAfter,
 			isEventEnded,
@@ -24,7 +24,7 @@ class ScheduleButton extends Component {
 		this.defaultState = {
 			scheduledAt,
 			isSending,
-			notificationTriggered,
+			broadcastSent,
 			isSchedule,
 			isNotificationAfter,
 			isEventEnded,
@@ -40,7 +40,7 @@ class ScheduleButton extends Component {
 		const {
 			scheduledAt,
 			isSending,
-			notificationTriggered,
+			broadcastSent,
 			isSchedule,
 			isNotificationAfter,
 			isEventEnded,
@@ -52,7 +52,7 @@ class ScheduleButton extends Component {
 		return {
 			scheduledAt,
 			isSending,
-			notificationTriggered,
+			broadcastSent,
 			isSchedule,
 			isNotificationAfter,
 			isEventEnded,
@@ -66,7 +66,7 @@ class ScheduleButton extends Component {
 		const {
 			scheduledAt,
 			isSending,
-			notificationTriggered,
+			broadcastSent,
 			isSchedule,
 			isNotificationAfter,
 			isEventEnded,
@@ -75,7 +75,7 @@ class ScheduleButton extends Component {
 			onSend
 		} = this.props;
 
-		if (scheduledAt && !notificationTriggered) {
+		if (scheduledAt && !broadcastSent) {
 			return (
 				<Typography className={classes.notificationBg}>
 					Notification scheduled
@@ -116,7 +116,7 @@ ScheduleButton.propTypes = {
 	isEventEnded: PropTypes.bool.isRequired,
 	timezone: PropTypes.string,
 	onSend: PropTypes.func.isRequired,
-	notificationTriggered: PropTypes.bool
+	broadcastSent: PropTypes.bool
 };
 
 export default ScheduleButton;
