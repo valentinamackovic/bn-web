@@ -245,12 +245,11 @@ const TicketDetails = observer(props => {
 		? eventUpdateStore.timezone
 		: user.currentOrgTimezone;
 
-	const onShowAdditionalOptions = () =>
+	const onShowAdditionalOptions = () => {
 		updateTicketType(index, {
-			showAdditionalOptions: true,
-			startDate: moment.utc().tz(timezone),
-			startTime: moment.utc().tz(timezone)
+			showAdditionalOptions: true
 		});
+	};
 
 	const showCustomStartTimes = saleStartTimeOption === "custom";
 	const showStartSaleWhenTicketSaleEnds = saleStartTimeOption === "parent";
@@ -410,6 +409,8 @@ const TicketDetails = observer(props => {
 							onChange={e => {
 								updateTicketType(index, {
 									saleStartTimeOption: e.target.value,
+									startDate: e.target.value !== "custom" ? null :  startDate ? startDate : moment.utc().tz(timezone),
+									startTime: e.target.value !== "custom" ? null : startTime ? startTime : startDate ? startDate : moment.utc().tz(timezone).startOf("hour"),
 									parentId:
 										e.target.value === "parent"
 											? parentTicketTypes[0].inner.id ||
