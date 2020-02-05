@@ -11,7 +11,7 @@ export const sendReactNativeMessage = (messageString) => {
 		return;
 	}
 	try {
-		return window.ReactNativeWebView.postMessage(messageString, "*");
+		return window.ReactNativeWebView.postMessage(messageString);
 	}catch(e) {
 		window.postMessage(messageString, "*");
 		console.error(e);
