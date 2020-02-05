@@ -18,10 +18,12 @@ import IconButton from "../../../../elements/IconButton";
 import DateTimePickerGroup from "../../../../common/form/DateTimePickerGroup";
 import PricePoint from "./PricePoint";
 import eventUpdateStore from "../../../../../stores/eventUpdate";
+import user from "../../../../../stores/user";
 import SelectGroup from "../../../../common/form/SelectGroup";
 import { dollars } from "../../../../../helpers/money";
 import CheckBox from "../../../../elements/form/CheckBox";
 import RadioButton from "../../../../elements/form/RadioButton";
+import moment from "moment-timezone";
 
 const styles = theme => {
 	return {
@@ -239,9 +241,15 @@ const TicketDetails = observer(props => {
 		});
 	});
 
+	const timezone = eventUpdateStore.timezone
+		? eventUpdateStore.timezone
+		: user.currentOrgTimezone;
+
 	const onShowAdditionalOptions = () =>
 		updateTicketType(index, {
-			showAdditionalOptions: true
+			showAdditionalOptions: true,
+			startDate: moment.utc().tz(timezone),
+			startTime: moment.utc().tz(timezone)
 		});
 
 	const showCustomStartTimes = saleStartTimeOption === "custom";
