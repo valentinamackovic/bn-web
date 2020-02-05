@@ -67,7 +67,7 @@ class OnRouteChange extends Component {
 			errorReporting.addBreadcrumb(`Navigated to: ${window.location.pathname}`);
 		}
 		if (isReactNative()) {
-			sendMessage(this.props.location);
+			// sendMessage(this.props.location);
 		}
 
 	}
