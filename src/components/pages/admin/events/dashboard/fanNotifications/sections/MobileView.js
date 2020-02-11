@@ -13,7 +13,7 @@ class MobileView extends Component {
 
 		const {
 			canTrigger,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -24,12 +24,14 @@ class MobileView extends Component {
 			scheduleSent,
 			isSending,
 			isCustom,
-			renderTimes
+			renderTimes,
+			onSendNow,
+			hasEventStarted
 		} = this.props;
 
 		this.defaultState = {
 			canTrigger,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -40,7 +42,9 @@ class MobileView extends Component {
 			scheduleSent,
 			isSending,
 			isCustom,
-			renderTimes
+			renderTimes,
+			onSendNow,
+			hasEventStarted
 		};
 
 		this.state = this.defaultState;
@@ -49,7 +53,7 @@ class MobileView extends Component {
 	static getDerivedStateFromProps(props, state) {
 		const {
 			canTrigger,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -60,12 +64,14 @@ class MobileView extends Component {
 			scheduleSent,
 			isSending,
 			isCustom,
-			renderTimes
+			renderTimes,
+			onSendNow,
+			hasEventStarted
 		} = props;
 
 		return {
 			canTrigger,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -76,7 +82,9 @@ class MobileView extends Component {
 			scheduleSent,
 			isSending,
 			isCustom,
-			renderTimes
+			renderTimes,
+			onSendNow,
+			hasEventStarted
 		};
 	}
 
@@ -84,7 +92,7 @@ class MobileView extends Component {
 		const {
 			classes,
 			canTrigger,
-			notificationTriggered,
+			broadcastSent,
 			scheduleProgress,
 			scheduledAt,
 			eventStart,
@@ -99,7 +107,9 @@ class MobileView extends Component {
 			onSend,
 			onAction,
 			details,
-			eventId
+			eventId,
+			onSendNow,
+			hasEventStarted
 		} = this.props;
 
 		return (
@@ -119,7 +129,7 @@ class MobileView extends Component {
 						<Grid item xs={12}>
 							<NotificationProgress
 								classes={classes}
-								notificationTriggered={notificationTriggered}
+								broadcastSent={broadcastSent}
 								scheduleProgress={scheduleProgress}
 								scheduledAt={scheduledAt}
 								eventStart={eventStart}
@@ -154,7 +164,9 @@ class MobileView extends Component {
 											isEventEnded={isEventEnded}
 											isCustom={isCustom}
 											onAction={onAction}
-											notificationTriggered={notificationTriggered}
+											onSendNow={onSendNow}
+											broadcastSent={broadcastSent}
+											hasEventStarted={hasEventStarted}
 										/>
 									</div>
 								</Grid>
@@ -181,19 +193,21 @@ class MobileView extends Component {
 MobileView.propTypes = {
 	classes: PropTypes.object.isRequired,
 	canTrigger: PropTypes.bool,
-	notificationTriggered: PropTypes.bool,
+	broadcastSent: PropTypes.bool,
 	scheduleProgress: PropTypes.number,
 	scheduledAt: PropTypes.string,
 	eventStart: PropTypes.string,
 	eventEnd: PropTypes.string,
 	timezone: PropTypes.string,
 	isNotificationAfter: PropTypes.bool,
+	hasEventStarted: PropTypes.bool,
 	isEventEnded: PropTypes.bool,
 	scheduleSent: PropTypes.number,
 	isSending: PropTypes.bool,
 	isCustom: PropTypes.bool,
 	renderTimes: PropTypes.object,
 	onSend: PropTypes.func,
+	onSendNow: PropTypes.func,
 	onAction: PropTypes.func,
 	details: PropTypes.object,
 	eventId: PropTypes.string
