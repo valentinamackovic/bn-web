@@ -173,8 +173,6 @@ class CheckoutConfirmation extends Component {
 	}
 
 	checkForAbandonedCart(id) {
-		const { history } = this.props;
-
 		if (!id) {
 			return;
 		}
@@ -184,9 +182,7 @@ class CheckoutConfirmation extends Component {
 				id
 			})
 			.then(response => {
-				const { data } = response;
-				removeURLParam("order_id",window.location.search);
-
+				removeURLParam("order_id", window.location.search);
 			})
 			.catch(error => {
 				notifications.showFromErrorResponse({
