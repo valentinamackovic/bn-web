@@ -36,6 +36,8 @@ import analytics from "../../../helpers/analytics";
 import getAllUrlParams from "../../../helpers/getAllUrlParams";
 import FormattedAdditionalInfo from "./FormattedAdditionalInfo";
 import getUrlParam from "../../../helpers/getUrlParam";
+import removeURLParam from "../../../helpers/removeURLParam";
+import changeUrlParam from "../../../helpers/changeUrlParam";
 
 const styles = theme => ({
 	root: {
@@ -171,6 +173,8 @@ class CheckoutConfirmation extends Component {
 	}
 
 	checkForAbandonedCart(id) {
+		const { history } = this.props;
+
 		if (!id) {
 			return;
 		}
@@ -181,6 +185,8 @@ class CheckoutConfirmation extends Component {
 			})
 			.then(response => {
 				const { data } = response;
+				removeURLParam("order_id",window.location.search);
+
 			})
 			.catch(error => {
 				notifications.showFromErrorResponse({
