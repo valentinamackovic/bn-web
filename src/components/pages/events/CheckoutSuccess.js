@@ -29,11 +29,12 @@ import OrgAnalytics from "../../common/OrgAnalytics";
 import Bigneon from "../../../helpers/bigneon";
 import moment from "moment-timezone";
 import Settings from "../../../config/settings";
-import classNames from "classnames";
 import PurchaseDetails from "./PurchaseDetails";
 import Hero from "./SuccessHero";
 import removeCountryFromAddress from "../../../helpers/removeCountryFromAddress";
 import { loadDrift } from "../../../helpers/drift";
+import Button from "../../elements/Button";
+import Card from "../../elements/Card";
 
 const heroHeight = 586;
 
@@ -434,23 +435,23 @@ class CheckoutSuccess extends Component {
 	}
 
 	componentDidMount() {
-		this.setState(
-			{
-				appId: Settings().driftBotAppID,
-				interactionId: Settings().driftBotOrderConfirmationInteractionID
-			},
-			() => {
-				const { appId, interactionId } = this.state;
-				if (appId && interactionId) {
-					loadDrift(appId, () => {
-						window.driftt.api.startInteraction({
-							interactionId: Number(interactionId),
-							goToConversation: true
-						});
-					});
-				}
-			}
-		);
+		// this.setState(
+		// 	{
+		// 		appId: Settings().driftBotAppID,
+		// 		interactionId: Settings().driftBotOrderConfirmationInteractionID
+		// 	},
+		// 	() => {
+		// 		const { appId, interactionId } = this.state;
+		// 		if (appId && interactionId) {
+		// 			loadDrift(appId, () => {
+		// 				window.driftt.api.startInteraction({
+		// 					interactionId: Number(interactionId),
+		// 					goToConversation: true
+		// 				});
+		// 			});
+		// 		}
+		// 	}
+		// );
 		cart.emptyCart(); //TODO move this to after they've submitted the final form
 
 		if (
@@ -535,8 +536,7 @@ class CheckoutSuccess extends Component {
 			mobileCardSlideIn,
 			order,
 			order_id,
-			phoneOS,
-			appId
+			phoneOS
 		} = this.state;
 		if (event === null || order === null) {
 			return (
@@ -577,6 +577,9 @@ class CheckoutSuccess extends Component {
 				qty = qty + item.quantity;
 			});
 		}
+
+		const iconUrlTicket = "/icons/ticket-white.svg";
+
 		return (
 			<div className={classes.root}>
 				<OrgAnalytics trackingKeys={tracking_keys}/>
@@ -611,7 +614,7 @@ class CheckoutSuccess extends Component {
 							containerStyle={{ minHeight: heroHeight }}
 							col1={null}
 							col2={(
-								<EventDetailsOverlayCard
+								<Card
 									style={{
 										minWidth: "390px",
 										position: "relative"
@@ -627,80 +630,26 @@ class CheckoutSuccess extends Component {
 												)}
 											/>
 											<Typography className={classes.cardLargeText}>
-												Get your tickets now by downloading the Big Neon App
+												Your Tickets are 2 Taps Away
+											</Typography>
+											<Typography>
+												Tap the buttons below and we'll text you a link to
+												download the Big Neon App to access your tickets. Don't
+												want to download the app? Just bring your ID to the show
+												instead.
 											</Typography>
 											<div className={classes.btnContainer}>
-												<a href={Settings().appStoreIos} target="_blank">
-													<img
-														className={classes.downloadBtn}
-														src={servedImage("/images/appstore-apple.png")}
-														alt="App Store download button"
-													/>
-												</a>
-												{/*<AppButton*/}
-												{/*	color="pinkBackground"*/}
-												{/*	variant="ios"*/}
-												{/*	href={Settings().appStoreIos}*/}
-												{/*	style={{ marginRight: 5 }}*/}
-												{/*>*/}
-												{/*	APP STORE*/}
-												{/*</AppButton>*/}
-												<a href={Settings().appStoreAndroid} target="_blank">
-													<img
-														className={classes.downloadBtn}
-														src={servedImage(
-															"/images/appstore-google-play.png"
-														)}
-														alt="Google Play download button"
-													/>
-												</a>
-												{/*<AppButton*/}
-												{/*	color="pinkBackground"*/}
-												{/*	variant="android"*/}
-												{/*	href={Settings().appStoreAndroid}*/}
-												{/*	style={{ marginRight: 5 }}*/}
-												{/*>*/}
-												{/*	GOOGLE PLAY*/}
-												{/*</AppButton>*/}
-											</div>
-											<Typography className={classes.cardMedText}>
-												2 ways to get your tickets:
-											</Typography>
-											<Typography className={classes.fakeList}>
-												1. Get the App (Quickest entry)
-												<br/>
-												2. Show your ID at the door
-											</Typography>
-										</div>
-
-										<div className={classes.divider}/>
-
-										<div className={classes.desktopCardFooterContainer}>
-											<Typography
-												className={classNames({
-													[classes.desktopFooterText]: true,
-													[classes.desktopFooterTextTitle]: true
-												})}
-											>
-												With the Big Neon App you can:
-											</Typography>
-											<div className={classes.iconText}>
-												<Typography className={classes.desktopFooterText}>
-													<span className={classes.icon}>&#x1F46F;</span>
-													Transfer tickets to friends
-												</Typography>
-												<Typography className={classes.desktopFooterText}>
-													<span className={classes.icon}>&#x1F430;</span>
-													Speed through the line
-												</Typography>
-												<Typography className={classes.desktopFooterText}>
-													<span className={classes.icon}>&#x1F379;</span>
-													Score presale access to events
-												</Typography>
+												<Button
+													iconUrl={iconUrlTicket}
+													size={"large"}
+													variant={"callToAction"}
+												>
+													Get the App to View my Tickets
+												</Button>
 											</div>
 										</div>
 									</div>
-								</EventDetailsOverlayCard>
+								</Card>
 							)}
 						/>
 					</div>
@@ -733,10 +682,8 @@ class CheckoutSuccess extends Component {
 					<Dialog
 						fullScreen
 						aria-labelledby="dialog-title"
-						onEntering={() => {
-						}}
-						onExiting={() => {
-						}}
+						onEntering={() => {}}
+						onExiting={() => {}}
 						open={mobileDialogOpen}
 					>
 						<div className={classes.mobileContent}>
@@ -790,7 +737,7 @@ class CheckoutSuccess extends Component {
 									<div className={classes.mobilePopupCard}>
 										<div className={classes.mobileCardContent}>
 											<Typography className={classes.cardLargeText}>
-												Get your tickets now by downloading the Big Neon App
+												Your Tickets are 2 Taps Away
 											</Typography>
 											<div className={classes.btnContainer}>
 												<a
