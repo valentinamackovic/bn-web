@@ -647,6 +647,9 @@ class CheckoutSuccess extends Component {
 													Get the App to View my Tickets
 												</Button>
 											</div>
+											<Typography className={classes.pinkSpan}>
+												Why do I need the App?
+											</Typography>
 										</div>
 									</div>
 								</Card>
