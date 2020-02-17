@@ -414,6 +414,11 @@ const styles = theme => {
 			fontFamily: fontFamilyDemiBold,
 			textDecoration: "none",
 			lineHeight: "19px"
+		},
+		greySmallInfo: {
+			color: "#9BA3B5",
+			lineHeight: "18px",
+			textAlign: "center"
 		}
 	};
 };
@@ -632,10 +637,11 @@ class CheckoutSuccess extends Component {
 											<Typography className={classes.cardLargeText}>
 												Your Tickets are 2 Taps Away
 											</Typography>
-											<Typography>
-												Tap the buttons below and we'll text you a link to
-												download the Big Neon App to access your tickets. Don't
-												want to download the app? Just bring your ID to the show
+											<Typography className={classes.greySmallInfo}>
+												Your secure tickets are waiting for you in the Big Neon
+												App. Just tap the button below and we’ll quickly help
+												you download the app to view your tickets. Don’t want to
+												use the app? Just bring your photo ID to the event
 												instead.
 											</Typography>
 											<div className={classes.btnContainer}>
