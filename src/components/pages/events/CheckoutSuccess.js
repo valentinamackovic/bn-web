@@ -231,10 +231,10 @@ const styles = theme => {
 			textAlign: "left"
 		},
 		desktopCardFooterContainer: {
-			// padding: 10,
-			// paddingRight: 10,
-			// paddingLeft: 10,
 			textAlign: "center",
+			display: "flex",
+			justifyContent: "center",
+			alignItems: "center",
 			[theme.breakpoints.down("md")]: {
 				textAlign: "left"
 			}
@@ -270,8 +270,6 @@ const styles = theme => {
 			display: "flex",
 			flexDirection: "column",
 			alignItems: "flex-start",
-			marginLeft: theme.spacing.unit * 6,
-			marginBottom: 25,
 			[theme.breakpoints.down("md")]: {
 				marginLeft: 0,
 				marginBottom: theme.spacing.unit * 2
@@ -624,6 +622,7 @@ class CheckoutSuccess extends Component {
 				<BigneonPerksDialog
 					open={perksDialogOpen}
 					onClose={() => this.togglePerksDialog}
+					classes={classes}
 				/>
 				<Hidden smDown>
 					<div style={{ height: heroHeight * 1.2 }}>
