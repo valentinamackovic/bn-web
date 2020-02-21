@@ -35,6 +35,7 @@ import removeCountryFromAddress from "../../../helpers/removeCountryFromAddress"
 import { loadDrift } from "../../../helpers/drift";
 import Button from "../../elements/Button";
 import Card from "../../elements/Card";
+import BigneonPerksDialog from "./BigneonPerksDialog";
 
 const heroHeight = 586;
 
@@ -322,7 +323,7 @@ const styles = theme => {
 		},
 		purchaseInfoBlock: {
 			padding: theme.spacing.unit * 4,
-			maxWidth: 796,
+			maxWidth: 956,
 			borderRadius: 10,
 			backgroundColor: "rgba(89,83,155,0.05)",
 			display: "flex",
@@ -415,6 +416,15 @@ const styles = theme => {
 			textDecoration: "none",
 			lineHeight: "19px"
 		},
+		pinkLink: {
+			color: secondaryHex,
+			fontSize: 16,
+			fontFamily: fontFamily,
+			textDecoration: "none",
+			lineHeight: "18px",
+			cursor: "pointer",
+			marginBottom: 20
+		},
 		greySmallInfo: {
 			color: "#9BA3B5",
 			lineHeight: "18px",
@@ -435,8 +445,11 @@ class CheckoutSuccess extends Component {
 			appId: null,
 			interactionId: null,
 			order: null,
-			phoneOS: getPhoneOS()
+			phoneOS: getPhoneOS(),
+			perksDialogOpen: false
 		};
+
+		this.togglePerksDialog = this.togglePerksDialog.bind(this);
 	}
 
 	componentDidMount() {
@@ -483,6 +496,13 @@ class CheckoutSuccess extends Component {
 		} else {
 			//TODO return 404
 		}
+	}
+
+	togglePerksDialog(e) {
+		e.preventDefault();
+		this.setState(prevState => ({
+			perksDialogOpen: !prevState.perksDialogOpen
+		}));
 	}
 
 	getOrderInformation() {
@@ -539,6 +559,7 @@ class CheckoutSuccess extends Component {
 		const {
 			mobileDialogOpen,
 			mobileCardSlideIn,
+			perksDialogOpen,
 			order,
 			order_id,
 			phoneOS
@@ -600,6 +621,10 @@ class CheckoutSuccess extends Component {
 				/>
 
 				{/*DESKTOP*/}
+				<BigneonPerksDialog
+					open={perksDialogOpen}
+					onClose={() => this.togglePerksDialog}
+				/>
 				<Hidden smDown>
 					<div style={{ height: heroHeight * 1.2 }}>
 						<Hero
@@ -616,12 +641,13 @@ class CheckoutSuccess extends Component {
 						/>
 						<TwoColumnLayout
 							containerClass={classes.desktopHeroContent}
-							containerStyle={{ minHeight: heroHeight }}
+							containerStyle={{ minHeight: heroHeight, maxWidth: 956 }}
+							style={{ maxWidth: 956 }}
 							col1={null}
 							col2={(
 								<Card
 									style={{
-										minWidth: "390px",
+										minWidth: "380px",
 										position: "relative"
 									}}
 								>
@@ -653,9 +679,11 @@ class CheckoutSuccess extends Component {
 													Get the App to View my Tickets
 												</Button>
 											</div>
-											<Typography className={classes.pinkSpan}>
-												Why do I need the App?
-											</Typography>
+											<div onClick={this.togglePerksDialog}>
+												<Typography className={classes.pinkLink}>
+													Why Life is Better with the Big Neon App
+												</Typography>
+											</div>
 										</div>
 									</div>
 								</Card>
