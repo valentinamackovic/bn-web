@@ -36,6 +36,440 @@ import DeleteCancelEventDialog from "../DeleteCancelEventDialog";
 import classnames from "classnames";
 
 import ArtistSummary from "../../../../elements/event/ArtistSummary";
+import { TIME_FORMAT_MM_DD_YYYY_WITH_TIMEZONE } from "../../../../../helpers/time";
+
+class EventOverview extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			event: null,
+			eventId: null,
+			venueTimezone: null,
+			ticket_types_info: [],
+			optionsAnchorEl: null,
+			eventMenuSelected: this.props.match.params.id,
+			expandedCardId: null,
+			isDelete: false,
+			deleteCancelEventId: null,
+			displayEventStart: null,
+			displayEventEnd: null,
+			displayEventStartTime: null,
+			displayEventEndTime: null,
+			displayDoorTime: null
+		};
+		this.formatDateL = this.formatDateL.bind(this);
+		this.formatDisplayTimeS = this.formatDisplayTimeS.bind(this);
+		this.handleExpandTicketCard = this.handleExpandTicketCard.bind(this);
+	}
+
+	componentDidMount() {
+		if (
+			this.props.match &&
+			this.props.match.params &&
+			this.props.match.params.id
+		) {
+			this.setState(
+				{
+					eventId: this.props.match.params.id
+				},
+				() => {
+					this.getEvent(this.state.eventId);
+				}
+			);
+		}
+	}
+
+	getTickets(event_id) {
+		Bigneon()
+			.events.ticketTypes.index({ event_id })
+			.then(response => {
+				this.setState({ ticket_types_info: response.data.data });
+			})
+			.catch(error => {
+				console.error(error);
+			});
+	}
+
+	formatDateL(date, tz) {
+		return moment
+			.utc(date)
+			.tz(tz)
+			.format("L");
+	}
+
+	formatDisplayTimeS(date, tz) {
+		return moment
+			.utc(date)
+			.tz(tz)
+			.format("hh:mm A");
+	}
+
+	handleMenuClick = event => {
+		this.setState({ optionsAnchorEl: event.currentTarget });
+	};
+
+	handleOptionsClose = () => {
+		this.setState({ optionsAnchorEl: null });
+	};
+
+	handleExpandTicketCard(expandedCardId) {
+		this.setState({ expandedCardId });
+	}
+
+	get cancelMenuItemDisabled() {
+		const { event } = this.state;
+
+		if (event) {
+			if (event.cancelled_at) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	getEvent(eventId) {
+		//A bit of a hack, we might not have set the current org ID yet for this admin so keep checking
+		if (!user.currentOrganizationId) {
+			this.timeout = setTimeout(this.updateEvents.bind(this), 100);
+			return;
+		}
+
+		const { id } = this.props.match.params;
+
+		if (eventId) {
+			Bigneon()
+				.events.read({ id: eventId })
+				.then(response => {
+					this.setState({ event: response.data });
+
+					const { event } = this.state;
+					const {
+						id: selectedEventId,
+						slug,
+						organization_id: organizationId,
+						name,
+						event_type,
+						event_start,
+						sales_start_date,
+						event_end,
+						venue,
+						publish_date,
+						door_time,
+						cancelled_at,
+						updated_at,
+						status
+					} = event;
+
+					this.getTickets(selectedEventId);
+
+					//Replace the id in the URL with the slug if we have it and it isn't currently set
+					if (id === selectedEventId && slug) {
+						replaceIdWithSlug(id, slug);
+					}
+
+					if (event) {
+						const venueTimezone = venue.timezone || "America/Los_Angeles";
+
+						event.displayEventStart = this.formatDateL(
+							event_start,
+							venue.timezone
+						);
+						event.displayEventEnd = this.formatDateL(event_end, venueTimezone);
+						event.displayEventStartTime = this.formatDisplayTimeS(
+							event_start,
+							venueTimezone
+						);
+						event.displayEventEndTime = this.formatDisplayTimeS(
+							event_end,
+							venueTimezone
+						);
+						event.displayDoorTime = this.formatDisplayTimeS(
+							door_time,
+							venueTimezone
+						);
+						event.shortDate = moment(event_start).format("ddd, MMM D, YYYY");
+
+						const publishedDateAfterNowAndNotDraft = moment.utc(publish_date).isAfter(moment.utc()) && status !== "Draft";
+						const publishedDateBeforeNow = moment.utc(publish_date).isBefore(moment.utc());
+						event.isPublished = publishedDateBeforeNow;
+						event.publishedDateAfterNowAndNotDraft = publishedDateAfterNowAndNotDraft;
+						event.isOnSale =
+							publishedDateBeforeNow &&
+							moment.utc(sales_start_date).isBefore(moment.utc());
+						event.eventEnded = moment.utc(event_end).isBefore(moment.utc());
+
+						event.publishStatusHeading = publishedDateBeforeNow
+							? "Published on"
+							: publishedDateAfterNowAndNotDraft
+								? "Scheduled on"
+								: "Publish date";
+
+						event.publishStatus = cancelled_at
+							? "Cancelled"
+							: publishedDateBeforeNow
+								? "Published"
+								: publishedDateAfterNowAndNotDraft
+									? "Scheduled"
+									: "Draft";
+
+						event.publishedDateFormatted = moment
+							.utc(publish_date)
+							.tz(venueTimezone)
+							.format(TIME_FORMAT_MM_DD_YYYY_WITH_TIMEZONE);
+
+						event.unpublishedDateFormatted = moment
+							.utc(updated_at)
+							.tz(venueTimezone)
+							.format(TIME_FORMAT_MM_DD_YYYY_WITH_TIMEZONE);
+
+						this.setState({
+							...event
+						});
+					}
+
+					analytics.viewContent(
+						[selectedEventId],
+						getAllUrlParams(),
+						name,
+						organizationId,
+						event_type
+					);
+					if (user.isAuthenticated) {
+						const { organizations } = user;
+						if (organizations.hasOwnProperty(organizationId)) {
+							user.setCurrentOrganizationRolesAndScopes(organizationId, false);
+						}
+					}
+				})
+				.catch(error => {
+					console.error(error);
+					notifications.show({
+						message: error.message,
+						variant: "error"
+					});
+				});
+		} else {
+			//TODO return 404
+		}
+	}
+
+	render() {
+		const { classes } = this.props;
+		const {
+			ticket_types_info,
+			expandedCardId,
+			deleteCancelEventId,
+			isDelete,
+			displayEventStart,
+			displayEventEnd,
+			displayEventStartTime,
+			displayEventEndTime,
+			event
+		} = this.state;
+
+		if (event === null) {
+			return (
+				<div>
+					<Loader style={{ height: 400 }}/>
+				</div>
+			);
+		}
+		if (event === false) {
+			return <NotFound>Event not found.</NotFound>;
+		}
+
+		const { id, name, event_start, venue, artists } = event;
+
+		const promo_image_url = event.promo_image_url
+			? optimizedImageUrl(event.promo_image_url)
+			: null;
+
+		const timezoneAbbr = moment
+			.utc(event_start)
+			.tz(venue.timezone)
+			.format("z");
+
+		const { optionsAnchorEl, eventMenuSelected } = this.state;
+
+		const eventOptions = [
+			{
+				text: "Dashboard",
+				onClick: () => this.props.history.push(`/admin/events/${id}/dashboard`),
+				MenuOptionIcon: DashboardIcon
+			},
+			{
+				text: "Edit event",
+				onClick: () =>
+					this.props.history.push(`/admin/events/${eventMenuSelected}/edit`),
+				MenuOptionIcon: EditIcon
+			},
+			{
+				text: "View event",
+				onClick: () => this.props.history.push(`/tickets/${eventMenuSelected}`),
+				// onClick: () =>
+				// 	this.props.history.push(`/events/${eventMenuSelected}`),
+				MenuOptionIcon: ViewIcon
+			},
+			{
+				text: "Cancel event",
+				disabled: !user.hasScope("event:write") || this.cancelMenuItemDisabled,
+				onClick: () =>
+					this.setState({
+						deleteCancelEventId: id,
+						isDelete: false
+					}),
+				MenuOptionIcon: CancelIcon
+			},
+			{
+				text: "Delete event",
+				disabled: !user.hasScope("event:write"),
+				onClick: () =>
+					this.setState({
+						deleteCancelEventId: id,
+						isDelete: true
+					}),
+				MenuOptionIcon: CancelIcon
+			}
+		];
+
+		return (
+			<div style={{ padding: 10 }}>
+				<DeleteCancelEventDialog
+					id={deleteCancelEventId}
+					isDelete={isDelete}
+					onClose={() =>
+						this.setState(
+							{ deleteCancelEventId: null, isDelete: false },
+							this.getEvent.bind(this)
+						)
+					}
+				/>
+				<Grid container>
+					<Grid item xs={12} md={9}>
+						<PageHeading iconUrl="/icons/events-multi.svg">{name}</PageHeading>
+					</Grid>
+					<Grid item xs={12} md={3}>
+						<div>
+							<Button
+								className={classes.menuButton}
+								onClick={e => {
+									this.setState({ eventMenuSelected: eventMenuSelected });
+									this.handleMenuClick(e);
+								}}
+								variant="callToAction"
+							>
+								Event <KeyboardArrowDownIcon/>
+							</Button>
+
+							<Menu
+								id="long-menu"
+								anchorEl={optionsAnchorEl}
+								open={Boolean(optionsAnchorEl)}
+								onClose={this.handleOptionsClose}
+							>
+								{eventOptions.map(
+									({ text, onClick, MenuOptionIcon, disabled }) => {
+										return (
+											<MenuItem
+												key={text}
+												onClick={() => {
+													this.handleOptionsClose();
+													onClick();
+												}}
+												disabled={disabled}
+											>
+												<ListItemIcon>
+													<MenuOptionIcon/>
+												</ListItemIcon>
+												<ListItemText inset primary={text}/>
+											</MenuItem>
+										);
+									}
+								)}
+							</Menu>
+						</div>
+					</Grid>
+				</Grid>
+				<OverviewHeader
+					event={event}
+					classes={classes}
+					timezoneAbbr={timezoneAbbr}
+					artists={artists}
+					venue={venue}
+				/>
+				<div className={classes.eventAllDetailsContainer}>
+					{artists ? (
+						<div>
+							<Typography
+								style={{ marginTop: 0 }}
+								className={classes.eventAllDetailsTitle}
+							>
+								Artists
+							</Typography>
+							{artists.map(({ artist, importance }, index) => (
+								<Card
+									key={index}
+									className={classnames({
+										[classes.detailsCardStyle]: true,
+										[classes.artistsOverviewCard]: true
+									})}
+								>
+									<ArtistSummary headliner={importance === 0} {...artist}/>
+								</Card>
+							))}
+						</div>
+					) : null}
+
+					<Typography className={classes.eventAllDetailsTitle}>
+						Event Details
+					</Typography>
+					<DetailsOverview
+						classes={classes}
+						venue={venue}
+						event={event}
+						displayEventStart={displayEventStart}
+						displayEventEnd={displayEventEnd}
+						displayEventEndTime={displayEventEndTime}
+						displayEventStartTime={displayEventStartTime}
+						timezoneAbbr={timezoneAbbr}
+					/>
+
+					{ticket_types_info.length > 0 ? (
+						<div>
+							<Typography className={classes.eventAllDetailsTitle}>
+								Ticketing
+							</Typography>
+							{ticket_types_info.map((ticket_type, index) => (
+								<TicketingOverview
+									key={index}
+									classes={classes}
+									ticket_type={ticket_type}
+									timezoneAbbr={timezoneAbbr}
+									timezone={venue.timezone}
+									isExpanded={
+										expandedCardId &&
+										ticket_type.id &&
+										expandedCardId === ticket_type.id
+									}
+									onExpandClick={this.handleExpandTicketCard}
+								/>
+							))}
+						</div>
+					) : null}
+					<Typography className={classes.eventAllDetailsTitle}>
+						Publish Options
+					</Typography>
+					<PublishedOverview
+						classes={classes}
+						event={event}
+						timezoneAbbr={timezoneAbbr}
+					/>
+				</div>
+			</div>
+		);
+	}
+}
 
 const styles = theme => ({
 	paddedContent: {
@@ -296,427 +730,5 @@ const styles = theme => ({
 		backgroundColor: "transparent"
 	}
 });
-
-class EventOverview extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			event: null,
-			eventId: null,
-			venueTimezone: null,
-			ticket_types_info: [],
-			optionsAnchorEl: null,
-			eventMenuSelected: this.props.match.params.id,
-			expandedCardId: null,
-			isDelete: false,
-			deleteCancelEventId: null,
-			displayEventStart: null,
-			displayEventEnd: null,
-			displayEventStartTime: null,
-			displayEventEndTime: null,
-			displayDoorTime: null
-		};
-		this.formatDateL = this.formatDateL.bind(this);
-		this.formatDisplayTimeS = this.formatDisplayTimeS.bind(this);
-		this.handleExpandTicketCard = this.handleExpandTicketCard.bind(this);
-	}
-
-	componentDidMount() {
-		if (
-			this.props.match &&
-			this.props.match.params &&
-			this.props.match.params.id
-		) {
-			this.setState(
-				{
-					eventId: this.props.match.params.id
-				},
-				() => {
-					this.getEvent(this.state.eventId);
-				}
-			);
-		}
-	}
-
-	getTickets(event_id) {
-		Bigneon()
-			.events.ticketTypes.index({ event_id })
-			.then(response => {
-				this.setState({ ticket_types_info: response.data.data });
-			})
-			.catch(error => {
-				console.error(error);
-			});
-	}
-
-	formatDateL(date, tz) {
-		return moment
-			.utc(date)
-			.tz(tz)
-			.format("L");
-	}
-
-	formatDisplayTimeS(date, tz) {
-		return moment
-			.utc(date)
-			.tz(tz)
-			.format("hh:mm A");
-	}
-
-	handleMenuClick = event => {
-		this.setState({ optionsAnchorEl: event.currentTarget });
-	};
-
-	handleOptionsClose = () => {
-		this.setState({ optionsAnchorEl: null });
-	};
-
-	handleExpandTicketCard(expandedCardId) {
-		this.setState({ expandedCardId });
-	}
-
-	get cancelMenuItemDisabled() {
-		const { event } = this.state;
-
-		if (event) {
-			if (event.cancelled_at) {
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	getEvent(eventId) {
-		//A bit of a hack, we might not have set the current org ID yet for this admin so keep checking
-		if (!user.currentOrganizationId) {
-			this.timeout = setTimeout(this.updateEvents.bind(this), 100);
-			return;
-		}
-
-		const { id } = this.props.match.params;
-
-		if (eventId) {
-			Bigneon()
-				.events.read({ id: eventId })
-				.then(response => {
-					this.setState({ event: response.data });
-
-					const { event } = this.state;
-					const {
-						id: selectedEventId,
-						slug,
-						organization_id: organizationId,
-						name,
-						event_type,
-						event_start,
-						sales_start_date,
-						event_end,
-						venue,
-						publish_date,
-						door_time,
-						cancelled_at
-					} = event;
-
-					this.getTickets(selectedEventId);
-
-					//Replace the id in the URL with the slug if we have it and it isn't currently set
-					if (id === selectedEventId && slug) {
-						replaceIdWithSlug(id, slug);
-					}
-
-					if (event) {
-						const venueTimezone = venue.timezone || "America/Los_Angeles";
-
-						event.displayEventStart = this.formatDateL(
-							event_start,
-							venue.timezone
-						);
-						event.displayEventEnd = this.formatDateL(event_end, venueTimezone);
-						event.displayEventStartTime = this.formatDisplayTimeS(
-							event_start,
-							venueTimezone
-						);
-						event.displayEventEndTime = this.formatDisplayTimeS(
-							event_end,
-							venueTimezone
-						);
-						event.displayDoorTime = this.formatDisplayTimeS(
-							door_time,
-							venueTimezone
-						);
-						event.shortDate = moment(event_start).format("ddd, MMM D, YYYY");
-
-						const isPublished = moment.utc(publish_date).isBefore(moment.utc());
-						event.isPublished = isPublished;
-						event.isOnSale =
-							isPublished &&
-							moment.utc(sales_start_date).isBefore(moment.utc());
-						event.eventEnded = moment.utc(event_end).isBefore(moment.utc());
-
-						event.publishStatusHeading = moment
-							.utc(publish_date)
-							.isBefore(moment.utc())
-							? "Published on"
-							: "Publish date";
-
-						event.publishStatus = cancelled_at
-							? "Cancelled"
-							: moment.utc(publish_date).isBefore(moment.utc())
-								? "Published"
-								: "Draft";
-
-						event.publishedDateFormatted = moment
-							.utc(publish_date)
-							.tz(venueTimezone)
-							.format("MM/DD/YYYY HH:mm A z");
-
-						this.setState({
-							...event
-						});
-					}
-
-					analytics.viewContent(
-						[selectedEventId],
-						getAllUrlParams(),
-						name,
-						organizationId,
-						event_type
-					);
-					if (user.isAuthenticated) {
-						const { organizations } = user;
-						if (organizations.hasOwnProperty(organizationId)) {
-							user.setCurrentOrganizationRolesAndScopes(organizationId, false);
-						}
-					}
-				})
-				.catch(error => {
-					console.error(error);
-					notifications.show({
-						message: error.message,
-						variant: "error"
-					});
-				});
-		} else {
-			//TODO return 404
-		}
-	}
-
-	render() {
-		const { classes } = this.props;
-		const {
-			ticket_types_info,
-			expandedCardId,
-			deleteCancelEventId,
-			isDelete,
-			displayEventStart,
-			displayEventEnd,
-			displayEventStartTime,
-			displayEventEndTime,
-			event
-		} = this.state;
-
-		if (event === null) {
-			return (
-				<div>
-					<Loader style={{ height: 400 }}/>
-				</div>
-			);
-		}
-		if (event === false) {
-			return <NotFound>Event not found.</NotFound>;
-		}
-
-		const { id, name, event_start, venue, artists } = event;
-
-		const promo_image_url = event.promo_image_url
-			? optimizedImageUrl(event.promo_image_url)
-			: null;
-
-		const timezoneAbbr = moment
-			.utc(event_start)
-			.tz(venue.timezone)
-			.format("z");
-
-		const { optionsAnchorEl, eventMenuSelected } = this.state;
-
-		const eventOptions = [
-			{
-				text: "Dashboard",
-				onClick: () => this.props.history.push(`/admin/events/${id}/dashboard`),
-				MenuOptionIcon: DashboardIcon
-			},
-			{
-				text: "Edit event",
-				onClick: () =>
-					this.props.history.push(`/admin/events/${eventMenuSelected}/edit`),
-				MenuOptionIcon: EditIcon
-			},
-			{
-				text: "View event",
-				onClick: () => this.props.history.push(`/tickets/${eventMenuSelected}`),
-				// onClick: () =>
-				// 	this.props.history.push(`/events/${eventMenuSelected}`),
-				MenuOptionIcon: ViewIcon
-			},
-			{
-				text: "Cancel event",
-				disabled: !user.hasScope("event:write") || this.cancelMenuItemDisabled,
-				onClick: () =>
-					this.setState({
-						deleteCancelEventId: id,
-						isDelete: false
-					}),
-				MenuOptionIcon: CancelIcon
-			},
-			{
-				text: "Delete event",
-				disabled: !user.hasScope("event:write"),
-				onClick: () =>
-					this.setState({
-						deleteCancelEventId: id,
-						isDelete: true
-					}),
-				MenuOptionIcon: CancelIcon
-			}
-		];
-
-		return (
-			<div style={{ padding: 10 }}>
-				<DeleteCancelEventDialog
-					id={deleteCancelEventId}
-					isDelete={isDelete}
-					onClose={() =>
-						this.setState(
-							{ deleteCancelEventId: null, isDelete: false },
-							this.getEvent.bind(this)
-						)
-					}
-				/>
-				<Grid container>
-					<Grid item xs={12} md={9}>
-						<PageHeading iconUrl="/icons/events-multi.svg">{name}</PageHeading>
-					</Grid>
-					<Grid item xs={12} md={3}>
-						<div>
-							<Button
-								className={classes.menuButton}
-								onClick={e => {
-									this.setState({ eventMenuSelected: eventMenuSelected });
-									this.handleMenuClick(e);
-								}}
-								variant="callToAction"
-							>
-								Event <KeyboardArrowDownIcon/>
-							</Button>
-
-							<Menu
-								id="long-menu"
-								anchorEl={optionsAnchorEl}
-								open={Boolean(optionsAnchorEl)}
-								onClose={this.handleOptionsClose}
-							>
-								{eventOptions.map(
-									({ text, onClick, MenuOptionIcon, disabled }) => {
-										return (
-											<MenuItem
-												key={text}
-												onClick={() => {
-													this.handleOptionsClose();
-													onClick();
-												}}
-												disabled={disabled}
-											>
-												<ListItemIcon>
-													<MenuOptionIcon/>
-												</ListItemIcon>
-												<ListItemText inset primary={text}/>
-											</MenuItem>
-										);
-									}
-								)}
-							</Menu>
-						</div>
-					</Grid>
-				</Grid>
-				<OverviewHeader
-					event={event}
-					classes={classes}
-					timezoneAbbr={timezoneAbbr}
-					artists={artists}
-					venue={venue}
-				/>
-				<div className={classes.eventAllDetailsContainer}>
-					{artists ? (
-						<div>
-							<Typography
-								style={{ marginTop: 0 }}
-								className={classes.eventAllDetailsTitle}
-							>
-								Artists
-							</Typography>
-							{artists.map(({ artist, importance }, index) => (
-								<Card
-									key={index}
-									className={classnames({
-										[classes.detailsCardStyle]: true,
-										[classes.artistsOverviewCard]: true
-									})}
-								>
-									<ArtistSummary headliner={importance === 0} {...artist}/>
-								</Card>
-							))}
-						</div>
-					) : null}
-
-					<Typography className={classes.eventAllDetailsTitle}>
-						Event Details
-					</Typography>
-					<DetailsOverview
-						classes={classes}
-						venue={venue}
-						event={event}
-						displayEventStart={displayEventStart}
-						displayEventEnd={displayEventEnd}
-						displayEventEndTime={displayEventEndTime}
-						displayEventStartTime={displayEventStartTime}
-						timezoneAbbr={timezoneAbbr}
-					/>
-
-					{ticket_types_info.length > 0 ? (
-						<div>
-							<Typography className={classes.eventAllDetailsTitle}>
-								Ticketing
-							</Typography>
-							{ticket_types_info.map((ticket_type, index) => (
-								<TicketingOverview
-									key={index}
-									classes={classes}
-									ticket_type={ticket_type}
-									timezoneAbbr={timezoneAbbr}
-									timezone={venue.timezone}
-									isExpanded={
-										expandedCardId &&
-										ticket_type.id &&
-										expandedCardId === ticket_type.id
-									}
-									onExpandClick={this.handleExpandTicketCard}
-								/>
-							))}
-						</div>
-					) : null}
-					<Typography className={classes.eventAllDetailsTitle}>
-						Publish Options
-					</Typography>
-					<PublishedOverview
-						classes={classes}
-						event={event}
-						timezoneAbbr={timezoneAbbr}
-					/>
-				</div>
-			</div>
-		);
-	}
-}
 
 export default withStyles(styles)(EventOverview);

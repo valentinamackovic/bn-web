@@ -320,6 +320,8 @@ class EventsList extends Component {
 							onExpandClick={this.expandCardDetails}
 							ticketTypes={event.ticket_types}
 							eventEnded={eventEnded}
+							publishDate={event.publish_date}
+							status={event.status}
 						/>
 					</Grid>
 				);
