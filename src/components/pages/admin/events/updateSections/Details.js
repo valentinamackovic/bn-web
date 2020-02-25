@@ -20,17 +20,7 @@ import Bigneon from "../../../../../helpers/bigneon";
 import eventUpdateStore from "../../../../../stores/eventUpdate";
 import RichTextInputField from "../../../../elements/form/rich-editor/RichTextInputField";
 import FormatInputLabel from "../../../../elements/form/FormatInputLabel";
-
-const styles = theme => ({
-	selectedAgeLimitContainer: {
-		flex: 1,
-		display: "flex",
-		alignItems: "center"
-	},
-	ageLimitContainer: {
-		paddingTop: "14px"
-	}
-});
+import user from "../../../../../stores/user";
 
 export const DEFAULT_END_TIME_HOURS_AFTER_SHOW_TIME = 24; //For lack of a better var name
 
@@ -319,16 +309,51 @@ class Details extends Component {
 	}
 
 	componentDidMount() {
-		this.loadVenues();
+		this.loadOrgVenueLinks();
+	}
+
+	loadOrgVenueLinks() {
+		const organization_id = user.currentOrganizationId;
+		if (organization_id) {
+			Bigneon()
+				.venues.orgVenues.index({ id: organization_id })
+				.then(response => {
+					const { data } = response.data;
+					this.setState({
+						orgVenues: data
+					});
+					this.loadVenues();
+				})
+				.catch(error => {
+					console.error(error);
+					notifications.showFromErrorResponse({
+						defaultMessage: "Loading org/venue links failed.",
+						error
+					});
+				});
+		}
 	}
 
 	loadVenues() {
+		const { orgVenues } = this.state;
 		this.setState({ venues: null }, () => {
 			Bigneon()
 				.venues.index()
 				.then(response => {
-					const { data, paging } = response.data; //@TODO Implement pagination
-					this.setState({ venues: data });
+					const { data } = response.data;
+					const organizationVenues = [];
+
+					if (orgVenues.length > 0) {
+						for (let i = 0; i < orgVenues.length; i++) {
+							data.forEach(venue => {
+								if (venue.id === orgVenues[i].venue_id) {
+									organizationVenues.push(venue);
+								}
+							});
+						}
+					}
+
+					this.setState({ venues: organizationVenues });
 
 					//If it's a new event and there is only one private venue available then auto select that one
 					const privateVenues = data.filter(v => v.is_private);
@@ -935,6 +960,17 @@ Details.propTypes = {
 	validateFields: PropTypes.func.isRequired,
 	hasSubmitted: PropTypes.bool.isRequired
 };
+
+const styles = theme => ({
+	selectedAgeLimitContainer: {
+		flex: 1,
+		display: "flex",
+		alignItems: "center"
+	},
+	ageLimitContainer: {
+		paddingTop: "14px"
+	}
+});
 
 export const EventDetails = withStyles(styles)(Details);
 export const validateEventFields = validateFields;
