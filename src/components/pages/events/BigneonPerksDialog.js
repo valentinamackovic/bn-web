@@ -6,47 +6,6 @@ import Dialog from "../../elements/Dialog";
 import { fontFamily, fontFamilyDemiBold } from "../../../config/theme";
 import Button from "../../elements/Button";
 
-const styles = theme => ({
-	root: {},
-	btnStyle: {
-		flex: 1,
-		marginRight: theme.spacing.unit
-	},
-	nameText: {
-		marginTop: theme.spacing.unit,
-		fontFamily: fontFamilyDemiBold
-	},
-	lightGreyText: {
-		fontSize: 16,
-		color: "#9BA3B5",
-		fontFamily: fontFamily,
-		lineHeight: "18px",
-		marginTop: theme.spacing.unit * 2,
-		marginBottom: theme.spacing.unit * 2
-	},
-	modalContainer: {
-		maxWidth: 400
-	},
-	customTitle: {
-		fontSize: 26
-	},
-	withBNtext: {
-		color: "#3C383F",
-		fontSize: 15,
-		lineHeight: "18px",
-		marginTop: 10,
-		fontFamily: fontFamilyDemiBold
-	},
-	iconText: {
-		marginBottom: 15
-	},
-	btnContainer: {
-		display: "flex",
-		justifyContent: "center",
-		alignItems: "center"
-	}
-});
-
 class BigneonPerksDialog extends React.Component {
 	constructor(props) {
 		super(props);
@@ -75,7 +34,7 @@ class BigneonPerksDialog extends React.Component {
 							richer experience at the event. Don’t want to use the app? Just
 							bring your photo ID to the event instead.
 						</Typography>
-						<div className={classes.desktopCardFooterContainer}>
+						<div className={classes.contentContainer}>
 							<div className={classes.iconText}>
 								<Typography className={classes.withBNtext}>
 									With the Big Neon App you can:
@@ -114,5 +73,55 @@ BigneonPerksDialog.propTypes = {
 	id: PropTypes.string,
 	onClose: PropTypes.func.isRequired
 };
+
+const styles = theme => ({
+	root: {},
+	btnStyle: {
+		flex: 1,
+		marginRight: theme.spacing.unit
+	},
+	nameText: {
+		marginTop: theme.spacing.unit,
+		fontFamily: fontFamilyDemiBold
+	},
+	lightGreyText: {
+		fontSize: 16,
+		color: "#9BA3B5",
+		fontFamily: fontFamily,
+		lineHeight: "18px",
+		marginTop: theme.spacing.unit * 2,
+		marginBottom: theme.spacing.unit * 2
+	},
+	modalContainer: {
+		maxWidth: 400
+	},
+	customTitle: {
+		fontSize: 26
+	},
+	withBNtext: {
+		color: "#3C383F",
+		fontSize: 15,
+		lineHeight: "18px",
+		marginTop: 10,
+		fontFamily: fontFamilyDemiBold
+	},
+	iconText: {
+		marginBottom: 15
+	},
+	btnContainer: {
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center"
+	},
+	contentContainer: {
+		textAlign: "center",
+		display: "flex",
+		justifyContent: "center",
+		alignItems: "center",
+		[theme.breakpoints.down("md")]: {
+			textAlign: "left"
+		}
+	}
+});
 
 export default withStyles(styles)(BigneonPerksDialog);
