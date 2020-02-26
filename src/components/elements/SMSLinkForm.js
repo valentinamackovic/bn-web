@@ -8,9 +8,8 @@ import Button from "./Button";
 import InputGroup from "../common/form/InputGroup";
 import user from "../../stores/user";
 import removePhoneFormatting from "../../helpers/removePhoneFormatting";
+import Bigneon from "../../helpers/bigneon";
 import { validPhone } from "../../validators";
-
-const branchKey = process.env.REACT_APP_BRANCH_KEY;
 
 const styles = theme => ({
 	smsContainer: {
@@ -37,65 +36,6 @@ class SMSLinkForm extends Component {
 				this.setState({ phone });
 			}
 		}, 500);
-
-		//TODO check we have a key in the env file and render something else instead if it's missing
-
-		if (!branchKey) {
-			console.warn("Missing REACT_APP_BRANCH_KEY");
-			return;
-		}
-
-		(function(b, r, a, n, c, h, _, s, d, k) {
-			if (!b[n] || !b[n]._q) {
-				for (; s < _.length; ) c(h, _[s++]);
-				d = r.createElement(a);
-				d.async = 1;
-				d.src = "https://cdn.branch.io/branch-latest.min.js";
-				k = r.getElementsByTagName(a)[0];
-				k.parentNode.insertBefore(d, k);
-				b[n] = h;
-			}
-		})(
-			window,
-			document,
-			"script",
-			"branch",
-			function(b, r) {
-				b[r] = function() {
-					b._q.push([r, arguments]);
-				};
-			},
-			{ _q: [], _v: 1 },
-			"addListener applyCode banner closeBanner creditHistory credits data deepview deepviewCta first getCode init link logout redeem referrals removeListener sendSMS setBranchViewData setIdentity track validateCode".split(
-				" "
-			),
-			0
-		);
-
-		branch.init(branchKey);
-	}
-
-	sendSMS(phone, onSuccess, onError) {
-		if (!branchKey) {
-			return notifications.show({ message: "SMS currently unavailable." });
-		}
-
-		branch.sendSMS(
-			phone,
-			{
-				channel: "Website",
-				feature: "Text-Me-The-App",
-				data: {}
-			},
-			{ make_new_link: false }, // Default: false. If set to true, sendSMS will generate a new link even if one already exists.
-			function(err) {
-				if (err) {
-					onError(err);
-				} else {
-					onSuccess();
-				}
-			}
-		);
 	}
 
 	onSubmit(e) {
@@ -110,25 +50,25 @@ class SMSLinkForm extends Component {
 		}
 
 		this.setState({ isSubmitting: true });
-
-		this.sendSMS(
-			phone,
-			() => {
+		Bigneon()
+			.sendDownloadLink.create({
+				phone
+			})
+			.then(() => {
 				this.setState({ isSubmitting: false, isSent: true });
 				notifications.show({ message: "SMS sent!", variant: "success" });
 
 				const { onSuccess } = this.props;
 				onSuccess ? onSuccess() : null;
-			},
-			err => {
+			})
+			.catch(err => {
 				this.setState({ isSubmitting: false });
 				console.error(err);
 				notifications.show({
 					message: "Sorry, something went wrong.",
 					variant: "error"
 				});
-			}
-		);
+			});
 	}
 
 	render() {

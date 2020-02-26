@@ -35,6 +35,7 @@ import { loadDrift } from "../../../helpers/drift";
 import Button from "../../elements/Button";
 import Card from "../../elements/Card";
 import BigneonPerksDialog from "./BigneonPerksDialog";
+import { Link } from "react-router-dom";
 
 const heroHeight = 586;
 
@@ -278,13 +279,15 @@ class CheckoutSuccess extends Component {
 												instead.
 											</Typography>
 											<div className={classes.btnContainer}>
-												<Button
-													iconUrl={iconUrlTicket}
-													size={"large"}
-													variant={"callToAction"}
-												>
-													Get the App to View my Tickets
-												</Button>
+												<Link to={"/send-download-link"}>
+													<Button
+														iconUrl={iconUrlTicket}
+														size={"large"}
+														variant={"callToAction"}
+													>
+														Get the App to View my Tickets
+													</Button>
+												</Link>
 											</div>
 											<div onClick={this.togglePerksDialog}>
 												<Typography className={classes.pinkLink}>

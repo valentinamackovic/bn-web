@@ -17,13 +17,11 @@ class BigneonPerksDialog extends React.Component {
 	}
 
 	render() {
-		const { onClose, open, classes, isDelete } = this.props;
-		const { name, isSubmitting } = this.state;
+		const { onClose, open, classes } = this.props;
 
 		return (
 			<Dialog
-				// open={open}
-				open={true}
+				open={open}
 				onClose={onClose}
 				title={"Life is Better with the Big Neon App!"}
 			>
@@ -56,7 +54,7 @@ class BigneonPerksDialog extends React.Component {
 						<div className={classes.btnContainer}>
 							<Button
 								variant={"secondary"}
-								size={"mediumLarge"}
+								style={{ width: "100%" }}
 								onClick={onClose()}
 							>
 								Awesome
@@ -75,7 +73,9 @@ BigneonPerksDialog.propTypes = {
 };
 
 const styles = theme => ({
-	root: {},
+	root: {
+		width: 380
+	},
 	btnStyle: {
 		flex: 1,
 		marginRight: theme.spacing.unit
@@ -106,7 +106,11 @@ const styles = theme => ({
 		fontFamily: fontFamilyDemiBold
 	},
 	iconText: {
-		marginBottom: 15
+		marginBottom: 15,
+		display: "flex",
+		flexDirection: "column",
+		justifyContent: "flex-start",
+		alignItems: "flex-start"
 	},
 	btnContainer: {
 		display: "flex",
