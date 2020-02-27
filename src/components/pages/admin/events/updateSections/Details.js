@@ -20,17 +20,7 @@ import Bigneon from "../../../../../helpers/bigneon";
 import eventUpdateStore from "../../../../../stores/eventUpdate";
 import RichTextInputField from "../../../../elements/form/rich-editor/RichTextInputField";
 import FormatInputLabel from "../../../../elements/form/FormatInputLabel";
-
-const styles = theme => ({
-	selectedAgeLimitContainer: {
-		flex: 1,
-		display: "flex",
-		alignItems: "center"
-	},
-	ageLimitContainer: {
-		paddingTop: "14px"
-	}
-});
+import user from "../../../../../stores/user";
 
 export const DEFAULT_END_TIME_HOURS_AFTER_SHOW_TIME = 24; //For lack of a better var name
 
@@ -935,6 +925,17 @@ Details.propTypes = {
 	validateFields: PropTypes.func.isRequired,
 	hasSubmitted: PropTypes.bool.isRequired
 };
+
+const styles = theme => ({
+	selectedAgeLimitContainer: {
+		flex: 1,
+		display: "flex",
+		alignItems: "center"
+	},
+	ageLimitContainer: {
+		paddingTop: "14px"
+	}
+});
 
 export const EventDetails = withStyles(styles)(Details);
 export const validateEventFields = validateFields;
