@@ -46,7 +46,9 @@ class SMSLinkPage extends Component {
 						src={servedImage("/icons/tickets-multi.svg")}
 						alt="Dialog Icon"
 					/>
-					<Typography/>
+					<Typography className={classes.cardTitle}>
+						Enter Your Phone Number
+					</Typography>
 					<SMSLinkForm autoFocus={!!open} onSuccess={this.onClose}/>
 				</Card>
 			</div>
@@ -69,6 +71,11 @@ const styles = theme => ({
 	dialogIcon: {
 		width: 40,
 		marginTop: 15
+	},
+	cardTitle: {
+		color: "#2C3136",
+		fontSize: 30,
+		lineHeight: "34px"
 	}
 });
 
