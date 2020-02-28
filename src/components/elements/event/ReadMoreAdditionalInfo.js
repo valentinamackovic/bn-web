@@ -23,6 +23,9 @@ const styles = theme => ({
 		display: "block",
 		fontWeight: 100
 	},
+	textBlock: {
+		display: "-webkit-box"
+	},
 	shortenedTextBlock: {
 		overflow: "hidden",
 		display: "-webkit-box",
@@ -82,7 +85,8 @@ class ReadMoreAdditionalInfo extends Component {
 			<div className={classes.root}>
 				<span
 					className={classnames({
-						[classes.shortenedTextBlock]: !showAllAdditionalInfo
+						[classes.shortenedTextBlock]: !showAllAdditionalInfo,
+						[classes.textBlock]: true
 					})}
 				>
 					<div
