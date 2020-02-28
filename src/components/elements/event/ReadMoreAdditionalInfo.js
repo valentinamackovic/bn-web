@@ -9,7 +9,10 @@ import "../../pages/events/rich-event-description.css";
 
 const styles = theme => ({
 	root: {
-		paddingTop: 10
+		paddingTop: 10,
+		[theme.breakpoints.down("sm")]: {
+			paddingTop: 0
+		}
 	},
 	readMoreLink: {
 		font: "inherit",
