@@ -26,6 +26,7 @@ class SMSLinkForm extends Component {
 			showConfirm: false
 		};
 		this.togglePerksDialog = this.togglePerksDialog.bind(this);
+		this.toggleConfirm = this.toggleConfirm.bind(this);
 	}
 
 	componentDidMount() {
@@ -41,6 +42,12 @@ class SMSLinkForm extends Component {
 		e.preventDefault();
 		this.setState(prevState => ({
 			perksDialogOpen: !prevState.perksDialogOpen
+		}));
+	}
+
+	toggleConfirm() {
+		this.setState(prevState => ({
+			showConfirm: !prevState.showConfirm
 		}));
 	}
 
@@ -105,40 +112,62 @@ class SMSLinkForm extends Component {
 					<Typography className={classes.cardExplainerText}>
 						{explainerText}
 					</Typography>
-
-					{showConfirm ? (
-						<div>confirm</div>
-					) : (
-						<div className={classes.smsContainer}>
-							<form
-								noValidate
-								autoComplete="off"
-								onSubmit={this.onSubmit.bind(this)}
-							>
-								<InputGroup
-									autoFocus={autoFocus}
-									label="Phone"
-									value={phone}
-									placeholder="+1"
-									type="phone"
-									name="phone"
-									onChange={e => this.setState({ phone: e.target.value })}
-								/>
-								{!isSent ? (
+					<div className={classes.smsContainer}>
+						<form
+							noValidate
+							autoComplete="off"
+							onSubmit={this.onSubmit.bind(this)}
+						>
+							{showConfirm ? (
+								<div>
+									<Typography className={classes.numberText}>
+										{phone}
+									</Typography>
+									<div className={classes.btnContainer}>
+										<Button
+											type="submit"
+											disabled={isSubmitting}
+											variant="secondary"
+											style={{ width: "100%", marginRight: 10 }}
+											size={"mediumLarge"}
+										>
+											{isSubmitting ? "Sending..." : "Continue"}
+										</Button>
+										<Button
+											disabled={isSubmitting}
+											variant="plainWhite"
+											style={{ width: "100%" }}
+											size={"mediumLarge"}
+											onClick={this.toggleConfirm}
+										>
+											Change Number
+										</Button>
+									</div>
+								</div>
+							) : (
+								<div>
+									<InputGroup
+										autoFocus={autoFocus}
+										label="Phone"
+										value={phone}
+										placeholder="+1"
+										type="phone"
+										name="phone"
+										onChange={e => this.setState({ phone: e.target.value })}
+									/>
 									<Button
-										type="submit"
 										disabled={isSubmitting}
 										style={{ width: "100%" }}
 										variant="secondary"
 										size={"mediumLarge"}
+										onClick={this.toggleConfirm}
 									>
 										{isSubmitting ? "Sending..." : "Continue"}
 									</Button>
-								) : null}
-							</form>
-						</div>
-					)}
-
+								</div>
+							)}
+						</form>
+					</div>
 					<div onClick={this.togglePerksDialog}>
 						<Typography className={classes.pinkLink}>
 							Why Life is Better with the Big Neon App
@@ -177,6 +206,15 @@ const styles = theme => ({
 		fontFamily: fontFamilyBold,
 		marginTop: 20
 	},
+	numberText: {
+		color: "#2C3136",
+		fontSize: 26,
+		lineHeight: "30px",
+		fontFamily: fontFamilyBold,
+		marginTop: 20,
+		marginBottom: 20,
+		textAlign: "center"
+	},
 	cardExplainerText: {
 		fontSize: 16,
 		color: "#9BA3B5",
@@ -192,6 +230,9 @@ const styles = theme => ({
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center"
+	},
+	btnContainer: {
+		display: "flex"
 	}
 });
 
