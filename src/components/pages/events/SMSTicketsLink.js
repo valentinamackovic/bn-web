@@ -12,8 +12,7 @@ class SMSLinkPage extends Component {
 		super(props);
 
 		this.state = {
-			showSMSLinkDialog: false,
-			showConfirm: false
+			showSMSLinkDialog: false
 		};
 	}
 
@@ -31,37 +30,7 @@ class SMSLinkPage extends Component {
 		this.props.history.push("/");
 	}
 
-	renderConfirmation() {
-		const { classes } = this.props;
-		return (
-			<div className={classes.contentHolder}>
-				<Typography className={classes.cardTitle}>
-					please confirm your number
-				</Typography>
-			</div>
-		);
-	}
-
-	renderEnterNumber() {
-		const { classes } = this.props;
-		return (
-			<div className={classes.contentHolder}>
-				<Typography className={classes.cardTitle}>
-					Enter Your Phone Number
-				</Typography>
-				<Typography className={classes.cardExplainerText}>
-					We’ll send you a link to download the Big Neon App to View your
-					Tickets. Don’t want to download the app? Just bring your photo ID to
-					the event instead.
-				</Typography>
-				<SMSLinkForm autoFocus={!!open} onSuccess={this.onClose}/>
-			</div>
-		);
-	}
-
 	render() {
-		const { showSMSLinkDialog, showConfirm } = this.state;
-
 		const { classes } = this.props;
 
 		return (
@@ -77,7 +46,7 @@ class SMSLinkPage extends Component {
 						src={servedImage("/icons/tickets-multi.svg")}
 						alt="Dialog Icon"
 					/>
-					{showConfirm ? this.renderConfirmation() : this.renderEnterNumber()}
+					<SMSLinkForm autoFocus={!!open} onSuccess={this.onClose}/>
 				</Card>
 			</div>
 		);
@@ -99,29 +68,6 @@ const styles = theme => ({
 	dialogIcon: {
 		width: 40,
 		marginTop: 15
-	},
-	cardTitle: {
-		color: "#2C3136",
-		fontSize: 30,
-		lineHeight: "34px",
-		fontFamily: fontFamilyBold,
-		marginTop: 20
-	},
-	cardExplainerText: {
-		fontSize: 16,
-		color: "#9BA3B5",
-		textAlign: "center",
-		lineHeight: "18px",
-		marginBottom: theme.spacing.unit * 2,
-		marginTop: theme.spacing.unit * 2
-	},
-	contentHolder: {
-		paddingLeft: theme.spacing.unit * 4,
-		paddingRight: theme.spacing.unit * 4,
-		paddingBottom: theme.spacing.unit * 4,
-		display: "flex",
-		flexDirection: "column",
-		alignItems: "center"
 	}
 });
 
