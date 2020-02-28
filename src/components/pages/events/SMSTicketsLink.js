@@ -3,6 +3,8 @@ import { Card, Typography, withStyles } from "@material-ui/core";
 import { observer } from "mobx-react";
 import servedImage from "../../../helpers/imagePathHelper";
 import SMSLinkForm from "../../elements/SMSLinkForm";
+import { withRouter } from "react-router-dom";
+import { fontFamilyBold } from "../../../config/theme";
 
 @observer
 class SMSLinkPage extends Component {
@@ -10,7 +12,8 @@ class SMSLinkPage extends Component {
 		super(props);
 
 		this.state = {
-			showSMSLinkDialog: false
+			showSMSLinkDialog: false,
+			showConfirm: false
 		};
 	}
 
@@ -28,8 +31,36 @@ class SMSLinkPage extends Component {
 		this.props.history.push("/");
 	}
 
+	renderConfirmation() {
+		const { classes } = this.props;
+		return (
+			<div className={classes.contentHolder}>
+				<Typography className={classes.cardTitle}>
+					please confirm your number
+				</Typography>
+			</div>
+		);
+	}
+
+	renderEnterNumber() {
+		const { classes } = this.props;
+		return (
+			<div className={classes.contentHolder}>
+				<Typography className={classes.cardTitle}>
+					Enter Your Phone Number
+				</Typography>
+				<Typography className={classes.cardExplainerText}>
+					We’ll send you a link to download the Big Neon App to View your
+					Tickets. Don’t want to download the app? Just bring your photo ID to
+					the event instead.
+				</Typography>
+				<SMSLinkForm autoFocus={!!open} onSuccess={this.onClose}/>
+			</div>
+		);
+	}
+
 	render() {
-		const { showSMSLinkDialog } = this.state;
+		const { showSMSLinkDialog, showConfirm } = this.state;
 
 		const { classes } = this.props;
 
@@ -46,10 +77,7 @@ class SMSLinkPage extends Component {
 						src={servedImage("/icons/tickets-multi.svg")}
 						alt="Dialog Icon"
 					/>
-					<Typography className={classes.cardTitle}>
-						Enter Your Phone Number
-					</Typography>
-					<SMSLinkForm autoFocus={!!open} onSuccess={this.onClose}/>
+					{showConfirm ? this.renderConfirmation() : this.renderEnterNumber()}
 				</Card>
 			</div>
 		);
@@ -58,7 +86,7 @@ class SMSLinkPage extends Component {
 
 const styles = theme => ({
 	formHolder: {
-		width: 400,
+		width: 448,
 		margin: "0 auto",
 		display: "flex",
 		flexDirection: "column",
@@ -75,8 +103,26 @@ const styles = theme => ({
 	cardTitle: {
 		color: "#2C3136",
 		fontSize: 30,
-		lineHeight: "34px"
+		lineHeight: "34px",
+		fontFamily: fontFamilyBold,
+		marginTop: 20
+	},
+	cardExplainerText: {
+		fontSize: 16,
+		color: "#9BA3B5",
+		textAlign: "center",
+		lineHeight: "18px",
+		marginBottom: theme.spacing.unit * 2,
+		marginTop: theme.spacing.unit * 2
+	},
+	contentHolder: {
+		paddingLeft: theme.spacing.unit * 4,
+		paddingRight: theme.spacing.unit * 4,
+		paddingBottom: theme.spacing.unit * 4,
+		display: "flex",
+		flexDirection: "column",
+		alignItems: "center"
 	}
 });
 
-export default withStyles(styles)(SMSLinkPage);
+export default withStyles(styles)(withRouter(SMSLinkPage));

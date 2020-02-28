@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { withStyles } from "@material-ui/core";
+import { Typography, withStyles } from "@material-ui/core";
 import { observer } from "mobx-react";
 import PropTypes from "prop-types";
 
@@ -10,12 +10,8 @@ import user from "../../stores/user";
 import removePhoneFormatting from "../../helpers/removePhoneFormatting";
 import Bigneon from "../../helpers/bigneon";
 import { validPhone } from "../../validators";
-
-const styles = theme => ({
-	smsContainer: {
-		padding: theme.spacing.unit * 2
-	}
-});
+import BigneonPerksDialog from "../pages/events/BigneonPerksDialog";
+import { fontFamily, secondaryHex } from "../../config/theme";
 
 @observer
 class SMSLinkForm extends Component {
@@ -25,8 +21,10 @@ class SMSLinkForm extends Component {
 		this.state = {
 			phone: "",
 			isSubmitting: false,
-			isSent: false
+			isSent: false,
+			perksDialogOpen: false
 		};
+		this.togglePerksDialog = this.togglePerksDialog.bind(this);
 	}
 
 	componentDidMount() {
@@ -36,6 +34,13 @@ class SMSLinkForm extends Component {
 				this.setState({ phone });
 			}
 		}, 500);
+	}
+
+	togglePerksDialog(e) {
+		e.preventDefault();
+		this.setState(prevState => ({
+			perksDialogOpen: !prevState.perksDialogOpen
+		}));
 	}
 
 	onSubmit(e) {
@@ -72,14 +77,18 @@ class SMSLinkForm extends Component {
 	}
 
 	render() {
-		const { phone, isSubmitting, isSent } = this.state;
+		const { phone, isSubmitting, perksDialogOpen, isSent } = this.state;
 		const { classes, autoFocus } = this.props;
 		return (
 			<div className={classes.smsContainer}>
+				<BigneonPerksDialog
+					open={perksDialogOpen}
+					onClose={() => this.togglePerksDialog}
+				/>
 				<form noValidate autoComplete="off" onSubmit={this.onSubmit.bind(this)}>
 					<InputGroup
 						autoFocus={autoFocus}
-						label="Mobile number"
+						label="Phone"
 						value={phone}
 						placeholder="+1"
 						type="phone"
@@ -92,11 +101,17 @@ class SMSLinkForm extends Component {
 							disabled={isSubmitting}
 							style={{ width: "100%" }}
 							variant="secondary"
+							size={"mediumLarge"}
 						>
-							{isSubmitting ? "Sending..." : "Text me the link"}
+							{isSubmitting ? "Sending..." : "Continue"}
 						</Button>
 					) : null}
 				</form>
+				<div onClick={this.togglePerksDialog}>
+					<Typography className={classes.pinkLink}>
+						Why Life is Better with the Big Neon App
+					</Typography>
+				</div>
 			</div>
 		);
 	}
@@ -107,5 +122,21 @@ SMSLinkForm.propTypes = {
 	autoFocus: PropTypes.bool,
 	onSuccess: PropTypes.func
 };
+
+const styles = theme => ({
+	smsContainer: {
+		width: "100%"
+	},
+	pinkLink: {
+		color: secondaryHex,
+		fontSize: 16,
+		fontFamily: fontFamily,
+		textDecoration: "none",
+		lineHeight: "18px",
+		cursor: "pointer",
+		marginTop: 20,
+		textAlign: "center"
+	}
+});
 
 export default withStyles(styles)(SMSLinkForm);
