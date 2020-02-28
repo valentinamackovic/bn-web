@@ -14,6 +14,7 @@ class SMSLinkPage extends Component {
 		this.state = {
 			showSMSLinkDialog: false
 		};
+		this.onClose = this.onClose.bind(this);
 	}
 
 	componentDidMount() {
@@ -27,7 +28,8 @@ class SMSLinkPage extends Component {
 	}
 
 	onClose() {
-		this.props.history.push("/");
+		const { history } = this.props;
+		history.push("/");
 	}
 
 	render() {

@@ -131,7 +131,7 @@ class SMSLinkForm extends Component {
 											style={{ width: "100%", marginRight: 10 }}
 											size={"mediumLarge"}
 										>
-											{isSubmitting ? "Sending..." : "Continue"}
+											{isSubmitting ? "Sending..." : "Send text"}
 										</Button>
 										<Button
 											disabled={isSubmitting}
@@ -224,9 +224,9 @@ const styles = theme => ({
 		marginTop: theme.spacing.unit * 2
 	},
 	contentHolder: {
-		paddingLeft: theme.spacing.unit * 4,
-		paddingRight: theme.spacing.unit * 4,
-		paddingBottom: theme.spacing.unit * 4,
+		paddingLeft: theme.spacing.unit * 5,
+		paddingRight: theme.spacing.unit * 5,
+		paddingBottom: theme.spacing.unit * 5,
 		display: "flex",
 		flexDirection: "column",
 		alignItems: "center"
