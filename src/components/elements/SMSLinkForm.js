@@ -121,7 +121,7 @@ class SMSLinkForm extends Component {
 							{showConfirm ? (
 								<div>
 									<Typography className={classes.numberText}>
-										{phone}
+										+1 {phone}
 									</Typography>
 									<div className={classes.btnContainer}>
 										<Button
