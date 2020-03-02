@@ -192,8 +192,8 @@ class Routes extends Component {
 					decodeJWT(access_token);
 					localStorage.setItem("access_token", access_token);
 				}
-				decodeJWT(refresh_token);
 
+				decodeJWT(refresh_token);
 				localStorage.setItem("refresh_token", refresh_token);
 				user.refreshUser();
 			} catch (e) {

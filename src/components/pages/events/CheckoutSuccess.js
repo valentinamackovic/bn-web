@@ -259,41 +259,36 @@ class CheckoutSuccess extends Component {
 										position: "relative"
 									}}
 								>
-									<div>
-										<div className={classes.desktopCardContent}>
-											<img
-												alt="Bigneon Logo"
-												className={classes.heartLogo}
-												src={servedImage(
-													"/site/images/big-neon-heart-logo.png"
-												)}
-											/>
-											<Typography className={classes.cardLargeText}>
-												Your Tickets are 2 Taps Away
+									<div className={classes.desktopCardContent}>
+										<img
+											alt="Bigneon Logo"
+											className={classes.heartLogo}
+											src={servedImage("/site/images/big-neon-heart-logo.png")}
+										/>
+										<Typography className={classes.cardLargeText}>
+											Your Tickets are 2 Taps Away
+										</Typography>
+										<Typography className={classes.greySmallInfo}>
+											Your secure tickets are waiting for you in the Big Neon
+											App. Just tap the button below and we’ll quickly help you
+											download the app to view your tickets. Don’t want to use
+											the app? Just bring your photo ID to the event instead.
+										</Typography>
+										<div className={classes.btnContainer}>
+											<Link to={"/send-download-link"}>
+												<Button
+													iconUrl={iconUrlTicket}
+													size={"large"}
+													variant={"callToAction"}
+												>
+													Get the App to View my Tickets
+												</Button>
+											</Link>
+										</div>
+										<div onClick={this.togglePerksDialog}>
+											<Typography className={classes.pinkLink}>
+												Why Life is Better with the Big Neon App
 											</Typography>
-											<Typography className={classes.greySmallInfo}>
-												Your secure tickets are waiting for you in the Big Neon
-												App. Just tap the button below and we’ll quickly help
-												you download the app to view your tickets. Don’t want to
-												use the app? Just bring your photo ID to the event
-												instead.
-											</Typography>
-											<div className={classes.btnContainer}>
-												<Link to={"/send-download-link"}>
-													<Button
-														iconUrl={iconUrlTicket}
-														size={"large"}
-														variant={"callToAction"}
-													>
-														Get the App to View my Tickets
-													</Button>
-												</Link>
-											</div>
-											<div onClick={this.togglePerksDialog}>
-												<Typography className={classes.pinkLink}>
-													Why Life is Better with the Big Neon App
-												</Typography>
-											</div>
 										</div>
 									</div>
 								</Card>
@@ -345,6 +340,46 @@ class CheckoutSuccess extends Component {
 								</div>
 							</div>
 
+							<Card
+								style={{
+									minWidth: "380px",
+									position: "relative"
+								}}
+							>
+								<div className={classes.desktopCardContent}>
+									<img
+										alt="Bigneon Logo"
+										className={classes.heartLogo}
+										src={servedImage("/site/images/big-neon-heart-logo.png")}
+									/>
+									<Typography className={classes.cardLargeText}>
+										Your Tickets are 2 Taps Away
+									</Typography>
+									<Typography className={classes.greySmallInfo}>
+										Your secure tickets are waiting for you in the Big Neon App.
+										Just tap the button below and we’ll quickly help you
+										download the app to view your tickets. Don’t want to use the
+										app? Just bring your photo ID to the event instead.
+									</Typography>
+									<div className={classes.btnContainer}>
+										<Link to={"/send-download-link"}>
+											<Button
+												iconUrl={iconUrlTicket}
+												size={"large"}
+												variant={"callToAction"}
+											>
+												Get the App to View my Tickets
+											</Button>
+										</Link>
+									</div>
+									<div onClick={this.togglePerksDialog}>
+										<Typography className={classes.pinkLink}>
+											Why Life is Better with the Big Neon App
+										</Typography>
+									</div>
+								</div>
+							</Card>
+
 							<div className={classes.mobileTopContent}>
 								<Typography className={classes.mobileSuccessHeading}>
 									{user.firstName},<br/>
@@ -382,53 +417,6 @@ class CheckoutSuccess extends Component {
 							<div>
 								<Slide direction="up" in={mobileCardSlideIn}>
 									<div className={classes.mobilePopupCard}>
-										<div className={classes.mobileCardContent}>
-											<Typography className={classes.cardLargeText}>
-												Your Tickets are 2 Taps Away
-											</Typography>
-											<div className={classes.btnContainer}>
-												<a
-													href={
-														phoneOS === "ios"
-															? Settings().appStoreIos
-															: Settings().appStoreAndroid
-													}
-													target="_blank"
-												>
-													<CustomButton
-														variant="secondary"
-														style={{ width: "80vw" }}
-													>
-														DOWNLOAD THE BIG NEON APP
-													</CustomButton>
-												</a>
-											</div>
-										</div>
-
-										<Divider/>
-
-										<div className={classes.desktopCardFooterContainer}>
-											<Typography className={classes.desktopFooterText}>
-												With the Big Neon App you can:
-											</Typography>
-											<br/>
-											<div className={classes.iconText}>
-												<Typography className={classes.desktopFooterText}>
-													<span className={classes.icon}>&#x1F46F;</span>
-													Transfer tickets to friends
-												</Typography>
-												<Typography className={classes.desktopFooterText}>
-													<span className={classes.icon}>&#x1F430;</span>
-													Speed through the line
-												</Typography>
-												<Typography className={classes.desktopFooterText}>
-													<span className={classes.icon}>&#x1F379;</span>
-													Score presale access to events
-												</Typography>
-											</div>
-										</div>
-										<Divider/>
-
 										<Typography className={classes.questionsText}>
 											Any questions?&nbsp;
 											<span>

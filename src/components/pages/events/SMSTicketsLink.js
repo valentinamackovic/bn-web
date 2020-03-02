@@ -5,6 +5,7 @@ import servedImage from "../../../helpers/imagePathHelper";
 import SMSLinkForm from "../../elements/SMSLinkForm";
 import { withRouter } from "react-router-dom";
 import { fontFamilyBold } from "../../../config/theme";
+import decodeJWT from "../../../helpers/decodeJWT";
 
 @observer
 class SMSLinkPage extends Component {
@@ -19,12 +20,16 @@ class SMSLinkPage extends Component {
 	}
 
 	componentDidMount() {
-		if (
-			this.props.match &&
-			this.props.match.params &&
-			this.props.match.params.eventId
-		) {
-			this.setState({ expandedEventId: this.props.match.params.eventId });
+		this.checkExpiry();
+	}
+
+	checkExpiry() {
+		const refresh_token = localStorage.getItem("refresh_token");
+		const refresh_token_data = decodeJWT(refresh_token);
+		const current_time = Date.now() / 1000;
+		if (refresh_token_data.exp < current_time) {
+			// Bigneon.sendDownloadLink.resend({user_id: refresh_token_data.sub});
+			this.setState({ linkExpired: true });
 		}
 	}
 
