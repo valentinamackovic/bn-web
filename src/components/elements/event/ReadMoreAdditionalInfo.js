@@ -29,7 +29,7 @@ const styles = theme => ({
 	shortenedTextBlock: {
 		overflow: "hidden",
 		display: "-webkit-box",
-		WebkitLineClamp: "3",
+		WebkitLineClamp: "5",
 		WebkitBoxOrient: "vertical",
 		textOverflow: "ellipsis"
 	},
