@@ -309,17 +309,19 @@ class Details extends Component {
 	}
 
 	componentDidMount() {
-		this.loadVenues();
+		this.loadOrgVenueLinks();
 	}
 
-	loadVenues() {
-		this.setState({ venues: null }, () => {
+	loadOrgVenueLinks() {
+		const organization_id = user.currentOrganizationId;
+		if (organization_id) {
 			Bigneon()
-				.venues.index()
+				.organizations.venues.index({ organization_id })
 				.then(response => {
-					const { data, paging } = response.data; //@TODO Implement pagination
-					this.setState({ venues: data });
-
+					const { data } = response.data;
+					this.setState({
+						venues: data
+					});
 					//If it's a new event and there is only one private venue available then auto select that one
 					const privateVenues = data.filter(v => v.is_private);
 					if (privateVenues.length === 1 && !eventUpdateStore.id) {
@@ -328,13 +330,12 @@ class Details extends Component {
 				})
 				.catch(error => {
 					console.error(error);
-
 					notifications.showFromErrorResponse({
-						defaultMessage: "Loading venues failed",
+						defaultMessage: "There was a problem loading your venues",
 						error
 					});
 				});
-		});
+		}
 	}
 
 	renderVenues() {
