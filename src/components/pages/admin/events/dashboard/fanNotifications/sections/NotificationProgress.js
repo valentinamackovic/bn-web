@@ -54,7 +54,8 @@ class NotificationProgress extends Component {
 						</span>
 						Event Period:{" "}
 						<span className={classes.blackText}>
-							{eventStart ? eventStart : ""} -
+							{eventStart ? eventStart : ""}
+							{" - "}
 							{eventEnd ? eventEnd : ""}
 						</span>
 					</Typography>
