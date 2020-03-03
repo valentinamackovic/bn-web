@@ -6,6 +6,8 @@ import SMSLinkForm from "../../elements/SMSLinkForm";
 import { withRouter } from "react-router-dom";
 import { fontFamilyBold } from "../../../config/theme";
 import decodeJWT from "../../../helpers/decodeJWT";
+import Bigneon from "../../../helpers/bigneon";
+import notifications from "../../../stores/notifications";
 
 @observer
 class SMSLinkPage extends Component {
@@ -28,7 +30,19 @@ class SMSLinkPage extends Component {
 		const refresh_token_data = decodeJWT(refresh_token);
 		const current_time = Date.now() / 1000;
 		if (refresh_token_data.exp < current_time) {
-			// Bigneon.sendDownloadLink.resend({user_id: refresh_token_data.sub});
+			Bigneon()
+				.sendDownloadLink.resend({ user_id: refresh_token_data.sub })
+				.then(res => {
+					notifications.show({ message: "Email sent!", variant: "success" });
+				})
+				.catch(error => {
+					console.error(error);
+					notifications.showFromErrorResponse({
+						defaultMessage: "Sending email failed",
+						error
+					});
+				});
+
 			this.setState({ linkExpired: true });
 		}
 	}

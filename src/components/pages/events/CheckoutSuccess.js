@@ -340,55 +340,40 @@ class CheckoutSuccess extends Component {
 								</div>
 							</div>
 
-							<Card
-								style={{
-									minWidth: "380px",
-									position: "relative"
-								}}
-							>
-								<div className={classes.desktopCardContent}>
-									<img
-										alt="Bigneon Logo"
-										className={classes.heartLogo}
-										src={servedImage("/site/images/big-neon-heart-logo.png")}
-									/>
-									<Typography className={classes.cardLargeText}>
-										Your Tickets are 2 Taps Away
-									</Typography>
-									<Typography className={classes.greySmallInfo}>
-										Your secure tickets are waiting for you in the Big Neon App.
-										Just tap the button below and we’ll quickly help you
-										download the app to view your tickets. Don’t want to use the
-										app? Just bring your photo ID to the event instead.
-									</Typography>
-									<div className={classes.btnContainer}>
-										<Link to={"/send-download-link"}>
-											<Button
-												iconUrl={iconUrlTicket}
-												size={"large"}
-												variant={"callToAction"}
-											>
-												Get the App to View my Tickets
-											</Button>
-										</Link>
-									</div>
-									<div onClick={this.togglePerksDialog}>
-										<Typography className={classes.pinkLink}>
-											Why Life is Better with the Big Neon App
+							<div className={classes.mobiCardHolder}>
+								<Card>
+									<div className={classes.mobileCardContent}>
+										<Typography className={classes.mobileSuccessHeading}>
+											{user.firstName}, Your Order is Confirmed! Now get the Big
+											Neon app to View your Tickets
 										</Typography>
+										<Typography className={classes.greySmallInfo}>
+											Your secure tickets are waiting for you in the Big Neon
+											App. Just tap the button below and we’ll quickly help you
+											download the app to view your tickets. Don’t want to use
+											the app? Just bring your photo ID to the event instead.
+										</Typography>
+										<div className={classes.btnContainer}>
+											<Link to={"/send-download-link"}>
+												<Button
+													iconUrl={iconUrlTicket}
+													size={"large"}
+													variant={"callToAction"}
+												>
+													Get the App to View my Tickets
+												</Button>
+											</Link>
+										</div>
+										<div onClick={this.togglePerksDialog}>
+											<Typography className={classes.pinkLink}>
+												Why Life is Better with the Big Neon App
+											</Typography>
+										</div>
 									</div>
-								</div>
-							</Card>
+								</Card>
+							</div>
 
 							<div className={classes.mobileTopContent}>
-								<Typography className={classes.mobileSuccessHeading}>
-									{user.firstName},<br/>
-									Your Big Neon order is confirmed!
-								</Typography>
-								<Typography className={classes.mobileSuccessText}>
-									Order #{order.order_number} |&nbsp;{qty} Tickets
-								</Typography>
-								<br/>
 								{promoImageStyle ? (
 									<div
 										className={classes.desktopEventPromoImg}
@@ -462,10 +447,13 @@ const styles = theme => {
 		},
 		mobileContent: {
 			// flex: 1,
-			paddingTop: 40,
 			flexDirection: "column",
+			paddingTop: 20,
 			background: "linear-gradient(180deg, #9C2D82 0%, #3965A6 40%)",
 			display: "flex"
+		},
+		mobiCardHolder: {
+			padding: 20
 		},
 		mobileTopContent: {
 			// flex: 1,
@@ -473,7 +461,7 @@ const styles = theme => {
 			flexDirection: "column",
 			justifyContent: "center",
 			alignItems: "center",
-			minHeight: "70vh",
+			minHeight: "55vh",
 			paddingLeft: 22,
 			paddingRight: 22,
 			[iPhone5MediaQuery]: {
@@ -515,7 +503,7 @@ const styles = theme => {
 		},
 		mobileSuccessHeading: {
 			fontSize: 22,
-			color: "#FFFFFF",
+			color: "#32383E",
 			lineHeight: 1,
 			fontFamily: fontFamilyDemiBold,
 			[iPhone5MediaQuery]: {
@@ -561,8 +549,7 @@ const styles = theme => {
 			textAlign: "center"
 		},
 		mobileCardContent: {
-			paddingRight: theme.spacing.unit,
-			paddingLeft: theme.spacing.unit,
+			padding: theme.spacing.unit * 4,
 			textAlign: "center"
 		},
 		desktopCoverImage: {

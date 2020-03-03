@@ -1,8 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import { Typography } from "@material-ui/core";
-import Dialog from "../../elements/Dialog";
+import { Typography, Dialog } from "@material-ui/core";
+// import Dialog from "../../elements/Dialog";
 import { fontFamily, fontFamilyDemiBold } from "../../../config/theme";
 import Button from "../../elements/Button";
 
@@ -20,13 +20,12 @@ class BigneonPerksDialog extends React.Component {
 		const { onClose, open, classes } = this.props;
 
 		return (
-			<Dialog
-				open={open}
-				onClose={onClose}
-				title={"Life is Better with the Big Neon App!"}
-			>
+			<Dialog open={open} onClose={onClose}>
 				<div className={classes.root}>
 					<div className={classes.modalContainer}>
+						<Typography className={classes.dialogTitle}>
+							Life is Better with the Big Neon App!
+						</Typography>
 						<Typography className={classes.lightGreyText}>
 							The Big Neon app makes your tickets more secure and unlocks a
 							richer experience at the event. Don’t want to use the app? Just
@@ -74,7 +73,14 @@ BigneonPerksDialog.propTypes = {
 
 const styles = theme => ({
 	root: {
-		width: 380
+		width: 380,
+		padding: 45
+	},
+	dialogTitle: {
+		color: "#32383E",
+		fontSize: 26,
+		lineHeight: "30px",
+		textAlign: "center"
 	},
 	btnStyle: {
 		flex: 1,
