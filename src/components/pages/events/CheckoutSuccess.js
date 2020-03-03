@@ -275,7 +275,7 @@ class CheckoutSuccess extends Component {
 											the app? Just bring your photo ID to the event instead.
 										</Typography>
 										<div className={classes.btnContainer}>
-											<Link to={"/send-download-link"}>
+											<a href={order.app_download_link}>
 												<Button
 													iconUrl={iconUrlTicket}
 													size={"large"}
@@ -283,7 +283,7 @@ class CheckoutSuccess extends Component {
 												>
 													Get the App to View my Tickets
 												</Button>
-											</Link>
+											</a>
 										</div>
 										<div onClick={this.togglePerksDialog}>
 											<Typography className={classes.pinkLink}>
@@ -354,7 +354,7 @@ class CheckoutSuccess extends Component {
 											the app? Just bring your photo ID to the event instead.
 										</Typography>
 										<div className={classes.btnContainer}>
-											<Link to={"/send-download-link"}>
+											<a href={order.app_download_link}>
 												<Button
 													iconUrl={iconUrlTicket}
 													size={"large"}
@@ -362,7 +362,7 @@ class CheckoutSuccess extends Component {
 												>
 													Get the App to View my Tickets
 												</Button>
-											</Link>
+											</a>
 										</div>
 										<div onClick={this.togglePerksDialog}>
 											<Typography className={classes.pinkLink}>
