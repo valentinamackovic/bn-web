@@ -61,23 +61,23 @@ class CheckoutSuccess extends Component {
 	}
 
 	componentDidMount() {
-		// this.setState(
-		// 	{
-		// 		appId: Settings().driftBotAppID,
-		// 		interactionId: Settings().driftBotOrderConfirmationInteractionID
-		// 	},
-		// 	() => {
-		// 		const { appId, interactionId } = this.state;
-		// 		if (appId && interactionId) {
-		// 			loadDrift(appId, () => {
-		// 				window.driftt.api.startInteraction({
-		// 					interactionId: Number(interactionId),
-		// 					goToConversation: true
-		// 				});
-		// 			});
-		// 		}
-		// 	}
-		// );
+		this.setState(
+			{
+				appId: Settings().driftBotAppID,
+				interactionId: Settings().driftBotOrderConfirmationInteractionID
+			},
+			() => {
+				const { appId, interactionId } = this.state;
+				if (appId && interactionId) {
+					loadDrift(appId, () => {
+						window.driftt.api.startInteraction({
+							interactionId: Number(interactionId),
+							goToConversation: true
+						});
+					});
+				}
+			}
+		);
 		cart.emptyCart(); //TODO move this to after they've submitted the final form
 
 		if (
