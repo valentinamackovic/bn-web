@@ -212,7 +212,7 @@ class CheckoutSuccess extends Component {
 			});
 		}
 
-		const iconUrlTicket = "/icons/ticket-white.svg";
+		const iconUrlTicket = "/icons/ticket-upright-white.svg";
 
 		return (
 			<div className={classes.root}>
@@ -281,7 +281,7 @@ class CheckoutSuccess extends Component {
 													size={"large"}
 													variant={"callToAction"}
 												>
-													Get the App to View my Tickets
+													Download App to View My Tickets
 												</Button>
 											</a>
 										</div>
@@ -360,7 +360,7 @@ class CheckoutSuccess extends Component {
 													size={"large"}
 													variant={"callToAction"}
 												>
-													Get the App to View my Tickets
+													Download App to View My Tickets
 												</Button>
 											</a>
 										</div>

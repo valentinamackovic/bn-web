@@ -48,6 +48,12 @@ class BigneonPerksDialog extends React.Component {
 									<span className={classes.icon}>&#x1F379;</span>
 									Score presale access to events
 								</Typography>
+								<Typography
+									style={{ alignSelf: "center" }}
+									className={classes.withBNtext}
+								>
+									... and more.
+								</Typography>
 							</div>
 						</div>
 						<div className={classes.btnContainer}>
@@ -80,6 +86,7 @@ const styles = theme => ({
 		color: "#32383E",
 		fontSize: 26,
 		lineHeight: "30px",
+		fontFamily: fontFamilyDemiBold,
 		textAlign: "center"
 	},
 	btnStyle: {
@@ -95,6 +102,7 @@ const styles = theme => ({
 		color: "#9BA3B5",
 		fontFamily: fontFamily,
 		lineHeight: "18px",
+		textAlign: "center",
 		marginTop: theme.spacing.unit * 2,
 		marginBottom: theme.spacing.unit * 2
 	},
@@ -107,9 +115,12 @@ const styles = theme => ({
 	withBNtext: {
 		color: "#3C383F",
 		fontSize: 15,
-		lineHeight: "18px",
+		lineHeight: "26px",
 		marginTop: 10,
 		fontFamily: fontFamilyDemiBold
+	},
+	icon: {
+		marginRight: 5
 	},
 	iconText: {
 		marginBottom: 15,
