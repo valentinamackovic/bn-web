@@ -25,6 +25,7 @@ import Footer from "./footers/FooterOne";
 import CaptureMissingEmail from "../pages/authentication/social/FacebookButton";
 import CaptureMissingEmailDialog from "../pages/authentication/CaptureMissingEmailDialog";
 import LandingFooter from "./footers/LandingFooter";
+import AnnouncementBanner from "./announcements/Banner";
 
 const drawerWidth = 240;
 
@@ -207,6 +208,8 @@ class Container extends React.Component {
 							[classes.paddedContent]: includeContainerPadding
 						})}
 					>
+						{layout.adminStyleMenu ? <AnnouncementBanner/> : null}
+
 						{/*If it's box office and mobile then hide this spacer. The event select menu take care of it.*/}
 						{/*<div className={classnames({ [classes.toolbarSpacer]: !isBoxOffice, [classes.boxOfficeToolBarSpacer]: isBoxOffice })}/>*/}
 

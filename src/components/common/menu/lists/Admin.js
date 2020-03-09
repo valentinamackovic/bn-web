@@ -70,7 +70,14 @@ const AdminList = props => {
 			>
 				Settings
 			</MenuItem>
-
+			<MenuItem
+				onClick={toggleDrawer}
+				shortLayout
+				iconName="megaphone"
+				to={"/admin/announcements"}
+			>
+				Announcements
+			</MenuItem>
 			<Divider style={{ marginTop: 10, marginBottom: 10 }}/>
 
 			<Typography
