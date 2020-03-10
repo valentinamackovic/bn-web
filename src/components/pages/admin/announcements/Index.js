@@ -6,6 +6,7 @@ import Button from "../../../elements/Button";
 import PageHeading from "../../../elements/PageHeading";
 import Bigneon from "../../../../helpers/bigneon";
 import notifications from "../../../../stores/notifications";
+import { HOLD_TYPES } from "../events/dashboard/holds/HoldDialog";
 
 class AdminAnnouncements extends Component {
 	constructor(props) {
@@ -13,22 +14,53 @@ class AdminAnnouncements extends Component {
 
 		this.state = {
 			modalOpen: false,
-			title: "",
-			description: "",
 			isSubmitting: false,
-			announcement: ""
+			announcement: "",
+			isUpdate: false,
+			announcements: null,
+			currentId: null
 		};
+	}
+
+	componentDidMount() {
+		this.refreshAnnouncement();
+	}
+
+	refreshAnnouncement() {
+		this.setState({ paging: null });
+		Bigneon()
+			.announcements.index()
+			.then(response => {
+				const { data } = response.data;
+				if (data.length > 0) {
+					this.setState({
+						announcements: data,
+						currentId: data[0].id,
+						isUpdate: true
+					});
+				}
+			})
+			.catch(error => {
+				notifications.showFromErrorResponse({
+					error,
+					defaultMessage: "Failed to load Announcements"
+				});
+			});
 	}
 
 	onSubmit() {
 		this.setState({ isSubmitting: true });
-		this.createAnnouncement();
+		this.updateAnnouncement();
 	}
 
-	createAnnouncement() {
-		const { announcement } = this.state;
-		Bigneon()
-			.announcements.create({ message: announcement })
+	updateAnnouncement() {
+		const { announcement, isUpdate, currentId } = this.state;
+
+		const announcementFunc = isUpdate
+			? Bigneon().announcements.update({ id: currentId, message: announcement })
+			: Bigneon().announcements.create({ message: announcement });
+
+		announcementFunc
 			.then(response => {
 				const { data } = response.data;
 				this.setState({ announcements: data }, () => {
@@ -48,16 +80,22 @@ class AdminAnnouncements extends Component {
 
 	render() {
 		const { classes } = this.props;
-		const { isSubmitting, announcement } = this.state;
+		const { isSubmitting, announcement, isUpdate } = this.state;
+
+		const explainerText = isUpdate
+			? "There is already an existing Admin Announcment. You can either update it below, or delete it."
+			: "There is currently no Admin Announcement. You can create one below.";
 
 		return (
 			<div className={classNames.root}>
 				<PageHeading>Admin Announcements</PageHeading>
 
+				<div className={classes.infoContainer}>
+					<Typography>{explainerText}</Typography>
+				</div>
+
 				<form noValidate autoComplete="off" onSubmit={this.onSubmit.bind(this)}>
-					<Typography>
-						Send announcement to admin users (less than 190 char)
-					</Typography>
+					<Typography>There is a 190 character limit.</Typography>
 					<textarea
 						maxLength="190"
 						className={classes.textAreaStyle}
@@ -70,7 +108,13 @@ class AdminAnnouncements extends Component {
 							type="submit"
 							variant="callToAction"
 						>
-							{isSubmitting ? "Sending..." : "Send"}
+							{isUpdate
+								? isSubmitting
+									? "Updating..."
+									: "Update"
+								: isSubmitting
+									? "Sending..."
+									: "Send"}
 						</Button>
 					</div>
 				</form>
@@ -101,6 +145,9 @@ const styles = theme => ({
 	},
 	heading: {
 		textTransform: "capitalize"
+	},
+	infoContainer: {
+		marginBottom: theme.spacing.unit * 2
 	}
 });
 

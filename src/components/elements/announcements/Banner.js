@@ -70,7 +70,6 @@ const styles = theme => ({
 
 AnnouncementBanner.propTypes = {
 	classes: PropTypes.object.isRequired,
-	children: PropTypes.array.isRequired,
 	heading: PropTypes.bool,
 	shaded: PropTypes.bool
 };
