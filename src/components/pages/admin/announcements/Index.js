@@ -4,6 +4,8 @@ import { Typography, withStyles } from "@material-ui/core";
 import classNames from "classnames";
 import Button from "../../../elements/Button";
 import PageHeading from "../../../elements/PageHeading";
+import Bigneon from "../../../../helpers/bigneon";
+import notifications from "../../../../stores/notifications";
 
 class AdminAnnouncements extends Component {
 	constructor(props) {
@@ -11,35 +13,56 @@ class AdminAnnouncements extends Component {
 
 		this.state = {
 			modalOpen: false,
-			paging: null,
-			slugs: null,
-			slugId: null,
 			title: "",
 			description: "",
 			isSubmitting: false,
-			slugType: "Genre",
-			slugHref: "genres"
+			announcement: ""
 		};
 	}
 
 	onSubmit() {
 		this.setState({ isSubmitting: true });
+		this.createAnnouncement();
+	}
+
+	createAnnouncement() {
+		const { announcement } = this.state;
+		Bigneon()
+			.announcements.create({ message: announcement })
+			.then(response => {
+				const { data } = response.data;
+				this.setState({ announcements: data }, () => {
+					notifications.show({
+						variant: "success",
+						message: "Announcement sent!"
+					});
+				});
+			})
+			.catch(error => {
+				notifications.showFromErrorResponse({
+					error,
+					defaultMessage: "Failed to create Announcement"
+				});
+			});
 	}
 
 	render() {
 		const { classes } = this.props;
-		const { isSubmitting, slugId, title, announcement } = this.state;
+		const { isSubmitting, announcement } = this.state;
 
 		return (
 			<div className={classNames.root}>
 				<PageHeading>Admin Announcements</PageHeading>
 
 				<form noValidate autoComplete="off" onSubmit={this.onSubmit.bind(this)}>
-					<Typography>Send announcement to admin users</Typography>
+					<Typography>
+						Send announcement to admin users (less than 190 char)
+					</Typography>
 					<textarea
+						maxLength="190"
 						className={classes.textAreaStyle}
 						value={announcement ? announcement : ""}
-						onChange={e => this.setState({ description: e.target.value })}
+						onChange={e => this.setState({ announcement: e.target.value })}
 					/>
 					<div style={{ display: "flex", marginTop: 20 }}>
 						<Button
@@ -47,7 +70,7 @@ class AdminAnnouncements extends Component {
 							type="submit"
 							variant="callToAction"
 						>
-							{isSubmitting ? "Updating..." : "Update"}
+							{isSubmitting ? "Sending..." : "Send"}
 						</Button>
 					</div>
 				</form>

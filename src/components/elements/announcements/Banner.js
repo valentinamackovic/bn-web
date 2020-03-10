@@ -1,25 +1,65 @@
-import React from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Card, Typography, withStyles } from "@material-ui/core";
 import classNames from "classnames";
+import { urlPageParam } from "../pagination";
+import Bigneon from "../../../helpers/bigneon";
+import notifications from "../../../stores/notifications";
 
-const AnnouncementBanner = props => {
-	const { heading, children, shaded, classes } = props;
+class AnnouncementBanner extends Component {
+	constructor(props) {
+		super(props);
 
-	return (
-		<div className={classes.root}>
-			<Typography className={classNames.bannerText}>
-				this a test announcement llabdgskfgdksufhodls this a test announcement
-				llabdgskfgdksufhodls this a test announcement llabdgskfgdksufhodls this
-				a test announcement llabdgskfgdksufhodls this a test announcement
-				llabdgskfgdksufhodls this a test announcement llabdgskfgdksufhodls
-			</Typography>
-		</div>
-	);
-};
+		this.state = {
+			announcements: []
+		};
+	}
+
+	componentDidMount() {
+		this.refreshAnnouncement();
+	}
+
+	refreshAnnouncement() {
+		this.setState({ paging: null });
+		Bigneon()
+			.announcements.index()
+			.then(response => {
+				const { data } = response.data;
+				this.setState({ announcements: data });
+			})
+			.catch(error => {
+				notifications.showFromErrorResponse({
+					error,
+					defaultMessage: "Failed to load Announcements"
+				});
+			});
+	}
+
+	render() {
+		const { classes } = this.props;
+		const { announcements } = this.state;
+
+		return (
+			<div className={classes.root}>
+				{announcements && announcements.length > 0
+					? announcements.map((a, index) => {
+						return (
+							<div className={classes.bannerContainer} key={index}>
+								<Typography className={classNames.bannerText}>
+									{a.message}
+								</Typography>
+							</div>
+						);
+					  })
+					: null}
+			</div>
+		);
+	}
+}
 
 const styles = theme => ({
-	root: {
+	root: {},
+	bannerContainer: {
 		paddingLeft: theme.spacing.unit,
 		paddingRight: theme.spacing.unit,
 		paddingBottom: theme.spacing.unit * 2,
