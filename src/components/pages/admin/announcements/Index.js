@@ -6,9 +6,11 @@ import Button from "../../../elements/Button";
 import PageHeading from "../../../elements/PageHeading";
 import Bigneon from "../../../../helpers/bigneon";
 import notifications from "../../../../stores/notifications";
-import { HOLD_TYPES } from "../events/dashboard/holds/HoldDialog";
 import DeleteAnnouncementDialog from "./DeleteAnnouncementDialog";
+import { observer } from "mobx-react";
+import announcements from "../../../../stores/announcements";
 
+@observer
 class AdminAnnouncements extends Component {
 	constructor(props) {
 		super(props);
@@ -49,7 +51,8 @@ class AdminAnnouncements extends Component {
 			});
 	}
 
-	onSubmit() {
+	onSubmit(e) {
+		e.preventDefault();
 		this.setState({ isSubmitting: true });
 		this.updateAnnouncement();
 	}
@@ -68,15 +71,17 @@ class AdminAnnouncements extends Component {
 		announcementFunc(params)
 			.then(response => {
 				const { data } = response.data;
-				this.setState({ announcements: data }, () => {
+				this.setState({ announcements: data, isSubmitting: false }, () => {
 					notifications.show({
 						variant: "success",
 						message: "Announcement set!"
 					});
-					this.refreshAnnouncement();
 				});
+				announcements.refreshAnnouncement();
 			})
 			.catch(error => {
+				this.setState({ isSubmitting: false });
+
 				notifications.showFromErrorResponse({
 					error,
 					defaultMessage: "Failed to create Announcement"

@@ -5,7 +5,11 @@ import classNames from "classnames";
 import { urlPageParam } from "../pagination";
 import Bigneon from "../../../helpers/bigneon";
 import notifications from "../../../stores/notifications";
+import announcements from "../../../stores/announcements";
+import { fontFamilyDemiBold } from "../../../config/theme";
+import { observer } from "mobx-react";
 
+@observer
 class AnnouncementBanner extends Component {
 	constructor(props) {
 		super(props);
@@ -16,33 +20,16 @@ class AnnouncementBanner extends Component {
 	}
 
 	componentDidMount() {
-		this.refreshAnnouncement();
-	}
-
-	refreshAnnouncement() {
-		this.setState({ paging: null });
-		Bigneon()
-			.announcements.index()
-			.then(response => {
-				const { data } = response.data;
-				this.setState({ announcements: data });
-			})
-			.catch(error => {
-				notifications.showFromErrorResponse({
-					error,
-					defaultMessage: "Failed to load Announcements"
-				});
-			});
+		announcements.refreshAnnouncement();
 	}
 
 	render() {
 		const { classes } = this.props;
-		const { announcements } = this.state;
-
+		const { messages } = announcements;
 		return (
 			<div className={classes.root}>
-				{announcements && announcements.length > 0
-					? announcements.map((a, index) => {
+				{messages && messages.length > 0
+					? messages.map((a, index) => {
 						return (
 							<div className={classes.bannerContainer} key={index}>
 								<Typography className={classNames.bannerText}>
@@ -65,6 +52,10 @@ const styles = theme => ({
 		paddingBottom: theme.spacing.unit * 2,
 		borderBottom: "1px solid #ececec",
 		marginBottom: theme.spacing.unit * 2
+	},
+	bannerText: {
+		fontFamily: fontFamilyDemiBold,
+		fontSize: 18
 	}
 });
 
