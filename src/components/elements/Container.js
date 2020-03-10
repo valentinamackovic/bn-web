@@ -29,58 +29,6 @@ import AnnouncementBanner from "./announcements/Banner";
 
 const drawerWidth = 240;
 
-const styles = theme => ({
-	root: {
-		flexGrow: 1,
-		height: "100%",
-		zIndex: 1,
-		overflow: "hidden",
-		position: "relative",
-		display: "flex",
-		width: "100%"
-	},
-	// toolbarSpacer: toolBarHeight,
-	// boxOfficeToolBarSpacer: {
-	// 	...toolBarHeight,
-	// 	//Don't add space on mobile, the event selection menu take care of it
-	// 	[theme.breakpoints.down("sm")]: {
-	// 		minHeight: 0
-	// 	}
-	// },
-	drawerPaper: {
-		//width: layout.adminStyleMenu ? 60 : drawerWidth,
-		minHeight: window.innerHeight * 1.1,
-		[theme.breakpoints.up("md")]: {
-			position: "relative"
-		}
-	},
-	content: {
-		flexGrow: 1,
-		backgroundColor: theme.palette.background.default
-	},
-	footerPlaceholder: {
-		paddingBottom: theme.spacing.unit * 10
-	},
-	paddedContent: {
-		padding: theme.spacing.unit * 3,
-		[theme.breakpoints.down("xs")]: {
-			padding: theme.spacing.unit
-		}
-	},
-	boxOfficePaddedContainer: {
-		padding: theme.spacing.unit * 3,
-		[theme.breakpoints.down("sm")]: {
-			padding: theme.spacing.unit * 2
-		},
-		[theme.breakpoints.down("xs")]: {
-			padding: theme.spacing.unit
-		}
-	},
-	belowFooterPadding: {
-		marginBottom: 80
-	}
-});
-
 @observer
 class Container extends React.Component {
 	constructor(props) {
@@ -208,8 +156,6 @@ class Container extends React.Component {
 							[classes.paddedContent]: includeContainerPadding
 						})}
 					>
-						{layout.showStudioLogo ? <AnnouncementBanner/> : null}
-
 						{/*If it's box office and mobile then hide this spacer. The event select menu take care of it.*/}
 						{/*<div className={classnames({ [classes.toolbarSpacer]: !isBoxOffice, [classes.boxOfficeToolBarSpacer]: isBoxOffice })}/>*/}
 
@@ -231,6 +177,8 @@ class Container extends React.Component {
 									[classes.boxOfficePaddedContainer]: isBoxOffice
 								})}
 							>
+								{layout.showStudioLogo ? <AnnouncementBanner/> : null}
+
 								{children}
 							</Grid>
 						</Grid>
@@ -265,6 +213,58 @@ class Container extends React.Component {
 		);
 	}
 }
+
+const styles = theme => ({
+	root: {
+		flexGrow: 1,
+		height: "100%",
+		zIndex: 1,
+		overflow: "hidden",
+		position: "relative",
+		display: "flex",
+		width: "100%"
+	},
+	// toolbarSpacer: toolBarHeight,
+	// boxOfficeToolBarSpacer: {
+	// 	...toolBarHeight,
+	// 	//Don't add space on mobile, the event selection menu take care of it
+	// 	[theme.breakpoints.down("sm")]: {
+	// 		minHeight: 0
+	// 	}
+	// },
+	drawerPaper: {
+		//width: layout.adminStyleMenu ? 60 : drawerWidth,
+		minHeight: window.innerHeight * 1.1,
+		[theme.breakpoints.up("md")]: {
+			position: "relative"
+		}
+	},
+	content: {
+		flexGrow: 1,
+		backgroundColor: theme.palette.background.default
+	},
+	footerPlaceholder: {
+		paddingBottom: theme.spacing.unit * 10
+	},
+	paddedContent: {
+		padding: theme.spacing.unit * 3,
+		[theme.breakpoints.down("xs")]: {
+			padding: theme.spacing.unit
+		}
+	},
+	boxOfficePaddedContainer: {
+		padding: theme.spacing.unit * 3,
+		[theme.breakpoints.down("sm")]: {
+			padding: theme.spacing.unit * 2
+		},
+		[theme.breakpoints.down("xs")]: {
+			padding: theme.spacing.unit
+		}
+	},
+	belowFooterPadding: {
+		marginBottom: 80
+	}
+});
 
 Container.propTypes = {
 	classes: PropTypes.object.isRequired,

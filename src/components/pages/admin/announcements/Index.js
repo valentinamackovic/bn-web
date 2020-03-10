@@ -7,19 +7,21 @@ import PageHeading from "../../../elements/PageHeading";
 import Bigneon from "../../../../helpers/bigneon";
 import notifications from "../../../../stores/notifications";
 import { HOLD_TYPES } from "../events/dashboard/holds/HoldDialog";
+import DeleteAnnouncementDialog from "./DeleteAnnouncementDialog";
 
 class AdminAnnouncements extends Component {
 	constructor(props) {
 		super(props);
 
 		this.state = {
-			modalOpen: false,
+			dialogOpen: false,
 			isSubmitting: false,
 			announcement: "",
 			isUpdate: false,
 			announcements: null,
 			currentId: null
 		};
+		this.toggleDialog = this.toggleDialog.bind(this);
 	}
 
 	componentDidMount() {
@@ -27,7 +29,6 @@ class AdminAnnouncements extends Component {
 	}
 
 	refreshAnnouncement() {
-		this.setState({ paging: null });
 		Bigneon()
 			.announcements.index()
 			.then(response => {
@@ -57,17 +58,22 @@ class AdminAnnouncements extends Component {
 		const { announcement, isUpdate, currentId } = this.state;
 
 		const announcementFunc = isUpdate
-			? Bigneon().announcements.update({ id: currentId, message: announcement })
-			: Bigneon().announcements.create({ message: announcement });
+			? Bigneon().announcements.update
+			: Bigneon().announcements.create;
 
-		announcementFunc
+		const params = isUpdate
+			? { id: currentId, message: announcement }
+			: { message: announcement };
+
+		announcementFunc(params)
 			.then(response => {
 				const { data } = response.data;
 				this.setState({ announcements: data }, () => {
 					notifications.show({
 						variant: "success",
-						message: "Announcement sent!"
+						message: "Announcement set!"
 					});
+					this.refreshAnnouncement();
 				});
 			})
 			.catch(error => {
@@ -78,9 +84,22 @@ class AdminAnnouncements extends Component {
 			});
 	}
 
+	toggleDialog(e) {
+		e.preventDefault();
+		this.setState(prevState => ({
+			dialogOpen: !prevState.dialogOpen
+		}));
+	}
+
 	render() {
 		const { classes } = this.props;
-		const { isSubmitting, announcement, isUpdate } = this.state;
+		const {
+			isSubmitting,
+			announcement,
+			isUpdate,
+			dialogOpen,
+			currentId
+		} = this.state;
 
 		const explainerText = isUpdate
 			? "There is already an existing Admin Announcment. You can either update it below, or delete it."
@@ -88,11 +107,28 @@ class AdminAnnouncements extends Component {
 
 		return (
 			<div className={classNames.root}>
+				<DeleteAnnouncementDialog
+					open={dialogOpen}
+					onClose={() => this.toggleDialog}
+					id={currentId}
+				/>
 				<PageHeading>Admin Announcements</PageHeading>
 
 				<div className={classes.infoContainer}>
 					<Typography>{explainerText}</Typography>
 				</div>
+
+				{isUpdate ? (
+					<div style={{ display: "flex", marginTop: 20, marginBottom: 60 }}>
+						<Button
+							type="submit"
+							variant="callToAction"
+							onClick={this.toggleDialog}
+						>
+							Remove Announcement
+						</Button>
+					</div>
+				) : null}
 
 				<form noValidate autoComplete="off" onSubmit={this.onSubmit.bind(this)}>
 					<Typography>There is a 190 character limit.</Typography>
@@ -141,7 +177,8 @@ const styles = theme => ({
 		minHeight: 200,
 		fontSize: 16,
 		outline: "none",
-		padding: 10
+		padding: 10,
+		borderRadius: 5
 	},
 	heading: {
 		textTransform: "capitalize"
