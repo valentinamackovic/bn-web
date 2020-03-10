@@ -145,7 +145,7 @@ class AdminAnnouncements extends Component {
 					/>
 					<div style={{ display: "flex", marginTop: 20 }}>
 						<Button
-							disabled={isSubmitting}
+							disabled={isSubmitting || !announcement}
 							type="submit"
 							variant="callToAction"
 						>

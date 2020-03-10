@@ -32,7 +32,7 @@ class AnnouncementBanner extends Component {
 					? messages.map((a, index) => {
 						return (
 							<div className={classes.bannerContainer} key={index}>
-								<Typography className={classNames.bannerText}>
+								<Typography className={classes.bannerText}>
 									{a.message}
 								</Typography>
 							</div>
