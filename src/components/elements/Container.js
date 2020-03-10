@@ -208,7 +208,7 @@ class Container extends React.Component {
 							[classes.paddedContent]: includeContainerPadding
 						})}
 					>
-						{layout.adminStyleMenu ? <AnnouncementBanner/> : null}
+						{layout.showStudioLogo ? <AnnouncementBanner/> : null}
 
 						{/*If it's box office and mobile then hide this spacer. The event select menu take care of it.*/}
 						{/*<div className={classnames({ [classes.toolbarSpacer]: !isBoxOffice, [classes.boxOfficeToolBarSpacer]: isBoxOffice })}/>*/}
