@@ -39,6 +39,7 @@ class AdminAnnouncements extends Component {
 					this.setState({
 						announcements: data,
 						currentId: data[0].id,
+						announcement: data[0].message,
 						isUpdate: true
 					});
 				}
@@ -105,7 +106,7 @@ class AdminAnnouncements extends Component {
 			dialogOpen,
 			currentId
 		} = this.state;
-
+		
 		const explainerText = isUpdate
 			? "There is already an existing Admin Announcment. You can either update it below, or delete it."
 			: "There is currently no Admin Announcement. You can create one below.";
