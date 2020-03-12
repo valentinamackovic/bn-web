@@ -111,9 +111,6 @@ const AdminFanDetails = asyncComponent(() =>
 const AdminMarketing = asyncComponent(() =>
 	import("../pages/admin/marketing/Index")
 );
-const AdminAnnouncements = asyncComponent(() =>
-	import("../pages/admin/announcements/Index")
-);
 const AdminReports = asyncComponent(() =>
 	import("../pages/admin/reports/Index")
 );
@@ -192,7 +189,7 @@ class Routes extends Component {
 				//Attempt to decode these, if they are not valid do not store them.
 				if (access_token) {
 					decodeJWT(access_token);
-					localStorage.setItem("access_token", access_token);
+					localStorage.setItem("access_token", access_token );
 				}
 				decodeJWT(refresh_token);
 
@@ -230,12 +227,16 @@ class Routes extends Component {
 									component={ElementShowcase}
 								/>
 								<Route exact path="/" component={Home}/>
-								<Route
-									exact
-									path="/events"
-									component={() => (
-										<Redirect to={`/tickets${window.location.search}`}/>
-									)}
+								<Route exact
+									   path="/events"
+									   component={
+									   	() => (
+											<Redirect
+												to={`/tickets${
+													window.location.search
+												}`}
+											/>
+										)}
 								/>
 								<Route exact path="/tickets" component={Home}/>
 								<Route exact path="/venues/:id" component={SlugsLanding}/>
@@ -417,12 +418,6 @@ class Routes extends Component {
 									exact
 									path="/admin/marketing"
 									component={AdminMarketing}
-									isAuthenticated={isAuthenticated}
-								/>
-								<PrivateRoute
-									exact
-									path="/admin/announcements"
-									component={AdminAnnouncements}
 									isAuthenticated={isAuthenticated}
 								/>
 								<PrivateRoute
