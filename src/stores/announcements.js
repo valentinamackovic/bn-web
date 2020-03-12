@@ -36,10 +36,12 @@ class Announcement {
 				this.message = orgMsg;
 			});
 		} catch (error) {
-			notifications.showFromErrorResponse({
-				error,
-				defaultMessage: "Failed to load Announcements"
-			});
+			if (error.status !== 404) {
+				notifications.showFromErrorResponse({
+					error,
+					defaultMessage: "Failed to load Announcements"
+				});
+			}
 		}
 	}
 }

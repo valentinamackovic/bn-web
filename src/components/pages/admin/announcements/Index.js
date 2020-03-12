@@ -77,7 +77,7 @@ class AdminAnnouncements extends Component {
 						variant: "success",
 						message: "Announcement set!"
 					});
-					announcements.refreshAnnouncements();
+					this.refreshAnnouncement();
 					announcements.getOrgAnnouncements();
 				});
 			})

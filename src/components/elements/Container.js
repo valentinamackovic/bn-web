@@ -50,6 +50,10 @@ class Container extends React.Component {
 		this.setState(state => ({ mobileOpen: !state.mobileOpen }));
 	}
 
+	renderAnnouncementBanner() {
+		return <AnnouncementBanner/>;
+	}
+
 	render() {
 		const {
 			showSideMenu,
@@ -177,7 +181,7 @@ class Container extends React.Component {
 									[classes.boxOfficePaddedContainer]: isBoxOffice
 								})}
 							>
-								{layout.showStudioLogo ? <AnnouncementBanner/> : null}
+								{layout.showStudioLogo ? this.renderAnnouncementBanner() : null}
 
 								{children}
 							</Grid>

@@ -8,6 +8,7 @@ import notifications from "../../../stores/notifications";
 import announcements from "../../../stores/announcements";
 import { fontFamilyDemiBold } from "../../../config/theme";
 import { observer } from "mobx-react";
+import user from "../../../stores/user";
 
 @observer
 class AnnouncementBanner extends Component {
@@ -20,7 +21,9 @@ class AnnouncementBanner extends Component {
 	}
 
 	componentDidMount() {
-		announcements.getOrgAnnouncements();
+		if (user.currentOrganizationId) {
+			announcements.getOrgAnnouncements();
+		}
 	}
 
 	render() {
