@@ -20,25 +20,21 @@ class AnnouncementBanner extends Component {
 	}
 
 	componentDidMount() {
-		announcements.refreshAnnouncement();
+		announcements.getOrgAnnouncements();
 	}
 
 	render() {
 		const { classes } = this.props;
-		const { messages } = announcements;
+		const { message } = announcements;
 		return (
 			<div className={classes.root}>
-				{messages && messages.length > 0
-					? messages.map((a, index) => {
-						return (
-							<div className={classes.bannerContainer} key={index}>
-								<Typography className={classes.bannerText}>
-									{a.message}
-								</Typography>
-							</div>
-						);
-					  })
-					: null}
+				{message ? (
+					<div className={classes.bannerContainer}>
+						<Typography className={classes.bannerText}>
+							{message.message}
+						</Typography>
+					</div>
+				) : null}
 			</div>
 		);
 	}

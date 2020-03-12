@@ -77,8 +77,9 @@ class AdminAnnouncements extends Component {
 						variant: "success",
 						message: "Announcement set!"
 					});
+					announcements.refreshAnnouncements();
+					announcements.getOrgAnnouncements();
 				});
-				announcements.refreshAnnouncement();
 			})
 			.catch(error => {
 				this.setState({ isSubmitting: false });
@@ -106,7 +107,7 @@ class AdminAnnouncements extends Component {
 			dialogOpen,
 			currentId
 		} = this.state;
-		
+
 		const explainerText = isUpdate
 			? "There is already an existing Admin Announcment. You can either update it below, or delete it."
 			: "There is currently no Admin Announcement. You can create one below.";

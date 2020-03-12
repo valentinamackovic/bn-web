@@ -1,13 +1,16 @@
-import { observable, computed, action } from "mobx";
+import { observable, action } from "mobx";
 import Bigneon from "../helpers/bigneon";
 import notifications from "./notifications";
 
 class Announcement {
 	@observable
-	messages = "";
+	messages = null;
+
+	@observable
+	message = null;
 
 	@action
-	refreshAnnouncement() {
+	refreshAnnouncements() {
 		Bigneon()
 			.announcements.index()
 			.then(response => {
@@ -20,6 +23,24 @@ class Announcement {
 					defaultMessage: "Failed to load Announcements"
 				});
 			});
+	}
+
+	@action
+	async getOrgAnnouncements() {
+		try {
+			const organization_id = localStorage.getItem("currentOrganizationId");
+			const { data } = await Bigneon().organizations.announcements.index({
+				organization_id
+			});
+			data.forEach(orgMsg => {
+				this.message = orgMsg;
+			});
+		} catch (error) {
+			notifications.showFromErrorResponse({
+				error,
+				defaultMessage: "Failed to load Announcements"
+			});
+		}
 	}
 }
 
