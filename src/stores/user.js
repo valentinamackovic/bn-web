@@ -420,7 +420,8 @@ class User {
 
 	@computed
 	get canRefundDuringCorona() {
-		return this.isAdmin || this.isSuper;
+		//The current org is NOT one of these 2, and if it is, then you must be an admin
+		return ["f010741a-713c-40a8-b9d0-41f08acdf8a0", "aa366d97-d433-403c-89e2-1748bd2a1b14"].indexOf(this.currentOrganizationId) === -1 || (this.isAdmin || this.isSuper);
 	}
 
 	@computed
