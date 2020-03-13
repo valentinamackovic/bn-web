@@ -419,6 +419,11 @@ class User {
 	}
 
 	@computed
+	get canRefundDuringCorona() {
+		return this.isAdmin || this.isSuper;
+	}
+
+	@computed
 	get isOrgOwner() {
 		return this.globalRoles.indexOf("OrgOwner") > -1;
 	}

@@ -346,7 +346,6 @@ class OrderItems extends Component {
 						{...item}
 					/>
 				))}
-
 			</div>
 		);
 	}
@@ -432,7 +431,7 @@ class OrderItems extends Component {
 			});
 		}
 
-		if ((user.hasScope("order:refund") && user.isAdmin) || user.isSuper) {
+		if (user.hasScope("order:refund") && user.canRefundDuringCorona) {
 			orderControlOptions.push({
 				label: `Refund Event Total ${!orderRefundable ? "(Unavailable)" : ""}`,
 				disabled: !orderRefundable,
@@ -662,7 +661,7 @@ class OrderItems extends Component {
 						</Card>
 					)}
 				</Hidden>
-				{user.isAdmin || user.isSuper ? (
+				{user.canRefundDuringCorona ? (
 					<RefundBottomBar
 						amountInCents={!showRefundType ? refundAmountInCents : null}
 						onClick={() => this.onRefundClick("items")}

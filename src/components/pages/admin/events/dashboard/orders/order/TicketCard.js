@@ -97,7 +97,7 @@ const TicketCard = ({
 			<Card className={classes.root}>
 				<div className={classes.detailsRow}>
 					<div style={colStyles[0]} className={classes.col1}>
-						{user.isAdmin || user.isSuper ? (
+						{user.canRefundDuringCorona ? (
 							checkbox
 						) : (
 							<div style={{ width: 20, background: "transparent" }}/>
@@ -186,7 +186,7 @@ const TicketCard = ({
 	return (
 		<div className={classes.detailsRow}>
 			<div style={colStyles[0]} className={classes.col1}>
-				{user.isAdmin || user.isSuper ? checkbox : null}
+				{user.canRefundDuringCorona ? checkbox : null}
 				<Typography className={classes.boldText}>{description}</Typography>
 			</div>
 
