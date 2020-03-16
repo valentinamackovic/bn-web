@@ -296,7 +296,6 @@ class Details extends Component {
 		super(props);
 
 		this.state = {
-			venues: null,
 			selectedAgeLimitOption: null,
 			ageLimits: {},
 			dateError: {}
@@ -311,53 +310,23 @@ class Details extends Component {
 	}
 
 	componentDidMount() {
-		this.loadOrgVenueLinks();
-	}
+		const { availableVenues } = this.props;
+		//If it's a new event and there is only one private venue available then auto select that one
 
-	loadOrgVenueLinks() {
-		const organization_id = user.currentOrganizationId;
-		if (organization_id) {
-			Bigneon()
-				.organizations.venues.index({ organization_id })
-				.then(response => {
-					const { data } = response.data;
-					this.setState({
-						venues: data
-					});
-					//If it's a new event and there is only one private venue available then auto select that one
-					const privateVenues = data.filter(v => v.is_private);
-					if (privateVenues.length === 1 && !eventUpdateStore.id) {
-						this.changeDetails({ venueId: privateVenues[0].id });
-					}
-				})
-				.catch(error => {
-					console.error(error);
-					notifications.showFromErrorResponse({
-						defaultMessage: "There was a problem loading your venues",
-						error
-					});
-				});
+		const privateVenues = availableVenues.filter(v => v.is_private);
+		if (privateVenues.length === 1 && !eventUpdateStore.id) {
+			this.changeDetails({ venueId: privateVenues[0].id });
 		}
 	}
 
 	renderVenues() {
-		const { venues } = this.state;
-		const { errors } = this.props;
+		const { errors, availableVenues } = this.props;
 		const { venueId } = eventUpdateStore.event;
-
 		const venueOptions = [];
 
-		let label = "";
-
-		if (venues !== null) {
-			venues.forEach(venue => {
-				venueOptions.push({ value: venue.id, label: venue.name });
-			});
-
-			label = "Venue *";
-		} else {
-			label = "Loading venues...";
-		}
+		availableVenues.forEach(venue => {
+			venueOptions.push({ value: venue.id, label: venue.name });
+		});
 
 		return (
 			<SelectGroup
@@ -366,7 +335,7 @@ class Details extends Component {
 				error={errors.venueId}
 				name={"venues"}
 				missingItemsLabel={"No available venues"}
-				label={label}
+				label={"Venue *"}
 				onChange={e => {
 					const venueId = e.target.value;
 					this.changeDetails({ venueId });
