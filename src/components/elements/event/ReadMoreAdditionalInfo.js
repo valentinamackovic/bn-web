@@ -6,6 +6,7 @@ import classnames from "classnames";
 
 import { secondaryHex, fontFamilyDemiBold } from "../../../config/theme";
 import "../../pages/events/rich-event-description.css";
+import substringIgnoreHtml from "../../../helpers/substringIgnoreHtml";
 
 const styles = theme => ({
 	root: {
@@ -26,18 +27,16 @@ const styles = theme => ({
 	textBlock: {
 		display: "-webkit-box"
 	},
-	shortenedTextBlock: {
-		overflow: "hidden",
-		display: "-webkit-box",
-		WebkitLineClamp: "5",
-		WebkitBoxOrient: "vertical",
-		textOverflow: "ellipsis"
-	},
 	descriptionLink: {
 		font: "inherit",
 		color: secondaryHex,
 		cursor: "pointer",
 		fontFamily: fontFamilyDemiBold
+	},
+	shortenedTextBlock: {
+		height: 150,
+		overflow: "hidden",
+		textOverflow: "elipsis"
 	}
 });
 
@@ -72,7 +71,11 @@ class ReadMoreAdditionalInfo extends Component {
 
 		const linkifiedText = linkifyHtml(children, options);
 
-		const artistBio = (
+		//Remove html chars to get an accurate character length
+		const removeHtml = linkifiedText.replace(/<[^>]*>?/gm, "");
+		const maxLength = 190;
+
+		const readMore = (
 			<span
 				className={classes.readMoreLink}
 				onClick={this.showHideMoreAdditionalInfo.bind(this)}
@@ -81,30 +84,61 @@ class ReadMoreAdditionalInfo extends Component {
 			</span>
 		);
 
+		//Exclude html tags for the initial shortened text of the description
+		const toShow = substringIgnoreHtml(linkifiedText, maxLength);
+
 		return (
 			<div className={classes.root}>
-				<span
-					className={classnames({
-						[classes.shortenedTextBlock]: !showAllAdditionalInfo,
-						[classes.textBlock]: true
-					})}
-				>
-					<div
-						className={"rich-edit-content"}
-						dangerouslySetInnerHTML={{ __html: linkifiedText }}
-					/>
-				</span>
-
-				{(linkifiedText.length > 184 ? artistBio : "")}
+				{removeHtml.length < maxLength ? (
+					<span
+						className={classnames({
+							[classes.textBlock]: true
+						})}
+					>
+						<div
+							className={"rich-edit-content"}
+							dangerouslySetInnerHTML={{ __html: linkifiedText }}
+						/>
+					</span>
+				) : (
+					<span
+						className={classnames({
+							[classes.textBlock]: true
+						})}
+					>
+						{!showAllAdditionalInfo && (
+							<div
+								className={classnames({
+									["rich-edit-content"]: true,
+									[classes.shortenedTextBlock]: true
+								})}
+								dangerouslySetInnerHTML={{ __html: toShow }}
+							/>
+						)}
+					</span>
+				)}
+				{removeHtml.length > maxLength && showAllAdditionalInfo && (
+					<span
+						className={classnames({
+							[classes.textBlock]: true
+						})}
+					>
+						<div
+							className={"rich-edit-content"}
+							dangerouslySetInnerHTML={{ __html: linkifiedText }}
+						/>
+					</span>
+				)}
+				{removeHtml.length > maxLength ? readMore : ""}
 			</div>
 		);
 	}
 }
 
 ReadMoreAdditionalInfo.defaultProps = {
-	 children: "",
-	 readMoreText: "Read more",
-	 readLessText: "Read less"
+	children: "",
+	readMoreText: "Read more",
+	readLessText: "Read less"
 };
 
 ReadMoreAdditionalInfo.propTypes = {
