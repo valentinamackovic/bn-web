@@ -374,7 +374,7 @@ class GuestList extends Component {
 			<Grid className={classes.filterOptions} container>
 				<Grid item xs={12} sm={12} md={6} lg={4}>
 					<SearchInput
-						placeholder="Search by guest name or order #"
+						placeholder="Search for attendees"
 						onSearch={this.onSearch.bind(this)}
 					/>
 				</Grid>
