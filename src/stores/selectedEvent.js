@@ -42,6 +42,19 @@ class SelectedEvent {
 	currentlyAppliedCode = null;
 
 	@action
+	getTickets() {
+		Bigneon()
+			.events.ticketTypes.index({ event_id: this.id })
+			.then(response => {
+				const { data } = response.data;
+				this.ticket_types = data;
+			})
+			.catch(e => {
+				console.error(e);
+			});
+	}
+
+	@action
 	refreshResult(id, onError = () => {}, onSuccess = () => {}) {
 		//If we're updating the state to a different event just reset the values first so it doesn't load old data in components observing this
 		if (this.id && id !== this.id) {
@@ -82,6 +95,8 @@ class SelectedEvent {
 					ticket_types,
 					user_is_interested
 				} = event;
+
+				this.getTickets();
 
 				// this.ticket_types = ticket_types;
 				this.organization = organization;
