@@ -204,6 +204,8 @@ class SelectedEvent {
 
 					const inactiveTicketNames = [];
 
+					const promoCodeEndDataIsBeforeNow = moment.utc(data.end_date).isBefore(moment.utc());
+
 					//For promo codes (New data format)
 					if (data.ticket_types && typeof data.ticket_types === "object") {
 						data.ticket_types.forEach(codeTicketType => {
@@ -245,10 +247,19 @@ class SelectedEvent {
 							variant: "warning"
 						});
 					} else {
-						this.currentlyAppliedCode = redemptionCode;
+						if(promoCodeEndDataIsBeforeNow) {
+							onError();
 
-						this.ticket_types = updatedTicketTypes;
-						onSuccess(appliedCodes);
+							notifications.show({
+								message: "Code has expired.",
+								variant: "warning"
+							});
+						} else {
+							this.currentlyAppliedCode = redemptionCode;
+
+							this.ticket_types = updatedTicketTypes;
+							onSuccess(appliedCodes);
+						}
 					}
 				},
 				error => {
@@ -259,7 +270,7 @@ class SelectedEvent {
 					if (error && error.response && error.response.status === 404) {
 						this.currentlyAppliedCode = null;
 						notifications.show({
-							message: "Promo code does not exist.",
+							message: "Promo code does not exist or has expired.",
 							variant: "warning"
 						});
 					} else {

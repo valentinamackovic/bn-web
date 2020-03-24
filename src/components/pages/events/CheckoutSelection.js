@@ -50,9 +50,6 @@ class CheckoutSelection extends Component {
 	}
 
 	componentDidMount() {
-		const code = getUrlParam("code");
-		code ? (selectedEvent.currentlyAppliedCode = code) : null;
-
 		//If we have a current cart in the store already, load that right away
 		if (cart.items && cart.items.length > 0) {
 			this.setTicketSelectionFromExistingCart(cart.items);
@@ -91,6 +88,9 @@ class CheckoutSelection extends Component {
 					const { id: selectedEventId } = selectedEvent.event;
 
 					analytics.viewContent([selectedEventId], getAllUrlParams());
+
+					const code = getUrlParam("code");
+					code && this.onSubmitPromo(code);
 				}
 			);
 		} else {
