@@ -584,7 +584,9 @@ class CheckoutConfirmation extends Component {
 				ticketTypeId
 			} = item;
 
-			selectedTicketType = (ticket_types).find(o => o.id === ticketTypeId);
+			if(!cart.cartExpired) {
+				selectedTicketType = (ticket_types).find(o => o.id === ticketTypeId);
+			}
 
 			const {
 				name,
