@@ -648,12 +648,6 @@ class CheckoutConfirmation extends Component {
 								ticketSelection
 							};
 						}, () => {
-							/**
-							 * @YENTY delete this comment
-							//There was a race condition with the ticketSelection
-							//Also moved this here to keep it DRY
-							//validateCart is called in replaceCart
-							 */
 							this.replaceCart();
 						});
 					}}
