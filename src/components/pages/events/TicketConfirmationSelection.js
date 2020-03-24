@@ -40,13 +40,11 @@ class TicketSelection extends Component {
 			increment,
 			available,
 			onNumberChange,
-			validateFields,
 			limitPerPerson,
 			discount_in_cents,
 			discount_as_percentage,
 			redemption_code,
-			eventIsCancelled,
-			replaceCart
+			eventIsCancelled
 		} = this.props;
 		let { status } = this.props;
 		status = eventIsCancelled ? "Cancelled" : status;
@@ -126,7 +124,11 @@ class TicketSelection extends Component {
 
 		return (
 			<div>
-				<Grid alignItems="center" className={classes.container} container>
+				<Grid
+					alignItems="center"
+					className={classes.container}
+					container
+				>
 					{redemption_code ? (
 						<Grid item xs={12} sm={12} md={12} lg={12}>
 							<Typography className={classes.promoAppliedText}>
@@ -135,8 +137,14 @@ class TicketSelection extends Component {
 						</Grid>
 					) : null}
 
-					<Grid item xs={6} sm={6} md={2} lg={2} className={classes.ticketSelectionContainer}>
-
+					<Grid
+						item
+						xs={6}
+						sm={6}
+						md={2}
+						lg={2}
+						className={classes.ticketSelectionContainer}
+					>
 						<NumberSelect
 							onIncrement={() => {
 								const currentAmount = amount ? amount : 0;
@@ -146,10 +154,8 @@ class TicketSelection extends Component {
 									newAmount = limitPerPerson;
 								}
 
-								if(newAmount <= available) {
+								if (newAmount <= available) {
 									onNumberChange(newAmount);
-									validateFields();
-									replaceCart();
 								}
 							}}
 							onDecrement={() => {
@@ -158,17 +164,21 @@ class TicketSelection extends Component {
 								if (newAmount < 0) {
 									newAmount = 0;
 								}
-
 								onNumberChange(newAmount);
-								validateFields();
-								replaceCart();
 							}}
 							available={amount < available}
 						>
 							{amount}
 						</NumberSelect>
 					</Grid>
-					<Grid item xs={3} sm={3} md={5} lg={6} className={classes.detailContainer}>
+					<Grid
+						item
+						xs={3}
+						sm={3}
+						md={5}
+						lg={6}
+						className={classes.detailContainer}
+					>
 						{description ? (
 							<Typography className={classes.name}>
 								{description}
@@ -207,7 +217,6 @@ class TicketSelection extends Component {
 TicketSelection.propTypes = {
 	ticketsAvailable: PropTypes.bool,
 	onNumberChange: PropTypes.func.isRequired,
-	replaceCart: PropTypes.func.isRequired,
 	name: PropTypes.string.isRequired,
 	description: PropTypes.string,
 	price_in_cents: PropTypes.number,
@@ -218,7 +227,6 @@ TicketSelection.propTypes = {
 	subTotal: PropTypes.string,
 	increment: PropTypes.number.isRequired,
 	available: PropTypes.number.isRequired,
-	validateFields: PropTypes.func.isRequired,
 	limitPerPerson: PropTypes.number,
 	status: PropTypes.string.isRequired,
 	classes: PropTypes.object.isRequired,

@@ -22,7 +22,8 @@ import {
 	secondaryHex,
 	fontFamily
 } from "../../../config/theme";
-import EventDetailsOverlayCard from "../../elements/event/EventDetailsOverlayCard";
+import EventDetailsOverlayCard
+	from "../../elements/event/EventDetailsOverlayCard";
 import Divider from "../../common/Divider";
 import orders from "../../../stores/orders";
 import tickets from "../../../stores/tickets";
@@ -315,7 +316,7 @@ class CheckoutConfirmation extends Component {
 					//If they're checking out for a specific event then we have a custom success page for them
 					history.push(
 						`/tickets/${slug}/tickets/success${window.location.search ||
-							"?"}&order_id=${data.id}`
+						"?"}&order_id=${data.id}`
 					);
 				} else {
 					history.push(`/`); //TODO go straight to tickets when route is available
@@ -396,7 +397,7 @@ class CheckoutConfirmation extends Component {
 					//If they're checking out for a specific event then we have a custom success page for them
 					history.push(
 						`/tickets/${slug}/tickets/success${window.location.search ||
-							"?"}&order_id=${data.id}`
+						"?"}&order_id=${data.id}`
 					);
 				} else {
 					history.push(`/`); //TODO go straight to tickets when route is available
@@ -459,7 +460,7 @@ class CheckoutConfirmation extends Component {
 				const { data } = response;
 				const { items } = data;
 				//Successful if no items in cart
-				if(items.length === 0) {
+				if (items.length === 0) {
 					cart.emptyCart();
 					notifications.show({
 						message: "Successfully emptied cart.",
@@ -583,7 +584,7 @@ class CheckoutConfirmation extends Component {
 				ticketTypeId
 			} = item;
 
-			selectedTicketType = ticket_types.find(o => o.id === ticketTypeId);
+			selectedTicketType = (ticket_types).find(o => o.id === ticketTypeId);
 
 			const {
 				name,
@@ -646,13 +647,18 @@ class CheckoutConfirmation extends Component {
 							return {
 								ticketSelection
 							};
+						}, () => {
+							/**
+							 * @YENTY delete this comment
+							//There was a race condition with the ticketSelection
+							//Also moved this here to keep it DRY
+							//validateCart is called in replaceCart
+							 */
+							this.replaceCart();
 						});
-					}
-					}
-					validateFields={this.validateFields.bind(this)}
+					}}
 					status={status}
 					eventIsCancelled={eventIsCancelled}
-					replaceCart={this.replaceCart.bind(this)}
 				/>
 			);
 		});
@@ -679,18 +685,30 @@ class CheckoutConfirmation extends Component {
 				<div className={classes.ticketLineTotalContainer}>
 					<TicketLineTotal
 						col1={(
-							<Link to={`/tickets/${id}`} onClick={this.clearCart}>
-								<span className={classes.backLink}>Clear cart</span>
+							<Link to={`/tickets/${id}`}
+								  onClick={this.clearCart}
+							>
+								<span
+									className={classes.backLink}
+								>Clear cart</span>
 							</Link>
 						)}
-						col2={<span className={classes.subTotal}>Service fees:</span>}
+						col2={(
+							<span
+								className={classes.subTotal}
+							>Service fees:</span>
+						)}
 						col3={`$${(serviceFeesInCents / 100).toFixed(2)}`}
 						classes={classes}
 					/>
 
 					<TicketLineTotal
 						col1={null}
-						col2={<span className={classes.subTotal}>Order total:</span>}
+						col2={(
+							<span
+								className={classes.subTotal}
+							>Order total:</span>
+						)}
 						col3={`$${(orderTotalInCents / 100).toFixed(2)}`}
 						classes={classes}
 					/>
@@ -751,9 +769,17 @@ class CheckoutConfirmation extends Component {
 			<div>
 				<TicketLineEntry
 					key={id}
-					col1={<span className={classes.lintEntryTitle}>Ticket</span>}
+					col1={(
+						<span
+							className={classes.lintEntryTitle}
+						>Ticket</span>
+					)}
 					col2={<span className={classes.lintEntryTitle}>Price</span>}
-					col3={<span className={classes.lintEntryTitle}>Subtotal</span>}
+					col3={(
+						<span
+							className={classes.lintEntryTitle}
+						>Subtotal</span>
+					)}
 					classes={classes}
 				/>
 
@@ -847,7 +873,9 @@ class CheckoutConfirmation extends Component {
 
 				{/*MOBILE*/}
 				<Hidden mdUp>
-					<div className={classes.mobileContainer}>{sharedContent}</div>
+					<div
+						className={classes.mobileContainer}
+					>{sharedContent}</div>
 				</Hidden>
 			</div>
 		);
