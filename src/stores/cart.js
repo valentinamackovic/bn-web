@@ -6,7 +6,6 @@ import getAllUrlParams from "../helpers/getAllUrlParams";
 
 const itemListToSave = selectedTickets => {
 	const ticketIds = Object.keys(selectedTickets);
-
 	const items = [];
 	ticketIds.forEach(id => {
 		const quantity = parseInt(selectedTickets[id].quantity);
@@ -16,7 +15,6 @@ const itemListToSave = selectedTickets => {
 			redemption_code: selectedTickets[id].redemption_code
 		});
 	});
-
 	return items;
 };
 
@@ -155,7 +153,6 @@ class Cart {
 	@action
 	replace(selectedTickets, onSuccess, onError) {
 		const items = itemListToSave(selectedTickets);
-
 		Bigneon()
 			.cart.replace({
 				items,

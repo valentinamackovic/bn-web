@@ -33,65 +33,6 @@ import FormattedAdditionalInfo from "./FormattedAdditionalInfo";
 
 const AUTO_SELECT_TICKET_AMOUNT = 2;
 
-const styles = theme => ({
-	root: {},
-	desktopContent: {
-		backgroundColor: "#FFFFFF"
-	},
-	desktopCardContent: {
-		padding: theme.spacing.unit * 2
-	},
-	mobileContainer: {
-		background: "#FFFFFF"
-	},
-	mobileTicketSelectionContainer: {
-		padding: theme.spacing.unit * 2,
-		paddingBottom: theme.spacing.unit * 10
-	},
-	mobileHeading: {
-		fontSize: theme.typography.fontSize * 1.25,
-		fontFamily: fontFamilyDemiBold,
-		marginTop: theme.spacing.unit,
-		marginBottom: theme.spacing.unit
-	},
-	mobileEventDetailsContainer: {
-		padding: theme.spacing.unit * 1.5,
-		display: "flex",
-		alignItems: "center",
-		boxShadow: "0px 2px 10px 0px rgba(157, 163, 180, 0.2)"
-	},
-	mobilePromoImage: {
-		width: 70,
-		height: 70,
-		backgroundRepeat: "no-repeat",
-		backgroundSize: "cover",
-		backgroundPosition: "center",
-		marginRight: theme.spacing.unit,
-		borderRadius: 6
-	},
-	mobileEventName: {
-		fontFamily: fontFamilyDemiBold,
-		fontSize: theme.typography.fontSize * 0.875,
-		color: "#2c3136",
-		overflow: "hidden",
-		textOverflow: "ellipsis"
-	},
-	mobileVenueName: {
-		fontFamily: fontFamilyDemiBold,
-		fontSize: theme.typography.fontSize * 0.8125,
-		color: "#9da3b4"
-	},
-	mobileEventTime: {
-		fontSize: theme.typography.fontSize * 0.8125,
-		color: "#9da3b4"
-	},
-	mobileViewDetailsLinkText: {
-		fontFamily: fontFamilyDemiBold,
-		fontSize: theme.typography.fontSize * 0.75,
-		color: secondaryHex
-	}
-});
-
 @observer
 class CheckoutSelection extends Component {
 	constructor(props) {
@@ -216,6 +157,7 @@ class CheckoutSelection extends Component {
 
 		//Auto add one ticket if there is only one
 		const { ticket_types } = selectedEvent;
+
 		if (items === undefined || items.length === 0) {
 			if (ticket_types && ticket_types.length > 1) {
 				ticket_types.forEach((type, index) => {
@@ -750,5 +692,64 @@ CheckoutSelection.propTypes = {
 	match: PropTypes.object.isRequired,
 	classes: PropTypes.object.isRequired
 };
+
+const styles = theme => ({
+	root: {},
+	desktopContent: {
+		backgroundColor: "#FFFFFF"
+	},
+	desktopCardContent: {
+		padding: theme.spacing.unit * 2
+	},
+	mobileContainer: {
+		background: "#FFFFFF"
+	},
+	mobileTicketSelectionContainer: {
+		padding: theme.spacing.unit * 2,
+		paddingBottom: theme.spacing.unit * 10
+	},
+	mobileHeading: {
+		fontSize: theme.typography.fontSize * 1.25,
+		fontFamily: fontFamilyDemiBold,
+		marginTop: theme.spacing.unit,
+		marginBottom: theme.spacing.unit
+	},
+	mobileEventDetailsContainer: {
+		padding: theme.spacing.unit * 1.5,
+		display: "flex",
+		alignItems: "center",
+		boxShadow: "0px 2px 10px 0px rgba(157, 163, 180, 0.2)"
+	},
+	mobilePromoImage: {
+		width: 70,
+		height: 70,
+		backgroundRepeat: "no-repeat",
+		backgroundSize: "cover",
+		backgroundPosition: "center",
+		marginRight: theme.spacing.unit,
+		borderRadius: 6
+	},
+	mobileEventName: {
+		fontFamily: fontFamilyDemiBold,
+		fontSize: theme.typography.fontSize * 0.875,
+		color: "#2c3136",
+		overflow: "hidden",
+		textOverflow: "ellipsis"
+	},
+	mobileVenueName: {
+		fontFamily: fontFamilyDemiBold,
+		fontSize: theme.typography.fontSize * 0.8125,
+		color: "#9da3b4"
+	},
+	mobileEventTime: {
+		fontSize: theme.typography.fontSize * 0.8125,
+		color: "#9da3b4"
+	},
+	mobileViewDetailsLinkText: {
+		fontFamily: fontFamilyDemiBold,
+		fontSize: theme.typography.fontSize * 0.75,
+		color: secondaryHex
+	}
+});
 
 export default withStyles(styles)(CheckoutSelection);

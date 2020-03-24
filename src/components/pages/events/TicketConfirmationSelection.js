@@ -36,6 +36,7 @@ class TicketSelection extends Component {
 			description,
 			price_in_cents,
 			amount,
+			subTotal,
 			increment,
 			available,
 			onNumberChange,
@@ -44,7 +45,8 @@ class TicketSelection extends Component {
 			discount_in_cents,
 			discount_as_percentage,
 			redemption_code,
-			eventIsCancelled
+			eventIsCancelled,
+			replaceCart
 		} = this.props;
 		let { status } = this.props;
 		status = eventIsCancelled ? "Cancelled" : status;
@@ -133,46 +135,8 @@ class TicketSelection extends Component {
 						</Grid>
 					) : null}
 
-					<Grid item xs={3} sm={3} md={4} lg={3}>
-						<Typography
-							className={classnames({
-								[classes.price]: true,
-								[classes.priceActive]: true
-							})}
-						>
-							{priceDisplay}
-						</Typography>
-					</Grid>
-					<Grid
-						item
-						xs={5}
-						sm={6}
-						md={5}
-						lg={6}
-						className={classes.detailContainer}
-					>
-						<Typography className={classes.name}>{name}</Typography>
-						<Typography variant="caption" style={{ color: "red" }}>
-							{lppText}
-						</Typography>
-						{description && !discount_in_cents ? (
-							<Typography
-								className={classes.readMoreLessText}
-								onClick={this.readMoreLess.bind(this)}
-							>
-								{showDescription ? "Read Less" : "Read More"}
-							</Typography>
-						) : null}
-					</Grid>
+					<Grid item xs={6} sm={6} md={2} lg={2} className={classes.ticketSelectionContainer}>
 
-					<Grid
-						item
-						xs={4}
-						sm={3}
-						md={3}
-						lg={3}
-						className={classes.ticketSelectionContainer}
-					>
 						<NumberSelect
 							onIncrement={() => {
 								const currentAmount = amount ? amount : 0;
@@ -182,8 +146,11 @@ class TicketSelection extends Component {
 									newAmount = limitPerPerson;
 								}
 
-								onNumberChange(newAmount);
-								validateFields();
+								if(newAmount <= available) {
+									onNumberChange(newAmount);
+									validateFields();
+									replaceCart();
+								}
 							}}
 							onDecrement={() => {
 								const currentAmount = amount ? amount : 0;
@@ -194,32 +161,42 @@ class TicketSelection extends Component {
 
 								onNumberChange(newAmount);
 								validateFields();
+								replaceCart();
 							}}
 							available={amount < available}
 						>
 							{amount}
 						</NumberSelect>
 					</Grid>
-				</Grid>
-
-				{showDescription ? (
-					<Grid justify="flex-end" alignItems="flex-end" container>
-						<Grid
-							item
-							xs={9}
-							sm={9}
-							md={8}
-							lg={9}
-							className={classes.detailContainer}
-						>
-							{description ? (
-								<Typography className={classes.description}>
-									{nl2br(description)}
-								</Typography>
-							) : null}
-						</Grid>
+					<Grid item xs={3} sm={3} md={5} lg={6} className={classes.detailContainer}>
+						{description ? (
+							<Typography className={classes.name}>
+								{description}
+							</Typography>
+						) : null}
+						<Typography variant="caption" style={{ color: "red" }}>
+							{lppText}
+						</Typography>
 					</Grid>
-				) : null}
+					<Grid item xs={3} sm={3} md={2} lg={2}>
+						<Typography
+							className={classnames({
+								[classes.lineEntryText]: true
+							})}
+						>
+							{priceDisplay}
+						</Typography>
+					</Grid>
+					<Grid item xs={3} sm={3} md={3} lg={2}>
+						<Typography
+							className={classnames({
+								[classes.lineEntryText]: true
+							})}
+						>
+							{subTotal}
+						</Typography>
+					</Grid>
+				</Grid>
 
 				<Divider style={{ margin: 0 }}/>
 			</div>
@@ -230,6 +207,7 @@ class TicketSelection extends Component {
 TicketSelection.propTypes = {
 	ticketsAvailable: PropTypes.bool,
 	onNumberChange: PropTypes.func.isRequired,
+	replaceCart: PropTypes.func.isRequired,
 	name: PropTypes.string.isRequired,
 	description: PropTypes.string,
 	price_in_cents: PropTypes.number,
@@ -237,6 +215,7 @@ TicketSelection.propTypes = {
 	redemption_code: PropTypes.string,
 	error: PropTypes.string,
 	amount: PropTypes.number,
+	subTotal: PropTypes.string,
 	increment: PropTypes.number.isRequired,
 	available: PropTypes.number.isRequired,
 	validateFields: PropTypes.func.isRequired,
@@ -273,8 +252,8 @@ const styles = theme => ({
 		color: "#9DA3B4"
 	},
 	detailContainer: {
-		paddingLeft: theme.spacing.unit,
-		paddingRight: theme.spacing.unit
+		paddingLeft: theme.spacing.unit * 2,
+		paddingRight: theme.spacing.unit * 2
 	},
 	readMoreLessText: {
 		marginTop: theme.spacing.unit / 2,
@@ -299,6 +278,12 @@ const styles = theme => ({
 	ticketSelectionContainer: {
 		display: "flex",
 		justifyContent: "flex-end"
+	},
+	lineEntryText: {
+		fontFamily: fontFamilyDemiBold,
+		fontSize: theme.typography.fontSize * 0.9,
+		paddingRight: theme.spacing.unit / 2,
+		textAlign: "right"
 	}
 });
 
