@@ -213,7 +213,7 @@ class OrganizationUpdateCard extends Component {
 							}
 							onBlur={this.validateFields.bind(this)}
 						/>
-						{user.isSuper || user.isAdmin && (
+						{(user.isSuper || user.isAdmin) && (
 							<div>
 								<InputGroup
 									error={errors.google_ads_conversion_id}
