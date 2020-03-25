@@ -53,7 +53,7 @@ const TransactionRow = props => {
 		{ flex: 3, textAlign: "left" }, // Date/time
 		{ flex: 1, textAlign: "right" }, // Qty
 		{ flex: 1, textAlign: "right" }, // Gross
-		{ flex: 3, textAlign: "left" } // Platform
+		{ flex: 2, textAlign: "left" } // Platform
 	];
 
 	//If they're adding the event name, make the second column side
