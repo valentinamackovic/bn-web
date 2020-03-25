@@ -42,15 +42,26 @@ class SelectedEvent {
 	currentlyAppliedCode = null;
 
 	@action
-	getTickets() {
+	getTickets(id) {
 		Bigneon()
-			.events.ticketTypes.index({ event_id: this.id })
+			.events.availability({ id })
 			.then(response => {
-				const { data } = response.data;
-				this.ticket_types = data;
+				const {
+					limited_tickets_remaining,
+					ticket_types,
+					sales_start_date,
+					user_is_interested
+				} = response.data;
+				this.ticket_types = ticket_types;
+				this.user_is_interested = user_is_interested;
 			})
 			.catch(e => {
 				console.error(e);
+				notifications.showFromErrorResponse({
+					e,
+					defaultMessage: "Failed to load availability information",
+					variant: "error"
+				});
 			});
 	}
 
@@ -96,7 +107,7 @@ class SelectedEvent {
 					user_is_interested
 				} = event;
 
-				this.getTickets();
+				this.getTickets(id);
 
 				// this.ticket_types = ticket_types;
 				this.organization = organization;
