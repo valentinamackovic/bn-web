@@ -307,6 +307,7 @@ class EventDashboardContainer extends Component {
 		const {
 			hasTransactionReports,
 			hasEventSummaryReports,
+			hasScanCountReports,
 			hasTicketCountReports,
 			hasEventAuditReports,
 			hasEventSummaryAuditReports,
@@ -357,6 +358,22 @@ class EventDashboardContainer extends Component {
 						onClick={this.handleReportsMenuClose.bind(this)}
 					>
 						Ticket counts report
+					</MenuItem>
+				</Link>
+			);
+		}
+
+		if (hasScanCountReports) {
+			items.push(
+				<Link
+					key="ticket-counts"
+					to={`/admin/events/${event.id}/dashboard/reports/scan-counts`}
+				>
+					<MenuItem
+						selected={isActiveReportMenu("scan-counts")}
+						onClick={this.handleReportsMenuClose.bind(this)}
+					>
+						Scan count report
 					</MenuItem>
 				</Link>
 			);
@@ -601,7 +618,8 @@ class EventDashboardContainer extends Component {
 			}
 		}
 
-		const publishedDateAfterNowAndNotDraft = moment.utc(publish_date).isAfter(moment.utc()) && status !== "Draft";
+		const publishedDateAfterNowAndNotDraft =
+			moment.utc(publish_date).isAfter(moment.utc()) && status !== "Draft";
 
 		return (
 			<div>
