@@ -45,7 +45,9 @@ class CheckoutSelection extends Component {
 			ticketSelection: null,
 			isSubmitting: false,
 			isSubmittingPromo: false,
-			overlayCardHeight: 600
+			overlayCardHeight: 600,
+			expiredCode: false,
+			codeErrorMessage: ""
 		};
 	}
 
@@ -250,7 +252,7 @@ class CheckoutSelection extends Component {
 					});
 				}
 
-				return { ticketSelection };
+				return { ticketSelection, expiredCode: false, codeErrorMessage: "" };
 			},
 			() => {
 				//Remove from ticket types in store
@@ -293,12 +295,16 @@ class CheckoutSelection extends Component {
 								}
 							});
 
-							return { ticketSelection, isSubmittingPromo: false };
+							return { ticketSelection, isSubmittingPromo: false, expiredCode: false, codeErrorMessage: ""  };
 						});
 					}
 				},
-				() => {
-					this.setState({ isSubmittingPromo: false });
+				error => {
+					this.setState({
+						isSubmittingPromo: false,
+						expiredCode: error.expired && true,
+						codeErrorMessage: error.expired && error.expired
+					});
 				}
 			);
 		});
@@ -476,7 +482,7 @@ class CheckoutSelection extends Component {
 
 	render() {
 		const { classes } = this.props;
-		const { isSubmitting, isSubmittingPromo, ticketSelection } = this.state;
+		const { isSubmitting, isSubmittingPromo, ticketSelection, expiredCode, codeErrorMessage } = this.state;
 
 		const { event, venue, artists, organization, id } = selectedEvent;
 		const eventIsCancelled = !!(event && event.cancelled_at);
@@ -541,14 +547,16 @@ class CheckoutSelection extends Component {
 					{this.renderTicketPricing()}
 
 					<InputWithButton
-						value={selectedEvent.currentlyAppliedCode}
+						value={selectedEvent.currentlyAppliedCode || selectedEvent.codeError}
 						clearText={"Remove"}
 						onClear={this.clearAppliedPromoCodes.bind(this)}
 						successState={promoCodeApplied}
+						errorState={expiredCode}
+						errorMessage={codeErrorMessage}
 						showClearButton={promoCodeApplied}
 						iconUrl={promoCodeApplied ? "/icons/checkmark-active.svg" : null}
 						iconStyle={{ height: 15, width: "auto" }}
-						style={{ marginBottom: 20, marginTop: 20 }}
+						style={{ marginBottom: !expiredCode ? 20 : 5, marginTop: 20 }}
 						name={"promoCode"}
 						placeholder="Enter a promo code"
 						buttonText="Apply"

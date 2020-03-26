@@ -204,7 +204,7 @@ class SelectedEvent {
 
 					const inactiveTicketNames = [];
 
-					const promoCodeEndDataIsBeforeNow = moment.utc(data.end_date).isBefore(moment.utc());
+					const promoCodeEndDateIsBeforeNow = moment.utc(data.end_date).isBefore(moment.utc());
 
 					//For promo codes (New data format)
 					if (data.ticket_types && typeof data.ticket_types === "object") {
@@ -247,13 +247,9 @@ class SelectedEvent {
 							variant: "warning"
 						});
 					} else {
-						if(promoCodeEndDataIsBeforeNow) {
-							onError();
-
-							notifications.show({
-								message: "Code has expired.",
-								variant: "warning"
-							});
+						if(promoCodeEndDateIsBeforeNow) {
+							onError({ "expired": "This code has expired" });
+							this.currentlyAppliedCode = redemptionCode;
 						} else {
 							this.currentlyAppliedCode = redemptionCode;
 

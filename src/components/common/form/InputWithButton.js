@@ -11,6 +11,149 @@ const height = 40;
 
 const borderColor = "#D1D1D1";
 
+class InputWithButton extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			value: false
+		};
+	}
+
+	componentDidUpdate(prevProps) {
+		if (this.state.value === false && this.props.value) {
+			this.setState({ value: this.props.value });
+		}
+	}
+
+	handleKeyPress(e) {
+		if (e.key === "Enter") {
+			this.props.onSubmit(this.state.value);
+		}
+	}
+
+	render() {
+		const { value } = this.state;
+		const {
+			classes,
+			name,
+			placeholder,
+			buttonText,
+			style,
+			disabled,
+			iconUrl,
+			onSubmit,
+			toUpperCase,
+			onClear,
+			showClearButton,
+			successState,
+			clearText,
+			inputDisabled,
+			iconStyle,
+			errorState,
+			errorMessage
+		} = this.props;
+
+		return (
+			<div>
+				<div
+					className={classNames({
+						[classes.root]: true,
+						[classes.successStateRoot]: successState,
+						[classes.errorStateRoot]: errorState
+					})}
+					style={style}
+				>
+					{(iconUrl && !errorState) ? (
+						<img
+							className={classes.icon}
+							style={iconStyle}
+							src={servedImage(iconUrl)}
+						/>
+					) : null}
+					<div className={classes.inputContainer}>
+						<input
+							className={classes.input}
+							value={value === false ? "" : value}
+							name={name}
+							onChange={e => {
+								let value = e.target.value;
+								if (toUpperCase) {
+									value = value.toUpperCase();
+								}
+								this.setState({ value });
+							}}
+							disabled={inputDisabled}
+							style={{
+								backgroundColor: inputDisabled ? "#fff" : ""
+							}}
+							placeholder={placeholder}
+							onKeyPress={this.handleKeyPress.bind(this)}
+						/>
+					</div>
+
+					<div
+						className={classNames({
+							[classes.buttonContainer]: true,
+							noselect: true
+						})}
+						onClick={() => {
+							if (!disabled) {
+								if (showClearButton) {
+									onClear();
+								} else {
+									onSubmit(value);
+								}
+							}
+						}}
+					>
+						<Typography
+							className={classNames({
+								[classes.buttonText]: true,
+								[classes.buttonTextSuccessState]: successState,
+								[classes.buttonTextDisabled]: disabled
+							})}
+						>
+							{showClearButton ? clearText : buttonText}
+						</Typography>
+					</div>
+				</div>
+				{errorState && (
+					<Typography className={classes.error}>
+						{errorMessage}
+					</Typography>
+				)}
+			</div>
+		);
+	}
+}
+
+InputWithButton.defaultPropTypes = {
+	buttonText: "Submit",
+	style: {},
+	clearText: "clear",
+	iconStyle: {}
+};
+
+InputWithButton.propTypes = {
+	classes: PropTypes.object.isRequired,
+	value: PropTypes.string,
+	onSubmit: PropTypes.func.isRequired,
+	name: PropTypes.string.isRequired,
+	placeholder: PropTypes.string,
+	buttonText: PropTypes.string,
+	style: PropTypes.object,
+	iconUrl: PropTypes.string,
+	toUpperCase: PropTypes.bool,
+	disabled: PropTypes.bool,
+	onClear: PropTypes.func,
+	showClearButton: PropTypes.bool,
+	successState: PropTypes.bool,
+	errorState: PropTypes.bool,
+	errorMessage: PropTypes.string,
+	clearText: PropTypes.string,
+	iconStyle: PropTypes.object
+};
+
 const styles = theme => {
 	return {
 		root: {
@@ -26,6 +169,10 @@ const styles = theme => {
 		},
 		successStateRoot: {
 			borderColor: secondaryHex,
+			borderWidth: 1
+		},
+		errorStateRoot: {
+			borderColor: "red",
 			borderWidth: 1
 		},
 		inputContainer: {
@@ -67,140 +214,13 @@ const styles = theme => {
 			height: height * 0.65,
 			width: "auto",
 			marginLeft: theme.spacing.unit
+		},
+		error: {
+			color: "red",
+			marginBottom: 10,
+			fontSize: "0.8em"
 		}
 	};
-};
-
-class InputWithButton extends Component {
-	constructor(props) {
-		super(props);
-		this.state = {
-			value: false
-		};
-	}
-
-	componentDidUpdate(prevProps) {
-		if (this.state.value === false && this.props.value) {
-			this.setState({ value: this.props.value });
-		}
-	}
-
-	handleKeyPress(e) {
-		if (e.key === "Enter") {
-			this.props.onSubmit(this.state.value);
-		}
-	}
-
-	render() {
-		const { value } = this.state;
-		const {
-			classes,
-			name,
-			placeholder,
-			buttonText,
-			style,
-			disabled,
-			iconUrl,
-			onSubmit,
-			toUpperCase,
-			onClear,
-			showClearButton,
-			successState,
-			clearText,
-			inputDisabled,
-			iconStyle
-		} = this.props;
-
-		return (
-			<div
-				className={classNames({
-					[classes.root]: true,
-					[classes.successStateRoot]: successState
-				})}
-				style={style}
-			>
-				{iconUrl ? (
-					<img
-						className={classes.icon}
-						style={iconStyle}
-						src={servedImage(iconUrl)}
-					/>
-				) : null}
-				<div className={classes.inputContainer}>
-					<input
-						className={classes.input}
-						value={value === false ? "" : value}
-						name={name}
-						onChange={e => {
-							let value = e.target.value;
-							if (toUpperCase) {
-								value = value.toUpperCase();
-							}
-							this.setState({ value });
-						}}
-						disabled={inputDisabled}
-						style={{
-							backgroundColor: inputDisabled ? "#fff" : ""
-						}}
-						placeholder={placeholder}
-						onKeyPress={this.handleKeyPress.bind(this)}
-					/>
-				</div>
-
-				<div
-					className={classNames({
-						[classes.buttonContainer]: true,
-						noselect: true
-					})}
-					onClick={() => {
-						if (!disabled) {
-							if (showClearButton) {
-								this.setState({ value: "" });
-								onClear();
-							} else {
-								onSubmit(value);
-							}
-						}
-					}}
-				>
-					<Typography
-						className={classNames({
-							[classes.buttonText]: true,
-							[classes.buttonTextSuccessState]: successState,
-							[classes.buttonTextDisabled]: disabled
-						})}
-					>
-						{showClearButton ? clearText : buttonText}
-					</Typography>
-				</div>
-			</div>
-		);
-	}
-}
-
-InputWithButton.defaultPropTypes = {
-	buttonText: "Submit",
-	style: {},
-	clearText: "clear",
-	iconStyle: {}
-};
-
-InputWithButton.propTypes = {
-	classes: PropTypes.object.isRequired,
-	value: PropTypes.string,
-	onSubmit: PropTypes.func.isRequired,
-	name: PropTypes.string.isRequired,
-	placeholder: PropTypes.string,
-	buttonText: PropTypes.string,
-	style: PropTypes.object,
-	iconUrl: PropTypes.string,
-	toUpperCase: PropTypes.bool,
-	disabled: PropTypes.bool,
-	onClear: PropTypes.func,
-	showClearButton: PropTypes.bool,
-	successState: PropTypes.bool,
-	clearText: PropTypes.string,
-	iconStyle: PropTypes.object
 };
 
 export default withStyles(styles)(InputWithButton);
