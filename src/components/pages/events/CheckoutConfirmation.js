@@ -565,8 +565,9 @@ class CheckoutConfirmation extends Component {
 		const { cartSummary } = cart;
 		const { event, ticket_types } = selectedEvent;
 		let selectedTicketType = "";
-
+		
 		if (!cartSummary) {
+			this.props.history.push(`/tickets/${event.id}/tickets/`);
 			return null;
 		}
 
