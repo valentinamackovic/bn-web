@@ -13,6 +13,7 @@ import EventAudit from "../../../reports/eventAudit/Audit";
 import EventSummaryAudit from "../../../reports/eventSummaryAudit/SummaryAudit";
 import EventPromoCodesReport from "../../../reports/eventPromoCode/EventPromoCode";
 import Loader from "../../../../../elements/loaders/Loader";
+import ScanCounts from "../../../reports/eventScanCount/EventScanCount";
 
 const styles = theme => ({
 	root: {}
@@ -90,6 +91,16 @@ class Report extends Component {
 			case "ticket-counts":
 				content = (
 					<TicketCounts
+						eventName={eventName}
+						organizationId={organizationId}
+						eventId={eventId}
+					/>
+				);
+				break;
+
+			case "scan-counts":
+				content = (
+					<ScanCounts
 						eventName={eventName}
 						organizationId={organizationId}
 						eventId={eventId}

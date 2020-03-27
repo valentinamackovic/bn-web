@@ -155,7 +155,9 @@ class Transactions extends Component {
 					"Term",
 					"Content",
 					"Platform",
-					"Check-in Method"
+					"Check-in Method",
+					"Headline Artist Main Genre",
+					"Alternate Genres of Headline Artist"
 				]);
 
 				items.forEach(item => {
@@ -196,7 +198,9 @@ class Transactions extends Component {
 						term,
 						content,
 						platform,
-						check_in_source
+						check_in_source,
+						headline_artist_main_genre,
+						headline_artist_alt_genres
 					} = item;
 
 					csvRows.push([
@@ -227,7 +231,9 @@ class Transactions extends Component {
 						term,
 						content,
 						platform,
-						check_in_source
+						check_in_source,
+						headline_artist_main_genre,
+						headline_artist_alt_genres
 					]);
 				});
 

@@ -182,6 +182,43 @@ const ga = {
 	}
 };
 
+const gtag = {
+	name: "gtag",
+	gtag: null,
+	enabled: true,
+	id: "",
+	labels: [],
+	addTrackingKey(providerOptions) {
+		window.dataLayer = window.dataLayer || [];
+		this.gtag = function() {
+			window.dataLayer.push(arguments);
+		};
+		this.gtag("js", new Date());
+
+		this.gtag("config", providerOptions.id);
+		this.id = providerOptions.id;
+		this.labels = providerOptions.labels;
+		this.enabled = true;
+	},
+	removeTrackingKey(id) {
+		this.id = null;
+		this.labels = [];
+		this.enabled = false;
+		this.gtag = null;
+	},
+	purchaseCompleted(ids, urlParams, currency, items, value) {
+		this.labels.forEach(label => {
+			this.gtag("event", "conversion", {
+				send_to: `${this.key}/${label}`,
+				value,
+				currency,
+				transaction_id: ids
+
+			});
+		});
+	}
+};
+
 const bigneon = {
 	name: "bigneon",
 	enabled: true,
@@ -211,12 +248,14 @@ const bigneon = {
 			ReactGA.ga()(function(tracker) {
 				clientId = tracker.get("clientId") || clientId;
 				source = source || tracker.get("source") || "";
-				medium = medium  || tracker.get("medium") || "";
+				medium = medium || tracker.get("medium") || "";
 			});
 		}
 
 		const referrer = trackingData.referrer || document.referrer;
-		const nonce = Math.random().toString(36).substr(2, 5);
+		const nonce = Math.random()
+			.toString(36)
+			.substr(2, 5);
 		img.src =
 			baseUrl +
 			`/a/t?n=${nonce}&url=${uri}&client_id=${clientId}&source=${source}&medium=${medium}&referrer=${referrer}&` +
@@ -477,13 +516,14 @@ const segment = {
 	}
 };
 
-const providers = [facebook, ga, segment, bigneon];
+const providers = [facebook, ga, segment, bigneon, gtag];
 
 const init = () => {
 	const providerOptions = {
 		ga: process.env.REACT_APP_GOOGLE_ANALYTICS_KEY,
 		segment: process.env.REACT_APP_SEGMENT_KEY,
-		bigneon: process.env.REACT_APP_BIGNEON_ANALYTICS_URL
+		bigneon: process.env.REACT_APP_BIGNEON_ANALYTICS_URL,
+		gtag: null
 	};
 
 	Object.keys(providerOptions).forEach(k => {
@@ -522,11 +562,11 @@ const removeTrackingKey = (providerName, key) => {
 	provider.removeTrackingKey(key);
 };
 
-const getProvider = name => providers.find(p => p.name == name);
+const getProvider = name => providers.find(p => p.name === name);
 
 const page = (...args) => {
 	const enabledProviders = providers.filter(p => p.enabled);
-	enabledProviders.forEach(p => p.pageView(...args));
+	enabledProviders.forEach(p => p.pageView ? p.pageView(...args) : {});
 };
 
 // Identify for all enabled analytics providers
@@ -593,7 +633,6 @@ export default {
 	addTrackingKey,
 	addImpressions,
 	eventClick,
-	getProvider,
 	removeTrackingKey,
 	page,
 	identify,

@@ -366,7 +366,13 @@ class User {
 	setCampaignTrackingData(data) {
 		let currentData = this.getCampaignTrackingData();
 		currentData = { ...currentData, ...data };
-		currentData.clientId = currentData.clientId || `bn.${Math.random().toString(36).substr(2, 7)}.${Math.random().toString(36).substr(2, 7)}`;
+		currentData.clientId =
+			currentData.clientId ||
+			`bn.${Math.random()
+				.toString(36)
+				.substr(2, 7)}.${Math.random()
+				.toString(36)
+				.substr(2, 7)}`;
 		currentData.expiresAt = moment().add({ hours: 24 });
 		localStorage.setItem("campaignData", JSON.stringify(currentData));
 	}
@@ -541,6 +547,22 @@ class User {
 	@computed
 	get hasTicketCountReports() {
 		if (this.isOrgAdmin || this.isOrgOwner || this.isAdmin) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@computed
+	get hasScanCountReports() {
+		if (
+			this.isOrgAdmin ||
+			this.isOrgOwner ||
+			this.isAdmin ||
+			this.isOrgMember ||
+			this.isPromoter ||
+			this.isPromoterReadOnly
+		) {
 			return true;
 		}
 

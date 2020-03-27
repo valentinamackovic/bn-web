@@ -3,7 +3,7 @@ import errorReporting from "./errorReporting";
 
 let bigneon;
 
-export const bigneonFactory = (options = {}, headers = {}, mockData, forceReInit) => {
+export const bigneonFactory = (options = {}, clientParams = {}, mockData, forceReInit) => {
 	if (!bigneon || forceReInit) {
 		options = {
 			...{
@@ -17,13 +17,16 @@ export const bigneonFactory = (options = {}, headers = {}, mockData, forceReInit
 			...options
 		};
 
-		bigneon = new Bigneon.Server(options, headers, mockData);
+		clientParams = {
+			onTokenRefresh,
+			...clientParams
+		};
+		bigneon = new Bigneon.Server(options, clientParams, mockData);
 		const access_token = localStorage.getItem("access_token");
 		const refresh_token = localStorage.getItem("refresh_token") || null;
 		if (access_token) {
 			bigneon.client.setTokens({ access_token, refresh_token });
 		}
-		bigneon.client.OnTokenRefresh = onTokenRefresh;
 		errorReporting.addBreadcrumb("Bigneon client instantiated.");
 	}
 

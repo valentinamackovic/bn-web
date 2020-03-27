@@ -1,0 +1,126 @@
+import React from "react";
+import PropTypes from "prop-types";
+import { withStyles, Typography } from "@material-ui/core";
+import classNames from "classnames";
+import {
+	fontFamilyDemiBold,
+	fontFamily,
+	primaryHex
+} from "../../../../../config/theme";
+
+const ScanCountRow = props => {
+	const {
+		heading,
+		subHeading,
+		gray,
+		children,
+		classes,
+		total,
+		...rest
+	} = props;
+
+	const columnStyles = [
+		{ flex: 7, textAlign: "left" },
+		{ flex: 2, textAlign: "left" },
+		{ flex: 2, textAlign: "left" }
+	];
+
+	const columns = children.map((text, index) => {
+		return (
+			<Typography
+				noWrap
+				className={classNames({
+					[classes.headingText]: heading,
+					[classes.subHeading]: subHeading,
+					[classes.text]: !heading,
+					[classes.totalText]: total
+				})}
+				key={index}
+				style={columnStyles[index]}
+			>
+				{text}
+				{text === "Not Scanned" && (
+					<div className={classes.noShowText}>No Show</div>
+				)}
+			</Typography>
+		);
+	});
+
+	return (
+		<div
+			className={classNames({
+				[classes.root]: true,
+				[classes.gray]: gray,
+				[classes.total]: total,
+				[classes.heading]: heading,
+				[classes.subHeading]: subHeading
+			})}
+			{...rest}
+		>
+			{columns}
+		</div>
+	);
+};
+
+const styles = theme => {
+	return {
+		root: {
+			paddingLeft: theme.spacing.unit * 2,
+			paddingRight: theme.spacing.unit * 2,
+
+			paddingTop: theme.spacing.unit,
+			paddingBottom: theme.spacing.unit,
+
+			display: "flex"
+		},
+		default: {},
+		gray: {
+			backgroundColor: "#f5f7fa"
+		},
+		heading: {
+			backgroundColor: "#000000",
+			borderTopLeftRadius: 8,
+			borderTopRightRadius: 8
+		},
+		subHeading: {
+			backgroundColor: "#f5f7fa",
+			fontFamily: fontFamilyDemiBold
+		},
+		headingText: {
+			fontSize: theme.typography.fontSize,
+			fontFamily: fontFamilyDemiBold,
+			paddingTop: 10,
+			color: "#FFFFFF"
+		},
+		total: {
+			backgroundColor: primaryHex,
+			borderBottomLeftRadius: 8,
+			borderBottomRightRadius: 8
+		},
+		totalText: {
+			color: "#FFFFFF",
+			fontFamily: fontFamilyDemiBold,
+			borderRadius: 4
+		},
+		text: {
+			fontSize: theme.typography.fontSize * 0.9
+		},
+		noShowText: {
+			fontSize: 10,
+			fontFamily: fontFamily,
+			color: "#f5f7fa",
+			lineHeight: "10px"
+		}
+	};
+};
+
+ScanCountRow.propTypes = {
+	classes: PropTypes.object.isRequired,
+	children: PropTypes.array.isRequired,
+	gray: PropTypes.bool,
+	total: PropTypes.bool,
+	heading: PropTypes.bool,
+	subHeading: PropTypes.bool
+};
+
+export default withStyles(styles)(ScanCountRow);

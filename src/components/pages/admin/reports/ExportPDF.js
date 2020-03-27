@@ -20,6 +20,7 @@ import user from "../../../../stores/user";
 import servedImage from "../../../../helpers/imagePathHelper";
 import BoxOfficeSalesSummary from "./boxOfficeSalesSummary/BoxOfficeSalesSummary";
 import SettlementReport from "./settlement/SettlementReport";
+import EventScanCount from "./eventScanCount/EventScanCount";
 
 const styles = theme => ({
 	root: {
@@ -74,6 +75,10 @@ const reportTypes = {
 	settlement: {
 		label: "Settlement report",
 		ReportComponent: SettlementReport
+	},
+	scan_count: {
+		label: "Scan count report",
+		ReportComponent: EventScanCount
 	}
 };
 
