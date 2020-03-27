@@ -565,7 +565,7 @@ class CheckoutConfirmation extends Component {
 		const { cartSummary } = cart;
 		const { event, ticket_types } = selectedEvent;
 		let selectedTicketType = "";
-		
+
 		if (!cartSummary) {
 			this.props.history.push(`/tickets/${event.id}/tickets/`);
 			return null;
@@ -589,75 +589,79 @@ class CheckoutConfirmation extends Component {
 				selectedTicketType = (ticket_types).find(o => o.id === ticketTypeId);
 			}
 
-			const {
-				name,
-				ticket_pricing,
-				increment,
-				limit_per_person,
-				start_date,
-				end_date,
-				redemption_code,
-				available,
-				discount_as_percentage,
-				status
-			} = selectedTicketType;
+			if(selectedTicketType) {
+				const {
+					name,
+					ticket_pricing,
+					increment,
+					limit_per_person,
+					start_date,
+					end_date,
+					redemption_code,
+					available,
+					discount_as_percentage,
+					status
+				} = selectedTicketType;
 
-			if (!quantity || item_type === "Fees") {
+				if (!quantity || item_type === "Fees") {
+					return null;
+				}
+
+				let price_in_cents;
+				let ticketsAvailable = false;
+				let discount_in_cents = 0;
+				if (ticket_pricing) {
+					price_in_cents = ticket_pricing.price_in_cents;
+					ticketsAvailable = available > 0;
+					discount_in_cents = ticket_pricing.discount_in_cents || 0;
+				} else {
+					//description = "(Tickets currently unavailable)";
+				}
+
+				//0 is returned for limit_per_person when there is no limit
+				const limitPerPerson =
+					limit_per_person > 0
+						? Math.min(available, limit_per_person)
+						: available;
+
+				return (
+					<TicketConfirmationSelection
+						key={id}
+						name={name}
+						description={description}
+						ticketsAvailable={ticketsAvailable}
+						price_in_cents={price_in_cents}
+						error={errors[id]}
+						amount={ticketSelection ? ticketSelection[ticketTypeId].quantity : 0}
+						subTotal={`$ ${((pricePerTicketInCents / 100) * quantity).toFixed(
+							2
+						)}`}
+						increment={increment}
+						limitPerPerson={limitPerPerson}
+						available={available}
+						discount_in_cents={discount_in_cents}
+						discount_as_percentage={discount_as_percentage}
+						redemption_code={redemption_code}
+						onNumberChange={amount => {
+							this.setState(({ ticketSelection }) => {
+								ticketSelection[ticketTypeId] = {
+									quantity: Number(amount) < 0 ? 0 : amount,
+									redemption_code
+								};
+								return {
+									ticketSelection
+								};
+							}, () => {
+								this.replaceCart();
+							});
+						}}
+						status={status}
+						eventIsCancelled={eventIsCancelled}
+					/>
+				);
+			} else {
 				return null;
 			}
-
-			let price_in_cents;
-			let ticketsAvailable = false;
-			let discount_in_cents = 0;
-			if (ticket_pricing) {
-				price_in_cents = ticket_pricing.price_in_cents;
-				ticketsAvailable = available > 0;
-				discount_in_cents = ticket_pricing.discount_in_cents || 0;
-			} else {
-				//description = "(Tickets currently unavailable)";
-			}
-
-			//0 is returned for limit_per_person when there is no limit
-			const limitPerPerson =
-				limit_per_person > 0
-					? Math.min(available, limit_per_person)
-					: available;
-
-			return (
-				<TicketConfirmationSelection
-					key={id}
-					name={name}
-					description={description}
-					ticketsAvailable={ticketsAvailable}
-					price_in_cents={price_in_cents}
-					error={errors[id]}
-					amount={ticketSelection ? ticketSelection[ticketTypeId].quantity : 0}
-					subTotal={`$ ${((pricePerTicketInCents / 100) * quantity).toFixed(
-						2
-					)}`}
-					increment={increment}
-					limitPerPerson={limitPerPerson}
-					available={available}
-					discount_in_cents={discount_in_cents}
-					discount_as_percentage={discount_as_percentage}
-					redemption_code={redemption_code}
-					onNumberChange={amount => {
-						this.setState(({ ticketSelection }) => {
-							ticketSelection[ticketTypeId] = {
-								quantity: Number(amount) < 0 ? 0 : amount,
-								redemption_code
-							};
-							return {
-								ticketSelection
-							};
-						}, () => {
-							this.replaceCart();
-						});
-					}}
-					status={status}
-					eventIsCancelled={eventIsCancelled}
-				/>
-			);
 		});
 
 		if (!ticketTypeRendered.length) {
