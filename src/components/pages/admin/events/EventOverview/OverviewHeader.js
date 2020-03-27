@@ -20,7 +20,8 @@ const OverviewHeader = ({ classes, event, artists, venue, timezoneAbbr }) => {
 		eventEnded,
 		publish_date,
 		status,
-		publishedDateAfterNowAndNotDraft
+		publishedDateAfterNowAndNotDraft,
+		override_status
 	} = event;
 
 	const promo_image_url = event.promo_image_url
@@ -35,13 +36,18 @@ const OverviewHeader = ({ classes, event, artists, venue, timezoneAbbr }) => {
 		tags = <Typography className={classes.cancelled}>Cancelled</Typography>;
 	} else {
 		let onSaleTag = null;
+		let overrideTag = null;
 
 		if (eventEnded) {
 			onSaleTag = <ColorTag variant="disabled">Event ended</ColorTag>;
-		} else if (isOnSale) {
+		} else if (isOnSale && !override_status) {
 			onSaleTag = <ColorTag variant="green">On sale</ColorTag>;
 		} else if (is_external) {
 			onSaleTag = <ColorTag variant="green">External</ColorTag>;
+		}
+
+		if(override_status) {
+			overrideTag = <ColorTag variant="disabled">{override_status}</ColorTag>;
 		}
 
 		tags = (
@@ -61,6 +67,7 @@ const OverviewHeader = ({ classes, event, artists, venue, timezoneAbbr }) => {
 							: "Draft"}
 				</ColorTag>
 				{onSaleTag}
+				{overrideTag}
 			</div>
 		);
 	}

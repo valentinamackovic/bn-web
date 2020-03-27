@@ -48,7 +48,8 @@ const EventSummaryCard = props => {
 		cancelled,
 		eventEnded,
 		publishDate,
-		status
+		status,
+		overrideStatus
 	} = props;
 
 	const mediaStyle = imageUrl
@@ -63,13 +64,18 @@ const EventSummaryCard = props => {
 		tags = <Typography className={classes.cancelled}>Cancelled</Typography>;
 	} else {
 		let onSaleTag = null;
+		let overrideTag = null;
 
 		if (eventEnded) {
 			onSaleTag = <ColorTag variant="disabled">Event ended</ColorTag>;
-		} else if (isOnSale) {
+		} else if (isOnSale && !overrideStatus) {
 			onSaleTag = <ColorTag variant="green">On sale</ColorTag>;
 		} else if (isExternal) {
 			onSaleTag = <ColorTag variant="green">External</ColorTag>;
+		}
+
+		if(overrideStatus) {
+			overrideTag = <ColorTag variant="disabled">{overrideStatus}</ColorTag>;
 		}
 
 		tags = (
@@ -85,6 +91,7 @@ const EventSummaryCard = props => {
 							: "Draft"}
 				</ColorTag>
 				{onSaleTag}
+				{overrideTag}
 			</div>
 		);
 	}
