@@ -75,10 +75,10 @@ const EventSummaryCard = props => {
 		}
 
 		if(overrideStatus) {
-			if(overrideStatus === "Purchase Tickets") {
+			if(overrideStatus === "PurchaseTickets") {
 				overrideTag = <ColorTag variant="green">On Sale</ColorTag>;
 			} else if(overrideStatus === "Rescheduled") {
-				overrideTag = <ColorTag variant="green">Postponed</ColorTag>;
+				overrideTag = <ColorTag variant="disabled">Postponed</ColorTag>;
 			} else if(overrideStatus === "Ended") {
 				overrideTag = <ColorTag variant="disabled">Event Ended</ColorTag>;
 			} else {

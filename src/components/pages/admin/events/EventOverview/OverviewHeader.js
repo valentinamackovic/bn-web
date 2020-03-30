@@ -47,10 +47,10 @@ const OverviewHeader = ({ classes, event, artists, venue, timezoneAbbr }) => {
 		}
 
 		if(override_status) {
-			if(override_status === "Purchase Tickets") {
+			if(override_status === "PurchaseTickets") {
 				overrideTag = <ColorTag variant="green">On Sale</ColorTag>;
 			} else if(override_status === "Rescheduled") {
-				overrideTag = <ColorTag variant="green">Postponed</ColorTag>;
+				overrideTag = <ColorTag variant="disabled">Postponed</ColorTag>;
 			} else if(override_status === "Ended") {
 				overrideTag = <ColorTag variant="disabled">Event Ended</ColorTag>;
 			} else {
