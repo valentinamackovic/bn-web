@@ -79,12 +79,18 @@ class Index extends Component {
 			.events.broadcasts.index({ event_id: this.eventId })
 			.then(response => {
 				const { data } = response.data;
+				let broadcastSent = true;
+				let inProgress = false;
 				data.forEach(
-					({ notification_type, sent_quantity, opened_quantity }) => {
+					({ notification_type, sent_quantity, opened_quantity, status }) => {
 						if (notification_type === "LastCall") {
+							broadcastSent = status !== "Pending";
+							inProgress = status === "InProgress";
 							this.setState({
 								scheduleProgress: opened_quantity,
-								scheduleSent: sent_quantity
+								scheduleSent: sent_quantity,
+								inProgress,
+								broadcastSent
 							});
 						}
 					}
@@ -138,9 +144,7 @@ class Index extends Component {
 									.format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE),
 								inProgress
 							});
-							if (inProgress) {
-								this.gradualTimer();
-							}
+							this.gradualTimer();
 						}
 					}
 				);
