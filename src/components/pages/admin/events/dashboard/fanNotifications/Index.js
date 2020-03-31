@@ -240,17 +240,27 @@ class Index extends Component {
 			};
 		}
 
-		updateNotification
+		let resolveSent = false;
+
+		const sent = updateNotification
 			? this.updateNotification(broadcastData)
 			: this.createNotification(broadcastData);
 
-		this.gradualTimer();
+		const cast = Promise.resolve(sent);
+
+		cast.then(function(v) {
+			resolveSent = true;
+		}, function(e) {
+			console.error(e);
+		});
+
+		resolveSent && this.gradualTimer();
 	}
 
 	onSend(e) {
 		const { sendAt, updateNotification, broadcastId, timezone } = this.state;
 		e.preventDefault();
-		let broadcastData = {};
+		let broadcastData;
 
 		this.submitAttempted = true;
 
@@ -289,7 +299,7 @@ class Index extends Component {
 			: this.createNotification(broadcastData);
 	}
 
-	createNotification(broadcastData) {
+	async createNotification(broadcastData) {
 		Bigneon()
 			.events.broadcasts.create(broadcastData)
 			.then(response => {
@@ -305,6 +315,7 @@ class Index extends Component {
 					variant: "success"
 				});
 				this.loadEventBroadcast();
+				return Promise.resolve(response);
 			})
 			.catch(error => {
 				this.setState({
@@ -317,7 +328,7 @@ class Index extends Component {
 			});
 	}
 
-	updateNotification(broadcastData) {
+	async updateNotification(broadcastData) {
 		Bigneon()
 			.broadcasts.update(broadcastData)
 			.then(response => {
@@ -333,6 +344,7 @@ class Index extends Component {
 					variant: "success"
 				});
 				this.loadEventBroadcast();
+				return Promise.resolve(response);
 			})
 			.catch(error => {
 				this.setState({
