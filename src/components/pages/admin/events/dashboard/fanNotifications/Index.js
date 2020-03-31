@@ -49,7 +49,8 @@ class Index extends Component {
 			hasEventStarted: true,
 			count: 1,
 			inProgress: false,
-			isNotificationAfterNow: true
+			isNotificationAfterNow: true,
+			updateNotification: false
 		};
 	}
 
@@ -144,7 +145,9 @@ class Index extends Component {
 									.format(TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE),
 								inProgress
 							});
-							this.gradualTimer();
+							if (inProgress) {
+								this.gradualTimer();
+							}
 						}
 					}
 				);
@@ -300,6 +303,7 @@ class Index extends Component {
 					variant: "success"
 				});
 				this.loadEventBroadcast();
+				this.gradualTimer();
 			})
 			.catch(error => {
 				this.setState({
