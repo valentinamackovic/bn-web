@@ -23,107 +23,6 @@ import Divider from "../../../../common/Divider";
 import AffiliateLinkGeneratorDialog from "./links/AffiliateLinkGeneratorDialog";
 import FBPixelDialog from "./marketing/FBPixelDialog";
 
-const styles = theme => {
-	const defaultSidePadding = {
-		paddingLeft: theme.spacing.unit * 8,
-		paddingRight: theme.spacing.unit * 8
-	};
-
-	return {
-		container: {
-			paddingTop: theme.spacing.unit * 4,
-			paddingBottom: theme.spacing.unit * 4,
-			...defaultSidePadding,
-
-			[theme.breakpoints.down("sm")]: {
-				padding: theme.spacing.unit * 2
-			}
-		},
-		noSidePaddingContainer: {
-			paddingLeft: 0,
-			paddingRight: 0
-		},
-		headerContainer: {
-			marginBottom: theme.spacing.unit * 4,
-			[theme.breakpoints.down("sm")]: {
-				marginBottom: theme.spacing.unit
-			}
-		},
-		card: {
-			borderRadius: "6px 6px 0 0",
-			[theme.breakpoints.down("sm")]: {
-				borderRadius: 6
-			}
-		},
-		innerCardContainer: {
-			paddingBottom: theme.spacing.unit * 4
-		},
-		rightHeaderOptions: {
-			display: "flex",
-			justifyContent: "flex-end",
-			alignContent: "center",
-			alignItems: "center",
-			[theme.breakpoints.down("md")]: {
-				justifyContent: "space-between",
-				marginBottom: theme.spacing.unit * 2
-			}
-		},
-		innerCard: {
-			padding: theme.spacing.unit * 5,
-			[theme.breakpoints.down("md")]: {
-				padding: theme.spacing.unit * 2
-			}
-		},
-		menuContainer: {
-			display: "flex",
-			justifyContent: "flex-start",
-			flexWrap: "wrap",
-			alignItems: "center",
-
-			paddingTop: theme.spacing.unit * 4,
-			paddingBottom: theme.spacing.unit * 3,
-			...defaultSidePadding,
-
-			[theme.breakpoints.down("sm")]: {
-				padding: theme.spacing.unit * 2,
-				paddingBottom: theme.spacing.unit
-			}
-		},
-		menuText: {
-			marginRight: theme.spacing.unit * 4,
-			marginBottom: theme.spacing.unit,
-
-			[theme.breakpoints.down("sm")]: {
-				marginRight: theme.spacing.unit * 2
-			}
-		},
-		menuDividerContainer: {
-			marginBottom: theme.spacing.unit * 3,
-			marginTop: theme.spacing.unit * 2,
-
-			...defaultSidePadding,
-
-			[theme.breakpoints.down("sm")]: {
-				paddingLeft: theme.spacing.unit * 2,
-				paddingRight: theme.spacing.unit * 2
-			}
-		},
-		tagsContainer: {
-			display: "flex",
-			justifyContent: "flex-start"
-		},
-		menuDropdownContainer: {
-			//borderStyle: "solid",
-			boxShadow: "0 4px 15px 2px rgba(112, 124, 237, 0.17)"
-		},
-		additionalDesktopMenuContent: {
-			flex: 1,
-			display: "flex",
-			justifyContent: "flex-end"
-		}
-	};
-};
-
 const isActiveReportMenu = type =>
 	(window.location.pathname || "").endsWith(`/${type}`);
 
@@ -600,12 +499,13 @@ class EventDashboardContainer extends Component {
 			removeCardSidePadding
 		} = this.props;
 		const organizationId = user.currentOrganizationId;
+		let overrideTag = '';
 
 		if (!event) {
 			return <Loader/>;
 		}
 
-		const { id, publish_date, on_sale, localized_times, status } = event;
+		const { id, publish_date, on_sale, localized_times, status, override_status } = event;
 		const isPublished = moment.utc(publish_date).isBefore(moment.utc());
 		const isOnSale = isPublished && moment.utc(on_sale).isBefore(moment.utc());
 
@@ -620,6 +520,18 @@ class EventDashboardContainer extends Component {
 
 		const publishedDateAfterNowAndNotDraft =
 			moment.utc(publish_date).isAfter(moment.utc()) && status !== "Draft";
+
+		if(override_status) {
+			if(override_status === "PurchaseTickets") {
+				overrideTag = <ColorTag variant="green">On Sale</ColorTag>;
+			} else if(override_status === "Rescheduled") {
+				overrideTag = <ColorTag variant="disabled">Postponed</ColorTag>;
+			} else if(override_status === "Ended") {
+				overrideTag = <ColorTag variant="disabled">Event Ended</ColorTag>;
+			} else {
+				overrideTag = <ColorTag variant="disabled">{override_status}</ColorTag>;
+			}
+		}
 
 		return (
 			<div>
@@ -665,11 +577,11 @@ class EventDashboardContainer extends Component {
 								</ColorTag>
 							</div>
 							<div>
-								{eventEnded ? (
+								{eventEnded  ? (
 									<ColorTag style={{ marginRight: 10 }} variant="disabled">
 										{"Event ended"}
 									</ColorTag>
-								) : (
+								) : !override_status && (
 									<ColorTag
 										style={{ marginRight: 10 }}
 										variant={isOnSale ? "green" : "disabled"}
@@ -677,6 +589,9 @@ class EventDashboardContainer extends Component {
 										{isOnSale ? "On sale" : "Off sale"}
 									</ColorTag>
 								)}
+							</div>
+							<div style={{ marginRight: 10 }}>
+								{overrideTag}
 							</div>
 						</div>
 						{!eventEnded && user.hasScope("event:write") ? (
@@ -811,6 +726,107 @@ EventDashboardContainer.propTypes = {
 	]),
 	additionalDesktopMenuContent: PropTypes.element,
 	removeCardSidePadding: PropTypes.bool
+};
+
+const styles = theme => {
+	const defaultSidePadding = {
+		paddingLeft: theme.spacing.unit * 8,
+		paddingRight: theme.spacing.unit * 8
+	};
+
+	return {
+		container: {
+			paddingTop: theme.spacing.unit * 4,
+			paddingBottom: theme.spacing.unit * 4,
+			...defaultSidePadding,
+
+			[theme.breakpoints.down("sm")]: {
+				padding: theme.spacing.unit * 2
+			}
+		},
+		noSidePaddingContainer: {
+			paddingLeft: 0,
+			paddingRight: 0
+		},
+		headerContainer: {
+			marginBottom: theme.spacing.unit * 4,
+			[theme.breakpoints.down("sm")]: {
+				marginBottom: theme.spacing.unit
+			}
+		},
+		card: {
+			borderRadius: "6px 6px 0 0",
+			[theme.breakpoints.down("sm")]: {
+				borderRadius: 6
+			}
+		},
+		innerCardContainer: {
+			paddingBottom: theme.spacing.unit * 4
+		},
+		rightHeaderOptions: {
+			display: "flex",
+			justifyContent: "flex-end",
+			alignContent: "center",
+			alignItems: "center",
+			[theme.breakpoints.down("md")]: {
+				justifyContent: "space-between",
+				marginBottom: theme.spacing.unit * 2
+			}
+		},
+		innerCard: {
+			padding: theme.spacing.unit * 5,
+			[theme.breakpoints.down("md")]: {
+				padding: theme.spacing.unit * 2
+			}
+		},
+		menuContainer: {
+			display: "flex",
+			justifyContent: "flex-start",
+			flexWrap: "wrap",
+			alignItems: "center",
+
+			paddingTop: theme.spacing.unit * 4,
+			paddingBottom: theme.spacing.unit * 3,
+			...defaultSidePadding,
+
+			[theme.breakpoints.down("sm")]: {
+				padding: theme.spacing.unit * 2,
+				paddingBottom: theme.spacing.unit
+			}
+		},
+		menuText: {
+			marginRight: theme.spacing.unit * 4,
+			marginBottom: theme.spacing.unit,
+
+			[theme.breakpoints.down("sm")]: {
+				marginRight: theme.spacing.unit * 2
+			}
+		},
+		menuDividerContainer: {
+			marginBottom: theme.spacing.unit * 3,
+			marginTop: theme.spacing.unit * 2,
+
+			...defaultSidePadding,
+
+			[theme.breakpoints.down("sm")]: {
+				paddingLeft: theme.spacing.unit * 2,
+				paddingRight: theme.spacing.unit * 2
+			}
+		},
+		tagsContainer: {
+			display: "flex",
+			justifyContent: "flex-start"
+		},
+		menuDropdownContainer: {
+			//borderStyle: "solid",
+			boxShadow: "0 4px 15px 2px rgba(112, 124, 237, 0.17)"
+		},
+		additionalDesktopMenuContent: {
+			flex: 1,
+			display: "flex",
+			justifyContent: "flex-end"
+		}
+	};
 };
 
 export default withStyles(styles)(EventDashboardContainer);
