@@ -217,7 +217,7 @@ class Index extends Component {
 	}
 
 	sendNow(e) {
-		const { updateNotification, broadcastId, timezone } = this.state;
+		const { updateNotification, broadcastId } = this.state;
 		e.preventDefault();
 		let broadcastData = {};
 
@@ -243,6 +243,8 @@ class Index extends Component {
 		updateNotification
 			? this.updateNotification(broadcastData)
 			: this.createNotification(broadcastData);
+
+		this.gradualTimer();
 	}
 
 	onSend(e) {
@@ -303,7 +305,6 @@ class Index extends Component {
 					variant: "success"
 				});
 				this.loadEventBroadcast();
-				this.gradualTimer();
 			})
 			.catch(error => {
 				this.setState({
