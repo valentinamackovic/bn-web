@@ -12,6 +12,7 @@ import Loader from "../../../elements/loaders/Loader";
 import SettlementReport from "./settlement/SettlementReport";
 import SettlementReportList from "./settlement/SettlementReportList";
 import BoxOfficeSalesSummary from "./boxOfficeSalesSummary/BoxOfficeSalesSummary";
+import SalesSummary from "./salesSummary/SalesSummary";
 
 const styles = theme => ({
 	content: {
@@ -41,6 +42,7 @@ class Reports extends Component {
 			hasTicketCountReports,
 			hasOrgBoxOfficeSalesReport,
 			hasOrgReconciliationReport,
+			hasOrgSalesSummaryReport,
 			hasOrgEventSettlementReport
 		} = user;
 
@@ -89,6 +91,17 @@ class Reports extends Component {
 				{/*		</StyledLink>*/}
 				{/*	</Typography>*/}
 				{/*) : null}*/}
+
+				{hasOrgSalesSummaryReport ? (
+					<Typography className={classes.menuText}>
+						<StyledLink
+							underlined={report === "sales-summary"}
+							to={`/admin/reports/sales-summary`}
+						>
+							Sales Summary
+						</StyledLink>
+					</Typography>
+				) : null}
 
 				{hasOrgEventSettlementReport ? (
 					<Typography className={classes.menuText}>
@@ -168,6 +181,20 @@ class Reports extends Component {
 				return (
 					<Card variant={"block"} className={classes.content}>
 						<BoxOfficeSalesSummary
+							organizationId={currentOrganizationId}
+							organizationTimezone={currentOrgTimezone}
+						/>
+					</Card>
+				);
+
+			case "sales-summary":
+				if (!currentOrgTimezone) {
+					return <Loader/>;
+				}
+
+				return (
+					<Card variant={"block"} className={classes.content}>
+						<SalesSummary
 							organizationId={currentOrganizationId}
 							organizationTimezone={currentOrgTimezone}
 						/>

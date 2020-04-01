@@ -615,6 +615,20 @@ class User {
 	}
 
 	@computed
+	get hasOrgSalesSummaryReport() {
+		if (
+			this.isAdmin ||
+			this.isOrgOwner ||
+			this.isOrgAdmin ||
+			this.isOrgMember
+		) {
+			return true;
+		}
+
+		return false;
+	}
+
+	@computed
 	get hasEventPromoCodesReport() {
 		if (this.isAdmin || this.isOrgOwner || this.isOrgAdmin) {
 			return true;
