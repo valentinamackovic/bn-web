@@ -242,19 +242,10 @@ class Index extends Component {
 
 		let resolveSent = false;
 
-		const sent = updateNotification
-			? this.updateNotification(broadcastData)
-			: this.createNotification(broadcastData);
-
-		const cast = Promise.resolve(sent);
-
-		cast.then(function(v) {
-			resolveSent = true;
-		}, function(e) {
-			console.error(e);
-		});
-
-		resolveSent && this.gradualTimer();
+		updateNotification
+			? await this.updateNotification(broadcastData)
+			: await this.createNotification(broadcastData);
+		this.gradualTimer();
 	}
 
 	onSend(e) {
