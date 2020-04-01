@@ -291,7 +291,7 @@ class Index extends Component {
 	}
 
 	async createNotification(broadcastData) {
-		Bigneon()
+		await Bigneon()
 			.events.broadcasts.create(broadcastData)
 			.then(response => {
 				this.setState({
