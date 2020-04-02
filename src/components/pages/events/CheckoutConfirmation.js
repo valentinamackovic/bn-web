@@ -37,6 +37,7 @@ import getAllUrlParams from "../../../helpers/getAllUrlParams";
 import FormattedAdditionalInfo from "./FormattedAdditionalInfo";
 import getUrlParam from "../../../helpers/getUrlParam";
 import removeURLParam from "../../../helpers/removeURLParam";
+import { isReactNative } from "../../../helpers/reactNative";
 
 const styles = theme => ({
 	root: {
@@ -304,7 +305,9 @@ class CheckoutConfirmation extends Component {
 				tickets.refreshTickets();
 				user.clearCampaignTrackingData();
 
-				if (id) {
+				if(isReactNative()){
+					history.push(`/?purchase_successful=true`);
+				} else if (id) {
 					//If they're checking out for a specific event then we have a custom success page for them
 					history.push(
 						`/tickets/${slug}/tickets/success${window.location.search ||
