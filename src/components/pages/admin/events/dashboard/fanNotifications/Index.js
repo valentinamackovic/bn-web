@@ -302,8 +302,14 @@ class Index extends Component {
 				variant: "success"
 			});
 			this.loadEventBroadcast();
-		} catch (e) {
-			console.error(e);
+		} catch (error) {
+			this.setState({
+				isSending: false
+			});
+			notifications.showFromErrorResponse({
+				error,
+				defaultMessage: "Failed to create notification."
+			});
 		}
 	}
 
@@ -322,8 +328,14 @@ class Index extends Component {
 				variant: "success"
 			});
 			this.loadEventBroadcast();
-		} catch (e) {
-			console.error(e);
+		} catch (error) {
+			this.setState({
+				isSending: false
+			});
+			notifications.showFromErrorResponse({
+				error,
+				defaultMessage: "Failed to update notifications."
+			});
 		}
 	}
 
