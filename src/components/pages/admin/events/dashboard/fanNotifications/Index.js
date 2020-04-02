@@ -289,7 +289,7 @@ class Index extends Component {
 
 	async createNotification(broadcastData) {
 		try {
-			await Bigneon().events.broadcasts.create(broadcastData);
+			const response = await Bigneon().events.broadcasts.create(broadcastData);
 			this.setState({
 				isSending: false,
 				openConfirmDialog: false,
@@ -302,6 +302,7 @@ class Index extends Component {
 				variant: "success"
 			});
 			this.loadEventBroadcast();
+			return await Promise.resolve(response);
 		} catch (error) {
 			this.setState({
 				isSending: false
@@ -315,7 +316,7 @@ class Index extends Component {
 
 	async updateNotification(broadcastData) {
 		try {
-			await Bigneon().broadcasts.update(broadcastData);
+			const response = await Bigneon().broadcasts.update(broadcastData);
 			this.setState({
 				isSending: false,
 				openConfirmDialog: false,
@@ -328,6 +329,7 @@ class Index extends Component {
 				variant: "success"
 			});
 			this.loadEventBroadcast();
+			return await Promise.resolve(response);
 		} catch (error) {
 			this.setState({
 				isSending: false
