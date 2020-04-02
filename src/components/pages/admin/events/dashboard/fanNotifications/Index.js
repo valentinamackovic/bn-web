@@ -9,9 +9,7 @@ import {
 import SelectGroup from "../../../../../common/form/SelectGroup";
 import moment from "moment-timezone";
 import servedImage from "../../../../../../helpers/imagePathHelper";
-import {
-	TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE
-} from "../../../../../../helpers/time";
+import { TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE } from "../../../../../../helpers/time";
 import SendDialog from "./sections/SendDialog";
 import MainContent from "./sections/MainContent";
 import getPhoneOS from "../../../../../../helpers/getPhoneOS";
@@ -216,7 +214,7 @@ class Index extends Component {
 			});
 	}
 
-	sendNow(e) {
+	async sendNow(e) {
 		const { updateNotification, broadcastId } = this.state;
 		e.preventDefault();
 		let broadcastData = {};
@@ -240,11 +238,10 @@ class Index extends Component {
 			};
 		}
 
-		let resolveSent = false;
-
 		updateNotification
 			? await this.updateNotification(broadcastData)
 			: await this.createNotification(broadcastData);
+
 		this.gradualTimer();
 	}
 
@@ -291,61 +288,69 @@ class Index extends Component {
 	}
 
 	async createNotification(broadcastData) {
-		await Bigneon()
-			.events.broadcasts.create(broadcastData)
-			.then(response => {
-				this.setState({
-					isSending: false,
-					openConfirmDialog: false,
-					lastCallMessage: "",
-					errors: {}
+		try {
+			Bigneon()
+				.events.broadcasts.create(broadcastData)
+				.then(response => {
+					this.setState({
+						isSending: false,
+						openConfirmDialog: false,
+						lastCallMessage: "",
+						errors: {}
+					});
+					this.submitAttempted = false;
+					notifications.show({
+						message: "Notification created!",
+						variant: "success"
+					});
+					this.loadEventBroadcast();
+					return Promise.resolve(response);
+				})
+				.catch(error => {
+					this.setState({
+						isSending: false
+					});
+					notifications.showFromErrorResponse({
+						error,
+						defaultMessage: "Failed to create notification."
+					});
 				});
-				this.submitAttempted = false;
-				notifications.show({
-					message: "Notification created!",
-					variant: "success"
-				});
-				this.loadEventBroadcast();
-				return Promise.resolve(response);
-			})
-			.catch(error => {
-				this.setState({
-					isSending: false
-				});
-				notifications.showFromErrorResponse({
-					error,
-					defaultMessage: "Failed to create notification."
-				});
-			});
+		} catch (e) {
+			console.error(e);
+		}
 	}
 
 	async updateNotification(broadcastData) {
-		Bigneon()
-			.broadcasts.update(broadcastData)
-			.then(response => {
-				this.setState({
-					isSending: false,
-					openConfirmDialog: false,
-					lastCallMessage: "",
-					errors: {}
+		try {
+			await Bigneon()
+				.broadcasts.update(broadcastData)
+				.then(response => {
+					this.setState({
+						isSending: false,
+						openConfirmDialog: false,
+						lastCallMessage: "",
+						errors: {}
+					});
+					this.submitAttempted = false;
+					notifications.show({
+						message: "Notification updated!",
+						variant: "success"
+					});
+					this.loadEventBroadcast();
+					return Promise.resolve(response);
+				})
+				.catch(error => {
+					this.setState({
+						isSending: false
+					});
+					notifications.showFromErrorResponse({
+						error,
+						defaultMessage: "Failed to update notifications."
+					});
 				});
-				this.submitAttempted = false;
-				notifications.show({
-					message: "Notification updated!",
-					variant: "success"
-				});
-				this.loadEventBroadcast();
-				return Promise.resolve(response);
-			})
-			.catch(error => {
-				this.setState({
-					isSending: false
-				});
-				notifications.showFromErrorResponse({
-					error,
-					defaultMessage: "Failed to update notifications."
-				});
-			});
+		} catch (e) {
+			console.error(e);
+		}
 	}
 
 	onDialogClose() {
@@ -554,9 +559,7 @@ class Index extends Component {
 							</Typography>
 							<Typography className={classes.heading}>Last Call</Typography>
 						</div>
-						<Card className={classes.mobileContainer}>
-							{MainContentConst}
-						</Card>
+						<Card className={classes.mobileContainer}>{MainContentConst}</Card>
 					</Hidden>
 				</Container>
 			</div>
