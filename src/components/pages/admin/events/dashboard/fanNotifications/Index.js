@@ -289,32 +289,19 @@ class Index extends Component {
 
 	async createNotification(broadcastData) {
 		try {
-			Bigneon()
-				.events.broadcasts.create(broadcastData)
-				.then(response => {
-					this.setState({
-						isSending: false,
-						openConfirmDialog: false,
-						lastCallMessage: "",
-						errors: {}
-					});
-					this.submitAttempted = false;
-					notifications.show({
-						message: "Notification created!",
-						variant: "success"
-					});
-					this.loadEventBroadcast();
-					return Promise.resolve(response);
-				})
-				.catch(error => {
-					this.setState({
-						isSending: false
-					});
-					notifications.showFromErrorResponse({
-						error,
-						defaultMessage: "Failed to create notification."
-					});
-				});
+			await Bigneon().events.broadcasts.create(broadcastData);
+			this.setState({
+				isSending: false,
+				openConfirmDialog: false,
+				lastCallMessage: "",
+				errors: {}
+			});
+			this.submitAttempted = false;
+			notifications.show({
+				message: "Notification created!",
+				variant: "success"
+			});
+			this.loadEventBroadcast();
 		} catch (e) {
 			console.error(e);
 		}
@@ -322,32 +309,19 @@ class Index extends Component {
 
 	async updateNotification(broadcastData) {
 		try {
-			await Bigneon()
-				.broadcasts.update(broadcastData)
-				.then(response => {
-					this.setState({
-						isSending: false,
-						openConfirmDialog: false,
-						lastCallMessage: "",
-						errors: {}
-					});
-					this.submitAttempted = false;
-					notifications.show({
-						message: "Notification updated!",
-						variant: "success"
-					});
-					this.loadEventBroadcast();
-					return Promise.resolve(response);
-				})
-				.catch(error => {
-					this.setState({
-						isSending: false
-					});
-					notifications.showFromErrorResponse({
-						error,
-						defaultMessage: "Failed to update notifications."
-					});
-				});
+			await Bigneon().broadcasts.update(broadcastData);
+			this.setState({
+				isSending: false,
+				openConfirmDialog: false,
+				lastCallMessage: "",
+				errors: {}
+			});
+			this.submitAttempted = false;
+			notifications.show({
+				message: "Notification updated!",
+				variant: "success"
+			});
+			this.loadEventBroadcast();
 		} catch (e) {
 			console.error(e);
 		}
