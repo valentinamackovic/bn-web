@@ -114,14 +114,14 @@ class Index extends Component {
 				let inProgress = false;
 				data.forEach(
 					({
-						 id,
-						 notification_type,
-						 status,
-						 send_at,
-						 sent_quantity,
-						 updated_at,
-						 opened_quantity
-					 }) => {
+						id,
+						notification_type,
+						status,
+						send_at,
+						sent_quantity,
+						updated_at,
+						opened_quantity
+					}) => {
 						if (notification_type === "LastCall") {
 							broadcastSent = status !== "Pending";
 							inProgress = status === "InProgress";
@@ -225,6 +225,14 @@ class Index extends Component {
 			.tz(sendAt, TIME_FORMAT_MM_DD_YYYY_NO_TIMEZONE, timezone)
 			.utc()
 			.format(moment.HTML5_FMT.DATETIME_LOCAL_MS);
+		this.setState({ sendAt: send_at });
+		if (!this.validateFields()) {
+			notifications.show({
+				message: "Invalid field.",
+				variant: "warning"
+			});
+			return false;
+		}
 		await this.onSend(e, send_at);
 	}
 
@@ -234,14 +242,6 @@ class Index extends Component {
 		let broadcastData;
 
 		this.submitAttempted = true;
-
-		if (!this.validateFields()) {
-			notifications.show({
-				message: "Invalid field.",
-				variant: "warning"
-			});
-			return false;
-		}
 
 		this.setState({ isSending: true });
 
@@ -267,9 +267,9 @@ class Index extends Component {
 
 	async sendNotificationToServer(broadcastData, isUpdate) {
 		try {
-			const response = isUpdate ?
-				await Bigneon().broadcasts.update(broadcastData) :
-				await Bigneon().events.broadcasts.create(broadcastData);
+			const response = isUpdate
+				? await Bigneon().broadcasts.update(broadcastData)
+				: await Bigneon().events.broadcasts.create(broadcastData);
 			this.setState({
 				isSending: false,
 				openConfirmDialog: false,
@@ -289,7 +289,9 @@ class Index extends Component {
 			});
 			notifications.showFromErrorResponse({
 				error,
-				defaultMessage: `Failed to  ${isUpdate ? "update" : "create"} notification.`
+				defaultMessage: `Failed to  ${
+					isUpdate ? "update" : "create"
+				} notification.`
 			});
 		}
 	}
@@ -424,20 +426,16 @@ class Index extends Component {
 							How does it work?
 						</span>
 						<br/>
-						Last Call Notifications are optimized to drive food and
-						beverage
-						sales by intelligently engaging your attendees prior to
-						the close of
+						Last Call Notifications are optimized to drive food and beverage
+						sales by intelligently engaging your attendees prior to the close of
 						service to entice them to make a purchase.{" "}
 						<span className={classes.pinkText}>
 							This can only be used once during your event.
 						</span>
 						<br/>
 						<br/>
-						All attendees who have enabled notifications on their
-						devices will
-						receive the following Last Call notification on their
-						device at the
+						All attendees who have enabled notifications on their devices will
+						receive the following Last Call notification on their device at the
 						time set above.
 					</Typography>
 				</Grid>
@@ -494,8 +492,7 @@ class Index extends Component {
 						<Typography className={classes.parentHeading}>
 							Fan Notifications
 						</Typography>
-						<Typography className={classes.heading}>Last
-							Call</Typography>
+						<Typography className={classes.heading}>Last Call</Typography>
 						{MainContentConst}
 					</Hidden>
 					<Hidden mdUp>
@@ -503,12 +500,9 @@ class Index extends Component {
 							<Typography className={classes.parentHeading}>
 								Fan Notifications
 							</Typography>
-							<Typography className={classes.heading}>Last
-								Call</Typography>
+							<Typography className={classes.heading}>Last Call</Typography>
 						</div>
-						<Card className={classes.mobileContainer}>
-							{MainContentConst}
-						</Card>
+						<Card className={classes.mobileContainer}>{MainContentConst}</Card>
 					</Hidden>
 				</Container>
 			</div>
