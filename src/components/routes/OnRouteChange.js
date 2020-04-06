@@ -3,7 +3,7 @@ import { withRouter } from "react-router-dom";
 import layout from "../../stores/layout";
 import analytics from "../../helpers/analytics";
 import errorReporting from "../../helpers/errorReporting";
-import { isReactNative, sendReactNativeMessage, useNewMessaging } from "../../helpers/reactNative";
+import { isReactNative, sendReactNativeMessage, useNewMessaging, MESSAGE_TYPES } from "../../helpers/reactNative";
 
 const showSideMenuRoutes = ["/admin", "/my-events", "/orders", "/account"];
 const showStudioLogoRoutes = ["/admin", "/box-office"];
@@ -68,7 +68,7 @@ class OnRouteChange extends Component {
 		}
 		//Only send route changes if we have specifically requested it
 		if (isReactNative() && useNewMessaging()) {
-			sendReactNativeMessage(this.props.location, "navigation");
+			sendReactNativeMessage(this.props.location, MESSAGE_TYPES.NAVIGATION);
 		}
 
 	}
