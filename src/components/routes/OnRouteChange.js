@@ -65,7 +65,7 @@ class OnRouteChange extends Component {
 			this.setLayout();
 
 			errorReporting.addBreadcrumb(`Navigated to: ${window.location.pathname}`);
-
+		}
 		//Only send route changes if we have specifically requested it
 		if (isReactNative() && useNewMessaging()) {
 			sendReactNativeMessage(this.props.location, MESSAGE_TYPES.NAVIGATION);
