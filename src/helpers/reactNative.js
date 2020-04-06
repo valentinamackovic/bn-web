@@ -24,10 +24,6 @@ export const useNewMessaging = () => {
  * @param messageType MESSAGE_TYPES
  */
 export const sendReactNativeMessage = (json, messageType) => {
-	if (!MESSAGE_TYPES.hasOwnProperty(messageType)) {
-		console.error("Invalid type", messageType, "use one of", Object.keys(MESSAGE_TYPES));
-		return;
-	}
 	if (!isReactNative()) {
 		console.warn("Not in embedded environment, please check `isReactNative()` first");
 		return;
