@@ -19,7 +19,7 @@ class SMSLinkForm extends Component {
 		super(props);
 
 		this.state = {
-			phone: "",
+			phone: "+1",
 			isSubmitting: false,
 			isSent: false,
 			perksDialogOpen: false,
@@ -154,6 +154,12 @@ class SMSLinkForm extends Component {
 										placeholder="+1"
 										type="phone"
 										name="phone"
+										onFocus={e => {
+											e.persist();
+											setTimeout(() => {
+												e.target.selectionStart = e.target.selectionEnd = e.target.value.length;
+											},150);
+										}}
 										onChange={e => this.setState({ phone: e.target.value })}
 									/>
 									<Button
