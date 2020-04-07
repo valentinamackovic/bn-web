@@ -101,6 +101,7 @@ class SMSLinkForm extends Component {
 			? "We want to make sure we send the text link to download the Big Neon app to the right person."
 			: "We’ll send you a link to download the Big Neon App to View your Tickets. Don’t want to download the app? Just bring your photo ID to the event instead.";
 
+		const displayPhone = phone.indexOf("+") === 0 ? phone : `+1 ${phone}`;
 		return (
 			<div>
 				<BigneonPerksDialog
@@ -121,7 +122,7 @@ class SMSLinkForm extends Component {
 							{showConfirm ? (
 								<div>
 									<Typography className={classes.numberText}>
-										+1 {phone}
+										{displayPhone}
 									</Typography>
 									<div className={classes.btnContainer}>
 										<Button
